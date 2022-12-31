@@ -1,35 +1,39 @@
-package main
+package wpm
 
 import (
+	"embed"
+
+	"github.com/bitwormhole/wpm/gen/wpmappcfg"
+
 	ginstarter "github.com/bitwormhole/starter-gin"
+	gormstarter "github.com/bitwormhole/starter-gorm"
+	sqlserverd "github.com/bitwormhole/starter-gorm-sqlserver"
 	"github.com/bitwormhole/starter/application"
-	etcwpm "github.com/bitwormhole/wpm/etc/wpm"
-	wpmsrcmain "github.com/bitwormhole/wpm/src/main"
+	"github.com/bitwormhole/starter/collection"
 )
 
 const (
-	myName     = "github.com/bitwormhole/wpm"
-	myVersion  = "v0.0.1"
-	myRevision = 1
+	theModuleName     = "github.com/bitwormhole/wpm"
+	theModuleVersion  = "v0.0.1"
+	theModuleRevision = 1
 )
+
+//go:embed "src/main/resources"
+var theModuleMainResFS embed.FS
 
 // Module 定义模块:wpm
 func Module() application.Module {
-	return myModule()
-}
 
-func myModule() application.Module {
+	mb := &application.ModuleBuilder{}
+	mb.Name(theModuleName).Version(theModuleVersion).Revision(theModuleRevision)
+	mb.OnMount(wpmappcfg.ExportConfig)
+	mb.Resources(collection.LoadEmbedResources(&theModuleMainResFS, "src/main/resources"))
 
-	mod := &application.DefineModule{
-		Name:     myName,
-		Version:  myVersion,
-		Revision: myRevision,
-	}
+	mb.Dependency(ginstarter.Module())
+	mb.Dependency(ginstarter.ModuleWithDevtools())
 
-	mod.OnMount = func(cb application.ConfigBuilder) error { return etcwpm.ExportConfig(cb) }
-	mod.Resources = wpmsrcmain.ExportResources()
-	mod.AddDependency(ginstarter.Module())
-	mod.AddDependency(ginstarter.ModuleWithDevtools())
+	mb.Dependency(gormstarter.Module())
+	mb.Dependency(sqlserverd.DriverModule())
 
-	return mod
+	return mb.Create()
 }
