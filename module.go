@@ -7,6 +7,7 @@ import (
 
 	ginstarter "github.com/bitwormhole/starter-gin"
 	gormstarter "github.com/bitwormhole/starter-gorm"
+	mysqld "github.com/bitwormhole/starter-gorm-mysql"
 	sqlserverd "github.com/bitwormhole/starter-gorm-sqlserver"
 	"github.com/bitwormhole/starter/application"
 	"github.com/bitwormhole/starter/collection"
@@ -40,6 +41,7 @@ func ServerModule() application.Module {
 
 	mb.Dependency(gormstarter.Module())
 	mb.Dependency(sqlserverd.DriverModule())
+	mb.Dependency(mysqld.DriverModule())
 
 	return mb.Create()
 }

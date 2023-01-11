@@ -54,6 +54,8 @@ github.com/bitwormhole/starter-gorm v0.0.4 h1:v+xQ5rqk0T7i1xQPjXAC3cLgPOMXcoFWJu
 github.com/bitwormhole/starter-gorm v0.0.4/go.mod h1:FOUraFxbLkTTYIX9RW1fOQ8Dx2j5vHg4lnnKbtRSuJY=
 github.com/bitwormhole/starter-gorm v0.0.7 h1:9S1lywtZ2RnOowIlTW4XH/wy9ixNj1o8gJNPLotLNJM=
 github.com/bitwormhole/starter-gorm v0.0.7/go.mod h1:BVAKttIV5UnsQI5+fLI+96XFJP96xffx+3Gdh6N7t8w=
+github.com/bitwormhole/starter-gorm-mysql v0.0.4 h1:rHYSQ+LAeJWo0hQqZH9hM9PS7PLciatxgXScJh5/5AE=
+github.com/bitwormhole/starter-gorm-mysql v0.0.4/go.mod h1:ak7BYTA4SvLOsVw7pi7xoEnS1uvFtD3WCjqfn3m64Uw=
 github.com/bitwormhole/starter-gorm-sqlserver v0.0.4 h1:rXWgbz4uGbiA757bbRC0GC7vi2VlPY3XLi4wrqzD3EI=
 github.com/bitwormhole/starter-gorm-sqlserver v0.0.4/go.mod h1:e5L+UnkDR7os9JbFn+Yh/G5xei/Dixgcq/ZuvmemFW0=
 github.com/bitwormhole/starter-restful v0.1.2 h1:L5A4e+ABe2XXYX+ghNq7IJ+QI3WyVkNtgg1hMYTkwt0=
@@ -79,6 +81,8 @@ github.com/go-playground/universal-translator v0.17.0 h1:icxd5fm+REJzpZx7ZfpaD87
 github.com/go-playground/universal-translator v0.17.0/go.mod h1:UkSxE5sNxxRwHyU+Scu5vgOQjsIJAF8j9muTVoKLVtA=
 github.com/go-playground/validator/v10 v10.4.1 h1:pH2c5ADXtd66mxoE0Zm9SUhxE20r7aM3F26W0hOn+GE=
 github.com/go-playground/validator/v10 v10.4.1/go.mod h1:nlOn6nFhuKACm19sB/8EGNn9GlaMV7XkbRSipzJ0Ii4=
+github.com/go-sql-driver/mysql v1.6.0 h1:BCTh4TKNUYmOmMUcQ3IipzF5prigylS7XXjEkfCHuOE=
+github.com/go-sql-driver/mysql v1.6.0/go.mod h1:DCzpHaOWr8IXmIStZouvnhqoel9Qv2LBy8hT2VhHyBg=
 github.com/golang-sql/civil v0.0.0-20190719163853-cb61b32ac6fe h1:lXe2qZdvpiX5WZkZR4hgp4KJVfY3nMkvmwbVkpv1rVY=
 github.com/golang-sql/civil v0.0.0-20190719163853-cb61b32ac6fe/go.mod h1:8vg3r2VgvsThLBIFL93Qb5yWzgyZWhEmBwUJWevAkK0=
 github.com/golang/protobuf v1.3.3 h1:gyjaxf+svBWX08ZjK86iN9geUJF0H6gp2IRKX6Nf6/I=
@@ -146,6 +150,8 @@ gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8
 gopkg.in/yaml.v2 v2.2.2/go.mod h1:hI93XBmqTisBFMUTm0b8Fm+jr3Dg1NNxqwp+5A1VGuI=
 gopkg.in/yaml.v2 v2.2.8 h1:obN1ZagJSUGI0Ek/LBmuj4SNLPfIny3KsKFopxRdj10=
 gopkg.in/yaml.v2 v2.2.8/go.mod h1:hI93XBmqTisBFMUTm0b8Fm+jr3Dg1NNxqwp+5A1VGuI=
+gorm.io/driver/mysql v1.2.1 h1:h+3f1l9Ng2C072Y2tIiLgPpWN78r1KXL7bHJ0nTjlhU=
+gorm.io/driver/mysql v1.2.1/go.mod h1:qsiz+XcAyMrS6QY+X3M9R6b/lKM1imKmcuK9kac5LTo=
 gorm.io/driver/sqlserver v1.2.1 h1:KhGOjvPX7JZ5hPyQICTJfMuTz88zgJ2lk9bWiHVNHd8=
 gorm.io/driver/sqlserver v1.2.1/go.mod h1:nixq0OB3iLXZDiPv6JSOjWuPgpyaRpOIIevYtA4Ulb4=
 gorm.io/gorm v1.21.12/go.mod h1:F+OptMscr0P2F2qU97WT1WimdH9GaQPoDW7AYd5i2Y0=
