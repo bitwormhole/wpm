@@ -6,7 +6,8 @@ import "github.com/bitwormhole/wpm/server/web/dto"
 type Pipe struct {
 	Base
 
-	Pipes []*dto.Pipe `json:"pipes"`
+	// Current dto.PipeInfo      `json:"pipe"`
 
-	// Intents []*dto.Intent `json:"intents"`
+	Pipes   []*dto.PipeInfo   `json:"pipes"`
+	Packets []*dto.PipePacket `json:"packets"`
 }

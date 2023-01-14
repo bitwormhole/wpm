@@ -26,7 +26,10 @@ func (inst *IntentServiceImpl) _Impl() service.IntentService {
 func (inst *IntentServiceImpl) dto2entity(o1 *dto.Intent) (*entity.Intent, error) {
 	o2 := &entity.Intent{}
 	o2.ID = o1.ID
-	o2.Executable = o1.Executable
+
+	// o2.Exe  = o1.Executable
+	// o2.cli = o1.Executable
+	// o2.Executable = o1.Executable
 	// todo ...
 	return o2, nil
 }
@@ -34,7 +37,7 @@ func (inst *IntentServiceImpl) dto2entity(o1 *dto.Intent) (*entity.Intent, error
 func (inst *IntentServiceImpl) entity2dto(o1 *entity.Intent) (*dto.Intent, error) {
 	o2 := &dto.Intent{}
 	o2.ID = o1.ID
-	o2.Executable = o1.Executable
+	// o2.Executable = o1.Executable
 	// todo ...
 	return o2, nil
 }

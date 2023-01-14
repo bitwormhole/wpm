@@ -1,15 +1,24 @@
 package dto
 
-import "github.com/bitwormhole/wpm/server/data/dxo"
+import (
+	"github.com/bitwormhole/starter/util"
+	"github.com/bitwormhole/wpm/server/data/dxo"
+)
 
-// Pipe 表示一个命令模板
-type Pipe struct {
+// PipeInfo 表示一个管道信息
+type PipeInfo struct {
 	ID dxo.PipeID `json:"id"`
 	Base
 
-	DesktopSessionID   string `json:"desktop_session_id"`
-	DesktopSessionUser string `json:"desktop_session_user"`
-	DesktopSessionHome string `json:"desktop_session_home"`
+	Name       dxo.PipeName `json:"name"`
+	AttachedAt util.Time    `json:"attached_at"`
 
+	DesktopSessionID   dxo.DesktopSessionID `json:"desktop_session_id"`
+	DesktopSessionUser string               `json:"desktop_session_user"`
+	DesktopSessionHome string               `json:"desktop_session_home"`
+}
+
+// PipePacket 表示一个管道包
+type PipePacket struct {
 	Intent *Intent `json:"intent"`
 }

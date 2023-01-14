@@ -32,6 +32,7 @@ func (inst *ExecutableServiceImpl) dto2entity(o1 *dto.Executable) (*entity.Execu
 	o2.Path = o1.Path
 	o2.Size = o1.Size
 	o2.SHA256SUM = o1.SHA256SUM
+	o2.Description = o1.Description
 	// todo ...
 	return o2, nil
 }
@@ -44,6 +45,7 @@ func (inst *ExecutableServiceImpl) entity2dto(o1 *entity.Executable) (*dto.Execu
 	o2.Path = o1.Path
 	o2.Size = o1.Size
 	o2.SHA256SUM = o1.SHA256SUM
+	o2.Description = o1.Description
 	// todo ...
 	return o2, nil
 }
@@ -76,8 +78,13 @@ func (inst *ExecutableServiceImpl) ListAll(ctx context.Context) ([]*dto.Executab
 	return dst, nil
 }
 
+// Find ...
 func (inst *ExecutableServiceImpl) Find(ctx context.Context, id dxo.ExecutableID) (*dto.Executable, error) {
-	return nil, errors.New("no impl")
+	o1, err := inst.ExecutableDAO.Find(id)
+	if err != nil {
+		return nil, err
+	}
+	return inst.entity2dto(o1)
 }
 
 // Insert ...

@@ -30,10 +30,18 @@ func (inst *ExecutableDaoImpl) modelList() []*entity.Executable {
 	return make([]*entity.Executable, 0)
 }
 
+// Find ...
 func (inst *ExecutableDaoImpl) Find(id dxo.ExecutableID) (*entity.Executable, error) {
-	return nil, errors.New("no impl")
+	db := inst.Agent.DB()
+	o := inst.model()
+	res := db.Find(o, id)
+	if res.Error != nil {
+		return nil, res.Error
+	}
+	return o, nil
 }
 
+// ListAll ...
 func (inst *ExecutableDaoImpl) ListAll() ([]*entity.Executable, error) {
 	list := inst.modelList()
 	db := inst.Agent.DB()

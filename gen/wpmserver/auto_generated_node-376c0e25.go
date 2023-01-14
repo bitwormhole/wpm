@@ -97,7 +97,7 @@ type pComMainRepositoryServiceImpl struct {
 
 type pComPipeServiceImpl struct {
 	instance *implservice0x22327c.PipeServiceImpl
-	 markup0x23084a.Component `id:"PipeService"`
+	 markup0x23084a.Component `id:"PipeService" initMethod:"Init"`
 }
 
 
@@ -140,6 +140,14 @@ type pComRepositorySearchServiceImpl struct {
 	instance *implservice0x22327c.RepositorySearchServiceImpl
 	 markup0x23084a.Component `id:"RepositorySearchService"`
 	LocateService service0x3e063d.RepositoryLocateService `inject:"#RepositoryLocateService"`
+}
+
+
+type pComRunIntentServiceImpl struct {
+	instance *implservice0x22327c.RunIntentServiceImpl
+	 markup0x23084a.Component `id:"RunIntentService"`
+	ExecutableService service0x3e063d.ExecutableService `inject:"#ExecutableService"`
+	PipeService service0x3e063d.PipeService `inject:"#PipeService"`
 }
 
 
@@ -211,6 +219,14 @@ type pComPipeController struct {
 }
 
 
+type pComPlatformController struct {
+	instance *controller0x9dc399.PlatformController
+	 markup0x23084a.RestController `class:"rest-controller"`
+	PlatformService service0x3e063d.PlatformService `inject:"#PlatformService"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
 type pComProjectController struct {
 	instance *controller0x9dc399.ProjectController
 	 markup0x23084a.RestController `class:"rest-controller"`
@@ -239,6 +255,14 @@ type pComRepositoryImportController struct {
 	instance *controller0x9dc399.RepositoryImportController
 	 markup0x23084a.RestController `class:"rest-controller"`
 	ImportService service0x3e063d.RepositoryImportService `inject:"#RepositoryImportService"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
+type pComRunIntentController struct {
+	instance *controller0x9dc399.RunIntentController
+	 markup0x23084a.RestController `class:"rest-controller"`
+	RunIntentService service0x3e063d.RunIntentService `inject:"#RunIntentService"`
 	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
 }
 

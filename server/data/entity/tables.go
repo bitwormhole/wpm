@@ -34,3 +34,25 @@ func (MainRepository) TableName() string {
 func (Project) TableName() string {
 	return TableNamePrefix + "project"
 }
+
+// TableName ...
+func (User) TableName() string {
+	return TableNamePrefix + "user"
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+// ListPrototypes 罗列出所有的 entity 原型
+func ListPrototypes() []any {
+	list := make([]any, 0)
+
+	list = append(list, &Executable{})
+	list = append(list, &Intent{})
+	list = append(list, &Project{})
+	list = append(list, &LocalRepository{})
+	list = append(list, &MainRepository{})
+	list = append(list, &RemoteRepository{})
+	list = append(list, &User{})
+
+	return list
+}

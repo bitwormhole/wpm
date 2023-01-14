@@ -12,6 +12,7 @@ import (
 	"github.com/bitwormhole/starter/application"
 	"github.com/bitwormhole/starter/collection"
 	"github.com/bitwormhole/wpm/gen/wpmclient"
+	"github.com/bitwormhole/wpm/gen/wpmcommon"
 	"github.com/bitwormhole/wpm/gen/wpmserver"
 )
 
@@ -38,6 +39,7 @@ func ServerModule() application.Module {
 
 	mb.Dependency(ginstarter.Module())
 	mb.Dependency(ginstarter.ModuleWithDevtools())
+	mb.Dependency(CommonModule())
 
 	mb.Dependency(gormstarter.Module())
 	mb.Dependency(sqlserverd.DriverModule())
@@ -55,6 +57,23 @@ func ClientModule() application.Module {
 	mb.Revision(theModuleRevision)
 
 	mb.OnMount(wpmclient.ExportConfig)
+	mb.Resources(collection.LoadEmbedResources(&theModuleResFS, theModuleResPath))
+
+	mb.Dependency(starter.Module())
+	mb.Dependency(CommonModule())
+
+	return mb.Create()
+}
+
+// CommonModule 定义模块:wpm
+func CommonModule() application.Module {
+
+	mb := &application.ModuleBuilder{}
+	mb.Name(theModuleName + "#common")
+	mb.Version(theModuleVersion)
+	mb.Revision(theModuleRevision)
+
+	mb.OnMount(wpmcommon.ExportConfig)
 	mb.Resources(collection.LoadEmbedResources(&theModuleResFS, theModuleResPath))
 
 	mb.Dependency(starter.Module())

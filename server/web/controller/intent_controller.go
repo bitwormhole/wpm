@@ -184,7 +184,14 @@ func (inst *myIntentRequest) doGetList() error {
 }
 
 func (inst *myIntentRequest) doPost() error {
-
+	ctx := inst.gc
+	ser := inst.controller.IntentService
+	o1 := inst.body1.Intents[0]
+	o2, err := ser.Insert(ctx, o1)
+	if err != nil {
+		return err
+	}
+	inst.body2.Intents = []*dto.Intent{o2}
 	return nil
 }
 

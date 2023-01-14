@@ -18,6 +18,9 @@ type ProjectID int
 // ProjectGroupID ...
 type ProjectGroupID int
 
+// PlatformID ...
+type PlatformID int
+
 // LocalRepositoryID ...
 type LocalRepositoryID int
 

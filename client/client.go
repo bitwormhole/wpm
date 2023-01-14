@@ -7,12 +7,17 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"sort"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/bitwormhole/starter/application"
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/starter/vlog"
 	"github.com/bitwormhole/wpm/server/data/dxo"
+	"github.com/bitwormhole/wpm/server/service"
+	"github.com/bitwormhole/wpm/server/web/dto"
 	"github.com/bitwormhole/wpm/server/web/vo"
 )
 
@@ -20,13 +25,16 @@ import (
 type Client struct {
 	markup.Component `class:"life"`
 
-	IntentHandler IntentHandler `inject:"#IntentHandler"`
+	IntentHandler   IntentHandler           `inject:"#IntentHandler"`
+	PlatformService service.PlatformService `inject:"#PlatformService"`
 
 	Protocol string `inject:"${wpm.server.protocol}"`
 	Host     string `inject:"${wpm.server.host}"`
 	Port     int    `inject:"${wpm.server.port}"`
 
-	pipeID dxo.PipeID
+	stopping bool
+	pipeID   dxo.PipeID
+	pipeInfo dto.PipeInfo
 }
 
 func (inst *Client) _Impl() application.LifeRegistry {
@@ -47,7 +55,11 @@ func (inst *Client) onInit() error {
 }
 
 func (inst *Client) onStart() error {
-	return inst.doPost()
+	err := inst.doPost()
+	if err != nil {
+		return err
+	}
+	return inst.logWebGuiURL()
 }
 
 // Loop ...
@@ -59,18 +71,21 @@ func (inst *Client) Loop() error {
 			vlog.Warn(err)
 			time.Sleep(time.Second * 3)
 		}
+		if inst.stopping {
+			break
+		}
 	}
 	return nil
 }
 
-func (inst *Client) getWebURL(url string) string {
+func (inst *Client) getWebURL(path string, query map[string]string) string {
 
-	pro := inst.Protocol
+	scheme := inst.Protocol
 	host := inst.Host
 	port := inst.Port
 
-	if pro == "" {
-		pro = "http"
+	if scheme == "" {
+		scheme = "http"
 	}
 
 	if host == "" {
@@ -81,33 +96,98 @@ func (inst *Client) getWebURL(url string) string {
 		port = 8080
 	}
 
-	const f = "%v://%v:%v%v"
-	return fmt.Sprintf(f, pro, host, port, url)
+	if !strings.HasPrefix(path, "/") {
+		path = "/" + path
+	}
+
+	builder := strings.Builder{}
+	builder.WriteString(scheme)
+	builder.WriteString("://")
+	builder.WriteString(host)
+	builder.WriteString(":")
+	builder.WriteString(strconv.Itoa(port))
+	builder.WriteString(path)
+
+	// query
+	keys := make([]string, 0)
+	for key := range query {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+	sep := "?"
+	for _, key := range keys {
+		value := query[key]
+		builder.WriteString(sep)
+		builder.WriteString(key)
+		builder.WriteString("=")
+		builder.WriteString(value)
+		sep = "&"
+	}
+
+	return builder.String()
 }
 
-func (inst *Client) getPipeURL(id dxo.PipeID, timeout int) string {
+func (inst *Client) getPipeURL(id dxo.PipeID, info *dto.PipeInfo, timeout int) string {
 
-	url := inst.getWebURL("/api/v1/pipe")
+	path := "/api/v1/pipe"
+	query := make(map[string]string)
 
 	if id > 0 {
 		idstr := fmt.Sprintf("%v", id)
-		url = url + "/" + idstr
+		path = path + "/" + idstr
 	}
 
 	if timeout > 0 {
-		q := fmt.Sprintf("timeout=%v", timeout)
-		url = url + "?" + q
+		query["timeout"] = strconv.Itoa(timeout)
 	}
 
-	return url
+	if info != nil {
+		dsid := fmt.Sprintf("%v", info.DesktopSessionID)
+		uuid := fmt.Sprintf("%v", info.UUID)
+		query["dsid"] = dsid
+		query["uuid"] = uuid
+	}
+
+	return inst.getWebURL(path, query)
+}
+
+func (inst *Client) prepareNewPipe() (*dto.PipeInfo, error) {
+	info, err := inst.PlatformService.GetInfo(nil)
+	if err != nil {
+		return nil, err
+	}
+	body1dto := &dto.PipeInfo{}
+	body1dto.DesktopSessionHome = info.Home
+	body1dto.DesktopSessionUser = info.User
+	return body1dto, nil
+}
+
+func (inst *Client) logWebGuiURL() error {
+
+	pid := inst.pipeID
+	dsid := inst.pipeInfo.DesktopSessionID
+
+	query := make(map[string]string)
+
+	query["pipe"] = fmt.Sprintf("%v", pid)
+	query["dsid"] = fmt.Sprintf("%v", dsid)
+
+	url := inst.getWebURL("/", query)
+	vlog.Info("webgui.url=" + url)
+	return nil
 }
 
 func (inst *Client) doPost() error {
 
-	body1obj := &vo.Pipe{}
+	body1info, err := inst.prepareNewPipe()
+	if err != nil {
+		return err
+	}
+	body1vo := &vo.Pipe{}
+	body1vo.Pipes = append(body1vo.Pipes, body1info)
 
-	body1reader := inst.prepareRequestBody(body1obj)
-	url := inst.getPipeURL(0, 0)
+	body1reader := inst.prepareRequestBody(body1vo)
+	url := inst.getPipeURL(0, nil, 0)
 	req, err := http.NewRequest(http.MethodPost, url, body1reader)
 	if err != nil {
 		return err
@@ -128,7 +208,7 @@ func (inst *Client) doPost() error {
 
 func (inst *Client) doGet(timeout int) error {
 
-	url := inst.getPipeURL(inst.pipeID, timeout)
+	url := inst.getPipeURL(inst.pipeID, &inst.pipeInfo, timeout)
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
 		return err
@@ -162,12 +242,13 @@ func (inst *Client) prepareRequestBody(o *vo.Pipe) io.Reader {
 func (inst *Client) handlePostResult(o *vo.Pipe) error {
 	all := o.Pipes
 	count := 0
-	for _, p := range all {
-		pid := p.ID
+	for _, pi := range all {
+		pid := pi.ID
 		if pid > 0 {
+			inst.pipeID = pid
+			inst.pipeInfo = *pi
 			count++
 		}
-		inst.pipeID = pid
 	}
 	if count < 1 {
 		return fmt.Errorf("no pipe id in result")
@@ -184,14 +265,12 @@ func (inst *Client) handleGetResult(o *vo.Pipe) error {
 		}
 	}()
 
-	all := o.Pipes
+	all := o.Packets
 	for _, p := range all {
-		if p.ID == inst.pipeID {
-			i := p.Intent
-			err := inst.IntentHandler.HandleIntent(i)
-			if err != nil {
-				vlog.Error(err)
-			}
+		i := p.Intent
+		err := inst.IntentHandler.HandleIntent(i)
+		if err != nil {
+			vlog.Error(err)
 		}
 	}
 

@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -33,37 +32,39 @@ func (inst *PipeController) Init(ec glass.EngineConnection) error {
 
 	ec.Handle(http.MethodGet, "", inst.handleGetList)
 	ec.Handle(http.MethodPost, "", inst.handlePost)
-	ec.Handle(http.MethodGet, ":id", inst.handleGetOne)
+	ec.Handle(http.MethodGet, ":id", inst.handleGet)
 	ec.Handle(http.MethodPut, ":id", inst.handlePut)
 	ec.Handle(http.MethodDelete, ":id", inst.handleDelete)
 
 	return nil
 }
 
-func (inst *PipeController) handleGetList(c *gin.Context) {
+func (inst *PipeController) handleGet(c *gin.Context) {
 	req := &myPipeRequest{
-		gc:              c,
-		controller:      inst,
-		wantRequestID:   false,
-		wantRequestBody: false,
+		gc:               c,
+		controller:       inst,
+		wantRequestID:    true,
+		wantRequestBody:  false,
+		wantRequestQuery: true,
 	}
 	err := req.open()
 	if err == nil {
-		err = req.doGetList()
+		err = req.doGet()
 	}
 	req.send(err)
 }
 
-func (inst *PipeController) handleGetOne(c *gin.Context) {
+func (inst *PipeController) handleGetList(c *gin.Context) {
 	req := &myPipeRequest{
-		gc:              c,
-		controller:      inst,
-		wantRequestID:   true,
-		wantRequestBody: false,
+		gc:               c,
+		controller:       inst,
+		wantRequestID:    false,
+		wantRequestBody:  false,
+		wantRequestQuery: false,
 	}
 	err := req.open()
 	if err == nil {
-		err = req.doGetOne()
+		err = req.doGetList()
 	}
 	req.send(err)
 }
@@ -116,12 +117,14 @@ type myPipeRequest struct {
 	gc         *gin.Context
 	controller *PipeController
 
-	wantRequestID   bool
-	wantRequestBody bool
+	wantRequestID    bool
+	wantRequestBody  bool
+	wantRequestQuery bool
 
-	id    dxo.PipeID
-	body1 vo.Pipe
-	body2 vo.Pipe
+	id      dxo.PipeID
+	timeout int
+	body1   vo.Pipe
+	body2   vo.Pipe
 }
 
 func (inst *myPipeRequest) open() error {
@@ -144,6 +147,12 @@ func (inst *myPipeRequest) open() error {
 		}
 	}
 
+	if inst.wantRequestQuery {
+		timeoutStr := c.Query("timeout")
+		timeoutInt, _ := strconv.Atoi(timeoutStr)
+		inst.timeout = timeoutInt
+	}
+
 	return nil
 }
 
@@ -160,40 +169,56 @@ func (inst *myPipeRequest) send(err error) {
 	inst.controller.Responder.Send(resp)
 }
 
-func (inst *myPipeRequest) doGetOne() error {
+func (inst *myPipeRequest) doGet() error {
 	id := inst.id
 	ctx := inst.gc
 	ser := inst.controller.PipeService
-	o, err := ser.Find(ctx, id)
+	o1 := &inst.body1
+	timeout := inst.timeout
+	err := ser.Pull(ctx, id, o1, timeout)
 	if err != nil {
 		return err
 	}
-	inst.body2.Pipes = []*dto.Pipe{o}
+	inst.body2 = *o1
 	return nil
 }
 
 func (inst *myPipeRequest) doGetList() error {
 	ctx := inst.gc
 	ser := inst.controller.PipeService
-	list, err := ser.ListAll(ctx)
+	all, err := ser.ListAll(ctx)
 	if err != nil {
 		return err
 	}
-	inst.body2.Pipes = list
+	inst.body2.Pipes = all
 	return nil
 }
 
 func (inst *myPipeRequest) doPost() error {
-
-	return fmt.Errorf("no impl")
+	ctx := inst.gc
+	ser := inst.controller.PipeService
+	o1 := inst.body1.Pipes[0]
+	o2, err := ser.Insert(ctx, o1)
+	if err != nil {
+		return err
+	}
+	inst.body2.Pipes = []*dto.PipeInfo{o2}
+	return nil
 }
 
 func (inst *myPipeRequest) doPut() error {
 
-	return fmt.Errorf("no impl")
+	ctx := inst.gc
+	ser := inst.controller.PipeService
+	id := inst.id
+	o1 := &inst.body1
+
+	return ser.Push(ctx, id, o1)
 }
 
 func (inst *myPipeRequest) doDelete() error {
-
-	return fmt.Errorf("no impl")
+	id := inst.id
+	ctx := inst.gc
+	ser := inst.controller.PipeService
+	return ser.Remove(ctx, id)
 }

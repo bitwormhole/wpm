@@ -8,3 +8,9 @@ type ProjectGroupName string
 
 // RepositoryGroupName ...
 type RepositoryGroupName string
+
+// PipeName ...
+type PipeName string
+
+// UserName ...
+type UserName string

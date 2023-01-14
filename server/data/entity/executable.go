@@ -10,9 +10,10 @@ type Executable struct {
 	ID dxo.ExecutableID `gorm:"primaryKey"`
 	Base
 
-	Name      string
-	Title     string
-	Path      string
-	Size      int64
-	SHA256SUM util.Hex
+	Name        string
+	Title       string
+	Description string
+	Path        string
+	Size        int64
+	SHA256SUM   util.Hex
 }

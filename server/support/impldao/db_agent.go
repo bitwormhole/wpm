@@ -53,14 +53,7 @@ func (inst *GormDBAgentImpl) autoMakeTables() error {
 
 	var e error
 	db := inst.DB()
-	models := make([]interface{}, 0)
-
-	models = append(models, &entity.Executable{})
-	models = append(models, &entity.Intent{})
-	models = append(models, &entity.Project{})
-	models = append(models, &entity.LocalRepository{})
-	models = append(models, &entity.MainRepository{})
-	models = append(models, &entity.RemoteRepository{})
+	models := entity.ListPrototypes()
 
 	for _, mod := range models {
 		err := db.AutoMigrate(mod)
@@ -69,5 +62,6 @@ func (inst *GormDBAgentImpl) autoMakeTables() error {
 			e = err
 		}
 	}
+
 	return e
 }

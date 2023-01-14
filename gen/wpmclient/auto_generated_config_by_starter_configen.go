@@ -10,6 +10,7 @@ import (
 	lang "github.com/bitwormhole/starter/lang"
 	util "github.com/bitwormhole/starter/util"
 	client0x4f5e0e "github.com/bitwormhole/wpm/client"
+	service0x3e063d "github.com/bitwormhole/wpm/server/service"
     
 )
 
@@ -58,6 +59,7 @@ type comFactory4pComClient struct {
 
 	
 	mIntentHandlerSelector config.InjectionSelector
+	mPlatformServiceSelector config.InjectionSelector
 	mProtocolSelector config.InjectionSelector
 	mHostSelector config.InjectionSelector
 	mPortSelector config.InjectionSelector
@@ -68,6 +70,7 @@ func (inst * comFactory4pComClient) init() application.ComponentFactory {
 
 	
 	inst.mIntentHandlerSelector = config.NewInjectionSelector("#IntentHandler",nil)
+	inst.mPlatformServiceSelector = config.NewInjectionSelector("#PlatformService",nil)
 	inst.mProtocolSelector = config.NewInjectionSelector("${wpm.server.protocol}",nil)
 	inst.mHostSelector = config.NewInjectionSelector("${wpm.server.host}",nil)
 	inst.mPortSelector = config.NewInjectionSelector("${wpm.server.port}",nil)
@@ -109,6 +112,7 @@ func (inst * comFactory4pComClient) Inject(instance application.ComponentInstanc
 	
 	obj := inst.castObject(instance)
 	obj.IntentHandler = inst.getterForFieldIntentHandlerSelector(context)
+	obj.PlatformService = inst.getterForFieldPlatformServiceSelector(context)
 	obj.Protocol = inst.getterForFieldProtocolSelector(context)
 	obj.Host = inst.getterForFieldHostSelector(context)
 	obj.Port = inst.getterForFieldPortSelector(context)
@@ -127,6 +131,24 @@ func (inst * comFactory4pComClient) getterForFieldIntentHandlerSelector (context
 		eb.Set("field", "IntentHandler")
 		eb.Set("type1", "?")
 		eb.Set("type2", "client0x4f5e0e.IntentHandler")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
+}
+
+//getterForFieldPlatformServiceSelector
+func (inst * comFactory4pComClient) getterForFieldPlatformServiceSelector (context application.InstanceContext) service0x3e063d.PlatformService {
+
+	o1 := inst.mPlatformServiceSelector.GetOne(context)
+	o2, ok := o1.(service0x3e063d.PlatformService)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "com0-client0x4f5e0e.Client")
+		eb.Set("field", "PlatformService")
+		eb.Set("type1", "?")
+		eb.Set("type2", "service0x3e063d.PlatformService")
 		context.HandleError(eb.Create())
 		return nil
 	}
