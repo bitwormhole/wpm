@@ -2,9 +2,10 @@ package vo
 
 import "github.com/bitwormhole/wpm/server/web/dto"
 
-// Platform ...
-type Platform struct {
+// Profile ...
+type Profile struct {
 	Base
 
 	Platform *dto.Platform `json:"platform"`
+	Profile  *dto.Profile  `json:"profile"`
 }

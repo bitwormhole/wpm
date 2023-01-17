@@ -16,9 +16,9 @@ import (
 type RepositoryServiceImpl struct {
 	markup.Component `id:"RepositoryService"`
 
-	UUIDGenService     service.UUIDGenService          `inject:"#UUIDGenService"`
-	LocateService      service.RepositoryLocateService `inject:"#RepositoryLocateService"`
-	LocalRepositoryDAO dao.LocalRepositoryDAO          `inject:"#RepositoryDAO"`
+	UUIDGenService     service.UUIDGenService        `inject:"#UUIDGenService"`
+	RepoFinder         service.LocalRepositoryFinder `inject:"#LocalRepositoryFinder"`
+	LocalRepositoryDAO dao.LocalRepositoryDAO        `inject:"#LocalRepositoryDAO"`
 }
 
 func (inst *RepositoryServiceImpl) _Impl() service.LocalRepositoryService {
@@ -34,7 +34,6 @@ func (inst *RepositoryServiceImpl) dto2entity(o1 *dto.LocalRepository) (*entity.
 	o2.Name = o1.Name
 	o2.DisplayName = o1.DisplayName
 	o2.Description = o1.Description
-	o2.IconURL = o1.IconURL
 	o2.Path = o1.Path
 
 	return o2, nil
@@ -50,7 +49,7 @@ func (inst *RepositoryServiceImpl) entity2dto(o1 *entity.LocalRepository) (*dto.
 	o2.Name = o1.Name
 	o2.DisplayName = o1.DisplayName
 	o2.Description = o1.Description
-	o2.IconURL = o1.IconURL
+
 	// o2.Ready =o1
 
 	return o2, nil
@@ -59,8 +58,8 @@ func (inst *RepositoryServiceImpl) entity2dto(o1 *entity.LocalRepository) (*dto.
 func (inst *RepositoryServiceImpl) prepareEntity(ctx context.Context, o1 *entity.LocalRepository) error {
 
 	deffs := fs.Default()
-	path := deffs.GetPath(o1.Path)
-	o2, err := inst.LocateService.Locate(ctx, path)
+	path := o1.Path
+	o2, err := inst.RepoFinder.Locate(ctx, path)
 	if err != nil {
 		return err
 	}

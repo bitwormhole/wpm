@@ -12,19 +12,19 @@ import (
 	"github.com/bitwormhole/wpm/server/web/dto"
 )
 
-// IntentServiceImpl ...
-type IntentServiceImpl struct {
-	markup.Component `id:"IntentService"`
+// IntentTemplateServiceImpl ...
+type IntentTemplateServiceImpl struct {
+	markup.Component `id:"IntentTemplateService"`
 
-	IntentDAO dao.IntentDAO `inject:"#IntentDAO"`
+	IntentTempDAO dao.IntentTemplateDAO `inject:"#IntentTemplateDAO"`
 }
 
-func (inst *IntentServiceImpl) _Impl() service.IntentService {
+func (inst *IntentTemplateServiceImpl) _Impl() service.IntentTemplateService {
 	return inst
 }
 
-func (inst *IntentServiceImpl) dto2entity(o1 *dto.Intent) (*entity.Intent, error) {
-	o2 := &entity.Intent{}
+func (inst *IntentTemplateServiceImpl) dto2entity(o1 *dto.IntentTemplate) (*entity.IntentTemplate, error) {
+	o2 := &entity.IntentTemplate{}
 	o2.ID = o1.ID
 
 	// o2.Exe  = o1.Executable
@@ -34,20 +34,20 @@ func (inst *IntentServiceImpl) dto2entity(o1 *dto.Intent) (*entity.Intent, error
 	return o2, nil
 }
 
-func (inst *IntentServiceImpl) entity2dto(o1 *entity.Intent) (*dto.Intent, error) {
-	o2 := &dto.Intent{}
+func (inst *IntentTemplateServiceImpl) entity2dto(o1 *entity.IntentTemplate) (*dto.IntentTemplate, error) {
+	o2 := &dto.IntentTemplate{}
 	o2.ID = o1.ID
 	// o2.Executable = o1.Executable
 	// todo ...
 	return o2, nil
 }
 
-func (inst *IntentServiceImpl) ListAll(ctx context.Context) ([]*dto.Intent, error) {
-	src, err := inst.IntentDAO.ListAll()
+func (inst *IntentTemplateServiceImpl) ListAll(ctx context.Context) ([]*dto.IntentTemplate, error) {
+	src, err := inst.IntentTempDAO.ListAll()
 	if err != nil {
 		return nil, err
 	}
-	dst := make([]*dto.Intent, 0)
+	dst := make([]*dto.IntentTemplate, 0)
 	for _, item1 := range src {
 		item2, err := inst.entity2dto(item1)
 		if err != nil {
@@ -58,18 +58,18 @@ func (inst *IntentServiceImpl) ListAll(ctx context.Context) ([]*dto.Intent, erro
 	return dst, nil
 }
 
-func (inst *IntentServiceImpl) Find(ctx context.Context, id dxo.IntentID) (*dto.Intent, error) {
+func (inst *IntentTemplateServiceImpl) Find(ctx context.Context, id dxo.IntentTemplateID) (*dto.IntentTemplate, error) {
 	return nil, errors.New("no impl")
 }
 
-func (inst *IntentServiceImpl) Insert(ctx context.Context, o *dto.Intent) (*dto.Intent, error) {
+func (inst *IntentTemplateServiceImpl) Insert(ctx context.Context, o *dto.IntentTemplate) (*dto.IntentTemplate, error) {
 	return nil, errors.New("no impl")
 }
 
-func (inst *IntentServiceImpl) Update(ctx context.Context, id dxo.IntentID, o *dto.Intent) (*dto.Intent, error) {
+func (inst *IntentTemplateServiceImpl) Update(ctx context.Context, id dxo.IntentTemplateID, o *dto.IntentTemplate) (*dto.IntentTemplate, error) {
 	return nil, errors.New("no impl")
 }
 
-func (inst *IntentServiceImpl) Remove(ctx context.Context, id dxo.IntentID) error {
+func (inst *IntentTemplateServiceImpl) Remove(ctx context.Context, id dxo.IntentTemplateID) error {
 	return errors.New("no impl")
 }

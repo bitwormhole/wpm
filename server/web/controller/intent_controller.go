@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -8,68 +9,39 @@ import (
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/service"
-	"github.com/bitwormhole/wpm/server/web/dto"
 	"github.com/bitwormhole/wpm/server/web/vo"
 	"github.com/gin-gonic/gin"
 )
 
-// IntentController Intent 控制器
-type IntentController struct {
+// RunIntentController RunIntent 控制器
+type RunIntentController struct {
 	markup.RestController `class:"rest-controller"`
 
 	IntentService service.IntentService `inject:"#IntentService"`
 	Responder     glass.MainResponder   `inject:"#glass-main-responder"`
 }
 
-func (inst *IntentController) _Impl() glass.Controller {
+func (inst *RunIntentController) _Impl() glass.Controller {
 	return inst
 }
 
 // Init 初始化
-func (inst *IntentController) Init(ec glass.EngineConnection) error {
+func (inst *RunIntentController) Init(ec glass.EngineConnection) error {
 
 	ec = ec.RequestMapping("intents")
 
-	ec.Handle(http.MethodGet, "", inst.handleGetList)
 	ec.Handle(http.MethodPost, "", inst.handlePost)
 
-	ec.Handle(http.MethodGet, ":id", inst.handleGetOne)
-	ec.Handle(http.MethodPut, ":id", inst.handlePut)
-	ec.Handle(http.MethodDelete, ":id", inst.handleDelete)
+	// ec.Handle(http.MethodGet, "", inst.handleGetList)
+	// ec.Handle(http.MethodGet, ":id", inst.handleGetOne)
+	// ec.Handle(http.MethodPut, ":id", inst.handlePut)
+	// ec.Handle(http.MethodDelete, ":id", inst.handleDelete)
 
 	return nil
 }
 
-func (inst *IntentController) handleGetList(c *gin.Context) {
-	req := &myIntentRequest{
-		gc:              c,
-		controller:      inst,
-		wantRequestID:   false,
-		wantRequestBody: false,
-	}
-	err := req.open()
-	if err == nil {
-		err = req.doGetList()
-	}
-	req.send(err)
-}
-
-func (inst *IntentController) handleGetOne(c *gin.Context) {
-	req := &myIntentRequest{
-		gc:              c,
-		controller:      inst,
-		wantRequestID:   true,
-		wantRequestBody: false,
-	}
-	err := req.open()
-	if err == nil {
-		err = req.doGetOne()
-	}
-	req.send(err)
-}
-
-func (inst *IntentController) handlePost(c *gin.Context) {
-	req := &myIntentRequest{
+func (inst *RunIntentController) handlePost(c *gin.Context) {
+	req := &myRunIntentRequest{
 		gc:              c,
 		controller:      inst,
 		wantRequestID:   false,
@@ -82,8 +54,8 @@ func (inst *IntentController) handlePost(c *gin.Context) {
 	req.send(err)
 }
 
-func (inst *IntentController) handlePut(c *gin.Context) {
-	req := &myIntentRequest{
+func (inst *RunIntentController) handlePut(c *gin.Context) {
+	req := &myRunIntentRequest{
 		gc:              c,
 		controller:      inst,
 		wantRequestID:   true,
@@ -96,8 +68,8 @@ func (inst *IntentController) handlePut(c *gin.Context) {
 	req.send(err)
 }
 
-func (inst *IntentController) handleDelete(c *gin.Context) {
-	req := &myIntentRequest{
+func (inst *RunIntentController) handleDelete(c *gin.Context) {
+	req := &myRunIntentRequest{
 		gc:              c,
 		controller:      inst,
 		wantRequestID:   true,
@@ -112,9 +84,9 @@ func (inst *IntentController) handleDelete(c *gin.Context) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-type myIntentRequest struct {
+type myRunIntentRequest struct {
 	gc         *gin.Context
-	controller *IntentController
+	controller *RunIntentController
 
 	wantRequestID   bool
 	wantRequestBody bool
@@ -124,7 +96,7 @@ type myIntentRequest struct {
 	body2 vo.Intent
 }
 
-func (inst *myIntentRequest) open() error {
+func (inst *myRunIntentRequest) open() error {
 
 	c := inst.gc
 
@@ -147,7 +119,7 @@ func (inst *myIntentRequest) open() error {
 	return nil
 }
 
-func (inst *myIntentRequest) send(err error) {
+func (inst *myRunIntentRequest) send(err error) {
 	ctx := inst.gc
 	data := &inst.body2
 	status := data.Status
@@ -160,46 +132,25 @@ func (inst *myIntentRequest) send(err error) {
 	inst.controller.Responder.Send(resp)
 }
 
-func (inst *myIntentRequest) doGetOne() error {
-	id := inst.id
+func (inst *myRunIntentRequest) doPost() error {
 	ctx := inst.gc
 	ser := inst.controller.IntentService
-	o, err := ser.Find(ctx, id)
-	if err != nil {
-		return err
+	olist1 := inst.body1.Intents
+	for _, o1 := range olist1 {
+		_, err := ser.Run(ctx, o1)
+		if err != nil {
+			return err
+		}
 	}
-	inst.body2.Intents = []*dto.Intent{o}
 	return nil
 }
 
-func (inst *myIntentRequest) doGetList() error {
-	ctx := inst.gc
-	ser := inst.controller.IntentService
-	list, err := ser.ListAll(ctx)
-	if err != nil {
-		return err
-	}
-	inst.body2.Intents = list
-	return nil
+func (inst *myRunIntentRequest) doPut() error {
+
+	return fmt.Errorf("no impl")
 }
 
-func (inst *myIntentRequest) doPost() error {
-	ctx := inst.gc
-	ser := inst.controller.IntentService
-	o1 := inst.body1.Intents[0]
-	o2, err := ser.Insert(ctx, o1)
-	if err != nil {
-		return err
-	}
-	inst.body2.Intents = []*dto.Intent{o2}
-	return nil
-}
+func (inst *myRunIntentRequest) doDelete() error {
 
-func (inst *myIntentRequest) doPut() error {
-	return nil
-}
-
-func (inst *myIntentRequest) doDelete() error {
-
-	return nil
+	return fmt.Errorf("no impl")
 }

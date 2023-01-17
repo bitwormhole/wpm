@@ -10,31 +10,33 @@ import (
 	"github.com/bitwormhole/wpm/server/service"
 )
 
-// IntentDaoImpl ...
-type IntentDaoImpl struct {
-	markup.Component `id:"IntentDAO"`
+// IntentTemplateDaoImpl ...
+type IntentTemplateDaoImpl struct {
+	markup.Component `id:"IntentTemplateDAO"`
 
 	Agent          GormDBAgent            `inject:"#GormDBAgent"`
 	UUIDGenService service.UUIDGenService `inject:"#UUIDGenService"`
 }
 
-func (inst *IntentDaoImpl) _Impl() dao.IntentDAO {
+func (inst *IntentTemplateDaoImpl) _Impl() dao.IntentTemplateDAO {
 	return inst
 }
 
-func (inst *IntentDaoImpl) model() *entity.Intent {
-	return &entity.Intent{}
+func (inst *IntentTemplateDaoImpl) model() *entity.IntentTemplate {
+	return &entity.IntentTemplate{}
 }
 
-func (inst *IntentDaoImpl) modelList() []*entity.Intent {
-	return make([]*entity.Intent, 0)
+func (inst *IntentTemplateDaoImpl) modelList() []*entity.IntentTemplate {
+	return make([]*entity.IntentTemplate, 0)
 }
 
-func (inst *IntentDaoImpl) Find(id dxo.IntentID) (*entity.Intent, error) {
+// Find ...
+func (inst *IntentTemplateDaoImpl) Find(id dxo.IntentTemplateID) (*entity.IntentTemplate, error) {
 	return nil, errors.New("no impl")
 }
 
-func (inst *IntentDaoImpl) ListAll() ([]*entity.Intent, error) {
+// ListAll ...
+func (inst *IntentTemplateDaoImpl) ListAll() ([]*entity.IntentTemplate, error) {
 	list := inst.modelList()
 	db := inst.Agent.DB()
 	res := db.Find(&list)
@@ -44,14 +46,17 @@ func (inst *IntentDaoImpl) ListAll() ([]*entity.Intent, error) {
 	return list, nil
 }
 
-func (inst *IntentDaoImpl) Insert(o *entity.Intent) (*entity.Intent, error) {
+// Insert ...
+func (inst *IntentTemplateDaoImpl) Insert(o *entity.IntentTemplate) (*entity.IntentTemplate, error) {
 	return nil, errors.New("no impl")
 }
 
-func (inst *IntentDaoImpl) Update(id dxo.IntentID, o *entity.Intent) (*entity.Intent, error) {
+// Update ...
+func (inst *IntentTemplateDaoImpl) Update(id dxo.IntentTemplateID, o *entity.IntentTemplate) (*entity.IntentTemplate, error) {
 	return nil, errors.New("no impl")
 }
 
-func (inst *IntentDaoImpl) Remove(id dxo.IntentID) error {
+// Remove ...
+func (inst *IntentTemplateDaoImpl) Remove(id dxo.IntentTemplateID) error {
 	return errors.New("no impl")
 }

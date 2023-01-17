@@ -6,14 +6,21 @@ import (
 
 // PlatformService ...
 type PlatformService interface {
-	Accept(p *dto.Platform) bool
+	GetPlatform() (*dto.Platform, error)
 
-	GetInfo(p *dto.Platform) (*dto.Platform, error)
+	GetProfile() (*dto.Profile, error)
+}
+
+// PlatformServiceProvider ...
+type PlatformServiceProvider interface {
+	PlatformService
+
+	Accept(p *dto.Platform) bool
 }
 
 // PlatformServiceRegistration ...
 type PlatformServiceRegistration struct {
-	Service PlatformService
+	Provider PlatformServiceProvider
 }
 
 // PlatformServiceRegistry ...

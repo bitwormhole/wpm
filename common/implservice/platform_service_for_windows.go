@@ -13,14 +13,14 @@ type WindowsPlatformServiceImpl struct {
 	markup.Component `class:"PlatformServiceRegistry"`
 }
 
-func (inst *WindowsPlatformServiceImpl) _Impl() (service.PlatformService, service.PlatformServiceRegistry) {
+func (inst *WindowsPlatformServiceImpl) _Impl() (service.PlatformServiceProvider, service.PlatformServiceRegistry) {
 	return inst, inst
 }
 
 // GetRegistration ...
 func (inst *WindowsPlatformServiceImpl) GetRegistration() *service.PlatformServiceRegistration {
 	return &service.PlatformServiceRegistration{
-		Service: inst,
+		Provider: inst,
 	}
 }
 
@@ -32,8 +32,8 @@ func (inst *WindowsPlatformServiceImpl) Accept(p *dto.Platform) bool {
 	return (p.OS == "windows")
 }
 
-// GetInfo ...
-func (inst *WindowsPlatformServiceImpl) GetInfo(p *dto.Platform) (*dto.Platform, error) {
+// GetProfile ...
+func (inst *WindowsPlatformServiceImpl) GetProfile() (*dto.Profile, error) {
 	const (
 		keyUser = "USERNAME"
 		keyHome = "USERPROFILE"
@@ -42,10 +42,16 @@ func (inst *WindowsPlatformServiceImpl) GetInfo(p *dto.Platform) (*dto.Platform,
 	if err != nil {
 		return nil, err
 	}
+	p := &dto.Profile{}
 	if p == nil {
 		return nil, fmt.Errorf("param is nil")
 	}
 	p.Home = kvs[keyHome]
 	p.User = kvs[keyUser]
 	return p, nil
+}
+
+// GetPlatform ...
+func (inst *WindowsPlatformServiceImpl) GetPlatform() (*dto.Platform, error) {
+	return nil, fmt.Errorf("use: PlatformService.GetPlatform()")
 }

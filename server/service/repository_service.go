@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 
-	"github.com/bitwormhole/starter/io/fs"
+	"github.com/bitwormhole/gitlib/git/store"
 	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/web/dto"
 	"github.com/bitwormhole/wpm/server/web/vo"
@@ -33,16 +33,23 @@ type LocalRepositoryService interface {
 	Remove(ctx context.Context, id dxo.LocalRepositoryID) error
 }
 
-// MainRepositoryService ...
-type MainRepositoryService interface {
-	Find(ctx context.Context, id dxo.MainRepositoryID) (*dto.MainRepository, error)
-	FindByName(ctx context.Context, name string) (*dto.MainRepository, error)
+// SystemMainRepositoryService ...
+type SystemMainRepositoryService interface {
+	GetInfo(ctx context.Context) (*dto.SystemMainRepository, error)
 
-	ListAll(ctx context.Context) ([]*dto.MainRepository, error)
+	GetRepository(ctx context.Context) (store.Repository, error)
+}
 
-	Insert(ctx context.Context, o *dto.MainRepository) (*dto.MainRepository, error)
-	Update(ctx context.Context, id dxo.MainRepositoryID, o *dto.MainRepository) (*dto.MainRepository, error)
-	Remove(ctx context.Context, id dxo.MainRepositoryID) error
+// UserMainRepositoryService ...
+type UserMainRepositoryService interface {
+	Find(ctx context.Context, id dxo.UserMainRepositoryID) (*dto.UserMainRepository, error)
+	FindByName(ctx context.Context, name string) (*dto.UserMainRepository, error)
+
+	ListAll(ctx context.Context) ([]*dto.UserMainRepository, error)
+
+	Insert(ctx context.Context, o *dto.UserMainRepository) (*dto.UserMainRepository, error)
+	Update(ctx context.Context, id dxo.UserMainRepositoryID, o *dto.UserMainRepository) (*dto.UserMainRepository, error)
+	Remove(ctx context.Context, id dxo.UserMainRepositoryID) error
 }
 
 // RepositoryImportService ...
@@ -53,13 +60,13 @@ type RepositoryImportService interface {
 	Save(ctx context.Context, o *vo.RepositoryImport) (*vo.RepositoryImport, error)
 }
 
-// RepositoryLocateService ...
-type RepositoryLocateService interface {
-	Locate(ctx context.Context, path fs.Path) (*dto.LocalRepository, error)
-	IsRepositoryDirectory(ctx context.Context, path fs.Path) bool
+// LocalRepositoryFinder 。。。
+type LocalRepositoryFinder interface {
+	Search(ctx context.Context, path string, depthLimit int) ([]*dto.LocalRepository, error)
+	Locate(ctx context.Context, path string) (*dto.LocalRepository, error)
 }
 
-// RepositorySearchService ...
-type RepositorySearchService interface {
-	Search(ctx context.Context, path fs.Path) ([]*dto.LocalRepository, error)
+// LocalRepositoryStateLoader 。。。
+type LocalRepositoryStateLoader interface {
+	LoadState(ctx context.Context, repo *dto.LocalRepository) error
 }

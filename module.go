@@ -3,11 +3,13 @@ package wpm
 import (
 	"embed"
 
+	"github.com/bitwormhole/gitlib"
 	"github.com/bitwormhole/starter"
 
 	ginstarter "github.com/bitwormhole/starter-gin"
 	gormstarter "github.com/bitwormhole/starter-gorm"
 	mysqld "github.com/bitwormhole/starter-gorm-mysql"
+	sqlited "github.com/bitwormhole/starter-gorm-sqlite"
 	sqlserverd "github.com/bitwormhole/starter-gorm-sqlserver"
 	"github.com/bitwormhole/starter/application"
 	"github.com/bitwormhole/starter/collection"
@@ -44,6 +46,7 @@ func ServerModule() application.Module {
 	mb.Dependency(gormstarter.Module())
 	mb.Dependency(sqlserverd.DriverModule())
 	mb.Dependency(mysqld.DriverModule())
+	mb.Dependency(sqlited.DriverModule())
 
 	return mb.Create()
 }
@@ -77,6 +80,7 @@ func CommonModule() application.Module {
 	mb.Resources(collection.LoadEmbedResources(&theModuleResFS, theModuleResPath))
 
 	mb.Dependency(starter.Module())
+	mb.Dependency(gitlib.Module())
 
 	return mb.Create()
 }

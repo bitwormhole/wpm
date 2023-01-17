@@ -2,12 +2,20 @@ package dto
 
 import "github.com/bitwormhole/wpm/server/data/dxo"
 
-// Intent 表示一个命令模板
+// Intent 表示一个命令实例
 type Intent struct {
 	ID dxo.IntentID `json:"id"`
 	Base
 
-	Pipe *PipeInfo `json:"pipe"`
+	Exe *IntentExecutable `json:"exe"`
+	Web *IntentWeb        `json:"web"`
+	CLI *IntentCLI        `json:"cli"`
+}
+
+// IntentTemplate 表示一个命令模板
+type IntentTemplate struct {
+	ID dxo.IntentTemplateID `json:"id"`
+	Base
 
 	Exe *IntentExecutable `json:"exe"`
 	Web *IntentWeb        `json:"web"`

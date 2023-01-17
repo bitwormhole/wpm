@@ -3,7 +3,6 @@ package implservice
 import (
 	"context"
 
-	"github.com/bitwormhole/starter/io/fs"
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/service"
@@ -15,9 +14,8 @@ import (
 type RepositoryImportServiceImpl struct {
 	markup.Component `id:"RepositoryImportService"`
 
-	LocateService     service.RepositoryLocateService `inject:"#RepositoryLocateService"`
-	SearchService     service.RepositorySearchService `inject:"#RepositorySearchService"`
-	RepositoryService service.LocalRepositoryService  `inject:"#RepositoryService"`
+	RepositoryService service.LocalRepositoryService `inject:"#RepositoryService"`
+	RepoFinder        service.LocalRepositoryFinder  `inject:"#LocalRepositoryFinder"`
 }
 
 func (inst *RepositoryImportServiceImpl) _Impl() service.RepositoryImportService {
@@ -29,8 +27,8 @@ func (inst *RepositoryImportServiceImpl) Find(ctx context.Context, o1 *vo.Reposi
 	src := o1.Items
 	rb := &myRepositoryImportResultBuilder{}
 	for _, item := range src {
-		path := fs.Default().GetPath(item.Path)
-		repolist, err := inst.SearchService.Search(ctx, path)
+		path := item.Path
+		repolist, err := inst.RepoFinder.Search(ctx, path, 8)
 		if err == nil {
 			rb.addItems(repolist, nil)
 		} else {
@@ -60,8 +58,8 @@ func (inst *RepositoryImportServiceImpl) Locate(ctx context.Context, o1 *vo.Repo
 	src := o1.Items
 	rb := &myRepositoryImportResultBuilder{}
 	for _, item := range src {
-		path := fs.Default().GetPath(item.Path)
-		repo, err := inst.LocateService.Locate(ctx, path)
+		path := item.Path
+		repo, err := inst.RepoFinder.Locate(ctx, path)
 		if repo == nil {
 			repo = item
 		}
@@ -75,15 +73,15 @@ func (inst *RepositoryImportServiceImpl) FindOrLocate(ctx context.Context, o1 *v
 	src := o1.Items
 	rb := &myRepositoryImportResultBuilder{}
 	for _, item := range src {
-		path := fs.Default().GetPath(item.Path)
+		path := item.Path
 		// try locate
-		repo, err := inst.LocateService.Locate(ctx, path)
+		repo, err := inst.RepoFinder.Locate(ctx, path)
 		if err == nil {
 			rb.add(repo, nil)
 			continue
 		}
 		// try search
-		repolist, err := inst.SearchService.Search(ctx, path)
+		repolist, err := inst.RepoFinder.Search(ctx, path, 8)
 		if err == nil {
 			rb.addItems(repolist, err)
 			continue

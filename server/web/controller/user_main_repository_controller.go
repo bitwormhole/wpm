@@ -8,26 +8,27 @@ import (
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/service"
+	"github.com/bitwormhole/wpm/server/web/dto"
 	"github.com/bitwormhole/wpm/server/web/vo"
 	"github.com/gin-gonic/gin"
 )
 
-// MainRepositoryController 仓库控制器
-type MainRepositoryController struct {
+// UserMainRepositoryController 仓库控制器
+type UserMainRepositoryController struct {
 	markup.RestController `class:"rest-controller"`
 
-	RepoService service.MainRepositoryService `inject:"#MainRepositoryService"`
-	Responder   glass.MainResponder           `inject:"#glass-main-responder"`
+	RepoService service.UserMainRepositoryService `inject:"#UserMainRepositoryService"`
+	Responder   glass.MainResponder               `inject:"#glass-main-responder"`
 }
 
-func (inst *MainRepositoryController) _Impl() glass.Controller {
+func (inst *UserMainRepositoryController) _Impl() glass.Controller {
 	return inst
 }
 
 // Init 初始化
-func (inst *MainRepositoryController) Init(ec glass.EngineConnection) error {
+func (inst *UserMainRepositoryController) Init(ec glass.EngineConnection) error {
 
-	ec = ec.RequestMapping("main-repositories")
+	ec = ec.RequestMapping("user-main-repositories")
 
 	ec.Handle(http.MethodGet, "", inst.handleGetList)
 	ec.Handle(http.MethodPost, "", inst.handlePost)
@@ -39,8 +40,8 @@ func (inst *MainRepositoryController) Init(ec glass.EngineConnection) error {
 	return nil
 }
 
-func (inst *MainRepositoryController) handleGetList(c *gin.Context) {
-	req := &myMainRepositoryRequest{
+func (inst *UserMainRepositoryController) handleGetList(c *gin.Context) {
+	req := &myUserMainRepositoryRequest{
 		gc:              c,
 		controller:      inst,
 		wantRequestID:   false,
@@ -53,8 +54,8 @@ func (inst *MainRepositoryController) handleGetList(c *gin.Context) {
 	req.send(err)
 }
 
-func (inst *MainRepositoryController) handleGetOne(c *gin.Context) {
-	req := &myMainRepositoryRequest{
+func (inst *UserMainRepositoryController) handleGetOne(c *gin.Context) {
+	req := &myUserMainRepositoryRequest{
 		gc:              c,
 		controller:      inst,
 		wantRequestID:   true,
@@ -67,8 +68,8 @@ func (inst *MainRepositoryController) handleGetOne(c *gin.Context) {
 	req.send(err)
 }
 
-func (inst *MainRepositoryController) handlePost(c *gin.Context) {
-	req := &myMainRepositoryRequest{
+func (inst *UserMainRepositoryController) handlePost(c *gin.Context) {
+	req := &myUserMainRepositoryRequest{
 		gc:              c,
 		controller:      inst,
 		wantRequestID:   false,
@@ -81,8 +82,8 @@ func (inst *MainRepositoryController) handlePost(c *gin.Context) {
 	req.send(err)
 }
 
-func (inst *MainRepositoryController) handlePut(c *gin.Context) {
-	req := &myMainRepositoryRequest{
+func (inst *UserMainRepositoryController) handlePut(c *gin.Context) {
+	req := &myUserMainRepositoryRequest{
 		gc:              c,
 		controller:      inst,
 		wantRequestID:   true,
@@ -95,8 +96,8 @@ func (inst *MainRepositoryController) handlePut(c *gin.Context) {
 	req.send(err)
 }
 
-func (inst *MainRepositoryController) handleDelete(c *gin.Context) {
-	req := &myMainRepositoryRequest{
+func (inst *UserMainRepositoryController) handleDelete(c *gin.Context) {
+	req := &myUserMainRepositoryRequest{
 		gc:              c,
 		controller:      inst,
 		wantRequestID:   true,
@@ -111,19 +112,19 @@ func (inst *MainRepositoryController) handleDelete(c *gin.Context) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-type myMainRepositoryRequest struct {
+type myUserMainRepositoryRequest struct {
 	gc         *gin.Context
-	controller *MainRepositoryController
+	controller *UserMainRepositoryController
 
 	wantRequestID   bool
 	wantRequestBody bool
 
-	id    dxo.MainRepositoryID
-	body1 vo.MainRepository
-	body2 vo.MainRepository
+	id    dxo.UserMainRepositoryID
+	body1 vo.UserMainRepository
+	body2 vo.UserMainRepository
 }
 
-func (inst *myMainRepositoryRequest) open() error {
+func (inst *myUserMainRepositoryRequest) open() error {
 
 	c := inst.gc
 
@@ -133,7 +134,7 @@ func (inst *myMainRepositoryRequest) open() error {
 		if err != nil {
 			return err
 		}
-		inst.id = dxo.MainRepositoryID(n)
+		inst.id = dxo.UserMainRepositoryID(n)
 	}
 
 	if inst.wantRequestBody {
@@ -146,7 +147,7 @@ func (inst *myMainRepositoryRequest) open() error {
 	return nil
 }
 
-func (inst *myMainRepositoryRequest) send(err error) {
+func (inst *myUserMainRepositoryRequest) send(err error) {
 	ctx := inst.gc
 	data := &inst.body2
 	status := data.Status
@@ -159,7 +160,7 @@ func (inst *myMainRepositoryRequest) send(err error) {
 	inst.controller.Responder.Send(resp)
 }
 
-func (inst *myMainRepositoryRequest) doGetOne() error {
+func (inst *myUserMainRepositoryRequest) doGetOne() error {
 	id := inst.id
 	ctx := inst.gc
 	ser := inst.controller.RepoService
@@ -167,31 +168,31 @@ func (inst *myMainRepositoryRequest) doGetOne() error {
 	if err != nil {
 		return err
 	}
-	inst.body2.Repository = o
+	inst.body2.Repositories = []*dto.UserMainRepository{o}
 	return nil
 }
 
-func (inst *myMainRepositoryRequest) doGetList() error {
+func (inst *myUserMainRepositoryRequest) doGetList() error {
 	ctx := inst.gc
 	ser := inst.controller.RepoService
 	list, err := ser.ListAll(ctx)
 	if err != nil {
 		return err
 	}
-	inst.body2.Repository = list[0]
+	inst.body2.Repositories = list
 	return nil
 }
 
-func (inst *myMainRepositoryRequest) doPost() error {
+func (inst *myUserMainRepositoryRequest) doPost() error {
 
 	return nil
 }
 
-func (inst *myMainRepositoryRequest) doPut() error {
+func (inst *myUserMainRepositoryRequest) doPut() error {
 	return nil
 }
 
-func (inst *myMainRepositoryRequest) doDelete() error {
+func (inst *myUserMainRepositoryRequest) doDelete() error {
 
 	return nil
 }

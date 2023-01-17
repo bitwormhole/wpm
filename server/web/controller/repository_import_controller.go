@@ -2,11 +2,15 @@ package controller
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/bitwormhole/starter-gin/glass"
 	"github.com/bitwormhole/starter/markup"
+	"github.com/bitwormhole/starter/vlog"
+	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/service"
+	"github.com/bitwormhole/wpm/server/web/dto"
 	"github.com/bitwormhole/wpm/server/web/vo"
 	"github.com/gin-gonic/gin"
 )
@@ -15,8 +19,9 @@ import (
 type RepositoryImportController struct {
 	markup.RestController `class:"rest-controller"`
 
-	ImportService service.RepositoryImportService `inject:"#RepositoryImportService"`
-	Responder     glass.MainResponder             `inject:"#glass-main-responder"`
+	RepoStateLoader service.LocalRepositoryStateLoader `inject:"#LocalRepositoryStateLoader"`
+	ImportService   service.RepositoryImportService    `inject:"#RepositoryImportService"`
+	Responder       glass.MainResponder                `inject:"#glass-main-responder"`
 }
 
 func (inst *RepositoryImportController) _Impl() glass.Controller {
@@ -130,8 +135,28 @@ func (inst *myRepositoryImportRequest) doPost() error {
 
 	if err != nil {
 		return err
+	} else if result == nil {
+		return fmt.Errorf("no result")
 	}
+
+	inst.loadStateForItems(result.Items)
 
 	inst.body2 = *result
 	return nil
+}
+
+func (inst *myRepositoryImportRequest) loadStateForItems(items []*dto.LocalRepository) {
+	for _, item := range items {
+		inst.loadStateForItem(item)
+	}
+}
+
+func (inst *myRepositoryImportRequest) loadStateForItem(item *dto.LocalRepository) {
+	ctx := inst.gc
+	loader := inst.controller.RepoStateLoader
+	err := loader.LoadState(ctx, item)
+	if err != nil {
+		vlog.Warn(err)
+		item.State = dxo.FileStateUnknowError
+	}
 }

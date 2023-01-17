@@ -1,9 +1,8 @@
 package impldao
 
 import (
-	"time"
-
 	"github.com/bitwormhole/starter-gorm/datasource"
+	"github.com/bitwormhole/starter/application"
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/starter/vlog"
 	"github.com/bitwormhole/wpm/server/data/entity"
@@ -19,42 +18,75 @@ type GormDBAgent interface {
 
 // GormDBAgentImpl ...
 type GormDBAgentImpl struct {
-	markup.Component `id:"GormDBAgent" initMethod:"Init"`
+	markup.Component `id:"GormDBAgent" class:"life"`
 
-	Source datasource.Source `inject:"#gorm-datasource-default"`
+	Sources datasource.SourceManager `inject:"#starter-gorm-source-manager"`
+
+	cached *gorm.DB
 }
 
-func (inst *GormDBAgentImpl) _Impl() GormDBAgent {
-	return inst
+func (inst *GormDBAgentImpl) _Impl() (GormDBAgent, application.LifeRegistry) {
+	return inst, inst
+}
+
+// GetLifeRegistration ...
+func (inst *GormDBAgentImpl) GetLifeRegistration() *application.LifeRegistration {
+	return &application.LifeRegistration{
+		OnInit: inst.onInit,
+	}
 }
 
 // Init ...
-func (inst *GormDBAgentImpl) Init() error {
-	inst.startAutoMakeTables()
-	return nil
-}
-
-func (inst *GormDBAgentImpl) startAutoMakeTables() {
-	go func() {
-		time.Sleep(time.Second * 3)
-		err := inst.autoMakeTables()
-		if err != nil {
-			panic(err)
-		}
-	}()
+func (inst *GormDBAgentImpl) onInit() error {
+	_, err := inst.get()
+	return err
 }
 
 // DB ...
 func (inst *GormDBAgentImpl) DB() *gorm.DB {
-	return inst.Source.DB()
+	db, err := inst.get()
+	if err != nil {
+		panic(db)
+	}
+	return db
 }
 
-func (inst *GormDBAgentImpl) autoMakeTables() error {
+func (inst *GormDBAgentImpl) load() (*gorm.DB, error) {
 
+	src, err := inst.Sources.GetSource("default")
+	if err != nil {
+		return nil, err
+	}
+
+	db, err := src.DB()
+	if err != nil {
+		return nil, err
+	}
+
+	err = inst.autoMakeTables(db)
+	if err != nil {
+		return nil, err
+	}
+
+	return db, nil
+}
+
+func (inst *GormDBAgentImpl) get() (*gorm.DB, error) {
+	db := inst.cached
+	if db == nil {
+		o, err := inst.load()
+		if err != nil {
+			return nil, err
+		}
+		db = o
+		inst.cached = o
+	}
+	return db, nil
+}
+
+func (inst *GormDBAgentImpl) autoMakeTables(db *gorm.DB) error {
 	var e error
-	db := inst.DB()
 	models := entity.ListPrototypes()
-
 	for _, mod := range models {
 		err := db.AutoMigrate(mod)
 		if err != nil {
@@ -62,6 +94,5 @@ func (inst *GormDBAgentImpl) autoMakeTables() error {
 			e = err
 		}
 	}
-
 	return e
 }

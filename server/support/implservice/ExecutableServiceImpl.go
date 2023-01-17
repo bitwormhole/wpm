@@ -33,6 +33,8 @@ func (inst *ExecutableServiceImpl) dto2entity(o1 *dto.Executable) (*entity.Execu
 	o2.Size = o1.Size
 	o2.SHA256SUM = o1.SHA256SUM
 	o2.Description = o1.Description
+	o2.IconURL = o1.IconURL
+	o2.OpenWithPriority = o1.OpenWithPriority
 	// todo ...
 	return o2, nil
 }
@@ -46,6 +48,8 @@ func (inst *ExecutableServiceImpl) entity2dto(o1 *entity.Executable) (*dto.Execu
 	o2.Size = o1.Size
 	o2.SHA256SUM = o1.SHA256SUM
 	o2.Description = o1.Description
+	o2.IconURL = o1.IconURL
+	o2.OpenWithPriority = o1.OpenWithPriority
 	// todo ...
 	return o2, nil
 }

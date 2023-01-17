@@ -12,30 +12,29 @@ type RemoteRepository struct {
 	DisplayName string
 }
 
+// LocalRepositoryBase ...
+type LocalRepositoryBase struct {
+	Name        string
+	DisplayName string
+	Description string
+
+	Path string
+
+	ConfigFile  string
+	DotGitPath  string
+	WorkingPath string
+}
+
 // LocalRepository ...
 type LocalRepository struct {
 	ID dxo.LocalRepositoryID `gorm:"primaryKey"`
 	Base
-
-	Name        string
-	Path        string
-	ConfigFile  string
-	DotGitPath  string
-	WorkingPath string
-	DisplayName string
-	Description string
-	IconURL     string
+	LocalRepositoryBase
 }
 
-// MainRepository ...
-type MainRepository struct {
-	ID dxo.MainRepositoryID `gorm:"primaryKey"`
+// UserMainRepository ...
+type UserMainRepository struct {
+	ID dxo.UserMainRepositoryID `gorm:"primaryKey"`
 	Base
-
-	Name        string
-	Path        string
-	ConfigFile  string
-	DotGitPath  string
-	WorkingPath string
-	DisplayName string
+	LocalRepositoryBase
 }

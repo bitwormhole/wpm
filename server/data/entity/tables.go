@@ -11,8 +11,13 @@ func (Executable) TableName() string {
 }
 
 // TableName ...
-func (Intent) TableName() string {
-	return TableNamePrefix + "intent"
+func (IntentTemplate) TableName() string {
+	return TableNamePrefix + "intent_template"
+}
+
+// TableName ...
+func (Media) TableName() string {
+	return TableNamePrefix + "media"
 }
 
 // TableName ...
@@ -26,8 +31,8 @@ func (LocalRepository) TableName() string {
 }
 
 // TableName ...
-func (MainRepository) TableName() string {
-	return TableNamePrefix + "main_repository"
+func (UserMainRepository) TableName() string {
+	return TableNamePrefix + "user_main_repository"
 }
 
 // TableName ...
@@ -47,11 +52,12 @@ func ListPrototypes() []any {
 	list := make([]any, 0)
 
 	list = append(list, &Executable{})
-	list = append(list, &Intent{})
+	list = append(list, &IntentTemplate{})
 	list = append(list, &Project{})
 	list = append(list, &LocalRepository{})
-	list = append(list, &MainRepository{})
+	list = append(list, &Media{})
 	list = append(list, &RemoteRepository{})
+	list = append(list, &UserMainRepository{})
 	list = append(list, &User{})
 
 	return list

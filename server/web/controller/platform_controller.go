@@ -8,7 +8,6 @@ import (
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/service"
-	"github.com/bitwormhole/wpm/server/web/dto"
 	"github.com/bitwormhole/wpm/server/web/vo"
 	"github.com/gin-gonic/gin"
 )
@@ -28,7 +27,7 @@ func (inst *PlatformController) _Impl() glass.Controller {
 // Init 初始化
 func (inst *PlatformController) Init(ec glass.EngineConnection) error {
 
-	ec = ec.RequestMapping("platforms")
+	ec = ec.RequestMapping("profiles")
 
 	ec.Handle(http.MethodGet, "", inst.handleGetOne)
 	ec.Handle(http.MethodGet, ":id", inst.handleGetOne)
@@ -65,8 +64,8 @@ type myPlatformRequest struct {
 	wantRequestBody bool
 
 	id    dxo.PlatformID
-	body1 vo.Platform
-	body2 vo.Platform
+	body1 vo.Profile
+	body2 vo.Profile
 }
 
 func (inst *myPlatformRequest) open() error {
@@ -107,10 +106,18 @@ func (inst *myPlatformRequest) send(err error) {
 
 func (inst *myPlatformRequest) doGetOne() error {
 	ser := inst.controller.PlatformService
-	o, err := ser.GetInfo(nil)
+
+	o1, err := ser.GetProfile()
 	if err != nil {
 		return err
 	}
-	inst.body2.Platforms = []*dto.Platform{o}
+
+	o2, err := ser.GetPlatform()
+	if err != nil {
+		return err
+	}
+
+	inst.body2.Profile = o1
+	inst.body2.Platform = o2
 	return nil
 }

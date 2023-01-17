@@ -5,12 +5,15 @@ import (
 	"github.com/bitwormhole/wpm/server/data/entity"
 )
 
-type IntentDAO interface {
-	Find(id dxo.IntentID) (*entity.Intent, error)
+// IntentTemplateDAO ...
+type IntentTemplateDAO interface {
+	Find(id dxo.IntentTemplateID) (*entity.IntentTemplate, error)
 
-	ListAll() ([]*entity.Intent, error)
+	ListAll() ([]*entity.IntentTemplate, error)
 
-	Insert(o *entity.Intent) (*entity.Intent, error)
-	Update(id dxo.IntentID, o *entity.Intent) (*entity.Intent, error)
-	Remove(id dxo.IntentID) error
+	Insert(o *entity.IntentTemplate) (*entity.IntentTemplate, error)
+
+	Update(id dxo.IntentTemplateID, o *entity.IntentTemplate) (*entity.IntentTemplate, error)
+
+	Remove(id dxo.IntentTemplateID) error
 }

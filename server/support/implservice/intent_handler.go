@@ -1,4 +1,4 @@
-package client
+package implservice
 
 import (
 	"fmt"
@@ -8,22 +8,16 @@ import (
 
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/starter/vlog"
+	"github.com/bitwormhole/wpm/server/service"
 	"github.com/bitwormhole/wpm/server/web/dto"
 )
 
-// IntentHandler ...
-type IntentHandler interface {
-	HandleIntent(i *dto.Intent) error
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
 // IntentHandlerImpl ...
 type IntentHandlerImpl struct {
-	markup.Component `id:"IntentHandler"`
+	markup.Component `id:"IntentHandlerService"`
 }
 
-func (inst *IntentHandlerImpl) _Impl() IntentHandler {
+func (inst *IntentHandlerImpl) _Impl() service.IntentHandlerService {
 	return inst
 }
 
@@ -99,7 +93,7 @@ func (inst *IntentHandlerImpl) run2(c *exec.Cmd) error {
 		inst.handleError(x)
 	}()
 
-	err := c.Run()
+	err := c.Start()
 	if err != nil {
 		return err
 	}

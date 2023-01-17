@@ -7,12 +7,25 @@ import (
 	"github.com/bitwormhole/wpm/server/web/dto"
 )
 
+// IntentService ...
 type IntentService interface {
-	Find(ctx context.Context, id dxo.IntentID) (*dto.Intent, error)
+	Run(ctx context.Context, o *dto.Intent) (*dto.Intent, error)
+}
 
-	ListAll(ctx context.Context) ([]*dto.Intent, error)
+// IntentTemplateService ...
+type IntentTemplateService interface {
+	Find(ctx context.Context, id dxo.IntentTemplateID) (*dto.IntentTemplate, error)
 
-	Insert(ctx context.Context, o *dto.Intent) (*dto.Intent, error)
-	Update(ctx context.Context, id dxo.IntentID, o *dto.Intent) (*dto.Intent, error)
-	Remove(ctx context.Context, id dxo.IntentID) error
+	ListAll(ctx context.Context) ([]*dto.IntentTemplate, error)
+
+	Insert(ctx context.Context, o *dto.IntentTemplate) (*dto.IntentTemplate, error)
+
+	Update(ctx context.Context, id dxo.IntentTemplateID, o *dto.IntentTemplate) (*dto.IntentTemplate, error)
+
+	Remove(ctx context.Context, id dxo.IntentTemplateID) error
+}
+
+// IntentHandlerService ...
+type IntentHandlerService interface {
+	HandleIntent(i *dto.Intent) error
 }

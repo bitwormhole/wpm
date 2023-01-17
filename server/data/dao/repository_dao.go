@@ -31,15 +31,15 @@ type LocalRepositoryDAO interface {
 	Remove(id dxo.LocalRepositoryID) error
 }
 
-// MainRepositoryDAO ...
-type MainRepositoryDAO interface {
-	Find(id dxo.MainRepositoryID) (*entity.MainRepository, error)
-	FindByName(name string) (*entity.MainRepository, error)
-	FindByPath(path string) (*entity.MainRepository, error)
+// UserMainRepositoryDAO ...
+type UserMainRepositoryDAO interface {
+	Find(id dxo.UserMainRepositoryID) (*entity.UserMainRepository, error)
 
-	ListAll() ([]*entity.MainRepository, error)
+	ListAll() ([]*entity.UserMainRepository, error)
 
-	Insert(o *entity.MainRepository) (*entity.MainRepository, error)
-	Update(id dxo.MainRepositoryID, o *entity.MainRepository) (*entity.MainRepository, error)
-	Remove(id dxo.MainRepositoryID) error
+	Insert(o *entity.UserMainRepository) (*entity.UserMainRepository, error)
+
+	Update(id dxo.UserMainRepositoryID, o *entity.UserMainRepository) (*entity.UserMainRepository, error)
+
+	Remove(id dxo.UserMainRepositoryID) error
 }

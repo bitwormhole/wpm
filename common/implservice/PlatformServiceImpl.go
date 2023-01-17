@@ -16,54 +16,60 @@ type PlatformServiceImpl struct {
 	markup.Component `id:"PlatformService"`
 
 	PSRs []service.PlatformServiceRegistry `inject:".PlatformServiceRegistry"`
+
+	cachedPSR service.PlatformServiceProvider
 }
 
 func (inst *PlatformServiceImpl) _Impl() service.PlatformService {
 	return inst
 }
 
-// Accept ...
-func (inst *PlatformServiceImpl) Accept(p *dto.Platform) bool {
-	return (p != nil)
+// GetProfile ...
+func (inst *PlatformServiceImpl) GetProfile() (*dto.Profile, error) {
+	dele, err := inst.findDelegate()
+	if err != nil {
+		return nil, err
+	}
+	return dele.GetProfile()
 }
 
-// GetInfo ...
-func (inst *PlatformServiceImpl) GetInfo(p *dto.Platform) (*dto.Platform, error) {
+// GetPlatform ...
+func (inst *PlatformServiceImpl) GetPlatform() (*dto.Platform, error) {
 
 	arch := runtime.GOARCH
 	os := runtime.GOOS
 
-	if p == nil {
-		p = &dto.Platform{}
-	}
-
+	p := &dto.Platform{}
 	p.Arch = strings.ToLower(arch)
 	p.OS = strings.ToLower(os)
 
-	dele, err := inst.findDelegate(p)
+	return p, nil
+}
+
+func (inst *PlatformServiceImpl) findDelegate() (service.PlatformService, error) {
+
+	psr := inst.cachedPSR
+	if psr != nil {
+		return psr, nil
+	}
+
+	pf, err := inst.GetPlatform()
 	if err != nil {
 		return nil, err
 	}
 
-	return dele.GetInfo(p)
-}
-
-func (inst *PlatformServiceImpl) findDelegate(p *dto.Platform) (service.PlatformService, error) {
-
-	if p == nil {
-		return nil, fmt.Errorf("param is nil")
-	}
 	all := inst.PSRs
 	for _, reg1 := range all {
 		reg2 := reg1.GetRegistration()
-		ser := reg2.Service
-		if ser.Accept(p) {
-			return ser, nil
+		provider := reg2.Provider
+		if provider.Accept(pf) {
+			inst.cachedPSR = provider
+			return provider, nil
 		}
 	}
 
-	arch := p.Arch
-	os := p.OS
+	arch := pf.Arch
+	os := pf.OS
 	return nil, fmt.Errorf("unsupported platform, os:%v arch:%v", os, arch)
 }
 

@@ -9,6 +9,4 @@ type Platform struct {
 
 	OS   string `json:"os"`
 	Arch string `json:"arch"`
-	User string `json:"user"`
-	Home string `json:"home"`
 }

@@ -13,7 +13,7 @@ import (
 
 // RepositoryDaoImpl ...
 type RepositoryDaoImpl struct {
-	markup.Component `id:"RepositoryDAO"`
+	markup.Component `id:"LocalRepositoryDAO"`
 
 	Agent          GormDBAgent            `inject:"#GormDBAgent"`
 	UUIDGenService service.UUIDGenService `inject:"#UUIDGenService"`
