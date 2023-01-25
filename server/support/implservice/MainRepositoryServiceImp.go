@@ -9,32 +9,33 @@ import (
 	"github.com/bitwormhole/wpm/server/web/dto"
 )
 
-// SystemMainRepositoryServiceImpl ...
-type SystemMainRepositoryServiceImpl struct {
-	markup.Component `id:"SystemMainRepositoryService"`
+// MainRepositoryServiceImpl ...
+type MainRepositoryServiceImpl struct {
+	markup.Component `id:"MainRepositoryService"`
 
-	SystemMainRepoPath string         `inject:"${wpm.system-main-repository.path}"`
-	GitLA              store.LibAgent `inject:"#git-lib-agent"`
+	// MainRepoPath string         `inject:"${wpm.system-main-repository.path}"`
+	AppDataService service.AppDataService `inject:"#AppDataService"`
+	GitLA          store.LibAgent         `inject:"#git-lib-agent"`
 
 	// cachedInfo *dto.SystemMainRepository
 	cachedRepo store.Repository
 }
 
-func (inst *SystemMainRepositoryServiceImpl) _Impl() service.SystemMainRepositoryService {
+func (inst *MainRepositoryServiceImpl) _Impl() service.MainRepositoryService {
 	return inst
 }
 
 // GetInfo ...
-func (inst *SystemMainRepositoryServiceImpl) GetInfo(ctx context.Context) (*dto.SystemMainRepository, error) {
-	path := inst.SystemMainRepoPath
-	info := &dto.SystemMainRepository{
+func (inst *MainRepositoryServiceImpl) GetInfo(ctx context.Context) (*dto.MainRepository, error) {
+	path := inst.AppDataService.GetMainRepositoryPath()
+	info := &dto.MainRepository{
 		Path: path,
 	}
 	return info, nil
 }
 
 // GetRepository ...
-func (inst *SystemMainRepositoryServiceImpl) GetRepository(ctx context.Context) (store.Repository, error) {
+func (inst *MainRepositoryServiceImpl) GetRepository(ctx context.Context) (store.Repository, error) {
 	repo := inst.cachedRepo
 	if repo != nil {
 		return repo, nil
@@ -47,7 +48,7 @@ func (inst *SystemMainRepositoryServiceImpl) GetRepository(ctx context.Context) 
 	return repo, nil
 }
 
-func (inst *SystemMainRepositoryServiceImpl) loadRepository(ctx context.Context) (store.Repository, error) {
+func (inst *MainRepositoryServiceImpl) loadRepository(ctx context.Context) (store.Repository, error) {
 	info, err := inst.GetInfo(ctx)
 	if err != nil {
 		return nil, err

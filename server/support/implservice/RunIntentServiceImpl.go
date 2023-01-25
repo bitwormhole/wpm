@@ -2,11 +2,11 @@ package implservice
 
 import (
 	"context"
-	"errors"
-	"fmt"
 
+	"github.com/bitwormhole/gitlib/git/store"
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/wpm/server/service"
+	"github.com/bitwormhole/wpm/server/utils/intents"
 	"github.com/bitwormhole/wpm/server/web/dto"
 )
 
@@ -14,9 +14,13 @@ import (
 type RunIntentServiceImpl struct {
 	markup.Component `id:"IntentService"`
 
-	ExecutableService service.ExecutableService `inject:"#ExecutableService"`
+	GitLibAgent store.LibAgent `inject:"#git-lib-agent"`
 
-	IntentHandlerService service.IntentHandlerService `inject:"#IntentHandlerService"`
+	IntentFilterManager intents.FilterManager `inject:"#intent-filter-manager"`
+
+	LocalRepositoryService service.LocalRepositoryService `inject:"#LocalRepositoryService"`
+	ExecutableService      service.ExecutableService      `inject:"#ExecutableService"`
+	IntentHandlerService   service.IntentHandlerService   `inject:"#IntentHandlerService"`
 }
 
 func (inst *RunIntentServiceImpl) _Impl() service.IntentService {
@@ -25,20 +29,15 @@ func (inst *RunIntentServiceImpl) _Impl() service.IntentService {
 
 // Run ...
 func (inst *RunIntentServiceImpl) Run(ctx context.Context, o *dto.Intent) (*dto.Intent, error) {
-
-	cli := o.CLI
-	exe := o.Exe
-	web := o.Web
-
-	if cli != nil {
-		return inst.runAsCLI(ctx, o)
-	} else if exe != nil {
-		return inst.runAsExe(ctx, o)
-	} else if web != nil {
-		return inst.runAsWeb(ctx, o)
+	o, err := inst.preprocessWithFilters(ctx, o)
+	if err != nil {
+		return nil, err
 	}
+	return inst.runAsCLI(ctx, o)
+}
 
-	return nil, errors.New("bad request body data")
+func (inst *RunIntentServiceImpl) preprocessWithFilters(ctx context.Context, o1 *dto.Intent) (*dto.Intent, error) {
+	return inst.IntentFilterManager.Filter(o1)
 }
 
 func (inst *RunIntentServiceImpl) runAsCLI(ctx context.Context, intent1 *dto.Intent) (*dto.Intent, error) {
@@ -50,29 +49,23 @@ func (inst *RunIntentServiceImpl) runAsCLI(ctx context.Context, intent1 *dto.Int
 	return intent1, nil
 }
 
-func (inst *RunIntentServiceImpl) runAsWeb(ctx context.Context, o *dto.Intent) (*dto.Intent, error) {
+// func (inst *RunIntentServiceImpl) runAsWeb(ctx context.Context, o *dto.Intent) (*dto.Intent, error) {
+// 	return nil, fmt.Errorf("no impl: RunIntentServiceImpl.runAsWeb")
+// }
 
-	return nil, fmt.Errorf("no impl: RunIntentServiceImpl.runAsWeb")
-}
-
-func (inst *RunIntentServiceImpl) runAsExe(ctx context.Context, intent1 *dto.Intent) (*dto.Intent, error) {
-
-	exe1 := intent1.Exe
-	exe2, err := inst.ExecutableService.Find(ctx, exe1.Executable)
-	if err != nil {
-		return nil, err
-	}
-
-	intent1.CLI = &dto.IntentCLI{
-		Command: exe2.Path,
-	}
-
-	err = inst.IntentHandlerService.HandleIntent(intent1)
-	if err != nil {
-		return nil, err
-	}
-
-	return intent1, nil
-}
+// func (inst *RunIntentServiceImpl) runAsExe(ctx context.Context, intent *dto.Intent) (*dto.Intent, error) {
+// 	runner := &intents.ObjectIntentRunner{
+// 		GitLibAgent:            inst.GitLibAgent,
+// 		IntentHandlerService:   inst.IntentHandlerService,
+// 		ExecutableService:      inst.ExecutableService,
+// 		LocalRepositoryService: inst.LocalRepositoryService,
+// 		IntentFilters:          inst.IntentFilterManager,
+// 	}
+// 	err := runner.Run(ctx, intent)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	return intent, nil
+// }
 
 ////////////////////////////////////////////////////////////////////////////////

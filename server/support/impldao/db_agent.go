@@ -53,7 +53,7 @@ func (inst *GormDBAgentImpl) DB() *gorm.DB {
 
 func (inst *GormDBAgentImpl) load() (*gorm.DB, error) {
 
-	src, err := inst.Sources.GetSource("default")
+	src, err := inst.Sources.GetSource("wpm")
 	if err != nil {
 		return nil, err
 	}

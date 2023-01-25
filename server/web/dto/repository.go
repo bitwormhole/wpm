@@ -25,20 +25,11 @@ type LocalRepository struct {
 	Path string `json:"path"`
 }
 
-// SystemMainRepository ...
-type SystemMainRepository struct {
+// MainRepository ...
+type MainRepository struct {
 	RepositoryBase
 
-	ID dxo.SystemMainRepositoryID `json:"id"`
-
-	Path string `json:"path"`
-}
-
-// UserMainRepository ...
-type UserMainRepository struct {
-	RepositoryBase
-
-	ID dxo.UserMainRepositoryID `json:"id"`
+	ID dxo.MainRepositoryID `json:"id"`
 
 	Path string `json:"path"`
 }

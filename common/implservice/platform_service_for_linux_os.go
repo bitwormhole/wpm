@@ -10,16 +10,16 @@ import (
 
 // LinuxPlatformServiceImpl ...
 type LinuxPlatformServiceImpl struct {
-	markup.Component `class:"PlatformServiceRegistry"`
+	markup.Component `class:"PlatformProviderRegistry"`
 }
 
-func (inst *LinuxPlatformServiceImpl) _Impl() (service.PlatformServiceProvider, service.PlatformServiceRegistry) {
+func (inst *LinuxPlatformServiceImpl) _Impl() (service.PlatformProvider, service.PlatformProviderRegistry) {
 	return inst, inst
 }
 
 // GetRegistration ...
-func (inst *LinuxPlatformServiceImpl) GetRegistration() *service.PlatformServiceRegistration {
-	return &service.PlatformServiceRegistration{
+func (inst *LinuxPlatformServiceImpl) GetRegistration() *service.PlatformProviderRegistration {
+	return &service.PlatformProviderRegistration{
 		Provider: inst,
 	}
 }
@@ -33,25 +33,19 @@ func (inst *LinuxPlatformServiceImpl) Accept(p *dto.Platform) bool {
 }
 
 // GetProfile ...
-func (inst *LinuxPlatformServiceImpl) GetProfile() (*dto.Profile, error) {
+func (inst *LinuxPlatformServiceImpl) GetProfile(p *dto.Profile) error {
 	const (
 		keyUser = "USER"
 		keyHome = "HOME"
 	)
+	if p == nil {
+		return fmt.Errorf("param is nil")
+	}
 	kvs, err := getRequiredEnvironmentValues(keyHome, keyUser)
 	if err != nil {
-		return nil, err
-	}
-	p := &dto.Profile{}
-	if p == nil {
-		return nil, fmt.Errorf("param is nil")
+		return err
 	}
 	p.Home = kvs[keyHome]
 	p.User = kvs[keyUser]
-	return p, nil
-}
-
-// GetPlatform ...
-func (inst *LinuxPlatformServiceImpl) GetPlatform() (*dto.Platform, error) {
-	return nil, fmt.Errorf("use: PlatformService.GetPlatform()")
+	return nil
 }

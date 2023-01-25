@@ -22,7 +22,11 @@ type RemoteRepositoryDAO interface {
 type LocalRepositoryDAO interface {
 	Find(id dxo.LocalRepositoryID) (*entity.LocalRepository, error)
 	FindByName(name string) (*entity.LocalRepository, error)
+	FindByUUID(uuid dxo.UUID) (*entity.LocalRepository, error)
+
 	FindByPath(path string) (*entity.LocalRepository, error)
+	FindByDotGit(path string) (*entity.LocalRepository, error)
+	FindByWorkingDir(path string) (*entity.LocalRepository, error)
 
 	ListAll() ([]*entity.LocalRepository, error)
 
@@ -31,15 +35,15 @@ type LocalRepositoryDAO interface {
 	Remove(id dxo.LocalRepositoryID) error
 }
 
-// UserMainRepositoryDAO ...
-type UserMainRepositoryDAO interface {
-	Find(id dxo.UserMainRepositoryID) (*entity.UserMainRepository, error)
+// // UserMainRepositoryDAO ...
+// type UserMainRepositoryDAO interface {
+// 	Find(id dxo.UserMainRepositoryID) (*entity.UserMainRepository, error)
 
-	ListAll() ([]*entity.UserMainRepository, error)
+// 	ListAll() ([]*entity.UserMainRepository, error)
 
-	Insert(o *entity.UserMainRepository) (*entity.UserMainRepository, error)
+// 	Insert(o *entity.UserMainRepository) (*entity.UserMainRepository, error)
 
-	Update(id dxo.UserMainRepositoryID, o *entity.UserMainRepository) (*entity.UserMainRepository, error)
+// 	Update(id dxo.UserMainRepositoryID, o *entity.UserMainRepository) (*entity.UserMainRepository, error)
 
-	Remove(id dxo.UserMainRepositoryID) error
-}
+// 	Remove(id dxo.UserMainRepositoryID) error
+// }

@@ -1,8 +1,6 @@
 package impldao
 
 import (
-	"errors"
-
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/wpm/server/data/dao"
 	"github.com/bitwormhole/wpm/server/data/dxo"
@@ -64,12 +62,36 @@ func (inst *ExecutableDaoImpl) Insert(o *entity.Executable) (*entity.Executable,
 	return o, nil
 }
 
-func (inst *ExecutableDaoImpl) Update(id dxo.ExecutableID, o *entity.Executable) (*entity.Executable, error) {
-	return nil, errors.New("no impl")
+// Update ...
+func (inst *ExecutableDaoImpl) Update(id dxo.ExecutableID, o1 *entity.Executable) (*entity.Executable, error) {
+	o2, err := inst.Find(id)
+	if err != nil {
+		return nil, err
+	}
+
+	o2.Name = o1.Name
+	o2.Title = o1.Title
+	o2.IconURL = o1.IconURL
+	o2.Description = o1.Description
+	o2.Path = o1.Path
+	o2.Size = o1.Size
+	o2.SHA256SUM = o1.SHA256SUM
+	o2.OpenWithPriority = o1.OpenWithPriority
+
+	db := inst.Agent.DB()
+	res := db.Save(o2)
+	if res.Error != nil {
+		return nil, res.Error
+	}
+	return o2, nil
 }
 
+// Remove ...
 func (inst *ExecutableDaoImpl) Remove(id dxo.ExecutableID) error {
-	return errors.New("no impl")
+	o1 := inst.model()
+	db := inst.Agent.DB()
+	res := db.Delete(o1, id)
+	return res.Error
 }
 
 // FindByPath ...

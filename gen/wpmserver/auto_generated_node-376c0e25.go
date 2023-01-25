@@ -7,11 +7,15 @@ import (
 	store0x8467b3 "github.com/bitwormhole/gitlib/git/store"
 	glass0x47343f "github.com/bitwormhole/starter-gin/glass"
 	datasource0x68a737 "github.com/bitwormhole/starter-gorm/datasource"
+	application0x67f6c5 "github.com/bitwormhole/starter/application"
 	markup0x23084a "github.com/bitwormhole/starter/markup"
 	dao0x5af8d0 "github.com/bitwormhole/wpm/server/data/dao"
 	service0x3e063d "github.com/bitwormhole/wpm/server/service"
+	support0xf47d7f "github.com/bitwormhole/wpm/server/support"
 	impldao0x73998b "github.com/bitwormhole/wpm/server/support/impldao"
 	implservice0x22327c "github.com/bitwormhole/wpm/server/support/implservice"
+	intents0xec84e7 "github.com/bitwormhole/wpm/server/utils/intents"
+	filters0x5d53d8 "github.com/bitwormhole/wpm/server/utils/intents/filters"
 	controller0x9dc399 "github.com/bitwormhole/wpm/server/web/controller"
 )
 
@@ -70,6 +74,21 @@ type pComProjectDaoImpl struct {
 }
 
 
+type pComAppDataServiceImpl struct {
+	instance *implservice0x22327c.AppDataServiceImpl
+	 markup0x23084a.Component `id:"AppDataService"`
+	ProfileService service0x3e063d.ProfileService `inject:"#ProfileService"`
+}
+
+
+type pComAppIconServiceImpl struct {
+	instance *implservice0x22327c.AppIconServiceImpl
+	 markup0x23084a.Component `id:"AppIconService" class:"life"`
+	PropsName string `inject:"${wpm.exe-icons.properties}"`
+	Context application0x67f6c5.Context `inject:"context"`
+}
+
+
 type pComExampleServiceImpl struct {
 	instance *implservice0x22327c.ExampleServiceImpl
 	 markup0x23084a.Component `id:"ExampleService"`
@@ -87,6 +106,7 @@ type pComExecutableServiceImpl struct {
 	instance *implservice0x22327c.ExecutableServiceImpl
 	 markup0x23084a.Component `id:"ExecutableService"`
 	ExecutableDAO dao0x5af8d0.ExecutableDAO `inject:"#ExecutableDAO"`
+	IconService service0x3e063d.AppIconService `inject:"#AppIconService"`
 }
 
 
@@ -110,9 +130,9 @@ type pComLocalRepositoryFinderImpl struct {
 }
 
 
-type pComRepositoryServiceImpl struct {
-	instance *implservice0x22327c.RepositoryServiceImpl
-	 markup0x23084a.Component `id:"RepositoryService"`
+type pComLocalRepositoryServiceImpl struct {
+	instance *implservice0x22327c.LocalRepositoryServiceImpl
+	 markup0x23084a.Component `id:"LocalRepositoryService"`
 	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
 	RepoFinder service0x3e063d.LocalRepositoryFinder `inject:"#LocalRepositoryFinder"`
 	LocalRepositoryDAO dao0x5af8d0.LocalRepositoryDAO `inject:"#LocalRepositoryDAO"`
@@ -122,8 +142,17 @@ type pComRepositoryServiceImpl struct {
 type pComLocalRepositoryStateLoaderImpl struct {
 	instance *implservice0x22327c.LocalRepositoryStateLoaderImpl
 	 markup0x23084a.Component `id:"LocalRepositoryStateLoader"`
+	LocalRepoService service0x3e063d.LocalRepositoryService `inject:"#LocalRepositoryService"`
 	Dao dao0x5af8d0.LocalRepositoryDAO `inject:"#LocalRepositoryDAO"`
 	GitLibAgent store0x8467b3.LibAgent `inject:"#git-lib-agent"`
+}
+
+
+type pComMainRepositoryServiceImpl struct {
+	instance *implservice0x22327c.MainRepositoryServiceImpl
+	 markup0x23084a.Component `id:"MainRepositoryService"`
+	AppDataService service0x3e063d.AppDataService `inject:"#AppDataService"`
+	GitLA store0x8467b3.LibAgent `inject:"#git-lib-agent"`
 }
 
 
@@ -131,7 +160,7 @@ type pComMediaServiceImpl struct {
 	instance *implservice0x22327c.MediaServiceImpl
 	 markup0x23084a.Component `id:"MediaService"`
 	MediaDAO dao0x5af8d0.MediaDAO `inject:"#MediaDAO"`
-	SysMainRepoService service0x3e063d.SystemMainRepositoryService `inject:"#SystemMainRepositoryService"`
+	SysMainRepoService service0x3e063d.MainRepositoryService `inject:"#MainRepositoryService"`
 }
 
 
@@ -158,7 +187,7 @@ type pComRemoteRepositoryServiceImpl struct {
 type pComRepositoryImportServiceImpl struct {
 	instance *implservice0x22327c.RepositoryImportServiceImpl
 	 markup0x23084a.Component `id:"RepositoryImportService"`
-	RepositoryService service0x3e063d.LocalRepositoryService `inject:"#RepositoryService"`
+	RepositoryService service0x3e063d.LocalRepositoryService `inject:"#LocalRepositoryService"`
 	RepoFinder service0x3e063d.LocalRepositoryFinder `inject:"#LocalRepositoryFinder"`
 }
 
@@ -166,28 +195,93 @@ type pComRepositoryImportServiceImpl struct {
 type pComRunIntentServiceImpl struct {
 	instance *implservice0x22327c.RunIntentServiceImpl
 	 markup0x23084a.Component `id:"IntentService"`
+	GitLibAgent store0x8467b3.LibAgent `inject:"#git-lib-agent"`
+	IntentFilterManager intents0xec84e7.FilterManager `inject:"#intent-filter-manager"`
+	LocalRepositoryService service0x3e063d.LocalRepositoryService `inject:"#LocalRepositoryService"`
 	ExecutableService service0x3e063d.ExecutableService `inject:"#ExecutableService"`
 	IntentHandlerService service0x3e063d.IntentHandlerService `inject:"#IntentHandlerService"`
-}
-
-
-type pComSystemMainRepositoryServiceImpl struct {
-	instance *implservice0x22327c.SystemMainRepositoryServiceImpl
-	 markup0x23084a.Component `id:"SystemMainRepositoryService"`
-	SystemMainRepoPath string `inject:"${wpm.system-main-repository.path}"`
-	GitLA store0x8467b3.LibAgent `inject:"#git-lib-agent"`
-}
-
-
-type pComUserMainRepositoryServiceImpl struct {
-	instance *implservice0x22327c.UserMainRepositoryServiceImpl
-	 markup0x23084a.Component `id:"UserMainRepositoryService"`
 }
 
 
 type pComUUIDGenServiceImpl struct {
 	instance *implservice0x22327c.UUIDGenServiceImpl
 	 markup0x23084a.Component `id:"UUIDGenService" initMethod:"Init"`
+}
+
+
+type pComWpmDataSource struct {
+	instance *support0xf47d7f.WpmDataSource
+	 markup0x23084a.Component `class:"starter-gorm-source-registry"`
+	DM datasource0x68a737.DriverManager `inject:"#starter-gorm-driver-manager"`
+	AppDataService service0x3e063d.AppDataService `inject:"#AppDataService"`
+	Driver string `inject:"${datasource.wpm.driver}"`
+	Host string `inject:"${datasource.wpm.host}"`
+	Port int `inject:"${datasource.wpm.port}"`
+	UserName string `inject:"${datasource.wpm.username}"`
+	Password string `inject:"${datasource.wpm.password}"`
+	Database string `inject:"${datasource.wpm.database}"`
+}
+
+
+type pComExecuteIntentFilter struct {
+	instance *filters0x5d53d8.ExecuteIntentFilter
+	 markup0x23084a.Component `class:"intent-filter-registry"`
+	GitLibAgent store0x8467b3.LibAgent `inject:"#git-lib-agent"`
+}
+
+
+type pComIntentFilterFor struct {
+	instance *filters0x5d53d8.IntentFilterFor
+	 markup0x23084a.Component `class:"intent-filter-registry"`
+}
+
+
+type pComIntentFilterForChrome struct {
+	instance *filters0x5d53d8.IntentFilterForChrome
+	 markup0x23084a.Component `class:"intent-filter-registry"`
+}
+
+
+type pComIntentFilterForCmd struct {
+	instance *filters0x5d53d8.IntentFilterForCmd
+	 markup0x23084a.Component `class:"intent-filter-registry"`
+}
+
+
+type pComIntentFilterForExplorer struct {
+	instance *filters0x5d53d8.IntentFilterForExplorer
+	 markup0x23084a.Component `class:"intent-filter-registry"`
+}
+
+
+type pComIntentFilterForFirefox struct {
+	instance *filters0x5d53d8.IntentFilterForFirefox
+	 markup0x23084a.Component `class:"intent-filter-registry"`
+}
+
+
+type pComIntentFilterForMsEdge struct {
+	instance *filters0x5d53d8.IntentFilterForMsEdge
+	 markup0x23084a.Component `class:"intent-filter-registry"`
+}
+
+
+type pComIntentFilterForPowerShell struct {
+	instance *filters0x5d53d8.IntentFilterForPowerShell
+	 markup0x23084a.Component `class:"intent-filter-registry"`
+}
+
+
+type pComIntentFilterForVscode struct {
+	instance *filters0x5d53d8.IntentFilterForVscode
+	 markup0x23084a.Component `class:"intent-filter-registry"`
+}
+
+
+type pComFilterManagerImpl struct {
+	instance *intents0xec84e7.FilterManagerImpl
+	 markup0x23084a.Component `id:"intent-filter-manager"`
+	Filters []intents0xec84e7.FilterRegistry `inject:".intent-filter-registry"`
 }
 
 
@@ -240,7 +334,7 @@ type pComIntentTemplateController struct {
 type pComLocalRepositoryController struct {
 	instance *controller0x9dc399.LocalRepositoryController
 	 markup0x23084a.RestController `class:"rest-controller"`
-	RepoService service0x3e063d.LocalRepositoryService `inject:"#RepositoryService"`
+	RepoService service0x3e063d.LocalRepositoryService `inject:"#LocalRepositoryService"`
 	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
 }
 
@@ -257,6 +351,7 @@ type pComPlatformController struct {
 	instance *controller0x9dc399.PlatformController
 	 markup0x23084a.RestController `class:"rest-controller"`
 	PlatformService service0x3e063d.PlatformService `inject:"#PlatformService"`
+	ProfileService service0x3e063d.ProfileService `inject:"#ProfileService"`
 	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
 }
 
@@ -290,14 +385,6 @@ type pComRepositoryImportController struct {
 	 markup0x23084a.RestController `class:"rest-controller"`
 	RepoStateLoader service0x3e063d.LocalRepositoryStateLoader `inject:"#LocalRepositoryStateLoader"`
 	ImportService service0x3e063d.RepositoryImportService `inject:"#RepositoryImportService"`
-	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
-}
-
-
-type pComUserMainRepositoryController struct {
-	instance *controller0x9dc399.UserMainRepositoryController
-	 markup0x23084a.RestController `class:"rest-controller"`
-	RepoService service0x3e063d.UserMainRepositoryService `inject:"#UserMainRepositoryService"`
 	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
 }
 

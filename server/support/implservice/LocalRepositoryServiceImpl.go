@@ -12,20 +12,20 @@ import (
 	"github.com/bitwormhole/wpm/server/web/dto"
 )
 
-// RepositoryServiceImpl ...
-type RepositoryServiceImpl struct {
-	markup.Component `id:"RepositoryService"`
+// LocalRepositoryServiceImpl ...
+type LocalRepositoryServiceImpl struct {
+	markup.Component `id:"LocalRepositoryService"`
 
 	UUIDGenService     service.UUIDGenService        `inject:"#UUIDGenService"`
 	RepoFinder         service.LocalRepositoryFinder `inject:"#LocalRepositoryFinder"`
 	LocalRepositoryDAO dao.LocalRepositoryDAO        `inject:"#LocalRepositoryDAO"`
 }
 
-func (inst *RepositoryServiceImpl) _Impl() service.LocalRepositoryService {
+func (inst *LocalRepositoryServiceImpl) _Impl() service.LocalRepositoryService {
 	return inst
 }
 
-func (inst *RepositoryServiceImpl) dto2entity(o1 *dto.LocalRepository) (*entity.LocalRepository, error) {
+func (inst *LocalRepositoryServiceImpl) dto2entity(o1 *dto.LocalRepository) (*entity.LocalRepository, error) {
 
 	o2 := &entity.LocalRepository{}
 
@@ -39,7 +39,7 @@ func (inst *RepositoryServiceImpl) dto2entity(o1 *dto.LocalRepository) (*entity.
 	return o2, nil
 }
 
-func (inst *RepositoryServiceImpl) entity2dto(o1 *entity.LocalRepository) (*dto.LocalRepository, error) {
+func (inst *LocalRepositoryServiceImpl) entity2dto(o1 *entity.LocalRepository) (*dto.LocalRepository, error) {
 
 	o2 := &dto.LocalRepository{}
 
@@ -55,7 +55,17 @@ func (inst *RepositoryServiceImpl) entity2dto(o1 *entity.LocalRepository) (*dto.
 	return o2, nil
 }
 
-func (inst *RepositoryServiceImpl) prepareEntity(ctx context.Context, o1 *entity.LocalRepository) error {
+// ConvertEntityToDto ...
+func (inst *LocalRepositoryServiceImpl) ConvertEntityToDto(o1 *entity.LocalRepository) (*dto.LocalRepository, error) {
+	return inst.entity2dto(o1)
+}
+
+// ConvertDtoToEntity ...
+func (inst *LocalRepositoryServiceImpl) ConvertDtoToEntity(o1 *dto.LocalRepository) (*entity.LocalRepository, error) {
+	return inst.dto2entity(o1)
+}
+
+func (inst *LocalRepositoryServiceImpl) prepareEntity(ctx context.Context, o1 *entity.LocalRepository) error {
 
 	deffs := fs.Default()
 	path := o1.Path
@@ -76,7 +86,7 @@ func (inst *RepositoryServiceImpl) prepareEntity(ctx context.Context, o1 *entity
 }
 
 // ListAll ...
-func (inst *RepositoryServiceImpl) ListAll(ctx context.Context) ([]*dto.LocalRepository, error) {
+func (inst *LocalRepositoryServiceImpl) ListAll(ctx context.Context) ([]*dto.LocalRepository, error) {
 	src, err := inst.LocalRepositoryDAO.ListAll()
 	if err != nil {
 		return nil, err
@@ -93,7 +103,7 @@ func (inst *RepositoryServiceImpl) ListAll(ctx context.Context) ([]*dto.LocalRep
 }
 
 // Find ...
-func (inst *RepositoryServiceImpl) Find(ctx context.Context, id dxo.LocalRepositoryID) (*dto.LocalRepository, error) {
+func (inst *LocalRepositoryServiceImpl) Find(ctx context.Context, id dxo.LocalRepositoryID) (*dto.LocalRepository, error) {
 	o1, err := inst.LocalRepositoryDAO.Find(id)
 	if err != nil {
 		return nil, err
@@ -102,7 +112,7 @@ func (inst *RepositoryServiceImpl) Find(ctx context.Context, id dxo.LocalReposit
 }
 
 // FindByName ...
-func (inst *RepositoryServiceImpl) FindByName(ctx context.Context, name string) (*dto.LocalRepository, error) {
+func (inst *LocalRepositoryServiceImpl) FindByName(ctx context.Context, name string) (*dto.LocalRepository, error) {
 	o1, err := inst.LocalRepositoryDAO.FindByName(name)
 	if err != nil {
 		return nil, err
@@ -111,7 +121,7 @@ func (inst *RepositoryServiceImpl) FindByName(ctx context.Context, name string) 
 }
 
 // Insert ...
-func (inst *RepositoryServiceImpl) Insert(ctx context.Context, o1 *dto.LocalRepository) (*dto.LocalRepository, error) {
+func (inst *LocalRepositoryServiceImpl) Insert(ctx context.Context, o1 *dto.LocalRepository) (*dto.LocalRepository, error) {
 	o2, err := inst.dto2entity(o1)
 	if err != nil {
 		return nil, err
@@ -130,7 +140,7 @@ func (inst *RepositoryServiceImpl) Insert(ctx context.Context, o1 *dto.LocalRepo
 }
 
 // Update ...
-func (inst *RepositoryServiceImpl) Update(ctx context.Context, id dxo.LocalRepositoryID, o1 *dto.LocalRepository) (*dto.LocalRepository, error) {
+func (inst *LocalRepositoryServiceImpl) Update(ctx context.Context, id dxo.LocalRepositoryID, o1 *dto.LocalRepository) (*dto.LocalRepository, error) {
 	o2, err := inst.dto2entity(o1)
 	if err != nil {
 		return nil, err
@@ -149,6 +159,6 @@ func (inst *RepositoryServiceImpl) Update(ctx context.Context, id dxo.LocalRepos
 }
 
 // Remove ...
-func (inst *RepositoryServiceImpl) Remove(ctx context.Context, id dxo.LocalRepositoryID) error {
+func (inst *LocalRepositoryServiceImpl) Remove(ctx context.Context, id dxo.LocalRepositoryID) error {
 	return inst.LocalRepositoryDAO.Remove(id)
 }

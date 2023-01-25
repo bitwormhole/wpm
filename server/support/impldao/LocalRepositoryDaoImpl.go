@@ -62,6 +62,17 @@ func (inst *RepositoryDaoImpl) Find(id dxo.LocalRepositoryID) (*entity.LocalRepo
 	return o, nil
 }
 
+// FindByUUID ...
+func (inst *RepositoryDaoImpl) FindByUUID(uuid dxo.UUID) (*entity.LocalRepository, error) {
+	db := inst.Agent.DB()
+	o := inst.model()
+	res := db.Where("uuid=?", uuid).First(o)
+	if res.Error != nil {
+		return nil, res.Error
+	}
+	return o, nil
+}
+
 // FindByName ...
 func (inst *RepositoryDaoImpl) FindByName(name string) (*entity.LocalRepository, error) {
 	db := inst.Agent.DB()
@@ -78,6 +89,28 @@ func (inst *RepositoryDaoImpl) FindByPath(path string) (*entity.LocalRepository,
 	db := inst.Agent.DB()
 	o := inst.model()
 	res := db.Where("path=?", path).First(o)
+	if res.Error != nil {
+		return nil, res.Error
+	}
+	return o, nil
+}
+
+// FindByDotGit ...
+func (inst *RepositoryDaoImpl) FindByDotGit(path string) (*entity.LocalRepository, error) {
+	db := inst.Agent.DB()
+	o := inst.model()
+	res := db.Where("dot_git_path=?", path).First(o)
+	if res.Error != nil {
+		return nil, res.Error
+	}
+	return o, nil
+}
+
+// FindByWorkingDir ...
+func (inst *RepositoryDaoImpl) FindByWorkingDir(path string) (*entity.LocalRepository, error) {
+	db := inst.Agent.DB()
+	o := inst.model()
+	res := db.Where("working_path=?", path).First(o)
 	if res.Error != nil {
 		return nil, res.Error
 	}

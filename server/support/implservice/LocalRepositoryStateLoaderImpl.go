@@ -18,8 +18,9 @@ import (
 type LocalRepositoryStateLoaderImpl struct {
 	markup.Component `id:"LocalRepositoryStateLoader"`
 
-	Dao         dao.LocalRepositoryDAO `inject:"#LocalRepositoryDAO"`
-	GitLibAgent store.LibAgent         `inject:"#git-lib-agent"`
+	LocalRepoService service.LocalRepositoryService `inject:"#LocalRepositoryService"`
+	Dao              dao.LocalRepositoryDAO         `inject:"#LocalRepositoryDAO"`
+	GitLibAgent      store.LibAgent                 `inject:"#git-lib-agent"`
 }
 
 func (inst *LocalRepositoryStateLoaderImpl) _Impl() service.LocalRepositoryStateLoader {
@@ -27,10 +28,18 @@ func (inst *LocalRepositoryStateLoaderImpl) _Impl() service.LocalRepositoryState
 }
 
 // LoadState ...
-func (inst *LocalRepositoryStateLoaderImpl) LoadState(ctx context.Context, repo *dto.LocalRepository) error {
+func (inst *LocalRepositoryStateLoaderImpl) LoadState(ctx context.Context, repo0 *dto.LocalRepository) error {
 
+	repo := repo0
 	if ctx == nil || repo == nil {
 		return fmt.Errorf("param is nil")
+	}
+
+	if inst.needForEntity(repo) {
+		repo2, err := inst.loadEntityAsDTO(ctx, repo)
+		if err == nil {
+			repo = repo2
+		}
 	}
 
 	err := inst.loadStateFromFileSystem(ctx, repo)
@@ -38,59 +47,112 @@ func (inst *LocalRepositoryStateLoaderImpl) LoadState(ctx context.Context, repo 
 		return err
 	}
 
-	if repo.State != dxo.FileStateReady {
-		return nil
-	}
-
-	err = inst.loadStateFromDatabase(ctx, repo)
-	if err != nil {
-		return err
-	}
-
-	repo.Ready = (repo.State == dxo.FileStateReady)
+	*repo0 = *repo
+	repo0.Ready = (repo.State == dxo.FileStateReady)
 	return nil
 }
 
-func (inst *LocalRepositoryStateLoaderImpl) findEntity(repo *dto.LocalRepository) (*entity.LocalRepository, error) {
-
-	dao1 := inst.Dao
+func (inst *LocalRepositoryStateLoaderImpl) needForEntity(repo *dto.LocalRepository) bool {
 	id := repo.ID
-	path := repo.Path
-	// name := repo.Name
+	uuid := repo.UUID
+	if id > 0 && uuid != "" {
+		return false
+	}
+	return true
+}
 
+func (inst *LocalRepositoryStateLoaderImpl) findEntityByID(id dxo.LocalRepositoryID) (*entity.LocalRepository, error) {
+	dao1 := inst.Dao
 	ent, err := dao1.Find(id)
 	if err == nil && ent != nil {
 		return ent, nil
 	}
-
-	ent, err = dao1.FindByPath(path)
-	if err == nil && ent != nil {
-		return ent, nil
-	}
-
-	// ent, err = dao1.FindByName(name)
-	// if err == nil && ent != nil {
-	// 	return ent, nil
-	// }
-
 	return nil, fmt.Errorf("repo not found")
 }
 
-func (inst *LocalRepositoryStateLoaderImpl) loadStateFromDatabase(ctx context.Context, repo *dto.LocalRepository) error {
+func (inst *LocalRepositoryStateLoaderImpl) findEntityByUUID(uuid dxo.UUID) (*entity.LocalRepository, error) {
+	dao1 := inst.Dao
+	ent, err := dao1.FindByUUID(uuid)
+	if err == nil && ent != nil {
+		return ent, nil
+	}
+	return nil, fmt.Errorf("repo not found")
+}
 
-	ent, err := inst.findEntity(repo)
+func (inst *LocalRepositoryStateLoaderImpl) findEntityByPath(path string) (*entity.LocalRepository, error) {
+	dao1 := inst.Dao
+	ent, err := dao1.FindByPath(path)
+	if err == nil && ent != nil {
+		return ent, nil
+	}
+	return nil, fmt.Errorf("repo not found")
+}
+
+func (inst *LocalRepositoryStateLoaderImpl) findEntityByWorkingDir(path string) (*entity.LocalRepository, error) {
+	dao1 := inst.Dao
+	ent, err := dao1.FindByWorkingDir(path)
+	if err == nil && ent != nil {
+		return ent, nil
+	}
+	return nil, fmt.Errorf("repo not found")
+}
+
+func (inst *LocalRepositoryStateLoaderImpl) findEntityByDotGit(path string) (*entity.LocalRepository, error) {
+	dao1 := inst.Dao
+	ent, err := dao1.FindByDotGit(path)
+	if err == nil && ent != nil {
+		return ent, nil
+	}
+	return nil, fmt.Errorf("repo not found")
+}
+
+func (inst *LocalRepositoryStateLoaderImpl) loadEntityAsDTO(ctx context.Context, repo *dto.LocalRepository) (*dto.LocalRepository, error) {
+	ent, err := inst.loadEntity(ctx, repo)
 	if err != nil {
-		repo.State = dxo.FileStateUntracked
-		return nil
+		return nil, err
+	}
+	return inst.LocalRepoService.ConvertEntityToDto(ent)
+}
+
+func (inst *LocalRepositoryStateLoaderImpl) loadEntity(ctx context.Context, repo *dto.LocalRepository) (*entity.LocalRepository, error) {
+
+	id := repo.ID
+	uuid := repo.UUID
+	path := repo.Path
+
+	if id > 0 {
+		ent, err := inst.findEntityByID(id)
+		if err == nil {
+			return ent, nil
+		}
 	}
 
-	if ent.Path == repo.Path {
-		repo.State = dxo.FileStateReady
-	} else {
-		repo.State = dxo.FileStateMoved
+	if uuid != "" {
+		ent, err := inst.findEntityByUUID(uuid)
+		if err == nil {
+			return ent, nil
+		}
 	}
 
-	return nil
+	errNoRepoInfo := fmt.Errorf("no repository info in database")
+	if path == "" {
+		return nil, errNoRepoInfo
+	}
+
+	ent, err := inst.findEntityByPath(path)
+	if err == nil {
+		return ent, nil
+	}
+	ent, err = inst.findEntityByWorkingDir(path)
+	if err == nil {
+		return ent, nil
+	}
+	ent, err = inst.findEntityByDotGit(path)
+	if err == nil {
+		return ent, nil
+	}
+
+	return nil, errNoRepoInfo
 }
 
 func (inst *LocalRepositoryStateLoaderImpl) loadStateFromFileSystem(ctx context.Context, repo *dto.LocalRepository) error {

@@ -5,9 +5,35 @@ import (
 
 	"github.com/bitwormhole/gitlib/git/store"
 	"github.com/bitwormhole/wpm/server/data/dxo"
+	"github.com/bitwormhole/wpm/server/data/entity"
 	"github.com/bitwormhole/wpm/server/web/dto"
 	"github.com/bitwormhole/wpm/server/web/vo"
 )
+
+////////////////////////////////////////////////////////////////////////////////
+// main
+
+// MainRepositoryService ...
+type MainRepositoryService interface {
+	GetInfo(ctx context.Context) (*dto.MainRepository, error)
+
+	GetRepository(ctx context.Context) (store.Repository, error)
+}
+
+// // UserMainRepositoryService ...
+// type UserMainRepositoryService interface {
+// 	Find(ctx context.Context, id dxo.UserMainRepositoryID) (*dto.UserMainRepository, error)
+// 	FindByName(ctx context.Context, name string) (*dto.UserMainRepository, error)
+
+// 	ListAll(ctx context.Context) ([]*dto.UserMainRepository, error)
+
+// 	Insert(ctx context.Context, o *dto.UserMainRepository) (*dto.UserMainRepository, error)
+// 	Update(ctx context.Context, id dxo.UserMainRepositoryID, o *dto.UserMainRepository) (*dto.UserMainRepository, error)
+// 	Remove(ctx context.Context, id dxo.UserMainRepositoryID) error
+// }
+
+////////////////////////////////////////////////////////////////////////////////
+// remote
 
 // RemoteRepositoryService ...
 type RemoteRepositoryService interface {
@@ -21,6 +47,9 @@ type RemoteRepositoryService interface {
 	Remove(ctx context.Context, id dxo.RemoteRepositoryID) error
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// local
+
 // LocalRepositoryService ...
 type LocalRepositoryService interface {
 	Find(ctx context.Context, id dxo.LocalRepositoryID) (*dto.LocalRepository, error)
@@ -31,33 +60,9 @@ type LocalRepositoryService interface {
 	Insert(ctx context.Context, o *dto.LocalRepository) (*dto.LocalRepository, error)
 	Update(ctx context.Context, id dxo.LocalRepositoryID, o *dto.LocalRepository) (*dto.LocalRepository, error)
 	Remove(ctx context.Context, id dxo.LocalRepositoryID) error
-}
 
-// SystemMainRepositoryService ...
-type SystemMainRepositoryService interface {
-	GetInfo(ctx context.Context) (*dto.SystemMainRepository, error)
-
-	GetRepository(ctx context.Context) (store.Repository, error)
-}
-
-// UserMainRepositoryService ...
-type UserMainRepositoryService interface {
-	Find(ctx context.Context, id dxo.UserMainRepositoryID) (*dto.UserMainRepository, error)
-	FindByName(ctx context.Context, name string) (*dto.UserMainRepository, error)
-
-	ListAll(ctx context.Context) ([]*dto.UserMainRepository, error)
-
-	Insert(ctx context.Context, o *dto.UserMainRepository) (*dto.UserMainRepository, error)
-	Update(ctx context.Context, id dxo.UserMainRepositoryID, o *dto.UserMainRepository) (*dto.UserMainRepository, error)
-	Remove(ctx context.Context, id dxo.UserMainRepositoryID) error
-}
-
-// RepositoryImportService ...
-type RepositoryImportService interface {
-	Find(ctx context.Context, o *vo.RepositoryImport) (*vo.RepositoryImport, error)
-	Locate(ctx context.Context, o *vo.RepositoryImport) (*vo.RepositoryImport, error)
-	FindOrLocate(ctx context.Context, o *vo.RepositoryImport) (*vo.RepositoryImport, error)
-	Save(ctx context.Context, o *vo.RepositoryImport) (*vo.RepositoryImport, error)
+	ConvertEntityToDto(e *entity.LocalRepository) (*dto.LocalRepository, error)
+	ConvertDtoToEntity(e *dto.LocalRepository) (*entity.LocalRepository, error)
 }
 
 // LocalRepositoryFinder 。。。
@@ -70,3 +75,14 @@ type LocalRepositoryFinder interface {
 type LocalRepositoryStateLoader interface {
 	LoadState(ctx context.Context, repo *dto.LocalRepository) error
 }
+
+// RepositoryImportService ...
+type RepositoryImportService interface {
+	Find(ctx context.Context, o *vo.RepositoryImport) (*vo.RepositoryImport, error)
+	Locate(ctx context.Context, o *vo.RepositoryImport) (*vo.RepositoryImport, error)
+	FindOrLocate(ctx context.Context, o *vo.RepositoryImport) (*vo.RepositoryImport, error)
+	Save(ctx context.Context, o *vo.RepositoryImport) (*vo.RepositoryImport, error)
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// EOF

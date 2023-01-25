@@ -17,8 +17,8 @@ import (
 type MediaServiceImpl struct {
 	markup.Component `id:"MediaService"`
 
-	MediaDAO           dao.MediaDAO                        `inject:"#MediaDAO"`
-	SysMainRepoService service.SystemMainRepositoryService `inject:"#SystemMainRepositoryService"`
+	MediaDAO           dao.MediaDAO                  `inject:"#MediaDAO"`
+	SysMainRepoService service.MainRepositoryService `inject:"#MainRepositoryService"`
 }
 
 func (inst *MediaServiceImpl) _Impl() service.MediaService {

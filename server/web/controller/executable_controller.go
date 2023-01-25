@@ -184,15 +184,32 @@ func (inst *myExecutableRequest) doGetList() error {
 }
 
 func (inst *myExecutableRequest) doPost() error {
-
+	ctx := inst.gc
+	ser := inst.controller.ExecutableService
+	o1 := inst.body1.Executables[0]
+	o2, err := ser.Insert(ctx, o1)
+	if err != nil {
+		return nil
+	}
+	inst.body2.Executables = append(inst.body2.Executables, o2)
 	return nil
 }
 
 func (inst *myExecutableRequest) doPut() error {
+	ctx := inst.gc
+	ser := inst.controller.ExecutableService
+	o1 := inst.body1.Executables[0]
+	id := inst.id
+	o2, err := ser.Update(ctx, id, o1)
+	if err != nil {
+		return nil
+	}
+	inst.body2.Executables = append(inst.body2.Executables, o2)
 	return nil
 }
 
 func (inst *myExecutableRequest) doDelete() error {
-
-	return nil
+	ctx := inst.gc
+	ser := inst.controller.ExecutableService
+	return ser.Remove(ctx, inst.id)
 }

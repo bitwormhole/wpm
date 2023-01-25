@@ -38,7 +38,7 @@ func autoGenConfig(cb application.ConfigBuilder) error {
 
 	// component: com1-implservice0x5a8f41.LinuxPlatformServiceImpl
 	cominfobuilder.Next()
-	cominfobuilder.ID("com1-implservice0x5a8f41.LinuxPlatformServiceImpl").Class("PlatformServiceRegistry").Aliases("").Scope("")
+	cominfobuilder.ID("com1-implservice0x5a8f41.LinuxPlatformServiceImpl").Class("PlatformProviderRegistry").Aliases("").Scope("")
 	cominfobuilder.Factory((&comFactory4pComLinuxPlatformServiceImpl{}).init())
 	err = cominfobuilder.CreateTo(cb)
 	if err != nil {
@@ -47,8 +47,17 @@ func autoGenConfig(cb application.ConfigBuilder) error {
 
 	// component: com2-implservice0x5a8f41.WindowsPlatformServiceImpl
 	cominfobuilder.Next()
-	cominfobuilder.ID("com2-implservice0x5a8f41.WindowsPlatformServiceImpl").Class("PlatformServiceRegistry").Aliases("").Scope("")
+	cominfobuilder.ID("com2-implservice0x5a8f41.WindowsPlatformServiceImpl").Class("PlatformProviderRegistry").Aliases("").Scope("")
 	cominfobuilder.Factory((&comFactory4pComWindowsPlatformServiceImpl{}).init())
+	err = cominfobuilder.CreateTo(cb)
+	if err != nil {
+		return err
+	}
+
+	// component: ProfileService
+	cominfobuilder.Next()
+	cominfobuilder.ID("ProfileService").Class("").Aliases("").Scope("")
+	cominfobuilder.Factory((&comFactory4pComProfileServiceImpl{}).init())
 	err = cominfobuilder.CreateTo(cb)
 	if err != nil {
 		return err
@@ -67,14 +76,14 @@ type comFactory4pComPlatformServiceImpl struct {
     mPrototype * implservice0x5a8f41.PlatformServiceImpl
 
 	
-	mPSRsSelector config.InjectionSelector
+	mProvidersSelector config.InjectionSelector
 
 }
 
 func (inst * comFactory4pComPlatformServiceImpl) init() application.ComponentFactory {
 
 	
-	inst.mPSRsSelector = config.NewInjectionSelector(".PlatformServiceRegistry",nil)
+	inst.mProvidersSelector = config.NewInjectionSelector(".PlatformProviderRegistry",nil)
 
 
 	inst.mPrototype = inst.newObject()
@@ -112,16 +121,16 @@ func (inst * comFactory4pComPlatformServiceImpl) Destroy(instance application.Co
 func (inst * comFactory4pComPlatformServiceImpl) Inject(instance application.ComponentInstance, context application.InstanceContext) error {
 	
 	obj := inst.castObject(instance)
-	obj.PSRs = inst.getterForFieldPSRsSelector(context)
+	obj.Providers = inst.getterForFieldProvidersSelector(context)
 	return context.LastError()
 }
 
-//getterForFieldPSRsSelector
-func (inst * comFactory4pComPlatformServiceImpl) getterForFieldPSRsSelector (context application.InstanceContext) []service0x3e063d.PlatformServiceRegistry {
-	list1 := inst.mPSRsSelector.GetList(context)
-	list2 := make([]service0x3e063d.PlatformServiceRegistry, 0, len(list1))
+//getterForFieldProvidersSelector
+func (inst * comFactory4pComPlatformServiceImpl) getterForFieldProvidersSelector (context application.InstanceContext) []service0x3e063d.PlatformProviderRegistry {
+	list1 := inst.mProvidersSelector.GetList(context)
+	list2 := make([]service0x3e063d.PlatformProviderRegistry, 0, len(list1))
 	for _, item1 := range list1 {
-		item2, ok := item1.(service0x3e063d.PlatformServiceRegistry)
+		item2, ok := item1.(service0x3e063d.PlatformProviderRegistry)
 		if ok {
 			list2 = append(list2, item2)
 		}
@@ -235,6 +244,83 @@ func (inst * comFactory4pComWindowsPlatformServiceImpl) Destroy(instance applica
 
 func (inst * comFactory4pComWindowsPlatformServiceImpl) Inject(instance application.ComponentInstance, context application.InstanceContext) error {
 	return nil
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+// comFactory4pComProfileServiceImpl : the factory of component: ProfileService
+type comFactory4pComProfileServiceImpl struct {
+
+    mPrototype * implservice0x5a8f41.ProfileServiceImpl
+
+	
+	mPlatformServiceSelector config.InjectionSelector
+
+}
+
+func (inst * comFactory4pComProfileServiceImpl) init() application.ComponentFactory {
+
+	
+	inst.mPlatformServiceSelector = config.NewInjectionSelector("#PlatformService",nil)
+
+
+	inst.mPrototype = inst.newObject()
+    return inst
+}
+
+func (inst * comFactory4pComProfileServiceImpl) newObject() * implservice0x5a8f41.ProfileServiceImpl {
+	return & implservice0x5a8f41.ProfileServiceImpl {}
+}
+
+func (inst * comFactory4pComProfileServiceImpl) castObject(instance application.ComponentInstance) * implservice0x5a8f41.ProfileServiceImpl {
+	return instance.Get().(*implservice0x5a8f41.ProfileServiceImpl)
+}
+
+func (inst * comFactory4pComProfileServiceImpl) GetPrototype() lang.Object {
+	return inst.mPrototype
+}
+
+func (inst * comFactory4pComProfileServiceImpl) NewInstance() application.ComponentInstance {
+	return config.SimpleInstance(inst, inst.newObject())
+}
+
+func (inst * comFactory4pComProfileServiceImpl) AfterService() application.ComponentAfterService {
+	return inst
+}
+
+func (inst * comFactory4pComProfileServiceImpl) Init(instance application.ComponentInstance) error {
+	return nil
+}
+
+func (inst * comFactory4pComProfileServiceImpl) Destroy(instance application.ComponentInstance) error {
+	return nil
+}
+
+func (inst * comFactory4pComProfileServiceImpl) Inject(instance application.ComponentInstance, context application.InstanceContext) error {
+	
+	obj := inst.castObject(instance)
+	obj.PlatformService = inst.getterForFieldPlatformServiceSelector(context)
+	return context.LastError()
+}
+
+//getterForFieldPlatformServiceSelector
+func (inst * comFactory4pComProfileServiceImpl) getterForFieldPlatformServiceSelector (context application.InstanceContext) service0x3e063d.PlatformService {
+
+	o1 := inst.mPlatformServiceSelector.GetOne(context)
+	o2, ok := o1.(service0x3e063d.PlatformService)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "ProfileService")
+		eb.Set("field", "PlatformService")
+		eb.Set("type1", "?")
+		eb.Set("type2", "service0x3e063d.PlatformService")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
 }
 
 

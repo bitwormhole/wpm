@@ -13,7 +13,6 @@ import (
 type AuthController struct {
 	markup.RestController `class:"rest-controller"`
 
-	// RepoService service.RepositoryService `inject:"#RepositoryService"`
 	Responder glass.MainResponder `inject:"#glass-main-responder"`
 }
 

@@ -22,20 +22,20 @@ type LocalRepository struct {
 	Repositories []*dto.LocalRepository `json:"local_repositories"`
 }
 
-// SystemMainRepository 仓库VO
-type SystemMainRepository struct {
+// MainRepository 仓库VO
+type MainRepository struct {
 	Base
 
 	// ParamID      string
 
-	Repository *dto.SystemMainRepository `json:"system_main_repository"`
+	Repository *dto.MainRepository `json:"main_repository"`
 }
 
-// UserMainRepository 仓库VO
-type UserMainRepository struct {
-	Base
+// // UserMainRepository 仓库VO
+// type UserMainRepository struct {
+// 	Base
 
-	// ParamID      string
+// 	// ParamID      string
 
-	Repositories []*dto.UserMainRepository `json:"user_main_repositories"`
-}
+// 	Repositories []*dto.UserMainRepository `json:"user_main_repositories"`
+// }

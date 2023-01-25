@@ -10,16 +10,16 @@ import (
 
 // WindowsPlatformServiceImpl ...
 type WindowsPlatformServiceImpl struct {
-	markup.Component `class:"PlatformServiceRegistry"`
+	markup.Component `class:"PlatformProviderRegistry"`
 }
 
-func (inst *WindowsPlatformServiceImpl) _Impl() (service.PlatformServiceProvider, service.PlatformServiceRegistry) {
+func (inst *WindowsPlatformServiceImpl) _Impl() (service.PlatformProvider, service.PlatformProviderRegistry) {
 	return inst, inst
 }
 
 // GetRegistration ...
-func (inst *WindowsPlatformServiceImpl) GetRegistration() *service.PlatformServiceRegistration {
-	return &service.PlatformServiceRegistration{
+func (inst *WindowsPlatformServiceImpl) GetRegistration() *service.PlatformProviderRegistration {
+	return &service.PlatformProviderRegistration{
 		Provider: inst,
 	}
 }
@@ -33,25 +33,19 @@ func (inst *WindowsPlatformServiceImpl) Accept(p *dto.Platform) bool {
 }
 
 // GetProfile ...
-func (inst *WindowsPlatformServiceImpl) GetProfile() (*dto.Profile, error) {
+func (inst *WindowsPlatformServiceImpl) GetProfile(p *dto.Profile) error {
 	const (
 		keyUser = "USERNAME"
 		keyHome = "USERPROFILE"
 	)
+	if p == nil {
+		return fmt.Errorf("param is nil")
+	}
 	kvs, err := getRequiredEnvironmentValues(keyHome, keyUser)
 	if err != nil {
-		return nil, err
-	}
-	p := &dto.Profile{}
-	if p == nil {
-		return nil, fmt.Errorf("param is nil")
+		return err
 	}
 	p.Home = kvs[keyHome]
 	p.User = kvs[keyUser]
-	return p, nil
-}
-
-// GetPlatform ...
-func (inst *WindowsPlatformServiceImpl) GetPlatform() (*dto.Platform, error) {
-	return nil, fmt.Errorf("use: PlatformService.GetPlatform()")
+	return nil
 }

@@ -17,6 +17,7 @@ type PlatformController struct {
 	markup.RestController `class:"rest-controller"`
 
 	PlatformService service.PlatformService `inject:"#PlatformService"`
+	ProfileService  service.ProfileService  `inject:"#ProfileService"`
 	Responder       glass.MainResponder     `inject:"#glass-main-responder"`
 }
 
@@ -105,19 +106,21 @@ func (inst *myPlatformRequest) send(err error) {
 }
 
 func (inst *myPlatformRequest) doGetOne() error {
-	ser := inst.controller.PlatformService
 
-	o1, err := ser.GetProfile()
+	ser1 := inst.controller.PlatformService
+	ser2 := inst.controller.ProfileService
+
+	o1, err := ser1.GetPlatform()
 	if err != nil {
 		return err
 	}
 
-	o2, err := ser.GetPlatform()
+	o2, err := ser2.GetProfile()
 	if err != nil {
 		return err
 	}
 
-	inst.body2.Profile = o1
-	inst.body2.Platform = o2
+	inst.body2.Profile = o2
+	inst.body2.Platform = o1
 	return nil
 }

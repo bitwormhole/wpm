@@ -31,11 +31,6 @@ func (LocalRepository) TableName() string {
 }
 
 // TableName ...
-func (UserMainRepository) TableName() string {
-	return TableNamePrefix + "user_main_repository"
-}
-
-// TableName ...
 func (Project) TableName() string {
 	return TableNamePrefix + "project"
 }
@@ -57,7 +52,6 @@ func ListPrototypes() []any {
 	list = append(list, &LocalRepository{})
 	list = append(list, &Media{})
 	list = append(list, &RemoteRepository{})
-	list = append(list, &UserMainRepository{})
 	list = append(list, &User{})
 
 	return list

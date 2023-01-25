@@ -17,7 +17,7 @@ import (
 type LocalRepositoryController struct {
 	markup.RestController `class:"rest-controller"`
 
-	RepoService service.LocalRepositoryService `inject:"#RepositoryService"`
+	RepoService service.LocalRepositoryService `inject:"#LocalRepositoryService"`
 	Responder   glass.MainResponder            `inject:"#glass-main-responder"`
 }
 
@@ -189,10 +189,21 @@ func (inst *myLocalRepositoryRequest) doPost() error {
 }
 
 func (inst *myLocalRepositoryRequest) doPut() error {
+	ctx := inst.gc
+	ser := inst.controller.RepoService
+	id := inst.id
+	o1 := inst.body1.Repositories[0]
+	o2, err := ser.Update(ctx, id, o1)
+	if err != nil {
+		return err
+	}
+	inst.body2.Repositories = []*dto.LocalRepository{o2}
 	return nil
 }
 
 func (inst *myLocalRepositoryRequest) doDelete() error {
-
-	return nil
+	ctx := inst.gc
+	ser := inst.controller.RepoService
+	id := inst.id
+	return ser.Remove(ctx, id)
 }

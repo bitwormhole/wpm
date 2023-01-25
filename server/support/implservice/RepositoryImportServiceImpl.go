@@ -14,7 +14,7 @@ import (
 type RepositoryImportServiceImpl struct {
 	markup.Component `id:"RepositoryImportService"`
 
-	RepositoryService service.LocalRepositoryService `inject:"#RepositoryService"`
+	RepositoryService service.LocalRepositoryService `inject:"#LocalRepositoryService"`
 	RepoFinder        service.LocalRepositoryFinder  `inject:"#LocalRepositoryFinder"`
 }
 

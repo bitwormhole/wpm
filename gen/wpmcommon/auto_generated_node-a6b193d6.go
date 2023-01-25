@@ -12,18 +12,25 @@ import (
 type pComPlatformServiceImpl struct {
 	instance *implservice0x5a8f41.PlatformServiceImpl
 	 markup0x23084a.Component `id:"PlatformService"`
-	PSRs []service0x3e063d.PlatformServiceRegistry `inject:".PlatformServiceRegistry"`
+	Providers []service0x3e063d.PlatformProviderRegistry `inject:".PlatformProviderRegistry"`
 }
 
 
 type pComLinuxPlatformServiceImpl struct {
 	instance *implservice0x5a8f41.LinuxPlatformServiceImpl
-	 markup0x23084a.Component `class:"PlatformServiceRegistry"`
+	 markup0x23084a.Component `class:"PlatformProviderRegistry"`
 }
 
 
 type pComWindowsPlatformServiceImpl struct {
 	instance *implservice0x5a8f41.WindowsPlatformServiceImpl
-	 markup0x23084a.Component `class:"PlatformServiceRegistry"`
+	 markup0x23084a.Component `class:"PlatformProviderRegistry"`
+}
+
+
+type pComProfileServiceImpl struct {
+	instance *implservice0x5a8f41.ProfileServiceImpl
+	 markup0x23084a.Component `id:"ProfileService"`
+	PlatformService service0x3e063d.PlatformService `inject:"#PlatformService"`
 }
 

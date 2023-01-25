@@ -15,42 +15,21 @@ import (
 type PlatformServiceImpl struct {
 	markup.Component `id:"PlatformService"`
 
-	PSRs []service.PlatformServiceRegistry `inject:".PlatformServiceRegistry"`
+	Providers []service.PlatformProviderRegistry `inject:".PlatformProviderRegistry"`
 
-	cachedPSR service.PlatformServiceProvider
+	cachedProvider service.PlatformProvider
 }
 
 func (inst *PlatformServiceImpl) _Impl() service.PlatformService {
 	return inst
 }
 
-// GetProfile ...
-func (inst *PlatformServiceImpl) GetProfile() (*dto.Profile, error) {
-	dele, err := inst.findDelegate()
-	if err != nil {
-		return nil, err
-	}
-	return dele.GetProfile()
-}
+// GetProvider ...
+func (inst *PlatformServiceImpl) GetProvider() (service.PlatformProvider, error) {
 
-// GetPlatform ...
-func (inst *PlatformServiceImpl) GetPlatform() (*dto.Platform, error) {
-
-	arch := runtime.GOARCH
-	os := runtime.GOOS
-
-	p := &dto.Platform{}
-	p.Arch = strings.ToLower(arch)
-	p.OS = strings.ToLower(os)
-
-	return p, nil
-}
-
-func (inst *PlatformServiceImpl) findDelegate() (service.PlatformService, error) {
-
-	psr := inst.cachedPSR
-	if psr != nil {
-		return psr, nil
+	provider := inst.cachedProvider
+	if provider != nil {
+		return provider, nil
 	}
 
 	pf, err := inst.GetPlatform()
@@ -58,12 +37,12 @@ func (inst *PlatformServiceImpl) findDelegate() (service.PlatformService, error)
 		return nil, err
 	}
 
-	all := inst.PSRs
+	all := inst.Providers
 	for _, reg1 := range all {
 		reg2 := reg1.GetRegistration()
 		provider := reg2.Provider
 		if provider.Accept(pf) {
-			inst.cachedPSR = provider
+			inst.cachedProvider = provider
 			return provider, nil
 		}
 	}
@@ -71,6 +50,16 @@ func (inst *PlatformServiceImpl) findDelegate() (service.PlatformService, error)
 	arch := pf.Arch
 	os := pf.OS
 	return nil, fmt.Errorf("unsupported platform, os:%v arch:%v", os, arch)
+}
+
+// GetPlatform ...
+func (inst *PlatformServiceImpl) GetPlatform() (*dto.Platform, error) {
+	arch := runtime.GOARCH
+	os := runtime.GOOS
+	p := &dto.Platform{}
+	p.Arch = strings.ToLower(arch)
+	p.OS = strings.ToLower(os)
+	return p, nil
 }
 
 ////////////////////////////////////////////////////////////////////////////////

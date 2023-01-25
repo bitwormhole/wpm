@@ -32,9 +32,9 @@ type LocalRepository struct {
 	LocalRepositoryBase
 }
 
-// UserMainRepository ...
-type UserMainRepository struct {
-	ID dxo.UserMainRepositoryID `gorm:"primaryKey"`
-	Base
-	LocalRepositoryBase
-}
+// // UserMainRepository ...
+// type UserMainRepository struct {
+// 	ID dxo.UserMainRepositoryID `gorm:"primaryKey"`
+// 	Base
+// 	LocalRepositoryBase
+// }

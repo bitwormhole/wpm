@@ -3,6 +3,7 @@ package implservice
 import (
 	"context"
 	"errors"
+	"os/exec"
 	"strings"
 
 	"github.com/bitwormhole/starter/io/fs"
@@ -55,6 +56,7 @@ func (inst *ExecutableImportServiceImpl) Locate(ctx context.Context, o1 *vo.Exec
 	fsys := fs.Default()
 	for _, item := range src {
 		file := fsys.GetPath(item.Path)
+		file = inst.locateItemPath(item, file)
 		info, err := inst.getExeInfo(ctx, file)
 		if err != nil {
 			info = item
@@ -66,6 +68,21 @@ func (inst *ExecutableImportServiceImpl) Locate(ctx context.Context, o1 *vo.Exec
 	o2 := &vo.ExecutableImport{}
 	o2.Executables = dst
 	return o2, nil
+}
+
+func (inst *ExecutableImportServiceImpl) locateItemPath(item *dto.Executable, path fs.Path) fs.Path {
+	if path == nil {
+		path = fs.Default().GetPath("a/b/c/d/e123456789")
+	}
+	if path.IsFile() {
+		return path
+	}
+	name := item.Name
+	if name == "" {
+		name = path.Name()
+	}
+	ml := exec.Command(name)
+	return path.FileSystem().GetPath(ml.Path)
 }
 
 func (inst *ExecutableImportServiceImpl) getExeInfo(ctx context.Context, file fs.Path) (*dto.Executable, error) {

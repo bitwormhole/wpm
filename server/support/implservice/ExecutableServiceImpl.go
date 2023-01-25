@@ -17,7 +17,8 @@ import (
 type ExecutableServiceImpl struct {
 	markup.Component `id:"ExecutableService"`
 
-	ExecutableDAO dao.ExecutableDAO `inject:"#ExecutableDAO"`
+	ExecutableDAO dao.ExecutableDAO      `inject:"#ExecutableDAO"`
+	IconService   service.AppIconService `inject:"#AppIconService"`
 }
 
 func (inst *ExecutableServiceImpl) _Impl() service.ExecutableService {
@@ -51,6 +52,9 @@ func (inst *ExecutableServiceImpl) entity2dto(o1 *entity.Executable) (*dto.Execu
 	o2.IconURL = o1.IconURL
 	o2.OpenWithPriority = o1.OpenWithPriority
 	// todo ...
+
+	inst.IconService.FillWithIconURL(o2)
+
 	return o2, nil
 }
 
@@ -66,6 +70,7 @@ func (inst *ExecutableServiceImpl) checkBeforeInsert(ctx context.Context, o *dto
 	return nil
 }
 
+// ListAll ...
 func (inst *ExecutableServiceImpl) ListAll(ctx context.Context) ([]*dto.Executable, error) {
 	src, err := inst.ExecutableDAO.ListAll()
 	if err != nil {
@@ -108,12 +113,22 @@ func (inst *ExecutableServiceImpl) Insert(ctx context.Context, o1 *dto.Executabl
 	return inst.entity2dto(e2)
 }
 
-func (inst *ExecutableServiceImpl) Update(ctx context.Context, id dxo.ExecutableID, o *dto.Executable) (*dto.Executable, error) {
-	return nil, errors.New("no impl")
+// Update ...
+func (inst *ExecutableServiceImpl) Update(ctx context.Context, id dxo.ExecutableID, o1 *dto.Executable) (*dto.Executable, error) {
+	o2, err := inst.dto2entity(o1)
+	if err != nil {
+		return nil, err
+	}
+	o3, err := inst.ExecutableDAO.Update(id, o2)
+	if err != nil {
+		return nil, err
+	}
+	return inst.entity2dto(o3)
 }
 
+// Remove ...
 func (inst *ExecutableServiceImpl) Remove(ctx context.Context, id dxo.ExecutableID) error {
-	return errors.New("no impl")
+	return inst.ExecutableDAO.Remove(id)
 }
 
 // FindByPath ...

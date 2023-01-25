@@ -28,7 +28,7 @@ func (inst *IntentHandlerImpl) HandleIntent(i *dto.Intent) error {
 		return nil
 	}
 
-	params := i.CLI
+	params := i
 	if params == nil {
 		return fmt.Errorf("intent-cli is nil")
 	}
@@ -59,7 +59,7 @@ func (inst *IntentHandlerImpl) makeEnv(src map[string]string) []string {
 	return dst
 }
 
-func (inst *IntentHandlerImpl) makeCmd(p *dto.IntentCLI) *exec.Cmd {
+func (inst *IntentHandlerImpl) makeCmd(p *dto.Intent) *exec.Cmd {
 	if p.Arguments == nil {
 		return exec.Command(p.Command)
 	}
