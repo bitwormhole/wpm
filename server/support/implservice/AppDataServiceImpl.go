@@ -1,6 +1,8 @@
 package implservice
 
 import (
+	"os"
+
 	"bitwormhole.com/starter/afs"
 	"bitwormhole.com/starter/afs/files"
 	"github.com/bitwormhole/starter/markup"
@@ -80,6 +82,10 @@ func (inst *AppDataServiceImpl) Ready() bool {
 func (inst *AppDataServiceImpl) Setup() error {
 	dir := inst.forPath(AppDataMainGit)
 	vlog.Info("setup main repository at ", dir.GetPath())
-	opt := &afs.Options{}
+	opt := &afs.Options{
+		Permission: os.ModePerm,
+		Create:     true,
+		Mkdirs:     true,
+	}
 	return dir.Mkdirs(opt)
 }
