@@ -10,7 +10,7 @@ require (
 )
 
 require (
-	bitwormhole.com/starter/afs v0.0.5 // indirect
+	bitwormhole.com/starter/afs v0.0.6 // indirect
 	bitwormhole.com/starter/base v0.0.1 // indirect
 	bitwormhole.com/starter/cli v0.0.9 // indirect
 	bitwormhole.com/starter/vlog v0.0.1 // indirect
