@@ -7,4 +7,8 @@ type AppDataService interface {
 	GetSQLiteDBFile() string
 
 	GetMainRepositoryPath() string
+
+	Ready() bool
+
+	Setup() error
 }

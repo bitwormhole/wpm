@@ -52,6 +52,15 @@ func (inst *WpmDataSource) DB() (*gorm.DB, error) {
 }
 
 func (inst *WpmDataSource) open() (*gorm.DB, error) {
+
+	ads := inst.AppDataService
+	if !ads.Ready() {
+		err := ads.Setup()
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	cfg := inst.config()
 	src, err := inst.DM.OpenSource(cfg)
 	if err != nil {

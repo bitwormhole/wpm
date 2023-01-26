@@ -17,6 +17,7 @@ import (
 	intents0xec84e7 "github.com/bitwormhole/wpm/server/utils/intents"
 	filters0x5d53d8 "github.com/bitwormhole/wpm/server/utils/intents/filters"
 	controller0x9dc399 "github.com/bitwormhole/wpm/server/web/controller"
+	filter0x8aa8f6 "github.com/bitwormhole/wpm/server/web/filter"
 )
 
 type pComGormDBAgentImpl struct {
@@ -386,5 +387,11 @@ type pComRepositoryImportController struct {
 	RepoStateLoader service0x3e063d.LocalRepositoryStateLoader `inject:"#LocalRepositoryStateLoader"`
 	ImportService service0x3e063d.RepositoryImportService `inject:"#RepositoryImportService"`
 	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
+type pComHostFilter struct {
+	instance *filter0x8aa8f6.HostFilter
+	 markup0x23084a.RestController `class:"rest-controller"`
 }
 

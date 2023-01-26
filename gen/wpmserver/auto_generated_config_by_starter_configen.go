@@ -20,6 +20,7 @@ import (
 	intents0xec84e7 "github.com/bitwormhole/wpm/server/utils/intents"
 	filters0x5d53d8 "github.com/bitwormhole/wpm/server/utils/intents/filters"
 	controller0x9dc399 "github.com/bitwormhole/wpm/server/web/controller"
+	filter0x8aa8f6 "github.com/bitwormhole/wpm/server/web/filter"
     
 )
 
@@ -472,6 +473,15 @@ func autoGenConfig(cb application.ConfigBuilder) error {
 	cominfobuilder.Next()
 	cominfobuilder.ID("com48-controller0x9dc399.RepositoryImportController").Class("rest-controller").Aliases("").Scope("")
 	cominfobuilder.Factory((&comFactory4pComRepositoryImportController{}).init())
+	err = cominfobuilder.CreateTo(cb)
+	if err != nil {
+		return err
+	}
+
+	// component: com49-filter0x8aa8f6.HostFilter
+	cominfobuilder.Next()
+	cominfobuilder.ID("com49-filter0x8aa8f6.HostFilter").Class("rest-controller").Aliases("").Scope("")
+	cominfobuilder.Factory((&comFactory4pComHostFilter{}).init())
 	err = cominfobuilder.CreateTo(cb)
 	if err != nil {
 		return err
@@ -4683,6 +4693,60 @@ func (inst * comFactory4pComRepositoryImportController) getterForFieldResponderS
 		return nil
 	}
 	return o2
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+// comFactory4pComHostFilter : the factory of component: com49-filter0x8aa8f6.HostFilter
+type comFactory4pComHostFilter struct {
+
+    mPrototype * filter0x8aa8f6.HostFilter
+
+	
+
+}
+
+func (inst * comFactory4pComHostFilter) init() application.ComponentFactory {
+
+	
+
+
+	inst.mPrototype = inst.newObject()
+    return inst
+}
+
+func (inst * comFactory4pComHostFilter) newObject() * filter0x8aa8f6.HostFilter {
+	return & filter0x8aa8f6.HostFilter {}
+}
+
+func (inst * comFactory4pComHostFilter) castObject(instance application.ComponentInstance) * filter0x8aa8f6.HostFilter {
+	return instance.Get().(*filter0x8aa8f6.HostFilter)
+}
+
+func (inst * comFactory4pComHostFilter) GetPrototype() lang.Object {
+	return inst.mPrototype
+}
+
+func (inst * comFactory4pComHostFilter) NewInstance() application.ComponentInstance {
+	return config.SimpleInstance(inst, inst.newObject())
+}
+
+func (inst * comFactory4pComHostFilter) AfterService() application.ComponentAfterService {
+	return inst
+}
+
+func (inst * comFactory4pComHostFilter) Init(instance application.ComponentInstance) error {
+	return nil
+}
+
+func (inst * comFactory4pComHostFilter) Destroy(instance application.ComponentInstance) error {
+	return nil
+}
+
+func (inst * comFactory4pComHostFilter) Inject(instance application.ComponentInstance, context application.InstanceContext) error {
+	return nil
 }
 
 
