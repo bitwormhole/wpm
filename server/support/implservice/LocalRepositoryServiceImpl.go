@@ -34,7 +34,11 @@ func (inst *LocalRepositoryServiceImpl) dto2entity(o1 *dto.LocalRepository) (*en
 	o2.Name = o1.Name
 	o2.DisplayName = o1.DisplayName
 	o2.Description = o1.Description
+
 	o2.Path = o1.Path
+	o2.DotGitPath = o1.DotGitPath
+	o2.RepositoryPath = o1.RepositoryPath
+	o2.WorkingPath = o1.WorkingPath
 
 	return o2, nil
 }
@@ -45,10 +49,14 @@ func (inst *LocalRepositoryServiceImpl) entity2dto(o1 *entity.LocalRepository) (
 
 	// todo ... fields
 	o2.ID = o1.ID
-	o2.Path = o1.Path
 	o2.Name = o1.Name
 	o2.DisplayName = o1.DisplayName
 	o2.Description = o1.Description
+
+	o2.Path = o1.Path
+	o2.DotGitPath = o1.DotGitPath
+	o2.RepositoryPath = o1.RepositoryPath
+	o2.WorkingPath = o1.WorkingPath
 
 	// o2.Ready =o1
 

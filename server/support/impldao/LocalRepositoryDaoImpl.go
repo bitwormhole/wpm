@@ -163,7 +163,14 @@ func (inst *RepositoryDaoImpl) Update(id dxo.LocalRepositoryID, o1 *entity.Local
 
 	// compute fields
 	o2.Path = inst.normalizePath(o1.Path)
+	o2.ConfigFile = inst.normalizePath(o1.ConfigFile)
 	o2.DotGitPath = inst.normalizePath(o1.DotGitPath)
+	o2.WorkingPath = inst.normalizePath(o1.WorkingPath)
+	o2.RepositoryPath = inst.normalizePath(o1.RepositoryPath)
+
+	o2.Name = o1.Name
+	o2.DisplayName = o1.DisplayName
+	o2.Description = o1.Description
 
 	// check
 	err := inst.checkEntity(o2)

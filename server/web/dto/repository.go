@@ -22,7 +22,10 @@ type LocalRepository struct {
 
 	RepositoryBase
 
-	Path string `json:"path"`
+	Path           string `json:"path"`
+	DotGitPath     string `json:"dot_git_path"`
+	RepositoryPath string `json:"repository_path"`
+	WorkingPath    string `json:"workspace_path"`
 }
 
 // MainRepository ...

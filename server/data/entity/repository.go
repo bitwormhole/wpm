@@ -18,11 +18,11 @@ type LocalRepositoryBase struct {
 	DisplayName string
 	Description string
 
-	Path string
-
-	ConfigFile  string
-	DotGitPath  string
-	WorkingPath string
+	Path           string
+	ConfigFile     string
+	DotGitPath     string
+	RepositoryPath string
+	WorkingPath    string
 }
 
 // LocalRepository ...
