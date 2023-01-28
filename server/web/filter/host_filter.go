@@ -40,6 +40,8 @@ func (inst *HostFilter) accept(c *gin.Context) bool {
 	vlog.Warn("http access with host:", ip)
 	if ip == "127.0.0.1" {
 		return true
+	} else if ip == "::1" {
+		return true
 	}
 	return false
 }
