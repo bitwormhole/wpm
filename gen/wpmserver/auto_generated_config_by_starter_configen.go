@@ -487,6 +487,15 @@ func autoGenConfig(cb application.ConfigBuilder) error {
 		return err
 	}
 
+	// component: com50-filter0x8aa8f6.HTTP404Filter
+	cominfobuilder.Next()
+	cominfobuilder.ID("com50-filter0x8aa8f6.HTTP404Filter").Class("rest-controller").Aliases("").Scope("")
+	cominfobuilder.Factory((&comFactory4pComHTTP404Filter{}).init())
+	err = cominfobuilder.CreateTo(cb)
+	if err != nil {
+		return err
+	}
+
 
 
     return nil
@@ -4747,6 +4756,70 @@ func (inst * comFactory4pComHostFilter) Destroy(instance application.ComponentIn
 
 func (inst * comFactory4pComHostFilter) Inject(instance application.ComponentInstance, context application.InstanceContext) error {
 	return nil
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+// comFactory4pComHTTP404Filter : the factory of component: com50-filter0x8aa8f6.HTTP404Filter
+type comFactory4pComHTTP404Filter struct {
+
+    mPrototype * filter0x8aa8f6.HTTP404Filter
+
+	
+	mContextSelector config.InjectionSelector
+
+}
+
+func (inst * comFactory4pComHTTP404Filter) init() application.ComponentFactory {
+
+	
+	inst.mContextSelector = config.NewInjectionSelector("context",nil)
+
+
+	inst.mPrototype = inst.newObject()
+    return inst
+}
+
+func (inst * comFactory4pComHTTP404Filter) newObject() * filter0x8aa8f6.HTTP404Filter {
+	return & filter0x8aa8f6.HTTP404Filter {}
+}
+
+func (inst * comFactory4pComHTTP404Filter) castObject(instance application.ComponentInstance) * filter0x8aa8f6.HTTP404Filter {
+	return instance.Get().(*filter0x8aa8f6.HTTP404Filter)
+}
+
+func (inst * comFactory4pComHTTP404Filter) GetPrototype() lang.Object {
+	return inst.mPrototype
+}
+
+func (inst * comFactory4pComHTTP404Filter) NewInstance() application.ComponentInstance {
+	return config.SimpleInstance(inst, inst.newObject())
+}
+
+func (inst * comFactory4pComHTTP404Filter) AfterService() application.ComponentAfterService {
+	return inst
+}
+
+func (inst * comFactory4pComHTTP404Filter) Init(instance application.ComponentInstance) error {
+	return nil
+}
+
+func (inst * comFactory4pComHTTP404Filter) Destroy(instance application.ComponentInstance) error {
+	return nil
+}
+
+func (inst * comFactory4pComHTTP404Filter) Inject(instance application.ComponentInstance, context application.InstanceContext) error {
+	
+	obj := inst.castObject(instance)
+	obj.Context = inst.getterForFieldContextSelector(context)
+	return context.LastError()
+}
+
+//getterForFieldContextSelector
+func (inst * comFactory4pComHTTP404Filter) getterForFieldContextSelector (context application.InstanceContext) application.Context {
+    return context.Context()
 }
 
 

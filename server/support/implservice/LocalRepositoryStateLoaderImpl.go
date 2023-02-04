@@ -31,6 +31,8 @@ func (inst *LocalRepositoryStateLoaderImpl) _Impl() service.LocalRepositoryState
 func (inst *LocalRepositoryStateLoaderImpl) LoadState(ctx context.Context, repo0 *dto.LocalRepository) error {
 
 	repo := repo0
+	isInDB := false
+
 	if ctx == nil || repo == nil {
 		return fmt.Errorf("param is nil")
 	}
@@ -39,12 +41,17 @@ func (inst *LocalRepositoryStateLoaderImpl) LoadState(ctx context.Context, repo0
 		repo2, err := inst.loadEntityAsDTO(ctx, repo)
 		if err == nil {
 			repo = repo2
+			isInDB = true
 		}
 	}
 
 	err := inst.loadStateFromFileSystem(ctx, repo)
 	if err != nil {
 		return err
+	}
+
+	if !isInDB {
+		repo.State = dxo.FileStateUntracked
 	}
 
 	*repo0 = *repo

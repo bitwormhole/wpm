@@ -395,3 +395,10 @@ type pComHostFilter struct {
 	 markup0x23084a.RestController `class:"rest-controller"`
 }
 
+
+type pComHTTP404Filter struct {
+	instance *filter0x8aa8f6.HTTP404Filter
+	 markup0x23084a.RestController `class:"rest-controller"`
+	Context application0x67f6c5.Context `inject:"context"`
+}
+
