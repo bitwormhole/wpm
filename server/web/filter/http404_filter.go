@@ -30,7 +30,7 @@ func (inst *HTTP404Filter) Init(ec glass.EngineConnection) error {
 
 func (inst *HTTP404Filter) handle(c *gin.Context) {
 	data := inst.getPage()
-	c.Data(http.StatusNotFound, "text/html", data)
+	c.Data(http.StatusOK, "text/html", data)
 }
 
 func (inst *HTTP404Filter) getPage() []byte {

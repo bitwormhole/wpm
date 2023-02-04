@@ -267,6 +267,12 @@ type pComIntentFilterForMsEdge struct {
 }
 
 
+type pComIntentFilterForNautilus struct {
+	instance *filters0x5d53d8.IntentFilterForNautilus
+	 markup0x23084a.Component `class:"intent-filter-registry"`
+}
+
+
 type pComIntentFilterForPowerShell struct {
 	instance *filters0x5d53d8.IntentFilterForPowerShell
 	 markup0x23084a.Component `class:"intent-filter-registry"`
