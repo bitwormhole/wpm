@@ -9,6 +9,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// [弃用] ： 通过设置 web.error-page.* 属性来配置 error 页面
+
 // HTTP404Filter 是 http 404 error 过滤器
 type HTTP404Filter struct {
 	markup.RestController `class:"rest-controller"`
@@ -24,7 +26,7 @@ func (inst *HTTP404Filter) _Impl() glass.Controller {
 
 // Init 初始化
 func (inst *HTTP404Filter) Init(ec glass.EngineConnection) error {
-	ec.HandleNoResource(0, inst.handle)
+	// ec.HandleNoResource(0, inst.handle)
 	return nil
 }
 

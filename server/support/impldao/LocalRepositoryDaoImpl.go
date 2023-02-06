@@ -190,6 +190,7 @@ func (inst *RepositoryDaoImpl) Update(id dxo.LocalRepositoryID, o1 *entity.Local
 func (inst *RepositoryDaoImpl) Remove(id dxo.LocalRepositoryID) error {
 	db := inst.Agent.DB()
 	o := inst.model()
+	o.ID = id
 	res := db.Delete(o, id)
 	return res.Error
 }

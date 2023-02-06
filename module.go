@@ -40,7 +40,7 @@ func ServerModule() application.Module {
 	mb.Resources(collection.LoadEmbedResources(&theModuleResFS, theModuleResPath))
 
 	mb.Dependency(ginstarter.Module())
-	// mb.Dependency(ginstarter.ModuleWithDevtools())
+	mb.Dependency(ginstarter.ModuleWithDevtools())
 	mb.Dependency(CommonModule())
 
 	mb.Dependency(gormstarter.Module())
