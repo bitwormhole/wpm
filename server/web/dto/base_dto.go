@@ -12,4 +12,5 @@ type Base struct {
 
 	UUID      dxo.UUID  `json:"uuid"`
 	CreatedAt util.Time `json:"created_at"`
+	UpdatedAt util.Time `json:"updated_at"`
 }

@@ -75,6 +75,18 @@ type pComProjectDaoImpl struct {
 }
 
 
+type pComAboutServiceImpl struct {
+	instance *implservice0x22327c.AboutServiceImpl
+	 markup0x23084a.Component `id:"AboutService"`
+	Profile string `inject:"${application.profiles.active}"`
+	Name string `inject:"${application.about.name}"`
+	Title string `inject:"${application.about.title}"`
+	Copyright string `inject:"${application.about.copyright}"`
+	PlatformService service0x3e063d.PlatformService `inject:"#PlatformService"`
+	ProfileService service0x3e063d.ProfileService `inject:"#ProfileService"`
+}
+
+
 type pComAppDataServiceImpl struct {
 	instance *implservice0x22327c.AppDataServiceImpl
 	 markup0x23084a.Component `id:"AppDataService"`
@@ -108,6 +120,12 @@ type pComExecutableServiceImpl struct {
 	 markup0x23084a.Component `id:"ExecutableService"`
 	ExecutableDAO dao0x5af8d0.ExecutableDAO `inject:"#ExecutableDAO"`
 	IconService service0x3e063d.AppIconService `inject:"#AppIconService"`
+}
+
+
+type pComFileQueryServiceImpl struct {
+	instance *implservice0x22327c.FileQueryServiceImpl
+	 markup0x23084a.Component `id:"FileQueryService"`
 }
 
 
@@ -292,6 +310,14 @@ type pComFilterManagerImpl struct {
 }
 
 
+type pComAboutController struct {
+	instance *controller0x9dc399.AboutController
+	 markup0x23084a.RestController `class:"rest-controller"`
+	AboutService service0x3e063d.AboutService `inject:"#AboutService"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
 type pComAuthController struct {
 	instance *controller0x9dc399.AuthController
 	 markup0x23084a.RestController `class:"rest-controller"`
@@ -318,6 +344,14 @@ type pComExecutableImportController struct {
 	instance *controller0x9dc399.ExecutableImportController
 	 markup0x23084a.RestController `class:"rest-controller"`
 	ExecutableImportService service0x3e063d.ExecutableImportService `inject:"#ExecutableImportService"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
+type pComFileQueryController struct {
+	instance *controller0x9dc399.FileQueryController
+	 markup0x23084a.RestController `class:"rest-controller"`
+	FileQueryService service0x3e063d.FileQueryService `inject:"#FileQueryService"`
 	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
 }
 

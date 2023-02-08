@@ -7,6 +7,6 @@ import (
 
 func main() {
 	i := starter.InitApp()
-	i.Use(wpm.ServerModule())
+	i.Use(wpm.Module())
 	i.Run()
 }
