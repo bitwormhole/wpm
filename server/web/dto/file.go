@@ -3,6 +3,7 @@ package dto
 // File 表示一个文件或者文件夹的信息
 type File struct {
 	Name string `json:"name"`
+	Path string `json:"path"`
 
 	Base
 

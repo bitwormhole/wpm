@@ -9,6 +9,7 @@ import (
 type FileQuery struct {
 	Base
 
+	BaseURL    string                `json:"base"` // 'file:///' or 'repository:///'
 	Repository dxo.LocalRepositoryID `json:"repository"`
 
 	Branch string `json:"branch"` // the git branch name
