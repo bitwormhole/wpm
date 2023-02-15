@@ -48,6 +48,29 @@ func (inst *FileSystemHandler) Accept(q *vo.FileQuery) bool {
 	return strings.HasPrefix(url, "file:/")
 }
 
+func (inst *FileSystemHandler) queryRoots(q *vo.FileQuery) (*vo.FileQuery, error) {
+
+	fs := inst.getfs()
+	res := &vo.FileQuery{}
+	roots := fs.ListRoots()
+	items := make([]*dto.File, 0)
+
+	for _, root := range roots {
+		item := &dto.File{}
+		inst.loadItem(root, item)
+		// item.Name = ""
+		items = append(items, item)
+	}
+
+	res.BaseURL = "file:///"
+	res.Path = "/"
+	res.Items = items
+	res.Self.IsFile = false
+	res.Self.Exists = true
+	res.Self.IsDir = true
+	return res, nil
+}
+
 func (inst *FileSystemHandler) Query(q *vo.FileQuery) (*vo.FileQuery, error) {
 
 	u, err := url.Parse(q.BaseURL)
@@ -57,6 +80,10 @@ func (inst *FileSystemHandler) Query(q *vo.FileQuery) (*vo.FileQuery, error) {
 	pathStr := u.Path + "/" + q.Path
 	fs := inst.getfs()
 	path := fs.NewPath(pathStr)
+
+	if path.GetPath() == "" {
+		return inst.queryRoots(q)
+	}
 
 	res := &vo.FileQuery{}
 	res.BaseURL = "file:///"
