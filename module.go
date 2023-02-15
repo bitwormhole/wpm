@@ -19,8 +19,8 @@ import (
 
 const (
 	theModuleName     = "github.com/bitwormhole/wpm"
-	theModuleVersion  = "v0.0.9"
-	theModuleRevision = 9
+	theModuleVersion  = "v0.0.10"
+	theModuleRevision = 10
 	theModuleResPath  = "src/main/resources"
 )
 
