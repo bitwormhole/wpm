@@ -32,7 +32,7 @@ func (inst *ExecutableDaoImpl) modelList() []*entity.Executable {
 func (inst *ExecutableDaoImpl) Find(id dxo.ExecutableID) (*entity.Executable, error) {
 	db := inst.Agent.DB()
 	o := inst.model()
-	res := db.Find(o, id)
+	res := db.First(&o, id)
 	if res.Error != nil {
 		return nil, res.Error
 	}
@@ -88,7 +88,10 @@ func (inst *ExecutableDaoImpl) Update(id dxo.ExecutableID, o1 *entity.Executable
 
 // Remove ...
 func (inst *ExecutableDaoImpl) Remove(id dxo.ExecutableID) error {
-	o1 := inst.model()
+	o1, err := inst.Find(id)
+	if err != nil {
+		return err
+	}
 	db := inst.Agent.DB()
 	res := db.Delete(o1, id)
 	return res.Error

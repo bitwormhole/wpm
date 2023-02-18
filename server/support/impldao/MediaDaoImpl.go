@@ -34,7 +34,7 @@ func (inst *MediaDaoImpl) modelList() []*entity.Media {
 func (inst *MediaDaoImpl) Find(id dxo.MediaID) (*entity.Media, error) {
 	o := inst.model()
 	db := inst.Agent.DB()
-	res := db.Find(&o, id)
+	res := db.First(&o, id)
 	if res.Error != nil {
 		return nil, res.Error
 	}
