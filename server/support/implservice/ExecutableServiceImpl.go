@@ -17,8 +17,9 @@ import (
 type ExecutableServiceImpl struct {
 	markup.Component `id:"ExecutableService"`
 
-	ExecutableDAO dao.ExecutableDAO      `inject:"#ExecutableDAO"`
-	IconService   service.AppIconService `inject:"#AppIconService"`
+	ExecutableDAO     dao.ExecutableDAO         `inject:"#ExecutableDAO"`
+	IconService       service.AppIconService    `inject:"#AppIconService"`
+	FileSystemService service.FileSystemService `inject:"#FileSystemService"`
 }
 
 func (inst *ExecutableServiceImpl) _Impl() service.ExecutableService {
@@ -51,11 +52,23 @@ func (inst *ExecutableServiceImpl) entity2dto(o1 *entity.Executable) (*dto.Execu
 	o2.Description = o1.Description
 	o2.IconURL = o1.IconURL
 	o2.OpenWithPriority = o1.OpenWithPriority
+
 	// todo ...
+	o2.State = inst.checkExeFileState(o1)
 
 	inst.IconService.FillWithIconURL(o2)
 
 	return o2, nil
+}
+
+func (inst *ExecutableServiceImpl) checkExeFileState(o1 *entity.Executable) dxo.FileState {
+	path := inst.FileSystemService.Path(o1.Path)
+	if path.IsFile() {
+		return dxo.FileStateReady
+	} else if path.IsDirectory() {
+		return dxo.FileStateUnknowError
+	}
+	return dxo.FileStateOffline
 }
 
 func (inst *ExecutableServiceImpl) checkBeforeInsert(ctx context.Context, o *dto.Executable) error {

@@ -59,6 +59,7 @@ func (inst *LocalRepositoryServiceImpl) entity2dto(o1 *entity.LocalRepository) (
 	o2.WorkingPath = o1.WorkingPath
 
 	// o2.Ready =o1
+	o2.State = "todo..."
 
 	return o2, nil
 }
