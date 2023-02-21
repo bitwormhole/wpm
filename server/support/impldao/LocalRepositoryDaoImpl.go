@@ -128,6 +128,27 @@ func (inst *RepositoryDaoImpl) ListAll() ([]*entity.LocalRepository, error) {
 	return list, nil
 }
 
+// ListByIds ...
+func (inst *RepositoryDaoImpl) ListByIds(ids []dxo.LocalRepositoryID) ([]*entity.LocalRepository, error) {
+
+	if ids == nil {
+		return []*entity.LocalRepository{}, nil
+	}
+
+	if len(ids) == 0 {
+		return []*entity.LocalRepository{}, nil
+	}
+
+	db := inst.Agent.DB()
+	list := inst.modelList()
+	res := db.Find(&list, ids)
+	if res.Error != nil {
+		return nil, res.Error
+	}
+
+	return list, nil
+}
+
 // Insert ...
 func (inst *RepositoryDaoImpl) Insert(o *entity.LocalRepository) (*entity.LocalRepository, error) {
 	db := inst.Agent.DB()

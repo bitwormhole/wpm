@@ -29,6 +29,7 @@ type LocalRepositoryDAO interface {
 	FindByWorkingDir(path string) (*entity.LocalRepository, error)
 
 	ListAll() ([]*entity.LocalRepository, error)
+	ListByIds(ids []dxo.LocalRepositoryID) ([]*entity.LocalRepository, error)
 
 	Insert(o *entity.LocalRepository) (*entity.LocalRepository, error)
 	Update(id dxo.LocalRepositoryID, o *entity.LocalRepository) (*entity.LocalRepository, error)

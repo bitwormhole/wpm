@@ -2139,18 +2139,20 @@ type comFactory4pComLocalRepositoryServiceImpl struct {
     mPrototype * implservice0x22327c.LocalRepositoryServiceImpl
 
 	
+	mLocalRepositoryDAOSelector config.InjectionSelector
 	mUUIDGenServiceSelector config.InjectionSelector
 	mRepoFinderSelector config.InjectionSelector
-	mLocalRepositoryDAOSelector config.InjectionSelector
+	mLrStateLoaderSelector config.InjectionSelector
 
 }
 
 func (inst * comFactory4pComLocalRepositoryServiceImpl) init() application.ComponentFactory {
 
 	
+	inst.mLocalRepositoryDAOSelector = config.NewInjectionSelector("#LocalRepositoryDAO",nil)
 	inst.mUUIDGenServiceSelector = config.NewInjectionSelector("#UUIDGenService",nil)
 	inst.mRepoFinderSelector = config.NewInjectionSelector("#LocalRepositoryFinder",nil)
-	inst.mLocalRepositoryDAOSelector = config.NewInjectionSelector("#LocalRepositoryDAO",nil)
+	inst.mLrStateLoaderSelector = config.NewInjectionSelector("#LocalRepositoryStateLoader",nil)
 
 
 	inst.mPrototype = inst.newObject()
@@ -2188,10 +2190,29 @@ func (inst * comFactory4pComLocalRepositoryServiceImpl) Destroy(instance applica
 func (inst * comFactory4pComLocalRepositoryServiceImpl) Inject(instance application.ComponentInstance, context application.InstanceContext) error {
 	
 	obj := inst.castObject(instance)
+	obj.LocalRepositoryDAO = inst.getterForFieldLocalRepositoryDAOSelector(context)
 	obj.UUIDGenService = inst.getterForFieldUUIDGenServiceSelector(context)
 	obj.RepoFinder = inst.getterForFieldRepoFinderSelector(context)
-	obj.LocalRepositoryDAO = inst.getterForFieldLocalRepositoryDAOSelector(context)
+	obj.LrStateLoader = inst.getterForFieldLrStateLoaderSelector(context)
 	return context.LastError()
+}
+
+//getterForFieldLocalRepositoryDAOSelector
+func (inst * comFactory4pComLocalRepositoryServiceImpl) getterForFieldLocalRepositoryDAOSelector (context application.InstanceContext) dao0x5af8d0.LocalRepositoryDAO {
+
+	o1 := inst.mLocalRepositoryDAOSelector.GetOne(context)
+	o2, ok := o1.(dao0x5af8d0.LocalRepositoryDAO)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "LocalRepositoryService")
+		eb.Set("field", "LocalRepositoryDAO")
+		eb.Set("type1", "?")
+		eb.Set("type2", "dao0x5af8d0.LocalRepositoryDAO")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
 }
 
 //getterForFieldUUIDGenServiceSelector
@@ -2230,18 +2251,18 @@ func (inst * comFactory4pComLocalRepositoryServiceImpl) getterForFieldRepoFinder
 	return o2
 }
 
-//getterForFieldLocalRepositoryDAOSelector
-func (inst * comFactory4pComLocalRepositoryServiceImpl) getterForFieldLocalRepositoryDAOSelector (context application.InstanceContext) dao0x5af8d0.LocalRepositoryDAO {
+//getterForFieldLrStateLoaderSelector
+func (inst * comFactory4pComLocalRepositoryServiceImpl) getterForFieldLrStateLoaderSelector (context application.InstanceContext) service0x3e063d.LocalRepositoryStateLoader {
 
-	o1 := inst.mLocalRepositoryDAOSelector.GetOne(context)
-	o2, ok := o1.(dao0x5af8d0.LocalRepositoryDAO)
+	o1 := inst.mLrStateLoaderSelector.GetOne(context)
+	o2, ok := o1.(service0x3e063d.LocalRepositoryStateLoader)
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
 		eb.Set("com", "LocalRepositoryService")
-		eb.Set("field", "LocalRepositoryDAO")
+		eb.Set("field", "LrStateLoader")
 		eb.Set("type1", "?")
-		eb.Set("type2", "dao0x5af8d0.LocalRepositoryDAO")
+		eb.Set("type2", "service0x3e063d.LocalRepositoryStateLoader")
 		context.HandleError(eb.Create())
 		return nil
 	}

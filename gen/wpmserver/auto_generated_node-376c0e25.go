@@ -162,9 +162,10 @@ type pComLocalRepositoryFinderImpl struct {
 type pComLocalRepositoryServiceImpl struct {
 	instance *implservice0x22327c.LocalRepositoryServiceImpl
 	 markup0x23084a.Component `id:"LocalRepositoryService"`
+	LocalRepositoryDAO dao0x5af8d0.LocalRepositoryDAO `inject:"#LocalRepositoryDAO"`
 	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
 	RepoFinder service0x3e063d.LocalRepositoryFinder `inject:"#LocalRepositoryFinder"`
-	LocalRepositoryDAO dao0x5af8d0.LocalRepositoryDAO `inject:"#LocalRepositoryDAO"`
+	LrStateLoader service0x3e063d.LocalRepositoryStateLoader `inject:"#LocalRepositoryStateLoader"`
 }
 
 

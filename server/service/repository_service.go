@@ -50,12 +50,19 @@ type RemoteRepositoryService interface {
 ////////////////////////////////////////////////////////////////////////////////
 // local
 
+// LocalRepositoryOptions ...
+type LocalRepositoryOptions struct {
+	WithFileState bool
+	WithGitStatus bool
+	All           bool
+}
+
 // LocalRepositoryService ...
 type LocalRepositoryService interface {
-	Find(ctx context.Context, id dxo.LocalRepositoryID) (*dto.LocalRepository, error)
-	FindByName(ctx context.Context, name string) (*dto.LocalRepository, error)
-
-	ListAll(ctx context.Context) ([]*dto.LocalRepository, error)
+	Find(ctx context.Context, id dxo.LocalRepositoryID, opt *LocalRepositoryOptions) (*dto.LocalRepository, error)
+	FindByName(ctx context.Context, name string, opt *LocalRepositoryOptions) (*dto.LocalRepository, error)
+	ListAll(ctx context.Context, opt *LocalRepositoryOptions) ([]*dto.LocalRepository, error)
+	ListByIds(ctx context.Context, ids []dxo.LocalRepositoryID, opt *LocalRepositoryOptions) ([]*dto.LocalRepository, error)
 
 	Insert(ctx context.Context, o *dto.LocalRepository) (*dto.LocalRepository, error)
 	Update(ctx context.Context, id dxo.LocalRepositoryID, o *dto.LocalRepository) (*dto.LocalRepository, error)

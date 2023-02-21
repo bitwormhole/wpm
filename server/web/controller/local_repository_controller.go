@@ -2,7 +2,9 @@ package controller
 
 import (
 	"net/http"
+	"sort"
 	"strconv"
+	"strings"
 
 	"github.com/bitwormhole/starter-gin/glass"
 	"github.com/bitwormhole/starter/markup"
@@ -42,10 +44,12 @@ func (inst *LocalRepositoryController) Init(ec glass.EngineConnection) error {
 
 func (inst *LocalRepositoryController) handleGetList(c *gin.Context) {
 	req := &myLocalRepositoryRequest{
-		gc:              c,
-		controller:      inst,
-		wantRequestID:   false,
-		wantRequestBody: false,
+		gc:                 c,
+		controller:         inst,
+		wantRequestID:      false,
+		wantRequestBody:    false,
+		wantRequestIds:     true,
+		wantRequestOptions: true,
 	}
 	err := req.open()
 	if err == nil {
@@ -56,10 +60,11 @@ func (inst *LocalRepositoryController) handleGetList(c *gin.Context) {
 
 func (inst *LocalRepositoryController) handleGetOne(c *gin.Context) {
 	req := &myLocalRepositoryRequest{
-		gc:              c,
-		controller:      inst,
-		wantRequestID:   true,
-		wantRequestBody: false,
+		gc:                 c,
+		controller:         inst,
+		wantRequestID:      true,
+		wantRequestBody:    false,
+		wantRequestOptions: true,
 	}
 	err := req.open()
 	if err == nil {
@@ -116,12 +121,16 @@ type myLocalRepositoryRequest struct {
 	gc         *gin.Context
 	controller *LocalRepositoryController
 
-	wantRequestID   bool
-	wantRequestBody bool
+	wantRequestID      bool
+	wantRequestIds     bool
+	wantRequestBody    bool
+	wantRequestOptions bool
 
-	id    dxo.LocalRepositoryID
-	body1 vo.LocalRepository
-	body2 vo.LocalRepository
+	options service.LocalRepositoryOptions
+	id      dxo.LocalRepositoryID
+	ids     []dxo.LocalRepositoryID
+	body1   vo.LocalRepository
+	body2   vo.LocalRepository
 }
 
 func (inst *myLocalRepositoryRequest) open() error {
@@ -137,6 +146,21 @@ func (inst *myLocalRepositoryRequest) open() error {
 		inst.id = dxo.LocalRepositoryID(n)
 	}
 
+	if inst.wantRequestIds {
+		idstr := c.Query("ids")
+		ids, err := inst.parseIds(idstr)
+		if err != nil {
+			return err
+		}
+		inst.ids = ids
+	}
+
+	if inst.wantRequestOptions {
+		inst.options.All = inst.hasFlag(c, "all")
+		inst.options.WithFileState = inst.hasFlag(c, "with-file-state")
+		inst.options.WithGitStatus = inst.hasFlag(c, "with-git-status")
+	}
+
 	if inst.wantRequestBody {
 		err := c.BindJSON(&inst.body1)
 		if err != nil {
@@ -145,6 +169,39 @@ func (inst *myLocalRepositoryRequest) open() error {
 	}
 
 	return nil
+}
+
+func (inst *myLocalRepositoryRequest) hasFlag(c *gin.Context, name string) bool {
+	value := c.Query(name)
+	if value == "1" {
+		return true
+	}
+	b, _ := strconv.ParseBool(value)
+	return b
+}
+
+func (inst *myLocalRepositoryRequest) parseIds(str string) ([]dxo.LocalRepositoryID, error) {
+	if str == "" {
+		return nil, nil
+	}
+	nlist := make([]int, 0)
+	src := strings.Split(str, ".")
+	for _, item := range src {
+		if item == "" {
+			continue
+		}
+		n, err := strconv.ParseInt(item, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		nlist = append(nlist, int(n))
+	}
+	sort.Ints(nlist)
+	dst := make([]dxo.LocalRepositoryID, 0)
+	for _, n := range nlist {
+		dst = append(dst, dxo.LocalRepositoryID(n))
+	}
+	return dst, nil
 }
 
 func (inst *myLocalRepositoryRequest) send(err error) {
@@ -164,7 +221,8 @@ func (inst *myLocalRepositoryRequest) doGetOne() error {
 	id := inst.id
 	ctx := inst.gc
 	ser := inst.controller.RepoService
-	o, err := ser.Find(ctx, id)
+	opt := &inst.options
+	o, err := ser.Find(ctx, id, opt)
 	if err != nil {
 		return err
 	}
@@ -175,7 +233,15 @@ func (inst *myLocalRepositoryRequest) doGetOne() error {
 func (inst *myLocalRepositoryRequest) doGetList() error {
 	ctx := inst.gc
 	ser := inst.controller.RepoService
-	list, err := ser.ListAll(ctx)
+	ids := inst.ids
+	opt := &inst.options
+	var err error
+	var list []*dto.LocalRepository
+	if inst.options.All {
+		list, err = ser.ListAll(ctx, opt)
+	} else {
+		list, err = ser.ListByIds(ctx, ids, opt)
+	}
 	if err != nil {
 		return err
 	}
@@ -184,7 +250,6 @@ func (inst *myLocalRepositoryRequest) doGetList() error {
 }
 
 func (inst *myLocalRepositoryRequest) doPost() error {
-
 	return nil
 }
 

@@ -16,9 +16,10 @@ import (
 type LocalRepositoryServiceImpl struct {
 	markup.Component `id:"LocalRepositoryService"`
 
-	UUIDGenService     service.UUIDGenService        `inject:"#UUIDGenService"`
-	RepoFinder         service.LocalRepositoryFinder `inject:"#LocalRepositoryFinder"`
-	LocalRepositoryDAO dao.LocalRepositoryDAO        `inject:"#LocalRepositoryDAO"`
+	LocalRepositoryDAO dao.LocalRepositoryDAO             `inject:"#LocalRepositoryDAO"`
+	UUIDGenService     service.UUIDGenService             `inject:"#UUIDGenService"`
+	RepoFinder         service.LocalRepositoryFinder      `inject:"#LocalRepositoryFinder"`
+	LrStateLoader      service.LocalRepositoryStateLoader `inject:"#LocalRepositoryStateLoader"`
 }
 
 func (inst *LocalRepositoryServiceImpl) _Impl() service.LocalRepositoryService {
@@ -43,8 +44,9 @@ func (inst *LocalRepositoryServiceImpl) dto2entity(o1 *dto.LocalRepository) (*en
 	return o2, nil
 }
 
-func (inst *LocalRepositoryServiceImpl) entity2dto(o1 *entity.LocalRepository) (*dto.LocalRepository, error) {
+func (inst *LocalRepositoryServiceImpl) entity2dto(ctx context.Context, o1 *entity.LocalRepository, opt *service.LocalRepositoryOptions) (*dto.LocalRepository, error) {
 
+	opt = inst.normalizeOptions(opt)
 	o2 := &dto.LocalRepository{}
 
 	// todo ... fields
@@ -59,14 +61,29 @@ func (inst *LocalRepositoryServiceImpl) entity2dto(o1 *entity.LocalRepository) (
 	o2.WorkingPath = o1.WorkingPath
 
 	// o2.Ready =o1
-	o2.State = "todo..."
+
+	if opt.WithFileState {
+		inst.LrStateLoader.LoadState(ctx, o2)
+	}
+
+	if opt.WithGitStatus {
+		// todo ...
+	}
 
 	return o2, nil
 }
 
+func (inst *LocalRepositoryServiceImpl) normalizeOptions(opt *service.LocalRepositoryOptions) *service.LocalRepositoryOptions {
+	if opt == nil {
+		opt = &service.LocalRepositoryOptions{}
+	}
+	return opt
+}
+
 // ConvertEntityToDto ...
 func (inst *LocalRepositoryServiceImpl) ConvertEntityToDto(o1 *entity.LocalRepository) (*dto.LocalRepository, error) {
-	return inst.entity2dto(o1)
+	ctx := context.Background()
+	return inst.entity2dto(ctx, o1, nil)
 }
 
 // ConvertDtoToEntity ...
@@ -95,14 +112,31 @@ func (inst *LocalRepositoryServiceImpl) prepareEntity(ctx context.Context, o1 *e
 }
 
 // ListAll ...
-func (inst *LocalRepositoryServiceImpl) ListAll(ctx context.Context) ([]*dto.LocalRepository, error) {
+func (inst *LocalRepositoryServiceImpl) ListAll(ctx context.Context, opt *service.LocalRepositoryOptions) ([]*dto.LocalRepository, error) {
 	src, err := inst.LocalRepositoryDAO.ListAll()
 	if err != nil {
 		return nil, err
 	}
 	dst := make([]*dto.LocalRepository, 0)
 	for _, o1 := range src {
-		o2, err := inst.entity2dto(o1)
+		o2, err := inst.entity2dto(ctx, o1, opt)
+		if err != nil {
+			return nil, err
+		}
+		dst = append(dst, o2)
+	}
+	return dst, nil
+}
+
+// ListByIds ...
+func (inst *LocalRepositoryServiceImpl) ListByIds(ctx context.Context, ids []dxo.LocalRepositoryID, opt *service.LocalRepositoryOptions) ([]*dto.LocalRepository, error) {
+	src, err := inst.LocalRepositoryDAO.ListByIds(ids)
+	if err != nil {
+		return nil, err
+	}
+	dst := make([]*dto.LocalRepository, 0)
+	for _, o1 := range src {
+		o2, err := inst.entity2dto(ctx, o1, opt)
 		if err != nil {
 			return nil, err
 		}
@@ -112,21 +146,21 @@ func (inst *LocalRepositoryServiceImpl) ListAll(ctx context.Context) ([]*dto.Loc
 }
 
 // Find ...
-func (inst *LocalRepositoryServiceImpl) Find(ctx context.Context, id dxo.LocalRepositoryID) (*dto.LocalRepository, error) {
+func (inst *LocalRepositoryServiceImpl) Find(ctx context.Context, id dxo.LocalRepositoryID, opt *service.LocalRepositoryOptions) (*dto.LocalRepository, error) {
 	o1, err := inst.LocalRepositoryDAO.Find(id)
 	if err != nil {
 		return nil, err
 	}
-	return inst.entity2dto(o1)
+	return inst.entity2dto(ctx, o1, opt)
 }
 
 // FindByName ...
-func (inst *LocalRepositoryServiceImpl) FindByName(ctx context.Context, name string) (*dto.LocalRepository, error) {
+func (inst *LocalRepositoryServiceImpl) FindByName(ctx context.Context, name string, opt *service.LocalRepositoryOptions) (*dto.LocalRepository, error) {
 	o1, err := inst.LocalRepositoryDAO.FindByName(name)
 	if err != nil {
 		return nil, err
 	}
-	return inst.entity2dto(o1)
+	return inst.entity2dto(ctx, o1, opt)
 }
 
 // Insert ...
@@ -145,7 +179,7 @@ func (inst *LocalRepositoryServiceImpl) Insert(ctx context.Context, o1 *dto.Loca
 	if err != nil {
 		return nil, err
 	}
-	return inst.entity2dto(o3)
+	return inst.entity2dto(ctx, o3, nil)
 }
 
 // Update ...
@@ -164,7 +198,7 @@ func (inst *LocalRepositoryServiceImpl) Update(ctx context.Context, id dxo.Local
 	if err != nil {
 		return nil, err
 	}
-	return inst.entity2dto(o3)
+	return inst.entity2dto(ctx, o3, nil)
 }
 
 // Remove ...
