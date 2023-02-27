@@ -16,10 +16,9 @@ type pComPlatformServiceImpl struct {
 }
 
 
-type pComProfileServiceImpl struct {
-	instance *implservice0x5a8f41.ProfileServiceImpl
-	 markup0x23084a.Component `id:"ProfileService"`
-	PlatformService service0x3e063d.PlatformService `inject:"#PlatformService"`
+type pComLinuxPlatformServiceImpl struct {
+	instance *implservice0x5a8f41.LinuxPlatformServiceImpl
+	 markup0x23084a.Component `class:"PlatformProviderRegistry"`
 }
 
 
@@ -29,8 +28,9 @@ type pComWindowsPlatformServiceImpl struct {
 }
 
 
-type pComLinuxPlatformServiceImpl struct {
-	instance *implservice0x5a8f41.LinuxPlatformServiceImpl
-	 markup0x23084a.Component `class:"PlatformProviderRegistry"`
+type pComProfileServiceImpl struct {
+	instance *implservice0x5a8f41.ProfileServiceImpl
+	 markup0x23084a.Component `id:"ProfileService"`
+	PlatformService service0x3e063d.PlatformService `inject:"#PlatformService"`
 }
 
