@@ -54,6 +54,7 @@ type RemoteRepositoryService interface {
 type LocalRepositoryOptions struct {
 	WithFileState bool
 	WithGitStatus bool
+	WithProjects  bool
 	All           bool
 }
 

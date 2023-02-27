@@ -159,6 +159,7 @@ func (inst *myLocalRepositoryRequest) open() error {
 		inst.options.All = inst.hasFlag(c, "all")
 		inst.options.WithFileState = inst.hasFlag(c, "with-file-state")
 		inst.options.WithGitStatus = inst.hasFlag(c, "with-git-status")
+		inst.options.WithProjects = inst.hasFlag(c, "with-projects")
 	}
 
 	if inst.wantRequestBody {
