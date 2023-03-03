@@ -30,18 +30,41 @@ func (inst *ProjectDaoImpl) modelList() []*entity.Project {
 	return make([]*entity.Project, 0)
 }
 
+// Find ...
 func (inst *ProjectDaoImpl) Find(id dxo.ProjectID) (*entity.Project, error) {
 	return nil, errors.New("no impl")
 }
 
+// FindByOwnerRepository ...
 func (inst *ProjectDaoImpl) FindByOwnerRepository(id dxo.LocalRepositoryID) ([]*entity.Project, error) {
 	return nil, errors.New("no impl")
 }
 
+// ListAll ...
 func (inst *ProjectDaoImpl) ListAll() ([]*entity.Project, error) {
 	list := inst.modelList()
 	db := inst.Agent.DB()
 	res := db.Find(&list)
+	if res.Error != nil {
+		return nil, res.Error
+	}
+	return list, nil
+}
+
+// ListByIds ...
+func (inst *ProjectDaoImpl) ListByIds(ids []dxo.ProjectID) ([]*entity.Project, error) {
+
+	if ids == nil {
+		return []*entity.Project{}, nil
+	}
+
+	if len(ids) == 0 {
+		return []*entity.Project{}, nil
+	}
+
+	list := inst.modelList()
+	db := inst.Agent.DB()
+	res := db.Find(&list, ids)
 	if res.Error != nil {
 		return nil, res.Error
 	}

@@ -84,6 +84,7 @@ type pComAboutServiceImpl struct {
 	Name string `inject:"${application.about.name}"`
 	Title string `inject:"${application.about.title}"`
 	Copyright string `inject:"${application.about.copyright}"`
+	ServerPort int `inject:"${server.port}"`
 	PlatformService service0x3e063d.PlatformService `inject:"#PlatformService"`
 	ProfileService service0x3e063d.ProfileService `inject:"#ProfileService"`
 }

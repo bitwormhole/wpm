@@ -15,19 +15,26 @@ type Project struct {
 	Description     string                `json:"description"`
 	ProjectType     string                `json:"project_type"`
 	Path            string                `json:"path"`
+	PathInWorktree  string                `json:"path_in_worktree"`
+	FullPath        string                `json:"full_path"`
 	OwnerRepository dxo.LocalRepositoryID `json:"owner_repository"`
 	Group           dxo.ProjectGroupName  `json:"group"`
 	State           dxo.FileState         `json:"state"`
 	Tags            dxo.StringList        `json:"tags"`
 }
 
+////////////////////////////////////////////////////////////////////////////////
+
+// ProjectLessFunc ...
 type ProjectLessFunc func(o1, o2 *Project) bool
 
+// ProjectSorter ...
 type ProjectSorter struct {
 	items []*Project
 	cmp   ProjectLessFunc
 }
 
+// Sort ...
 func (inst *ProjectSorter) Sort(items []*Project, fn ProjectLessFunc) {
 	inst.cmp = fn
 	inst.items = items
@@ -50,3 +57,5 @@ func (inst *ProjectSorter) Swap(i1, i2 int) {
 	inst.items[i1] = o2
 	inst.items[i2] = o1
 }
+
+////////////////////////////////////////////////////////////////////////////////

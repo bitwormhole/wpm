@@ -8,7 +8,8 @@ type Project struct {
 	Base
 
 	Name            string
-	Path            string
+	PathInWorkspace string
+	FullPath        string
 	Description     string
 	ProjectType     string
 	OwnerRepository dxo.LocalRepositoryID

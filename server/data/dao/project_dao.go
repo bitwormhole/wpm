@@ -11,6 +11,7 @@ type ProjectDAO interface {
 	FindByOwnerRepository(id dxo.LocalRepositoryID) ([]*entity.Project, error)
 
 	ListAll() ([]*entity.Project, error)
+	ListByIds(ids []dxo.ProjectID) ([]*entity.Project, error)
 
 	Insert(o *entity.Project) (*entity.Project, error)
 	Update(id dxo.ProjectID, o *entity.Project) (*entity.Project, error)

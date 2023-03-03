@@ -1280,6 +1280,7 @@ type comFactory4pComAboutServiceImpl struct {
 	mNameSelector config.InjectionSelector
 	mTitleSelector config.InjectionSelector
 	mCopyrightSelector config.InjectionSelector
+	mServerPortSelector config.InjectionSelector
 	mPlatformServiceSelector config.InjectionSelector
 	mProfileServiceSelector config.InjectionSelector
 
@@ -1292,6 +1293,7 @@ func (inst * comFactory4pComAboutServiceImpl) init() application.ComponentFactor
 	inst.mNameSelector = config.NewInjectionSelector("${application.about.name}",nil)
 	inst.mTitleSelector = config.NewInjectionSelector("${application.about.title}",nil)
 	inst.mCopyrightSelector = config.NewInjectionSelector("${application.about.copyright}",nil)
+	inst.mServerPortSelector = config.NewInjectionSelector("${server.port}",nil)
 	inst.mPlatformServiceSelector = config.NewInjectionSelector("#PlatformService",nil)
 	inst.mProfileServiceSelector = config.NewInjectionSelector("#ProfileService",nil)
 
@@ -1335,6 +1337,7 @@ func (inst * comFactory4pComAboutServiceImpl) Inject(instance application.Compon
 	obj.Name = inst.getterForFieldNameSelector(context)
 	obj.Title = inst.getterForFieldTitleSelector(context)
 	obj.Copyright = inst.getterForFieldCopyrightSelector(context)
+	obj.ServerPort = inst.getterForFieldServerPortSelector(context)
 	obj.PlatformService = inst.getterForFieldPlatformServiceSelector(context)
 	obj.ProfileService = inst.getterForFieldProfileServiceSelector(context)
 	return context.LastError()
@@ -1358,6 +1361,11 @@ func (inst * comFactory4pComAboutServiceImpl) getterForFieldTitleSelector (conte
 //getterForFieldCopyrightSelector
 func (inst * comFactory4pComAboutServiceImpl) getterForFieldCopyrightSelector (context application.InstanceContext) string {
     return inst.mCopyrightSelector.GetString(context)
+}
+
+//getterForFieldServerPortSelector
+func (inst * comFactory4pComAboutServiceImpl) getterForFieldServerPortSelector (context application.InstanceContext) int {
+    return inst.mServerPortSelector.GetInt(context)
 }
 
 //getterForFieldPlatformServiceSelector

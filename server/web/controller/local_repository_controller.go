@@ -10,6 +10,7 @@ import (
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/service"
+	"github.com/bitwormhole/wpm/server/utils"
 	"github.com/bitwormhole/wpm/server/web/dto"
 	"github.com/bitwormhole/wpm/server/web/vo"
 	"github.com/gin-gonic/gin"
@@ -173,12 +174,7 @@ func (inst *myLocalRepositoryRequest) open() error {
 }
 
 func (inst *myLocalRepositoryRequest) hasFlag(c *gin.Context, name string) bool {
-	value := c.Query(name)
-	if value == "1" {
-		return true
-	}
-	b, _ := strconv.ParseBool(value)
-	return b
+	return (&utils.GinUtils{}).HasFlag(c, name)
 }
 
 func (inst *myLocalRepositoryRequest) parseIds(str string) ([]dxo.LocalRepositoryID, error) {

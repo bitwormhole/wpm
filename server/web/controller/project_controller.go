@@ -2,12 +2,15 @@ package controller
 
 import (
 	"net/http"
+	"sort"
 	"strconv"
+	"strings"
 
 	"github.com/bitwormhole/starter-gin/glass"
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/service"
+	"github.com/bitwormhole/wpm/server/utils"
 	"github.com/bitwormhole/wpm/server/web/dto"
 	"github.com/bitwormhole/wpm/server/web/vo"
 	"github.com/gin-gonic/gin"
@@ -42,24 +45,32 @@ func (inst *ProjectController) Init(ec glass.EngineConnection) error {
 
 func (inst *ProjectController) handleGetList(c *gin.Context) {
 	req := &myProjectRequest{
-		gc:              c,
-		controller:      inst,
-		wantRequestID:   false,
-		wantRequestBody: false,
+		gc:                 c,
+		controller:         inst,
+		wantRequestID:      false,
+		wantRequestBody:    false,
+		wantRequestIDs:     true,
+		wantRequestOptions: true,
 	}
 	err := req.open()
 	if err == nil {
-		err = req.doGetList()
+		wantAll := req.options.All
+		if wantAll {
+			err = req.doGetAll()
+		} else {
+			err = req.doGetListByIds()
+		}
 	}
 	req.send(err)
 }
 
 func (inst *ProjectController) handleGetOne(c *gin.Context) {
 	req := &myProjectRequest{
-		gc:              c,
-		controller:      inst,
-		wantRequestID:   true,
-		wantRequestBody: false,
+		gc:                 c,
+		controller:         inst,
+		wantRequestID:      true,
+		wantRequestBody:    false,
+		wantRequestOptions: true,
 	}
 	err := req.open()
 	if err == nil {
@@ -116,9 +127,14 @@ type myProjectRequest struct {
 	gc         *gin.Context
 	controller *ProjectController
 
-	wantRequestID   bool
-	wantRequestBody bool
+	wantRequestID      bool
+	wantRequestIDs     bool
+	wantRequestBody    bool
+	wantRequestOptions bool
 
+	options service.ProjectOptions
+
+	ids   []dxo.ProjectID
 	id    dxo.ProjectID
 	body1 vo.Project
 	body2 vo.Project
@@ -137,6 +153,15 @@ func (inst *myProjectRequest) open() error {
 		inst.id = dxo.ProjectID(n)
 	}
 
+	if inst.wantRequestIDs {
+		idstr := c.Query("ids")
+		ids, err := inst.parseIds(idstr)
+		if err != nil {
+			return err
+		}
+		inst.ids = ids
+	}
+
 	if inst.wantRequestBody {
 		err := c.BindJSON(&inst.body1)
 		if err != nil {
@@ -144,7 +169,42 @@ func (inst *myProjectRequest) open() error {
 		}
 	}
 
+	if inst.wantRequestOptions {
+		inst.options.All = inst.hasFlag(c, "all")
+		inst.options.WithFileState = inst.hasFlag(c, "with-file-state")
+		inst.options.WithGitStatus = inst.hasFlag(c, "with-git-status")
+		// inst.options.WithProjects = inst.hasFlag(c, "with-projects")
+	}
+
 	return nil
+}
+
+func (inst *myProjectRequest) parseIds(str string) ([]dxo.ProjectID, error) {
+	if str == "" {
+		return nil, nil
+	}
+	nlist := make([]int, 0)
+	src := strings.Split(str, ".")
+	for _, item := range src {
+		if item == "" {
+			continue
+		}
+		n, err := strconv.ParseInt(item, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		nlist = append(nlist, int(n))
+	}
+	sort.Ints(nlist)
+	dst := make([]dxo.ProjectID, 0)
+	for _, n := range nlist {
+		dst = append(dst, dxo.ProjectID(n))
+	}
+	return dst, nil
+}
+
+func (inst *myProjectRequest) hasFlag(c *gin.Context, name string) bool {
+	return (&utils.GinUtils{}).HasFlag(c, name)
 }
 
 func (inst *myProjectRequest) send(err error) {
@@ -164,7 +224,8 @@ func (inst *myProjectRequest) doGetOne() error {
 	id := inst.id
 	ctx := inst.gc
 	ser := inst.controller.ProjectService
-	o, err := ser.Find(ctx, id)
+	opt := &inst.options
+	o, err := ser.Find(ctx, id, opt)
 	if err != nil {
 		return err
 	}
@@ -172,10 +233,24 @@ func (inst *myProjectRequest) doGetOne() error {
 	return nil
 }
 
-func (inst *myProjectRequest) doGetList() error {
+func (inst *myProjectRequest) doGetListByIds() error {
 	ctx := inst.gc
 	ser := inst.controller.ProjectService
-	list, err := ser.ListAll(ctx)
+	opt := &inst.options
+	ids := inst.ids
+	list, err := ser.ListByIds(ctx, ids, opt)
+	if err != nil {
+		return err
+	}
+	inst.body2.Projects = list
+	return nil
+}
+
+func (inst *myProjectRequest) doGetAll() error {
+	ctx := inst.gc
+	ser := inst.controller.ProjectService
+	opt := &inst.options
+	list, err := ser.ListAll(ctx, opt)
 	if err != nil {
 		return err
 	}

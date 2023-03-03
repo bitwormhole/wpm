@@ -28,7 +28,9 @@ func (inst *ProjectServiceImpl) dto2entity(o1 *dto.Project) (*entity.Project, er
 	o2 := &entity.Project{}
 	o2.ID = o1.ID
 	o2.Name = o1.Name
-	o2.Path = o1.Path
+	o2.PathInWorkspace = o1.PathInWorktree
+	o2.FullPath = o1.FullPath
+	// o2.Path = o1.Path
 	o2.OwnerRepository = o1.OwnerRepository
 	// todo ...
 	return o2, nil
@@ -38,18 +40,15 @@ func (inst *ProjectServiceImpl) entity2dto(o1 *entity.Project) (*dto.Project, er
 	o2 := &dto.Project{}
 	o2.ID = o1.ID
 	o2.Name = o1.Name
-	o2.Path = o1.Path
+	// o2.Path = o1.Path
+	o2.PathInWorktree = o1.PathInWorkspace
+	o2.FullPath = o1.FullPath
 	o2.OwnerRepository = o1.OwnerRepository
 	// todo ...
 	return o2, nil
 }
 
-// ListAll ...
-func (inst *ProjectServiceImpl) ListAll(ctx context.Context) ([]*dto.Project, error) {
-	src, err := inst.ProjectDAO.ListAll()
-	if err != nil {
-		return nil, err
-	}
+func (inst *ProjectServiceImpl) entity2dtoList(src []*entity.Project) ([]*dto.Project, error) {
 	dst := make([]*dto.Project, 0)
 	for _, item1 := range src {
 		item2, err := inst.entity2dto(item1)
@@ -61,14 +60,40 @@ func (inst *ProjectServiceImpl) ListAll(ctx context.Context) ([]*dto.Project, er
 	return dst, nil
 }
 
+// ListAll ...
+func (inst *ProjectServiceImpl) ListAll(ctx context.Context, options *service.ProjectOptions) ([]*dto.Project, error) {
+	src, err := inst.ProjectDAO.ListAll()
+	if err != nil {
+		return nil, err
+	}
+	return inst.entity2dtoList(src)
+}
+
+// ListByIds ...
+func (inst *ProjectServiceImpl) ListByIds(ctx context.Context, ids []dxo.ProjectID, options *service.ProjectOptions) ([]*dto.Project, error) {
+	src, err := inst.ProjectDAO.ListByIds(ids)
+	if err != nil {
+		return nil, err
+	}
+	return inst.entity2dtoList(src)
+}
+
 // Find ...
-func (inst *ProjectServiceImpl) Find(ctx context.Context, id dxo.ProjectID) (*dto.Project, error) {
-	return nil, errors.New("no impl")
+func (inst *ProjectServiceImpl) Find(ctx context.Context, id dxo.ProjectID, options *service.ProjectOptions) (*dto.Project, error) {
+	p, err := inst.ProjectDAO.Find(id)
+	if err != nil {
+		return nil, err
+	}
+	return inst.entity2dto(p)
 }
 
 // FindByOwnerRepository ...
-func (inst *ProjectServiceImpl) FindByOwnerRepository(ctx context.Context, id dxo.LocalRepositoryID) ([]*dto.Project, error) {
-	return nil, errors.New("no impl")
+func (inst *ProjectServiceImpl) FindByOwnerRepository(ctx context.Context, id dxo.LocalRepositoryID, options *service.ProjectOptions) ([]*dto.Project, error) {
+	items1, err := inst.ProjectDAO.FindByOwnerRepository(id)
+	if err != nil {
+		return nil, err
+	}
+	return inst.entity2dtoList(items1)
 }
 
 // Insert ...
