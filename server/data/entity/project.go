@@ -8,7 +8,7 @@ type Project struct {
 	Base
 
 	Name            string
-	PathInWorkspace string
+	PathInWorktree  string
 	FullPath        string
 	Description     string
 	ProjectType     string

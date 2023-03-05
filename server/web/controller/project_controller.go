@@ -259,15 +259,33 @@ func (inst *myProjectRequest) doGetAll() error {
 }
 
 func (inst *myProjectRequest) doPost() error {
-
+	ctx := inst.gc
+	ser := inst.controller.ProjectService
+	item1 := inst.body1.Projects[0]
+	item2, err := ser.Insert(ctx, item1)
+	if err != nil {
+		return err
+	}
+	inst.body2.Projects = []*dto.Project{item2}
 	return nil
 }
 
 func (inst *myProjectRequest) doPut() error {
+	ctx := inst.gc
+	ser := inst.controller.ProjectService
+	id := inst.id
+	item1 := inst.body1.Projects[0]
+	item2, err := ser.Update(ctx, id, item1)
+	if err != nil {
+		return err
+	}
+	inst.body2.Projects = []*dto.Project{item2}
 	return nil
 }
 
 func (inst *myProjectRequest) doDelete() error {
-
-	return nil
+	ctx := inst.gc
+	ser := inst.controller.ProjectService
+	id := inst.id
+	return ser.Remove(ctx, id)
 }

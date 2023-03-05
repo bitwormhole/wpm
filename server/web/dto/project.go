@@ -11,12 +11,14 @@ type Project struct {
 	ID dxo.ProjectID `json:"id"`
 	Base
 
-	Name            string                `json:"name"`
-	Description     string                `json:"description"`
-	ProjectType     string                `json:"project_type"`
-	Path            string                `json:"path"`
-	PathInWorktree  string                `json:"path_in_worktree"`
-	FullPath        string                `json:"full_path"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	ProjectType string `json:"project_type"`
+
+	// Path            string                `json:"path"`
+	PathInWorktree string `json:"path_in_worktree"`
+	FullPath       string `json:"full_path"`
+
 	OwnerRepository dxo.LocalRepositoryID `json:"owner_repository"`
 	Group           dxo.ProjectGroupName  `json:"group"`
 	State           dxo.FileState         `json:"state"`

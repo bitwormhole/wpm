@@ -240,15 +240,15 @@ func (inst *LocalRepositoryServiceImpl) loadProjects(ctx context.Context, repo *
 			i2 := len(key) - len(suffix)
 			item := &dto.Project{}
 			item.Name = key[i1:i2]
-			item.Path = value
+			item.FullPath = value
 			dst = append(dst, item)
 		}
 	}
 
 	sorter := &dto.ProjectSorter{}
 	sorter.Sort(dst, func(o1, o2 *dto.Project) bool {
-		s1 := o1.Path
-		s2 := o2.Path
+		s1 := o1.FullPath
+		s2 := o2.FullPath
 		return strings.Compare(s1, s2) < 0
 	})
 
