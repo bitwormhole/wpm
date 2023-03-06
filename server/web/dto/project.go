@@ -22,6 +22,8 @@ type Project struct {
 	OwnerRepository dxo.LocalRepositoryID `json:"owner_repository"`
 	Group           dxo.ProjectGroupName  `json:"group"`
 	State           dxo.FileState         `json:"state"`
+	IsDir           bool                  `json:"is_dir"`
+	IsFile          bool                  `json:"is_file"`
 	Tags            dxo.StringList        `json:"tags"`
 }
 

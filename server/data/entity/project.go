@@ -12,5 +12,7 @@ type Project struct {
 	FullPath        string
 	Description     string
 	ProjectType     string
+	IsFile          bool
+	IsDir           bool
 	OwnerRepository dxo.LocalRepositoryID
 }

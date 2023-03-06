@@ -207,7 +207,10 @@ type pComProjectServiceImpl struct {
 	instance *implservice0x22327c.ProjectServiceImpl
 	 markup0x23084a.Component `id:"ProjectService"`
 	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
+	LocalRepoService service0x3e063d.LocalRepositoryService `inject:"#LocalRepositoryService"`
 	ProjectDAO dao0x5af8d0.ProjectDAO `inject:"#ProjectDAO"`
+	LocalRepoDAO dao0x5af8d0.LocalRepositoryDAO `inject:"#LocalRepositoryDAO"`
+	GitLibAgent store0x8467b3.LibAgent `inject:"#git-lib-agent"`
 }
 
 

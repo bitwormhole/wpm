@@ -2699,7 +2699,10 @@ type comFactory4pComProjectServiceImpl struct {
 
 	
 	mUUIDGenServiceSelector config.InjectionSelector
+	mLocalRepoServiceSelector config.InjectionSelector
 	mProjectDAOSelector config.InjectionSelector
+	mLocalRepoDAOSelector config.InjectionSelector
+	mGitLibAgentSelector config.InjectionSelector
 
 }
 
@@ -2707,7 +2710,10 @@ func (inst * comFactory4pComProjectServiceImpl) init() application.ComponentFact
 
 	
 	inst.mUUIDGenServiceSelector = config.NewInjectionSelector("#UUIDGenService",nil)
+	inst.mLocalRepoServiceSelector = config.NewInjectionSelector("#LocalRepositoryService",nil)
 	inst.mProjectDAOSelector = config.NewInjectionSelector("#ProjectDAO",nil)
+	inst.mLocalRepoDAOSelector = config.NewInjectionSelector("#LocalRepositoryDAO",nil)
+	inst.mGitLibAgentSelector = config.NewInjectionSelector("#git-lib-agent",nil)
 
 
 	inst.mPrototype = inst.newObject()
@@ -2746,7 +2752,10 @@ func (inst * comFactory4pComProjectServiceImpl) Inject(instance application.Comp
 	
 	obj := inst.castObject(instance)
 	obj.UUIDGenService = inst.getterForFieldUUIDGenServiceSelector(context)
+	obj.LocalRepoService = inst.getterForFieldLocalRepoServiceSelector(context)
 	obj.ProjectDAO = inst.getterForFieldProjectDAOSelector(context)
+	obj.LocalRepoDAO = inst.getterForFieldLocalRepoDAOSelector(context)
+	obj.GitLibAgent = inst.getterForFieldGitLibAgentSelector(context)
 	return context.LastError()
 }
 
@@ -2768,6 +2777,24 @@ func (inst * comFactory4pComProjectServiceImpl) getterForFieldUUIDGenServiceSele
 	return o2
 }
 
+//getterForFieldLocalRepoServiceSelector
+func (inst * comFactory4pComProjectServiceImpl) getterForFieldLocalRepoServiceSelector (context application.InstanceContext) service0x3e063d.LocalRepositoryService {
+
+	o1 := inst.mLocalRepoServiceSelector.GetOne(context)
+	o2, ok := o1.(service0x3e063d.LocalRepositoryService)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "ProjectService")
+		eb.Set("field", "LocalRepoService")
+		eb.Set("type1", "?")
+		eb.Set("type2", "service0x3e063d.LocalRepositoryService")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
+}
+
 //getterForFieldProjectDAOSelector
 func (inst * comFactory4pComProjectServiceImpl) getterForFieldProjectDAOSelector (context application.InstanceContext) dao0x5af8d0.ProjectDAO {
 
@@ -2780,6 +2807,42 @@ func (inst * comFactory4pComProjectServiceImpl) getterForFieldProjectDAOSelector
 		eb.Set("field", "ProjectDAO")
 		eb.Set("type1", "?")
 		eb.Set("type2", "dao0x5af8d0.ProjectDAO")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
+}
+
+//getterForFieldLocalRepoDAOSelector
+func (inst * comFactory4pComProjectServiceImpl) getterForFieldLocalRepoDAOSelector (context application.InstanceContext) dao0x5af8d0.LocalRepositoryDAO {
+
+	o1 := inst.mLocalRepoDAOSelector.GetOne(context)
+	o2, ok := o1.(dao0x5af8d0.LocalRepositoryDAO)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "ProjectService")
+		eb.Set("field", "LocalRepoDAO")
+		eb.Set("type1", "?")
+		eb.Set("type2", "dao0x5af8d0.LocalRepositoryDAO")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
+}
+
+//getterForFieldGitLibAgentSelector
+func (inst * comFactory4pComProjectServiceImpl) getterForFieldGitLibAgentSelector (context application.InstanceContext) store0x8467b3.LibAgent {
+
+	o1 := inst.mGitLibAgentSelector.GetOne(context)
+	o2, ok := o1.(store0x8467b3.LibAgent)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "ProjectService")
+		eb.Set("field", "GitLibAgent")
+		eb.Set("type1", "?")
+		eb.Set("type2", "store0x8467b3.LibAgent")
 		context.HandleError(eb.Create())
 		return nil
 	}
