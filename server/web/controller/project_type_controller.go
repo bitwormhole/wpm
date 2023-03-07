@@ -1,13 +1,11 @@
 package controller
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
 	"github.com/bitwormhole/starter-gin/glass"
 	"github.com/bitwormhole/starter/markup"
-	"github.com/bitwormhole/starter/util"
 	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/service"
 	"github.com/bitwormhole/wpm/server/web/dto"
@@ -15,22 +13,22 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// MediaController Media 控制器
-type MediaController struct {
+// ProjectTypeController ProjectType 控制器
+type ProjectTypeController struct {
 	markup.RestController `class:"rest-controller"`
 
-	MediaService service.MediaService `inject:"#MediaService"`
-	Responder    glass.MainResponder  `inject:"#glass-main-responder"`
+	ProjectTypeService service.ProjectTypeService `inject:"#ProjectTypeService"`
+	Responder          glass.MainResponder        `inject:"#glass-main-responder"`
 }
 
-func (inst *MediaController) _Impl() glass.Controller {
+func (inst *ProjectTypeController) _Impl() glass.Controller {
 	return inst
 }
 
 // Init 初始化
-func (inst *MediaController) Init(ec glass.EngineConnection) error {
+func (inst *ProjectTypeController) Init(ec glass.EngineConnection) error {
 
-	ec = ec.RequestMapping("media")
+	ec = ec.RequestMapping("project-types")
 
 	ec.Handle(http.MethodGet, "", inst.handleGetList)
 	ec.Handle(http.MethodPost, "", inst.handlePost)
@@ -38,13 +36,11 @@ func (inst *MediaController) Init(ec glass.EngineConnection) error {
 	ec.Handle(http.MethodPut, ":id", inst.handlePut)
 	ec.Handle(http.MethodDelete, ":id", inst.handleDelete)
 
-	ec.Handle(http.MethodGet, "/media/:type1/:type2/:hex/:name", inst.handleGetFile)
-
 	return nil
 }
 
-func (inst *MediaController) handleGetList(c *gin.Context) {
-	req := &myMediaRequest{
+func (inst *ProjectTypeController) handleGetList(c *gin.Context) {
+	req := &myProjectTypeRequest{
 		gc:              c,
 		controller:      inst,
 		wantRequestID:   false,
@@ -57,8 +53,8 @@ func (inst *MediaController) handleGetList(c *gin.Context) {
 	req.send(err)
 }
 
-func (inst *MediaController) handleGetOne(c *gin.Context) {
-	req := &myMediaRequest{
+func (inst *ProjectTypeController) handleGetOne(c *gin.Context) {
+	req := &myProjectTypeRequest{
 		gc:              c,
 		controller:      inst,
 		wantRequestID:   true,
@@ -71,8 +67,8 @@ func (inst *MediaController) handleGetOne(c *gin.Context) {
 	req.send(err)
 }
 
-func (inst *MediaController) handlePost(c *gin.Context) {
-	req := &myMediaRequest{
+func (inst *ProjectTypeController) handlePost(c *gin.Context) {
+	req := &myProjectTypeRequest{
 		gc:              c,
 		controller:      inst,
 		wantRequestID:   false,
@@ -85,8 +81,8 @@ func (inst *MediaController) handlePost(c *gin.Context) {
 	req.send(err)
 }
 
-func (inst *MediaController) handlePut(c *gin.Context) {
-	req := &myMediaRequest{
+func (inst *ProjectTypeController) handlePut(c *gin.Context) {
+	req := &myProjectTypeRequest{
 		gc:              c,
 		controller:      inst,
 		wantRequestID:   true,
@@ -99,8 +95,8 @@ func (inst *MediaController) handlePut(c *gin.Context) {
 	req.send(err)
 }
 
-func (inst *MediaController) handleDelete(c *gin.Context) {
-	req := &myMediaRequest{
+func (inst *ProjectTypeController) handleDelete(c *gin.Context) {
+	req := &myProjectTypeRequest{
 		gc:              c,
 		controller:      inst,
 		wantRequestID:   true,
@@ -113,32 +109,21 @@ func (inst *MediaController) handleDelete(c *gin.Context) {
 	req.send(err)
 }
 
-func (inst *MediaController) handleGetFile(c *gin.Context) {
-	req := &myMediaRequest{
-		controller: inst,
-		gc:         c,
-	}
-	err := req.doGetFile(c)
-	if err != nil {
-		c.AbortWithError(http.StatusNotFound, err)
-	}
-}
-
 ////////////////////////////////////////////////////////////////////////////////
 
-type myMediaRequest struct {
+type myProjectTypeRequest struct {
 	gc         *gin.Context
-	controller *MediaController
+	controller *ProjectTypeController
 
 	wantRequestID   bool
 	wantRequestBody bool
 
-	id    dxo.MediaID
-	body1 vo.Media
-	body2 vo.Media
+	id    dxo.ProjectTypeID
+	body1 vo.ProjectType
+	body2 vo.ProjectType
 }
 
-func (inst *myMediaRequest) open() error {
+func (inst *myProjectTypeRequest) open() error {
 
 	c := inst.gc
 
@@ -148,7 +133,7 @@ func (inst *myMediaRequest) open() error {
 		if err != nil {
 			return err
 		}
-		inst.id = dxo.MediaID(n)
+		inst.id = dxo.ProjectTypeID(n)
 	}
 
 	if inst.wantRequestBody {
@@ -161,7 +146,7 @@ func (inst *myMediaRequest) open() error {
 	return nil
 }
 
-func (inst *myMediaRequest) send(err error) {
+func (inst *myProjectTypeRequest) send(err error) {
 	ctx := inst.gc
 	data := &inst.body2
 	status := data.Status
@@ -174,66 +159,57 @@ func (inst *myMediaRequest) send(err error) {
 	inst.controller.Responder.Send(resp)
 }
 
-func (inst *myMediaRequest) doGetOne() error {
+func (inst *myProjectTypeRequest) doGetOne() error {
 	id := inst.id
 	ctx := inst.gc
-	ser := inst.controller.MediaService
+	ser := inst.controller.ProjectTypeService
 	o, err := ser.Find(ctx, id)
 	if err != nil {
 		return err
 	}
-	inst.body2.Mediae = []*dto.Media{o}
+	inst.body2.ProjectTypes = []*dto.ProjectType{o}
 	return nil
 }
 
-func (inst *myMediaRequest) doGetList() error {
+func (inst *myProjectTypeRequest) doGetList() error {
 	ctx := inst.gc
-	ser := inst.controller.MediaService
+	ser := inst.controller.ProjectTypeService
 	list, err := ser.ListAll(ctx)
 	if err != nil {
 		return err
 	}
-	inst.body2.Mediae = list
+	inst.body2.ProjectTypes = list
 	return nil
 }
 
-func (inst *myMediaRequest) doPost() error {
-
-	return fmt.Errorf("no impl")
-}
-
-func (inst *myMediaRequest) doPut() error {
-
-	return fmt.Errorf("no impl")
-}
-
-func (inst *myMediaRequest) doDelete() error {
-
-	return fmt.Errorf("no impl")
-}
-
-func (inst *myMediaRequest) doGetFile(c *gin.Context) error {
-
-	type1 := c.Param("type1")
-	type2 := c.Param("type2")
-	hex := c.Param("hex")
-	name := c.Param("name")
-
-	ser := inst.controller.MediaService
-
-	me, err := ser.FindByPath(c, name)
+func (inst *myProjectTypeRequest) doPost() error {
+	ctx := inst.gc
+	ser := inst.controller.ProjectTypeService
+	o1 := inst.body1.ProjectTypes[0]
+	o2, err := ser.Insert(ctx, o1)
 	if err != nil {
 		return err
 	}
-
-	me.SHA256SUM = util.Hex(hex)
-	me.ContentType = type1 + "/" + type2 + "/todo..."
-
-	me, err = ser.PrepareForDownload(c, me)
-	if err != nil {
-		return err
-	}
-
-	c.File(me.LocalFilePath)
+	inst.body2.ProjectTypes = []*dto.ProjectType{o2}
 	return nil
+}
+
+func (inst *myProjectTypeRequest) doPut() error {
+	ctx := inst.gc
+	ser := inst.controller.ProjectTypeService
+	id := inst.id
+	o1 := inst.body1.ProjectTypes[0]
+	o2, err := ser.Update(ctx, id, o1)
+	if err != nil {
+		return err
+	}
+	inst.body2.ProjectTypes = []*dto.ProjectType{o2}
+	return nil
+}
+
+func (inst *myProjectTypeRequest) doDelete() error {
+	ctx := inst.gc
+	ser := inst.controller.ProjectTypeService
+	id := inst.id
+	return ser.Remove(ctx, id)
 }

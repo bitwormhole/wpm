@@ -77,6 +77,14 @@ type pComProjectDaoImpl struct {
 }
 
 
+type pComProjectTypeDaoImpl struct {
+	instance *impldao0x73998b.ProjectTypeDaoImpl
+	 markup0x23084a.Component `id:"ProjectTypeDAO"`
+	Agent impldao0x73998b.GormDBAgent `inject:"#GormDBAgent"`
+	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
+}
+
+
 type pComAboutServiceImpl struct {
 	instance *implservice0x22327c.AboutServiceImpl
 	 markup0x23084a.Component `id:"AboutService"`
@@ -211,6 +219,13 @@ type pComProjectServiceImpl struct {
 	ProjectDAO dao0x5af8d0.ProjectDAO `inject:"#ProjectDAO"`
 	LocalRepoDAO dao0x5af8d0.LocalRepositoryDAO `inject:"#LocalRepositoryDAO"`
 	GitLibAgent store0x8467b3.LibAgent `inject:"#git-lib-agent"`
+}
+
+
+type pComProjectTypeServiceImpl struct {
+	instance *implservice0x22327c.ProjectTypeServiceImpl
+	 markup0x23084a.Component `id:"ProjectTypeService"`
+	ProjectTypeDAO dao0x5af8d0.ProjectTypeDAO `inject:"#ProjectTypeDAO"`
 }
 
 
@@ -432,6 +447,14 @@ type pComProjectImportController struct {
 	instance *controller0x9dc399.ProjectImportController
 	 markup0x23084a.RestController `class:"rest-controller"`
 	ProjectImportService service0x3e063d.ProjectImportService `inject:"#ProjectImportService"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
+type pComProjectTypeController struct {
+	instance *controller0x9dc399.ProjectTypeController
+	 markup0x23084a.RestController `class:"rest-controller"`
+	ProjectTypeService service0x3e063d.ProjectTypeService `inject:"#ProjectTypeService"`
 	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
 }
 

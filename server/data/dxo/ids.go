@@ -21,6 +21,9 @@ type MediaID int
 // ProjectID ...
 type ProjectID int
 
+// ProjectTypeID ...
+type ProjectTypeID int
+
 // ProjectGroupID ...
 type ProjectGroupID int
 

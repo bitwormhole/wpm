@@ -36,6 +36,11 @@ func (Project) TableName() string {
 }
 
 // TableName ...
+func (ProjectType) TableName() string {
+	return TableNamePrefix + "project_type"
+}
+
+// TableName ...
 func (User) TableName() string {
 	return TableNamePrefix + "user"
 }
@@ -49,6 +54,7 @@ func ListPrototypes() []any {
 	list = append(list, &Executable{})
 	list = append(list, &IntentTemplate{})
 	list = append(list, &Project{})
+	list = append(list, &ProjectType{})
 	list = append(list, &LocalRepository{})
 	list = append(list, &Media{})
 	list = append(list, &RemoteRepository{})
