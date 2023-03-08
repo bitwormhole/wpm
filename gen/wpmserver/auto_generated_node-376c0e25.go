@@ -222,6 +222,14 @@ type pComProjectServiceImpl struct {
 }
 
 
+type pComProjectTypeImportServiceImpl struct {
+	instance *implservice0x22327c.ProjectTypeImportServiceImpl
+	 markup0x23084a.Component `id:"ProjectTypeImportService"`
+	AC application0x67f6c5.Context `inject:"context"`
+	ProjectTypeService service0x3e063d.ProjectTypeService `inject:"#ProjectTypeService"`
+}
+
+
 type pComProjectTypeServiceImpl struct {
 	instance *implservice0x22327c.ProjectTypeServiceImpl
 	 markup0x23084a.Component `id:"ProjectTypeService"`
@@ -455,6 +463,14 @@ type pComProjectTypeController struct {
 	instance *controller0x9dc399.ProjectTypeController
 	 markup0x23084a.RestController `class:"rest-controller"`
 	ProjectTypeService service0x3e063d.ProjectTypeService `inject:"#ProjectTypeService"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
+type pComProjectTypeImportController struct {
+	instance *controller0x9dc399.ProjectTypeImportController
+	 markup0x23084a.RestController `class:"rest-controller"`
+	ProjectTypeImportService service0x3e063d.ProjectTypeImportService `inject:"#ProjectTypeImportService"`
 	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
 }
 

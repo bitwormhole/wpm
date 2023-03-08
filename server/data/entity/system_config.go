@@ -1,6 +1,6 @@
 package entity
 
 type SystemConfig struct {
-	Name        string
+	Name        string `gorm:"index:,unique"`
 	ContentType string
 }

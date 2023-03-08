@@ -9,7 +9,7 @@ import (
 
 // Base ...
 type Base struct {
-	UUID dxo.UUID
+	UUID dxo.UUID `gorm:"index:,unique"`
 
 	Committer dxo.UserID
 	Creator   dxo.UserID

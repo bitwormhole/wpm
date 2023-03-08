@@ -7,7 +7,7 @@ type ProjectType struct {
 	ID dxo.ProjectTypeID `gorm:"primaryKey"`
 	Base
 
-	Name        string
+	Name        string `gorm:"index:,unique"`
 	Type        string
 	Label       string
 	Description string

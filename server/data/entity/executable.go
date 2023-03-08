@@ -14,7 +14,7 @@ type Executable struct {
 	Title            string
 	IconURL          string
 	Description      string
-	Path             string
+	Path             string `gorm:"index:,unique"`
 	Size             int64
 	SHA256SUM        util.Hex
 	OpenWithPriority int // 如果 value<=0, 表示 disable

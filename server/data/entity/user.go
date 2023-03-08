@@ -7,7 +7,7 @@ type User struct {
 	ID dxo.UserID
 	Base
 
-	Name     dxo.UserName
+	Name     dxo.UserName `gorm:"index:,unique"`
 	Avatar   string
 	Nickname string
 	Home     string // the home dir path

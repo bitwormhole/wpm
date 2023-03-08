@@ -18,7 +18,7 @@ type LocalRepositoryBase struct {
 	DisplayName string
 	Description string
 
-	Path           string
+	Path           string `gorm:"index:,unique"`
 	ConfigFile     string
 	DotGitPath     string
 	RepositoryPath string

@@ -11,11 +11,11 @@ type Project struct {
 	ID dxo.ProjectID `json:"id"`
 	Base
 
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	ProjectType string `json:"project_type"`
+	Name        string            `json:"name"`
+	Description string            `json:"description"`
+	ProjectType dxo.ProjectTypeID `json:"project_type"`
 
-	// Path            string                `json:"path"`
+	ConfigFileName string `json:"config_file_name"`
 	PathInWorktree string `json:"path_in_worktree"`
 	FullPath       string `json:"full_path"`
 
