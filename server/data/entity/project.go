@@ -10,9 +10,12 @@ type Project struct {
 	Name            string
 	PathInWorktree  string
 	FullPath        string `gorm:"index:,unique"`
+	ProjectDir      string
 	Description     string
 	IsFile          bool
 	IsDir           bool
+	ProjectTypeName string
+	ConfigFileName  string
 	ProjectType     dxo.ProjectTypeID
 	OwnerRepository dxo.LocalRepositoryID
 }

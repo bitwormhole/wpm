@@ -1,10 +1,11 @@
-package impldao
+package projects
 
 import (
 	"errors"
 
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/wpm/server/data/dao"
+	"github.com/bitwormhole/wpm/server/data/dbagent"
 	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/data/entity"
 	"github.com/bitwormhole/wpm/server/service"
@@ -14,7 +15,7 @@ import (
 type ProjectDaoImpl struct {
 	markup.Component `id:"ProjectDAO"`
 
-	Agent          GormDBAgent            `inject:"#GormDBAgent"`
+	Agent          dbagent.GormDBAgent    `inject:"#GormDBAgent"`
 	UUIDGenService service.UUIDGenService `inject:"#UUIDGenService"`
 }
 
@@ -98,12 +99,17 @@ func (inst *ProjectDaoImpl) Update(id dxo.ProjectID, o1 *entity.Project) (*entit
 	}
 
 	// todo ...
-	o2.Name = o1.Name
-	o2.ProjectType = o1.ProjectType
-	o2.PathInWorktree = o1.PathInWorktree
-	o2.FullPath = o1.FullPath
+	o2.ConfigFileName = o1.ConfigFileName
 	o2.Description = o1.Description
+	o2.FullPath = o1.FullPath
+	o2.IsDir = o1.IsDir
+	o2.IsFile = o1.IsFile
+	o2.Name = o1.Name
 	o2.OwnerRepository = o1.OwnerRepository
+	o2.PathInWorktree = o1.PathInWorktree
+	o2.ProjectDir = o1.ProjectDir
+	o2.ProjectType = o1.ProjectType
+	o2.ProjectTypeName = o1.ProjectTypeName
 
 	res = db.Save(o2)
 	if res.Error != nil {

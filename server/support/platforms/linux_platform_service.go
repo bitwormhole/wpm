@@ -1,4 +1,4 @@
-package implservice
+package platforms
 
 import (
 	"fmt"

@@ -1,4 +1,4 @@
-package implservice
+package projecttypes
 
 import (
 	"context"
@@ -15,7 +15,8 @@ import (
 type ProjectTypeServiceImpl struct {
 	markup.Component `id:"ProjectTypeService"`
 
-	ProjectTypeDAO dao.ProjectTypeDAO `inject:"#ProjectTypeDAO"`
+	ProjectTypeDAO    dao.ProjectTypeDAO        `inject:"#ProjectTypeDAO"`
+	FileSystemService service.FileSystemService `inject:"#FileSystemService"`
 }
 
 func (inst *ProjectTypeServiceImpl) _Impl() service.ProjectTypeService {
@@ -107,4 +108,15 @@ func (inst *ProjectTypeServiceImpl) Update(ctx context.Context, id dxo.ProjectTy
 // Remove ...
 func (inst *ProjectTypeServiceImpl) Remove(ctx context.Context, id dxo.ProjectTypeID) error {
 	return inst.ProjectTypeDAO.Remove(id)
+}
+
+// LocateProject ...
+func (inst *ProjectTypeServiceImpl) LocateProject(ctx context.Context, o *dto.Project, path string) error {
+	locator := &myProjectLocatorWithTypes{
+		parent:  inst,
+		path:    path,
+		project: o,
+		context: ctx,
+	}
+	return locator.Locate()
 }

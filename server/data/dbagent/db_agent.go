@@ -1,4 +1,4 @@
-package impldao
+package dbagent
 
 import (
 	"github.com/bitwormhole/starter-gorm/datasource"

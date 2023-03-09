@@ -1,8 +1,9 @@
-package impldao
+package projecttypes
 
 import (
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/wpm/server/data/dao"
+	"github.com/bitwormhole/wpm/server/data/dbagent"
 	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/data/entity"
 	"github.com/bitwormhole/wpm/server/service"
@@ -12,7 +13,7 @@ import (
 type ProjectTypeDaoImpl struct {
 	markup.Component `id:"ProjectTypeDAO"`
 
-	Agent          GormDBAgent            `inject:"#GormDBAgent"`
+	Agent          dbagent.GormDBAgent    `inject:"#GormDBAgent"`
 	UUIDGenService service.UUIDGenService `inject:"#UUIDGenService"`
 }
 

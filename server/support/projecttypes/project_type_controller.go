@@ -1,4 +1,4 @@
-package controller
+package projecttypes
 
 import (
 	"net/http"

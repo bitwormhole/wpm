@@ -1,4 +1,4 @@
-package implservice
+package platforms
 
 import (
 	"github.com/bitwormhole/starter/markup"

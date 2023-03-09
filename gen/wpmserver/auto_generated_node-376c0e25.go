@@ -10,10 +10,14 @@ import (
 	application0x67f6c5 "github.com/bitwormhole/starter/application"
 	markup0x23084a "github.com/bitwormhole/starter/markup"
 	dao0x5af8d0 "github.com/bitwormhole/wpm/server/data/dao"
+	dbagent0x9f90fb "github.com/bitwormhole/wpm/server/data/dbagent"
 	service0x3e063d "github.com/bitwormhole/wpm/server/service"
 	support0xf47d7f "github.com/bitwormhole/wpm/server/support"
 	impldao0x73998b "github.com/bitwormhole/wpm/server/support/impldao"
 	implservice0x22327c "github.com/bitwormhole/wpm/server/support/implservice"
+	platforms0xb539c0 "github.com/bitwormhole/wpm/server/support/platforms"
+	projects0x4d85c7 "github.com/bitwormhole/wpm/server/support/projects"
+	projecttypes0x53bffe "github.com/bitwormhole/wpm/server/support/projecttypes"
 	filequery0xca51d2 "github.com/bitwormhole/wpm/server/utils/filequery"
 	handlers0x162741 "github.com/bitwormhole/wpm/server/utils/filequery/handlers"
 	intents0xec84e7 "github.com/bitwormhole/wpm/server/utils/intents"
@@ -23,7 +27,7 @@ import (
 )
 
 type pComGormDBAgentImpl struct {
-	instance *impldao0x73998b.GormDBAgentImpl
+	instance *dbagent0x9f90fb.GormDBAgentImpl
 	 markup0x23084a.Component `id:"GormDBAgent" class:"life"`
 	Sources datasource0x68a737.SourceManager `inject:"#starter-gorm-source-manager"`
 }
@@ -32,7 +36,7 @@ type pComGormDBAgentImpl struct {
 type pComExampleDaoImpl struct {
 	instance *impldao0x73998b.ExampleDaoImpl
 	 markup0x23084a.Component `id:"ExampleDAO"`
-	Agent impldao0x73998b.GormDBAgent `inject:"#GormDBAgent"`
+	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
 	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
 }
 
@@ -40,7 +44,7 @@ type pComExampleDaoImpl struct {
 type pComExecutableDaoImpl struct {
 	instance *impldao0x73998b.ExecutableDaoImpl
 	 markup0x23084a.Component `id:"ExecutableDAO"`
-	Agent impldao0x73998b.GormDBAgent `inject:"#GormDBAgent"`
+	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
 	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
 }
 
@@ -48,7 +52,7 @@ type pComExecutableDaoImpl struct {
 type pComIntentTemplateDaoImpl struct {
 	instance *impldao0x73998b.IntentTemplateDaoImpl
 	 markup0x23084a.Component `id:"IntentTemplateDAO"`
-	Agent impldao0x73998b.GormDBAgent `inject:"#GormDBAgent"`
+	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
 	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
 }
 
@@ -56,7 +60,7 @@ type pComIntentTemplateDaoImpl struct {
 type pComRepositoryDaoImpl struct {
 	instance *impldao0x73998b.RepositoryDaoImpl
 	 markup0x23084a.Component `id:"LocalRepositoryDAO"`
-	Agent impldao0x73998b.GormDBAgent `inject:"#GormDBAgent"`
+	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
 	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
 }
 
@@ -64,23 +68,7 @@ type pComRepositoryDaoImpl struct {
 type pComMediaDaoImpl struct {
 	instance *impldao0x73998b.MediaDaoImpl
 	 markup0x23084a.Component `id:"MediaDAO"`
-	Agent impldao0x73998b.GormDBAgent `inject:"#GormDBAgent"`
-	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
-}
-
-
-type pComProjectDaoImpl struct {
-	instance *impldao0x73998b.ProjectDaoImpl
-	 markup0x23084a.Component `id:"ProjectDAO"`
-	Agent impldao0x73998b.GormDBAgent `inject:"#GormDBAgent"`
-	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
-}
-
-
-type pComProjectTypeDaoImpl struct {
-	instance *impldao0x73998b.ProjectTypeDaoImpl
-	 markup0x23084a.Component `id:"ProjectTypeDAO"`
-	Agent impldao0x73998b.GormDBAgent `inject:"#GormDBAgent"`
+	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
 	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
 }
 
@@ -205,38 +193,6 @@ type pComMediaServiceImpl struct {
 }
 
 
-type pComProjectImportServiceImpl struct {
-	instance *implservice0x22327c.ProjectImportServiceImpl
-	 markup0x23084a.Component `id:"ProjectImportService"`
-}
-
-
-type pComProjectServiceImpl struct {
-	instance *implservice0x22327c.ProjectServiceImpl
-	 markup0x23084a.Component `id:"ProjectService"`
-	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
-	LocalRepoService service0x3e063d.LocalRepositoryService `inject:"#LocalRepositoryService"`
-	ProjectDAO dao0x5af8d0.ProjectDAO `inject:"#ProjectDAO"`
-	LocalRepoDAO dao0x5af8d0.LocalRepositoryDAO `inject:"#LocalRepositoryDAO"`
-	GitLibAgent store0x8467b3.LibAgent `inject:"#git-lib-agent"`
-}
-
-
-type pComProjectTypeImportServiceImpl struct {
-	instance *implservice0x22327c.ProjectTypeImportServiceImpl
-	 markup0x23084a.Component `id:"ProjectTypeImportService"`
-	AC application0x67f6c5.Context `inject:"context"`
-	ProjectTypeService service0x3e063d.ProjectTypeService `inject:"#ProjectTypeService"`
-}
-
-
-type pComProjectTypeServiceImpl struct {
-	instance *implservice0x22327c.ProjectTypeServiceImpl
-	 markup0x23084a.Component `id:"ProjectTypeService"`
-	ProjectTypeDAO dao0x5af8d0.ProjectTypeDAO `inject:"#ProjectTypeDAO"`
-}
-
-
 type pComRemoteRepositoryServiceImpl struct {
 	instance *implservice0x22327c.RemoteRepositoryServiceImpl
 	 markup0x23084a.Component `id:"RemoteRepositoryService"`
@@ -265,6 +221,115 @@ type pComRunIntentServiceImpl struct {
 type pComUUIDGenServiceImpl struct {
 	instance *implservice0x22327c.UUIDGenServiceImpl
 	 markup0x23084a.Component `id:"UUIDGenService" initMethod:"Init"`
+}
+
+
+type pComLinuxPlatformServiceImpl struct {
+	instance *platforms0xb539c0.LinuxPlatformServiceImpl
+	 markup0x23084a.Component `class:"PlatformProviderRegistry"`
+}
+
+
+type pComPlatformServiceImpl struct {
+	instance *platforms0xb539c0.PlatformServiceImpl
+	 markup0x23084a.Component `id:"PlatformService"`
+	Providers []service0x3e063d.PlatformProviderRegistry `inject:".PlatformProviderRegistry"`
+}
+
+
+type pComProfileServiceImpl struct {
+	instance *platforms0xb539c0.ProfileServiceImpl
+	 markup0x23084a.Component `id:"ProfileService"`
+	PlatformService service0x3e063d.PlatformService `inject:"#PlatformService"`
+}
+
+
+type pComWindowsPlatformServiceImpl struct {
+	instance *platforms0xb539c0.WindowsPlatformServiceImpl
+	 markup0x23084a.Component `class:"PlatformProviderRegistry"`
+}
+
+
+type pComProjectController struct {
+	instance *projects0x4d85c7.ProjectController
+	 markup0x23084a.RestController `class:"rest-controller"`
+	ProjectService service0x3e063d.ProjectService `inject:"#ProjectService"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
+type pComProjectDaoImpl struct {
+	instance *projects0x4d85c7.ProjectDaoImpl
+	 markup0x23084a.Component `id:"ProjectDAO"`
+	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
+	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
+}
+
+
+type pComProjectImportController struct {
+	instance *projects0x4d85c7.ProjectImportController
+	 markup0x23084a.RestController `class:"rest-controller"`
+	ProjectImportService service0x3e063d.ProjectImportService `inject:"#ProjectImportService"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
+type pComProjectImportServiceImpl struct {
+	instance *projects0x4d85c7.ProjectImportServiceImpl
+	 markup0x23084a.Component `id:"ProjectImportService"`
+}
+
+
+type pComProjectServiceImpl struct {
+	instance *projects0x4d85c7.ProjectServiceImpl
+	 markup0x23084a.Component `id:"ProjectService"`
+	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
+	LocalRepoService service0x3e063d.LocalRepositoryService `inject:"#LocalRepositoryService"`
+	ProjectTypeService service0x3e063d.ProjectTypeService `inject:"#ProjectTypeService"`
+	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
+	ProjectDAO dao0x5af8d0.ProjectDAO `inject:"#ProjectDAO"`
+	LocalRepoDAO dao0x5af8d0.LocalRepositoryDAO `inject:"#LocalRepositoryDAO"`
+	GitLibAgent store0x8467b3.LibAgent `inject:"#git-lib-agent"`
+}
+
+
+type pComProjectTypeController struct {
+	instance *projecttypes0x53bffe.ProjectTypeController
+	 markup0x23084a.RestController `class:"rest-controller"`
+	ProjectTypeService service0x3e063d.ProjectTypeService `inject:"#ProjectTypeService"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
+type pComProjectTypeDaoImpl struct {
+	instance *projecttypes0x53bffe.ProjectTypeDaoImpl
+	 markup0x23084a.Component `id:"ProjectTypeDAO"`
+	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
+	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
+}
+
+
+type pComProjectTypeImportController struct {
+	instance *projecttypes0x53bffe.ProjectTypeImportController
+	 markup0x23084a.RestController `class:"rest-controller"`
+	ProjectTypeImportService service0x3e063d.ProjectTypeImportService `inject:"#ProjectTypeImportService"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
+type pComProjectTypeImportServiceImpl struct {
+	instance *projecttypes0x53bffe.ProjectTypeImportServiceImpl
+	 markup0x23084a.Component `id:"ProjectTypeImportService"`
+	AC application0x67f6c5.Context `inject:"context"`
+	ProjectTypeService service0x3e063d.ProjectTypeService `inject:"#ProjectTypeService"`
+}
+
+
+type pComProjectTypeServiceImpl struct {
+	instance *projecttypes0x53bffe.ProjectTypeServiceImpl
+	 markup0x23084a.Component `id:"ProjectTypeService"`
+	ProjectTypeDAO dao0x5af8d0.ProjectTypeDAO `inject:"#ProjectTypeDAO"`
+	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
 }
 
 
@@ -439,38 +504,6 @@ type pComPlatformController struct {
 	 markup0x23084a.RestController `class:"rest-controller"`
 	PlatformService service0x3e063d.PlatformService `inject:"#PlatformService"`
 	ProfileService service0x3e063d.ProfileService `inject:"#ProfileService"`
-	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
-}
-
-
-type pComProjectController struct {
-	instance *controller0x9dc399.ProjectController
-	 markup0x23084a.RestController `class:"rest-controller"`
-	ProjectService service0x3e063d.ProjectService `inject:"#ProjectService"`
-	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
-}
-
-
-type pComProjectImportController struct {
-	instance *controller0x9dc399.ProjectImportController
-	 markup0x23084a.RestController `class:"rest-controller"`
-	ProjectImportService service0x3e063d.ProjectImportService `inject:"#ProjectImportService"`
-	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
-}
-
-
-type pComProjectTypeController struct {
-	instance *controller0x9dc399.ProjectTypeController
-	 markup0x23084a.RestController `class:"rest-controller"`
-	ProjectTypeService service0x3e063d.ProjectTypeService `inject:"#ProjectTypeService"`
-	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
-}
-
-
-type pComProjectTypeImportController struct {
-	instance *controller0x9dc399.ProjectTypeImportController
-	 markup0x23084a.RestController `class:"rest-controller"`
-	ProjectTypeImportService service0x3e063d.ProjectTypeImportService `inject:"#ProjectTypeImportService"`
 	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
 }
 
