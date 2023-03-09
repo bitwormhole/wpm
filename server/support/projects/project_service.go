@@ -59,7 +59,12 @@ func (inst *ProjectServiceImpl) dto2entity(c context.Context, o1 *dto.Project) (
 	return o2, nil
 }
 
-func (inst *ProjectServiceImpl) entity2dto(o1 *entity.Project) (*dto.Project, error) {
+func (inst *ProjectServiceImpl) entity2dto(o1 *entity.Project, opt *service.ProjectOptions) (*dto.Project, error) {
+
+	if opt == nil {
+		opt = &service.ProjectOptions{}
+	}
+
 	o2 := &dto.Project{}
 	o2.ID = o1.ID
 
@@ -75,15 +80,17 @@ func (inst *ProjectServiceImpl) entity2dto(o1 *entity.Project) (*dto.Project, er
 	o2.ProjectDir = o1.ProjectDir
 	o2.ConfigFileName = o1.ConfigFileName
 
-	o2.State = inst.checkProjectFileState(o1)
+	if opt.WithFileState {
+		o2.State = inst.checkProjectFileState(o1)
+	}
 
 	return o2, nil
 }
 
-func (inst *ProjectServiceImpl) entity2dtoList(src []*entity.Project) ([]*dto.Project, error) {
+func (inst *ProjectServiceImpl) entity2dtoList(src []*entity.Project, opt *service.ProjectOptions) ([]*dto.Project, error) {
 	dst := make([]*dto.Project, 0)
 	for _, item1 := range src {
-		item2, err := inst.entity2dto(item1)
+		item2, err := inst.entity2dto(item1, opt)
 		if err != nil {
 			return nil, err
 		}
@@ -106,7 +113,7 @@ func (inst *ProjectServiceImpl) ListAll(ctx context.Context, options *service.Pr
 	if err != nil {
 		return nil, err
 	}
-	return inst.entity2dtoList(src)
+	return inst.entity2dtoList(src, options)
 }
 
 // ListByIds ...
@@ -115,7 +122,7 @@ func (inst *ProjectServiceImpl) ListByIds(ctx context.Context, ids []dxo.Project
 	if err != nil {
 		return nil, err
 	}
-	return inst.entity2dtoList(src)
+	return inst.entity2dtoList(src, options)
 }
 
 // Find ...
@@ -124,7 +131,7 @@ func (inst *ProjectServiceImpl) Find(ctx context.Context, id dxo.ProjectID, opti
 	if err != nil {
 		return nil, err
 	}
-	return inst.entity2dto(p)
+	return inst.entity2dto(p, options)
 }
 
 // FindByOwnerRepository ...
@@ -133,7 +140,7 @@ func (inst *ProjectServiceImpl) FindByOwnerRepository(ctx context.Context, id dx
 	if err != nil {
 		return nil, err
 	}
-	return inst.entity2dtoList(items1)
+	return inst.entity2dtoList(items1, options)
 }
 
 // Insert ...
@@ -154,7 +161,7 @@ func (inst *ProjectServiceImpl) Insert(ctx context.Context, o1 *dto.Project) (*d
 		return nil, err
 	}
 
-	return inst.entity2dto(o3)
+	return inst.entity2dto(o3, nil)
 }
 
 // Update ...
@@ -175,7 +182,7 @@ func (inst *ProjectServiceImpl) Update(ctx context.Context, id dxo.ProjectID, o1
 		return nil, err
 	}
 
-	return inst.entity2dto(o3)
+	return inst.entity2dto(o3, nil)
 }
 
 // Remove ...
