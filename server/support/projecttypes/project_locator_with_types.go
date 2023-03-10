@@ -73,6 +73,9 @@ func (inst *myProjectLocatorWithTypes) loadTypes() error {
 		}
 		inst.types = []*entity.ProjectType{ent}
 	}
+	entity.SortProjectTypeArray(inst.types, func(o1, o2 *entity.ProjectType) bool {
+		return o1.Priority > o2.Priority
+	})
 	return nil
 }
 

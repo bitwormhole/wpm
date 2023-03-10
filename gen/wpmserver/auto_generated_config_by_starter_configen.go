@@ -5083,6 +5083,7 @@ type comFactory4pComAboutController struct {
 	
 	mAboutServiceSelector config.InjectionSelector
 	mResponderSelector config.InjectionSelector
+	mProfileSelector config.InjectionSelector
 
 }
 
@@ -5091,6 +5092,7 @@ func (inst * comFactory4pComAboutController) init() application.ComponentFactory
 	
 	inst.mAboutServiceSelector = config.NewInjectionSelector("#AboutService",nil)
 	inst.mResponderSelector = config.NewInjectionSelector("#glass-main-responder",nil)
+	inst.mProfileSelector = config.NewInjectionSelector("${application.profiles.active}",nil)
 
 
 	inst.mPrototype = inst.newObject()
@@ -5130,6 +5132,7 @@ func (inst * comFactory4pComAboutController) Inject(instance application.Compone
 	obj := inst.castObject(instance)
 	obj.AboutService = inst.getterForFieldAboutServiceSelector(context)
 	obj.Responder = inst.getterForFieldResponderSelector(context)
+	obj.Profile = inst.getterForFieldProfileSelector(context)
 	return context.LastError()
 }
 
@@ -5167,6 +5170,11 @@ func (inst * comFactory4pComAboutController) getterForFieldResponderSelector (co
 		return nil
 	}
 	return o2
+}
+
+//getterForFieldProfileSelector
+func (inst * comFactory4pComAboutController) getterForFieldProfileSelector (context application.InstanceContext) string {
+    return inst.mProfileSelector.GetString(context)
 }
 
 

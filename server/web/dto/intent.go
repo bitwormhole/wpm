@@ -16,6 +16,8 @@ type Intent struct {
 	// as exe
 	Executable *Executable      `json:"executable"`
 	Repository *LocalRepository `json:"repository"`
+	Project    *Project         `json:"project"`
+	Location   *File            `json:"location"`
 
 	// as web
 	Method string `json:"method"`

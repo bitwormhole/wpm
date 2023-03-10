@@ -77,6 +77,7 @@ func (inst *ProjectTypeDaoImpl) Update(id dxo.ProjectTypeID, o1 *entity.ProjectT
 
 	o2.AsDir = o1.AsDir
 	o2.AsFile = o1.AsFile
+	o2.Priority = o1.Priority
 
 	o2.Type = o1.Type
 	o2.Name = o1.Name

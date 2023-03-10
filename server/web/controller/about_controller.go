@@ -16,6 +16,7 @@ type AboutController struct {
 
 	AboutService service.AboutService `inject:"#AboutService"`
 	Responder    glass.MainResponder  `inject:"#glass-main-responder"`
+	Profile      string               `inject:"${application.profiles.active}"`
 }
 
 func (inst *AboutController) _Impl() glass.Controller {
@@ -27,6 +28,7 @@ func (inst *AboutController) Init(ec glass.EngineConnection) error {
 
 	ec = ec.RequestMapping("about")
 	ec.Handle(http.MethodGet, "", inst.handleGet)
+	ec.Handle(http.MethodGet, "debug-mode", inst.handleGetDebug)
 	return nil
 }
 
@@ -40,6 +42,20 @@ func (inst *AboutController) handleGet(c *gin.Context) {
 	err := req.open()
 	if err == nil {
 		err = req.doGet()
+	}
+	req.send(err)
+}
+
+func (inst *AboutController) handleGetDebug(c *gin.Context) {
+	req := &myAboutRequest{
+		gc:              c,
+		controller:      inst,
+		wantRequestID:   false,
+		wantRequestBody: false,
+	}
+	err := req.open()
+	if err == nil {
+		err = req.doGetDebug()
 	}
 	req.send(err)
 }
@@ -93,5 +109,11 @@ func (inst *myAboutRequest) doGet() error {
 		return err
 	}
 	inst.body2 = *view
+	return nil
+}
+
+func (inst *myAboutRequest) doGetDebug() error {
+	ctl := inst.controller
+	inst.body2.Profile = ctl.Profile
 	return nil
 }

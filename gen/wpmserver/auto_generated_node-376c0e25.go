@@ -426,6 +426,7 @@ type pComAboutController struct {
 	 markup0x23084a.RestController `class:"rest-controller"`
 	AboutService service0x3e063d.AboutService `inject:"#AboutService"`
 	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+	Profile string `inject:"${application.profiles.active}"`
 }
 
 
