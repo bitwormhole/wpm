@@ -11,6 +11,8 @@ type MediaDAO interface {
 
 	FindByPath(path string) (*entity.Media, error)
 
+	ListByIDs(ids []dxo.MediaID) ([]*entity.Media, error)
+
 	ListAll() ([]*entity.Media, error)
 
 	Insert(o *entity.Media) (*entity.Media, error)

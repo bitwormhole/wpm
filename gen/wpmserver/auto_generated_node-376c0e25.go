@@ -15,6 +15,7 @@ import (
 	support0xf47d7f "github.com/bitwormhole/wpm/server/support"
 	impldao0x73998b "github.com/bitwormhole/wpm/server/support/impldao"
 	implservice0x22327c "github.com/bitwormhole/wpm/server/support/implservice"
+	mediae0xf005e2 "github.com/bitwormhole/wpm/server/support/mediae"
 	platforms0xb539c0 "github.com/bitwormhole/wpm/server/support/platforms"
 	projects0x4d85c7 "github.com/bitwormhole/wpm/server/support/projects"
 	projecttypes0x53bffe "github.com/bitwormhole/wpm/server/support/projecttypes"
@@ -60,14 +61,6 @@ type pComIntentTemplateDaoImpl struct {
 type pComRepositoryDaoImpl struct {
 	instance *impldao0x73998b.RepositoryDaoImpl
 	 markup0x23084a.Component `id:"LocalRepositoryDAO"`
-	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
-	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
-}
-
-
-type pComMediaDaoImpl struct {
-	instance *impldao0x73998b.MediaDaoImpl
-	 markup0x23084a.Component `id:"MediaDAO"`
 	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
 	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
 }
@@ -185,14 +178,6 @@ type pComMainRepositoryServiceImpl struct {
 }
 
 
-type pComMediaServiceImpl struct {
-	instance *implservice0x22327c.MediaServiceImpl
-	 markup0x23084a.Component `id:"MediaService"`
-	MediaDAO dao0x5af8d0.MediaDAO `inject:"#MediaDAO"`
-	SysMainRepoService service0x3e063d.MainRepositoryService `inject:"#MainRepositoryService"`
-}
-
-
 type pComRemoteRepositoryServiceImpl struct {
 	instance *implservice0x22327c.RemoteRepositoryServiceImpl
 	 markup0x23084a.Component `id:"RemoteRepositoryService"`
@@ -221,6 +206,31 @@ type pComRunIntentServiceImpl struct {
 type pComUUIDGenServiceImpl struct {
 	instance *implservice0x22327c.UUIDGenServiceImpl
 	 markup0x23084a.Component `id:"UUIDGenService" initMethod:"Init"`
+}
+
+
+type pComMediaController struct {
+	instance *mediae0xf005e2.MediaController
+	 markup0x23084a.RestController `class:"rest-controller"`
+	MediaService service0x3e063d.MediaService `inject:"#MediaService"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
+type pComMediaDaoImpl struct {
+	instance *mediae0xf005e2.MediaDaoImpl
+	 markup0x23084a.Component `id:"MediaDAO"`
+	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
+	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
+}
+
+
+type pComMediaServiceImpl struct {
+	instance *mediae0xf005e2.MediaServiceImpl
+	 markup0x23084a.Component `id:"MediaService"`
+	MediaDAO dao0x5af8d0.MediaDAO `inject:"#MediaDAO"`
+	SysMainRepoService service0x3e063d.MainRepositoryService `inject:"#MainRepositoryService"`
+	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
 }
 
 
@@ -492,14 +502,6 @@ type pComLocalRepositoryController struct {
 }
 
 
-type pComMediaController struct {
-	instance *controller0x9dc399.MediaController
-	 markup0x23084a.RestController `class:"rest-controller"`
-	MediaService service0x3e063d.MediaService `inject:"#MediaService"`
-	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
-}
-
-
 type pComPlatformController struct {
 	instance *controller0x9dc399.PlatformController
 	 markup0x23084a.RestController `class:"rest-controller"`
@@ -522,6 +524,14 @@ type pComRepositoryImportController struct {
 	 markup0x23084a.RestController `class:"rest-controller"`
 	RepoStateLoader service0x3e063d.LocalRepositoryStateLoader `inject:"#LocalRepositoryStateLoader"`
 	ImportService service0x3e063d.RepositoryImportService `inject:"#RepositoryImportService"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
+type pComUploadController struct {
+	instance *controller0x9dc399.UploadController
+	 markup0x23084a.RestController `class:"rest-controller"`
+	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
 	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
 }
 

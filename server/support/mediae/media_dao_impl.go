@@ -1,4 +1,4 @@
-package impldao
+package mediae
 
 import (
 	"errors"
@@ -64,9 +64,29 @@ func (inst *MediaDaoImpl) ListAll() ([]*entity.Media, error) {
 	return list, nil
 }
 
+// ListByIDs ...
+func (inst *MediaDaoImpl) ListByIDs(ids []dxo.MediaID) ([]*entity.Media, error) {
+	list := inst.modelList()
+	db := inst.Agent.DB()
+	res := db.Find(&list, ids)
+	if res.Error != nil {
+		return nil, res.Error
+	}
+	return list, nil
+}
+
 // Insert ...
 func (inst *MediaDaoImpl) Insert(o *entity.Media) (*entity.Media, error) {
-	return nil, errors.New("no impl")
+
+	o.ID = 0
+	o.UUID = inst.UUIDGenService.GenerateUUID(o.SHA256SUM.String() + "|entity.Media|")
+
+	db := inst.Agent.DB()
+	res := db.Create(o)
+	if res.Error != nil {
+		return nil, res.Error
+	}
+	return o, nil
 }
 
 // Update ....

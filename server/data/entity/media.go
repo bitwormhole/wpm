@@ -10,8 +10,12 @@ type Media struct {
 	ID dxo.MediaID `gorm:"primaryKey"`
 	Base
 
-	Path        string `gorm:"index:,unique"`
-	SHA256SUM   util.Hex
-	FileSize    int64
+	Name        string
+	URL         string `gorm:"index:,unique"`
+	Bucket      string
+	Label       string
 	ContentType string
+
+	SHA256SUM util.Hex
+	FileSize  int64
 }

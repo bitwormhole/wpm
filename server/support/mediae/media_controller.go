@@ -1,4 +1,4 @@
-package controller
+package mediae
 
 import (
 	"fmt"
@@ -10,6 +10,7 @@ import (
 	"github.com/bitwormhole/starter/util"
 	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/service"
+	"github.com/bitwormhole/wpm/server/utils"
 	"github.com/bitwormhole/wpm/server/web/dto"
 	"github.com/bitwormhole/wpm/server/web/vo"
 	"github.com/gin-gonic/gin"
@@ -45,10 +46,12 @@ func (inst *MediaController) Init(ec glass.EngineConnection) error {
 
 func (inst *MediaController) handleGetList(c *gin.Context) {
 	req := &myMediaRequest{
-		gc:              c,
-		controller:      inst,
-		wantRequestID:   false,
-		wantRequestBody: false,
+		gc:                 c,
+		controller:         inst,
+		wantRequestID:      false,
+		wantRequestIDs:     true,
+		wantRequestBody:    false,
+		wantRequestOptions: true,
 	}
 	err := req.open()
 	if err == nil {
@@ -59,10 +62,12 @@ func (inst *MediaController) handleGetList(c *gin.Context) {
 
 func (inst *MediaController) handleGetOne(c *gin.Context) {
 	req := &myMediaRequest{
-		gc:              c,
-		controller:      inst,
-		wantRequestID:   true,
-		wantRequestBody: false,
+		gc:                 c,
+		controller:         inst,
+		wantRequestID:      true,
+		wantRequestIDs:     false,
+		wantRequestBody:    false,
+		wantRequestOptions: true,
 	}
 	err := req.open()
 	if err == nil {
@@ -130,12 +135,16 @@ type myMediaRequest struct {
 	gc         *gin.Context
 	controller *MediaController
 
-	wantRequestID   bool
-	wantRequestBody bool
+	wantRequestID      bool
+	wantRequestIDs     bool
+	wantRequestBody    bool
+	wantRequestOptions bool
 
-	id    dxo.MediaID
-	body1 vo.Media
-	body2 vo.Media
+	options service.MediaOptions
+	id      dxo.MediaID
+	ids     []dxo.MediaID
+	body1   vo.Media
+	body2   vo.Media
 }
 
 func (inst *myMediaRequest) open() error {
@@ -158,7 +167,33 @@ func (inst *myMediaRequest) open() error {
 		}
 	}
 
+	if inst.wantRequestOptions {
+		inst.options.All = inst.hasFlag(c, "all")
+		inst.options.WithFileState = inst.hasFlag(c, "with-file-state")
+	}
+
+	if inst.wantRequestIDs {
+		idstr := c.Query("ids")
+		ids, err := inst.parseIds(idstr)
+		if err != nil {
+			return err
+		}
+		inst.ids = ids
+	}
+
 	return nil
+}
+
+func (inst *myMediaRequest) parseIds(str string) ([]dxo.MediaID, error) {
+	list := make([]dxo.MediaID, 0)
+	err := (&utils.GinUtils{}).ParseIDs(str, ".", func(n int) {
+		list = append(list, dxo.MediaID(n))
+	})
+	return list, err
+}
+
+func (inst *myMediaRequest) hasFlag(c *gin.Context, name string) bool {
+	return (&utils.GinUtils{}).HasFlag(c, name)
 }
 
 func (inst *myMediaRequest) send(err error) {
@@ -178,7 +213,8 @@ func (inst *myMediaRequest) doGetOne() error {
 	id := inst.id
 	ctx := inst.gc
 	ser := inst.controller.MediaService
-	o, err := ser.Find(ctx, id)
+	opt := &inst.options
+	o, err := ser.Find(ctx, id, opt)
 	if err != nil {
 		return err
 	}
@@ -187,9 +223,21 @@ func (inst *myMediaRequest) doGetOne() error {
 }
 
 func (inst *myMediaRequest) doGetList() error {
+
 	ctx := inst.gc
 	ser := inst.controller.MediaService
-	list, err := ser.ListAll(ctx)
+	opt := &inst.options
+	all := inst.options.All
+	err := fmt.Errorf("")
+	list := inst.body2.Mediae
+
+	if all {
+		list, err = ser.ListAll(ctx, opt)
+	} else {
+		ids := inst.ids
+		list, err = ser.FindByIDs(ctx, ids, opt)
+	}
+
 	if err != nil {
 		return err
 	}
@@ -198,18 +246,35 @@ func (inst *myMediaRequest) doGetList() error {
 }
 
 func (inst *myMediaRequest) doPost() error {
-
-	return fmt.Errorf("no impl")
+	ctx := inst.gc
+	ser := inst.controller.MediaService
+	o1 := inst.body1.Mediae[0]
+	o2, err := ser.Insert(ctx, o1)
+	if err != nil {
+		return err
+	}
+	inst.body2.Mediae = []*dto.Media{o2}
+	return nil
 }
 
 func (inst *myMediaRequest) doPut() error {
-
-	return fmt.Errorf("no impl")
+	ctx := inst.gc
+	ser := inst.controller.MediaService
+	id := inst.id
+	o1 := inst.body1.Mediae[0]
+	o2, err := ser.Update(ctx, id, o1)
+	if err != nil {
+		return err
+	}
+	inst.body2.Mediae = []*dto.Media{o2}
+	return nil
 }
 
 func (inst *myMediaRequest) doDelete() error {
-
-	return fmt.Errorf("no impl")
+	ctx := inst.gc
+	ser := inst.controller.MediaService
+	id := inst.id
+	return ser.Remove(ctx, id)
 }
 
 func (inst *myMediaRequest) doGetFile(c *gin.Context) error {
@@ -219,17 +284,14 @@ func (inst *myMediaRequest) doGetFile(c *gin.Context) error {
 	hex := c.Param("hex")
 	name := c.Param("name")
 
-	ser := inst.controller.MediaService
-
-	me, err := ser.FindByPath(c, name)
-	if err != nil {
-		return err
+	me := &dto.Media{
+		ContentType: type1 + "/" + type2,
+		Name:        name,
+		SHA256SUM:   util.Hex(hex),
 	}
 
-	me.SHA256SUM = util.Hex(hex)
-	me.ContentType = type1 + "/" + type2 + "/todo..."
-
-	me, err = ser.PrepareForDownload(c, me)
+	ser := inst.controller.MediaService
+	me, err := ser.PrepareForDownload(c, me)
 	if err != nil {
 		return err
 	}
