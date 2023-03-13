@@ -19,6 +19,8 @@ type MediaService interface {
 
 	ListAll(ctx context.Context, opt *MediaOptions) ([]*dto.Media, error)
 
+	ImportPresets(ctx context.Context) error
+
 	Insert(ctx context.Context, o *dto.Media) (*dto.Media, error)
 	Update(ctx context.Context, id dxo.MediaID, o *dto.Media) (*dto.Media, error)
 	Remove(ctx context.Context, id dxo.MediaID) error

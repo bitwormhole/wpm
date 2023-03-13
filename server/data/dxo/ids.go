@@ -3,6 +3,11 @@ package dxo
 // ExampleID ...
 type ExampleID int
 
+////////////////////////////////////////////////////////////////////////////////
+
+// MIMETypeID ...
+type MIMETypeID int
+
 // ExecutableID ...
 type ExecutableID int
 

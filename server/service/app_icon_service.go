@@ -1,8 +1,6 @@
 package service
 
-import "github.com/bitwormhole/wpm/server/web/dto"
-
-// AppIconService ...
+// AppIconService ... [这个接口已经弃用]
 type AppIconService interface {
-	FillWithIconURL(o1 *dto.Executable) error
+	// FillWithIconURL(o1 *dto.Executable) error
 }

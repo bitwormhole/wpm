@@ -13,6 +13,7 @@ import (
 	dbagent0x9f90fb "github.com/bitwormhole/wpm/server/data/dbagent"
 	service0x3e063d "github.com/bitwormhole/wpm/server/service"
 	support0xf47d7f "github.com/bitwormhole/wpm/server/support"
+	contenttypes0x61ca37 "github.com/bitwormhole/wpm/server/support/contenttypes"
 	impldao0x73998b "github.com/bitwormhole/wpm/server/support/impldao"
 	implservice0x22327c "github.com/bitwormhole/wpm/server/support/implservice"
 	mediae0xf005e2 "github.com/bitwormhole/wpm/server/support/mediae"
@@ -31,6 +32,14 @@ type pComGormDBAgentImpl struct {
 	instance *dbagent0x9f90fb.GormDBAgentImpl
 	 markup0x23084a.Component `id:"GormDBAgent" class:"life"`
 	Sources datasource0x68a737.SourceManager `inject:"#starter-gorm-source-manager"`
+}
+
+
+type pComContentTypeServiceImpl struct {
+	instance *contenttypes0x61ca37.ContentTypeServiceImpl
+	 markup0x23084a.Component `id:"ContentTypeService"`
+	AC application0x67f6c5.Context `inject:"context"`
+	PropsFileName string `inject:"${wpm.content-types.properties.filename}"`
 }
 
 
@@ -228,9 +237,13 @@ type pComMediaDaoImpl struct {
 type pComMediaServiceImpl struct {
 	instance *mediae0xf005e2.MediaServiceImpl
 	 markup0x23084a.Component `id:"MediaService"`
+	AC application0x67f6c5.Context `inject:"context"`
 	MediaDAO dao0x5af8d0.MediaDAO `inject:"#MediaDAO"`
 	SysMainRepoService service0x3e063d.MainRepositoryService `inject:"#MainRepositoryService"`
 	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
+	ContentTypeService service0x3e063d.ContentTypeService `inject:"#ContentTypeService"`
+	ResPathPrefix string `inject:"${wpm.presets.res-path-prefix}"`
+	WebPathPrefix string `inject:"${wpm.presets.web-path-prefix}"`
 }
 
 

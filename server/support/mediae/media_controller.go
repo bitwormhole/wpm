@@ -34,8 +34,11 @@ func (inst *MediaController) Init(ec glass.EngineConnection) error {
 	ec = ec.RequestMapping("media")
 
 	ec.Handle(http.MethodGet, "", inst.handleGetList)
-	ec.Handle(http.MethodPost, "", inst.handlePost)
 	ec.Handle(http.MethodGet, ":id", inst.handleGetOne)
+
+	ec.Handle(http.MethodPost, "", inst.handlePost)
+	ec.Handle(http.MethodPost, "import-presets", inst.handlePostImportPresets)
+
 	ec.Handle(http.MethodPut, ":id", inst.handlePut)
 	ec.Handle(http.MethodDelete, ":id", inst.handleDelete)
 
@@ -86,6 +89,20 @@ func (inst *MediaController) handlePost(c *gin.Context) {
 	err := req.open()
 	if err == nil {
 		err = req.doPost()
+	}
+	req.send(err)
+}
+
+func (inst *MediaController) handlePostImportPresets(c *gin.Context) {
+	req := &myMediaRequest{
+		gc:              c,
+		controller:      inst,
+		wantRequestID:   false,
+		wantRequestBody: true,
+	}
+	err := req.open()
+	if err == nil {
+		err = req.doPostImportPresets()
 	}
 	req.send(err)
 }
@@ -255,6 +272,12 @@ func (inst *myMediaRequest) doPost() error {
 	}
 	inst.body2.Mediae = []*dto.Media{o2}
 	return nil
+}
+
+func (inst *myMediaRequest) doPostImportPresets() error {
+	ctx := inst.gc
+	ser := inst.controller.MediaService
+	return ser.ImportPresets(ctx)
 }
 
 func (inst *myMediaRequest) doPut() error {

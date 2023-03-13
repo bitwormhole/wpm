@@ -56,7 +56,7 @@ func (inst *ExecutableServiceImpl) entity2dto(o1 *entity.Executable) (*dto.Execu
 	// todo ...
 	o2.State = inst.checkExeFileState(o1)
 
-	inst.IconService.FillWithIconURL(o2)
+	// inst.IconService.FillWithIconURL(o2)
 
 	return o2, nil
 }

@@ -1,8 +1,6 @@
 package mediae
 
 import (
-	"errors"
-
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/wpm/server/data/dao"
 	"github.com/bitwormhole/wpm/server/data/dbagent"
@@ -90,11 +88,35 @@ func (inst *MediaDaoImpl) Insert(o *entity.Media) (*entity.Media, error) {
 }
 
 // Update ....
-func (inst *MediaDaoImpl) Update(id dxo.MediaID, o *entity.Media) (*entity.Media, error) {
-	return nil, errors.New("no impl")
+func (inst *MediaDaoImpl) Update(id dxo.MediaID, o1 *entity.Media) (*entity.Media, error) {
+
+	db := inst.Agent.DB()
+	o2 := inst.model()
+	res := db.Find(&o2, id)
+	if res.Error != nil {
+		return nil, res.Error
+	}
+
+	o2.Bucket = o1.Bucket
+	o2.Label = o1.Label
+	o2.Name = o1.Name
+
+	res = db.Save(o2)
+	if res.Error != nil {
+		return nil, res.Error
+	}
+
+	return o2, nil
 }
 
 // Remove ...
 func (inst *MediaDaoImpl) Remove(id dxo.MediaID) error {
-	return errors.New("no impl")
+	db := inst.Agent.DB()
+	o2 := inst.model()
+	res := db.Find(&o2, id)
+	if res.Error != nil {
+		return res.Error
+	}
+	res = db.Delete(o2, id)
+	return res.Error
 }

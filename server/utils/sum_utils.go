@@ -33,3 +33,10 @@ func ComputeFileSHA256sumAFS(file afs.Path) (util.Hex, error) {
 	hex := util.HexFromBytes(sum)
 	return hex, nil
 }
+
+// ComputeSHA256sum ...
+func ComputeSHA256sum(data []byte) util.Hex {
+	sum := sha256.Sum256(data)
+	hex := util.HexFromBytes(sum[:])
+	return hex
+}

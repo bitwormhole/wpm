@@ -2,9 +2,9 @@ package mediae
 
 import (
 	"context"
-	"errors"
 
 	"bitwormhole.com/starter/afs"
+	"github.com/bitwormhole/starter/application"
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/starter/vlog"
 	"github.com/bitwormhole/wpm/server/data/dao"
@@ -19,9 +19,14 @@ import (
 type MediaServiceImpl struct {
 	markup.Component `id:"MediaService"`
 
+	AC                 application.Context           `inject:"context"`
 	MediaDAO           dao.MediaDAO                  `inject:"#MediaDAO"`
 	SysMainRepoService service.MainRepositoryService `inject:"#MainRepositoryService"`
 	FileSystemService  service.FileSystemService     `inject:"#FileSystemService"`
+	ContentTypeService service.ContentTypeService    `inject:"#ContentTypeService"`
+
+	ResPathPrefix string `inject:"${wpm.presets.res-path-prefix}"`
+	WebPathPrefix string `inject:"${wpm.presets.web-path-prefix}"`
 }
 
 func (inst *MediaServiceImpl) _Impl() service.MediaService {
@@ -173,14 +178,30 @@ func (inst *MediaServiceImpl) Insert(ctx context.Context, o *dto.Media) (*dto.Me
 	return inst.entity2dto(o3, nil)
 }
 
+// ImportPresets ...
+func (inst *MediaServiceImpl) ImportPresets(ctx context.Context) error {
+	loader := myImportPresetsLoader{
+		context: ctx, parent: inst,
+	}
+	return loader.Load()
+}
+
 // Update ...
 func (inst *MediaServiceImpl) Update(ctx context.Context, id dxo.MediaID, o *dto.Media) (*dto.Media, error) {
-	return nil, errors.New("no impl")
+	o2, err := inst.dto2entity(o)
+	if err != nil {
+		return nil, err
+	}
+	o3, err := inst.MediaDAO.Update(id, o2)
+	if err != nil {
+		return nil, err
+	}
+	return inst.entity2dto(o3, nil)
 }
 
 // Remove ...
 func (inst *MediaServiceImpl) Remove(ctx context.Context, id dxo.MediaID) error {
-	return errors.New("no impl")
+	return inst.MediaDAO.Remove(id)
 }
 
 // PrepareForDownload ...
