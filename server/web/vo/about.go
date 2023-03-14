@@ -23,4 +23,21 @@ type About struct {
 	MainModule dto.Module `json:"main_module"`
 
 	Modules []*dto.Module `json:"modules"`
+
+	CheckUpdate *AboutCheckUpdate `json:"checkupdate"`
+}
+
+// AboutCheckUpdate  用于检查更新
+type AboutCheckUpdate struct {
+
+	// params
+	Auto  bool `json:"auto"`  // 自动检查
+	Force bool `json:"force"` // 必须检查
+
+	// results
+	Current       *dto.SoftwarePackage `json:"current"`         // 当前使用的版本
+	Latest        *dto.SoftwarePackage `json:"latest"`          // 最新的版本
+	Ignore        *dto.SoftwarePackage `json:"ignore"`          // 已忽略的版本
+	HasNewVersion bool                 `json:"has_new_version"` // 检查结果
+	HasIgnored    bool                 `json:"has_ignored"`     // 检查结果
 }

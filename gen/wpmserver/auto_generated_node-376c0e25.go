@@ -13,6 +13,7 @@ import (
 	dbagent0x9f90fb "github.com/bitwormhole/wpm/server/data/dbagent"
 	service0x3e063d "github.com/bitwormhole/wpm/server/service"
 	support0xf47d7f "github.com/bitwormhole/wpm/server/support"
+	checkupdate0xea1855 "github.com/bitwormhole/wpm/server/support/checkupdate"
 	contenttypes0x61ca37 "github.com/bitwormhole/wpm/server/support/contenttypes"
 	impldao0x73998b "github.com/bitwormhole/wpm/server/support/impldao"
 	implservice0x22327c "github.com/bitwormhole/wpm/server/support/implservice"
@@ -20,6 +21,7 @@ import (
 	platforms0xb539c0 "github.com/bitwormhole/wpm/server/support/platforms"
 	projects0x4d85c7 "github.com/bitwormhole/wpm/server/support/projects"
 	projecttypes0x53bffe "github.com/bitwormhole/wpm/server/support/projecttypes"
+	settings0x19237d "github.com/bitwormhole/wpm/server/support/settings"
 	filequery0xca51d2 "github.com/bitwormhole/wpm/server/utils/filequery"
 	handlers0x162741 "github.com/bitwormhole/wpm/server/utils/filequery/handlers"
 	intents0xec84e7 "github.com/bitwormhole/wpm/server/utils/intents"
@@ -32,6 +34,15 @@ type pComGormDBAgentImpl struct {
 	instance *dbagent0x9f90fb.GormDBAgentImpl
 	 markup0x23084a.Component `id:"GormDBAgent" class:"life"`
 	Sources datasource0x68a737.SourceManager `inject:"#starter-gorm-source-manager"`
+}
+
+
+type pComTheCheckUpdateServiceImpl struct {
+	instance *checkupdate0xea1855.TheCheckUpdateServiceImpl
+	 markup0x23084a.Component `id:"CheckUpdateService"`
+	PackagesURL string `inject:"${wpm.check-update.url}"`
+	AboutService service0x3e063d.AboutService `inject:"#AboutService"`
+	SettingService service0x3e063d.SettingService `inject:"#SettingService"`
 }
 
 
@@ -356,6 +367,29 @@ type pComProjectTypeServiceImpl struct {
 }
 
 
+type pComSettingController struct {
+	instance *settings0x19237d.SettingController
+	 markup0x23084a.RestController `class:"rest-controller"`
+	SettingService service0x3e063d.SettingService `inject:"#SettingService"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
+type pComSettingDaoImpl struct {
+	instance *settings0x19237d.SettingDaoImpl
+	 markup0x23084a.Component `id:"SettingDAO"`
+	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
+	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
+}
+
+
+type pComSettingServiceImpl struct {
+	instance *settings0x19237d.SettingServiceImpl
+	 markup0x23084a.Component `id:"SettingService" class:"life" `
+	SettingDAO dao0x5af8d0.SettingDAO `inject:"#SettingDAO"`
+}
+
+
 type pComWpmDataSource struct {
 	instance *support0xf47d7f.WpmDataSource
 	 markup0x23084a.Component `class:"starter-gorm-source-registry"`
@@ -448,6 +482,7 @@ type pComAboutController struct {
 	instance *controller0x9dc399.AboutController
 	 markup0x23084a.RestController `class:"rest-controller"`
 	AboutService service0x3e063d.AboutService `inject:"#AboutService"`
+	UpdateService service0x3e063d.CheckUpdateService `inject:"#CheckUpdateService"`
 	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
 	Profile string `inject:"${application.profiles.active}"`
 }

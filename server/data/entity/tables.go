@@ -41,6 +41,11 @@ func (ProjectType) TableName() string {
 }
 
 // TableName ...
+func (Setting) TableName() string {
+	return TableNamePrefix + "setting"
+}
+
+// TableName ...
 func (User) TableName() string {
 	return TableNamePrefix + "user"
 }
@@ -58,6 +63,7 @@ func ListPrototypes() []any {
 	list = append(list, &LocalRepository{})
 	list = append(list, &Media{})
 	list = append(list, &RemoteRepository{})
+	list = append(list, &Setting{})
 	list = append(list, &User{})
 
 	return list
