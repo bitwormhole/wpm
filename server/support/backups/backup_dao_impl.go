@@ -69,6 +69,21 @@ func (inst *ImpBackupServiceDAO) Export(file afs.Path) error {
 	return file.GetIO().WriteBinary(data, opt)
 }
 
+// Import ...
 func (inst *ImpBackupServiceDAO) Import(file afs.Path) error {
-	return fmt.Errorf("no impl")
+	view := &backup.VO{}
+	data, err := file.GetIO().ReadBinary(nil)
+	if err != nil {
+		return err
+	}
+	err = json.Unmarshal(data, view)
+	if err != nil {
+		return err
+	}
+	db := inst.Agent.DB()
+	task := &tablesImportTask{
+		db:   db,
+		view: view,
+	}
+	return task.importAll()
 }

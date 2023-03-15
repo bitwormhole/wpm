@@ -98,7 +98,17 @@ func (inst *ImpBackupService) Export(c context.Context, o *dto.Backup) (*dto.Bac
 
 // Import ...
 func (inst *ImpBackupService) Import(c context.Context, o *dto.Backup) (*dto.Backup, error) {
-	return nil, fmt.Errorf("no impl")
+	path := o.BackupFilePath
+	path = strings.TrimSpace(path)
+	if path == "" {
+		return nil, fmt.Errorf("no param:backup_file_path")
+	}
+	file := inst.FilesysService.Path(path)
+	err := inst.BackupDao.Import(file)
+	if err != nil {
+		return nil, err
+	}
+	return o, nil
 }
 
 // ListAll ...
