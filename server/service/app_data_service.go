@@ -8,6 +8,8 @@ type AppDataService interface {
 
 	GetMainRepositoryPath() string
 
+	GetBackupDirectory() string
+
 	Ready() bool
 
 	Setup() error

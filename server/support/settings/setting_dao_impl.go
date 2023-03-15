@@ -97,7 +97,7 @@ func (inst *SettingDaoImpl) Update(id dxo.SettingID, o1 *entity.Setting) (*entit
 func (inst *SettingDaoImpl) Remove(id dxo.SettingID) error {
 	o := inst.model()
 	db := inst.Agent.DB()
-	res := db.Delete(&o, id)
+	res := db.Unscoped().Delete(&o, id)
 	return res.Error
 }
 

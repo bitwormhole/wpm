@@ -8,12 +8,14 @@ import (
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/starter/vlog"
 	"github.com/bitwormhole/wpm/server/service"
+	"github.com/bitwormhole/wpm/server/utils"
 )
 
 // 定义 app-data 文件名
 const (
-	AppDataFileDB  = "wpm.db"
-	AppDataMainGit = "main/.git"
+	AppDataFileDB    = "wpm.db"
+	AppDataMainGit   = "main/.git"
+	AppDataBackupDir = "backups"
 )
 
 // AppDataServiceImpl ...
@@ -21,6 +23,8 @@ type AppDataServiceImpl struct {
 	markup.Component `id:"AppDataService"`
 
 	ProfileService service.ProfileService `inject:"#ProfileService"`
+
+	SQLiteDatabaseNameWithAppVersion bool `inject:"${datasource.wpm.database-name-with-version}"`
 
 	baseAppDataDir afs.Path
 }
@@ -62,9 +66,25 @@ func (inst *AppDataServiceImpl) GetAppDataDirectory() string {
 	return inst.forPathString(".")
 }
 
+// GetBackupDirectory 。。。
+func (inst *AppDataServiceImpl) GetBackupDirectory() string {
+	return inst.forPathString(AppDataBackupDir)
+}
+
 // GetSQLiteDBFile ...
 func (inst *AppDataServiceImpl) GetSQLiteDBFile() string {
-	return inst.forPathString(AppDataFileDB)
+	name := AppDataFileDB
+	if inst.SQLiteDatabaseNameWithAppVersion {
+		am := service.GetAppModule()
+		if am != nil {
+			version := am.GetVersion()
+			moduleName := am.GetName()
+			moduleHex := utils.ComputeSHA256sum([]byte(moduleName))
+			hexName := moduleHex.String()[0:7]
+			name = "wpm-" + hexName + "-" + version + ".db"
+		}
+	}
+	return inst.forPathString(name)
 }
 
 // GetMainRepositoryPath ...

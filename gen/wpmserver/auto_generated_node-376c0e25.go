@@ -13,6 +13,7 @@ import (
 	dbagent0x9f90fb "github.com/bitwormhole/wpm/server/data/dbagent"
 	service0x3e063d "github.com/bitwormhole/wpm/server/service"
 	support0xf47d7f "github.com/bitwormhole/wpm/server/support"
+	backups0xe44d54 "github.com/bitwormhole/wpm/server/support/backups"
 	checkupdate0xea1855 "github.com/bitwormhole/wpm/server/support/checkupdate"
 	contenttypes0x61ca37 "github.com/bitwormhole/wpm/server/support/contenttypes"
 	impldao0x73998b "github.com/bitwormhole/wpm/server/support/impldao"
@@ -34,6 +35,30 @@ type pComGormDBAgentImpl struct {
 	instance *dbagent0x9f90fb.GormDBAgentImpl
 	 markup0x23084a.Component `id:"GormDBAgent" class:"life"`
 	Sources datasource0x68a737.SourceManager `inject:"#starter-gorm-source-manager"`
+}
+
+
+type pComController struct {
+	instance *backups0xe44d54.Controller
+	 markup0x23084a.Component `id:"" class:"rest-controller"`
+	BackupService service0x3e063d.DatabaseBackupService `inject:"#DatabaseBackupService"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
+type pComImpBackupServiceDAO struct {
+	instance *backups0xe44d54.ImpBackupServiceDAO
+	 markup0x23084a.Component `id:"wpm-database-backup-dao" class:""`
+	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
+}
+
+
+type pComImpBackupService struct {
+	instance *backups0xe44d54.ImpBackupService
+	 markup0x23084a.Component `id:"DatabaseBackupService" class:""`
+	AppDataService service0x3e063d.AppDataService `inject:"#AppDataService"`
+	FilesysService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
+	BackupDao dao0x5af8d0.Backup `inject:"#wpm-database-backup-dao"`
 }
 
 
@@ -103,6 +128,7 @@ type pComAppDataServiceImpl struct {
 	instance *implservice0x22327c.AppDataServiceImpl
 	 markup0x23084a.Component `id:"AppDataService"`
 	ProfileService service0x3e063d.ProfileService `inject:"#ProfileService"`
+	SQLiteDatabaseNameWithAppVersion bool `inject:"${datasource.wpm.database-name-with-version}"`
 }
 
 
