@@ -1,4 +1,4 @@
-package implservice
+package executables
 
 import (
 	"context"
@@ -6,6 +6,7 @@ import (
 	"os/exec"
 	"strings"
 
+	"github.com/bitwormhole/starter/application"
 	"github.com/bitwormhole/starter/io/fs"
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/wpm/server/service"
@@ -18,7 +19,9 @@ import (
 type ExecutableImportServiceImpl struct {
 	markup.Component `id:"ExecutableImportService"`
 
+	AC                application.Context       `inject:"context"`
 	ExecutableService service.ExecutableService `inject:"#ExecutableService"`
+	FileSystemService service.FileSystemService `inject:"#FileSystemService"`
 }
 
 func (inst *ExecutableImportServiceImpl) _Impl() service.ExecutableImportService {
@@ -116,4 +119,13 @@ func (inst *ExecutableImportServiceImpl) getExeInfo(ctx context.Context, file fs
 	o.ID = 0
 
 	return o, nil
+}
+
+// ImportPresets ...
+func (inst *ExecutableImportServiceImpl) ImportPresets(ctx context.Context) error {
+	h := &myImportPresetExecutablesHanlder{
+		context: ctx,
+		parent:  inst,
+	}
+	return h.Import()
 }

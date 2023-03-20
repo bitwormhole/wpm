@@ -65,6 +65,7 @@ func ListPrototypes() []any {
 	list = append(list, &RemoteRepository{})
 	list = append(list, &Setting{})
 	list = append(list, &User{})
+	list = append(list, &Worktree{})
 
 	return list
 }

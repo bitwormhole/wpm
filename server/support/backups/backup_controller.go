@@ -13,20 +13,20 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// Controller ...
-type Controller struct {
+// WpmBackupController ...
+type WpmBackupController struct {
 	markup.Component `id:"" class:"rest-controller"`
 
 	BackupService service.DatabaseBackupService `inject:"#DatabaseBackupService"`
 	Responder     glass.MainResponder           `inject:"#glass-main-responder"`
 }
 
-func (inst *Controller) _Impl() glass.Controller {
+func (inst *WpmBackupController) _Impl() glass.Controller {
 	return inst
 }
 
 // Init 初始化
-func (inst *Controller) Init(ec glass.EngineConnection) error {
+func (inst *WpmBackupController) Init(ec glass.EngineConnection) error {
 	ec = ec.RequestMapping("backups")
 
 	ec.Handle(http.MethodGet, "", inst.handleGetList)
@@ -37,11 +37,11 @@ func (inst *Controller) Init(ec glass.EngineConnection) error {
 	return nil
 }
 
-func (inst *Controller) handlePostImport(c *gin.Context) {
+func (inst *WpmBackupController) handlePostImport(c *gin.Context) {
 	req := &myBackupRequest{
-		controller:      inst,
-		gc:              c,
-		wantRequestBody: true,
+		WpmBackupController: inst,
+		gc:                  c,
+		wantRequestBody:     true,
 	}
 	err := req.open()
 	if err == nil {
@@ -50,11 +50,11 @@ func (inst *Controller) handlePostImport(c *gin.Context) {
 	req.send(err)
 }
 
-func (inst *Controller) handlePostExport(c *gin.Context) {
+func (inst *WpmBackupController) handlePostExport(c *gin.Context) {
 	req := &myBackupRequest{
-		controller:      inst,
-		gc:              c,
-		wantRequestBody: true,
+		WpmBackupController: inst,
+		gc:                  c,
+		wantRequestBody:     true,
 	}
 	err := req.open()
 	if err == nil {
@@ -63,11 +63,11 @@ func (inst *Controller) handlePostExport(c *gin.Context) {
 	req.send(err)
 }
 
-func (inst *Controller) handleGetList(c *gin.Context) {
+func (inst *WpmBackupController) handleGetList(c *gin.Context) {
 	req := &myBackupRequest{
-		controller:      inst,
-		gc:              c,
-		wantRequestBody: false,
+		WpmBackupController: inst,
+		gc:                  c,
+		wantRequestBody:     false,
 	}
 	err := req.open()
 	if err == nil {
@@ -79,8 +79,8 @@ func (inst *Controller) handleGetList(c *gin.Context) {
 ////////////////////////////////////////////////////////////////////////////////
 
 type myBackupRequest struct {
-	gc         *gin.Context
-	controller *Controller
+	gc                  *gin.Context
+	WpmBackupController *WpmBackupController
 
 	wantRequestID   bool
 	wantRequestBody bool
@@ -123,12 +123,12 @@ func (inst *myBackupRequest) send(err error) {
 		Error:   err,
 		Status:  status,
 	}
-	inst.controller.Responder.Send(resp)
+	inst.WpmBackupController.Responder.Send(resp)
 }
 
 func (inst *myBackupRequest) doImport() error {
 	ctx := inst.gc
-	ser := inst.controller.BackupService
+	ser := inst.WpmBackupController.BackupService
 	o1 := inst.body1.Backups[0]
 	o2, err := ser.Import(ctx, o1)
 	if err != nil {
@@ -140,7 +140,7 @@ func (inst *myBackupRequest) doImport() error {
 
 func (inst *myBackupRequest) doExport() error {
 	ctx := inst.gc
-	ser := inst.controller.BackupService
+	ser := inst.WpmBackupController.BackupService
 	o1 := inst.body1.Backups[0]
 	o2, err := ser.Export(ctx, o1)
 	if err != nil {
@@ -152,7 +152,7 @@ func (inst *myBackupRequest) doExport() error {
 
 func (inst *myBackupRequest) doListAll() error {
 	ctx := inst.gc
-	ser := inst.controller.BackupService
+	ser := inst.WpmBackupController.BackupService
 	list, err := ser.ListAll(ctx)
 	if err != nil {
 		return err

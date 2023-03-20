@@ -1,4 +1,4 @@
-package impldao
+package executables
 
 import (
 	"github.com/bitwormhole/starter/markup"

@@ -26,6 +26,7 @@ type LocalRepository struct {
 	DotGitPath     string `json:"dot_git_path"`
 	RepositoryPath string `json:"repository_path"`
 	WorkingPath    string `json:"workspace_path"`
+	ConfigFile     string `json:"config_file_path"`
 
 	Projects []*Project `json:"projects"`
 }

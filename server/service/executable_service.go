@@ -23,5 +23,8 @@ type ExecutableService interface {
 // ExecutableImportService ...
 type ExecutableImportService interface {
 	Save(ctx context.Context, o *vo.ExecutableImport) (*vo.ExecutableImport, error)
+
 	Locate(ctx context.Context, o *vo.ExecutableImport) (*vo.ExecutableImport, error)
+
+	ImportPresets(ctx context.Context) error
 }

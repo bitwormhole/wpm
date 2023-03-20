@@ -41,6 +41,7 @@ func (inst *LocalRepositoryServiceImpl) dto2entity(o1 *dto.LocalRepository) (*en
 	o2.Description = o1.Description
 
 	o2.Path = o1.Path
+	o2.ConfigFile = o1.ConfigFile
 	o2.DotGitPath = o1.DotGitPath
 	o2.RepositoryPath = o1.RepositoryPath
 	o2.WorkingPath = o1.WorkingPath
@@ -60,6 +61,7 @@ func (inst *LocalRepositoryServiceImpl) entity2dto(ctx context.Context, o1 *enti
 	o2.Description = o1.Description
 
 	o2.Path = o1.Path
+	o2.ConfigFile = o1.ConfigFile
 	o2.DotGitPath = o1.DotGitPath
 	o2.RepositoryPath = o1.RepositoryPath
 	o2.WorkingPath = o1.WorkingPath
@@ -112,10 +114,11 @@ func (inst *LocalRepositoryServiceImpl) prepareEntity(ctx context.Context, o1 *e
 	config := dotgit.GetChild("config")
 	working := dotgit.Parent()
 
-	o1.Path = dotgit.String()
-	o1.DotGitPath = dotgit.String()
+	o1.DotGitPath = dotgit.Path()
 	o1.ConfigFile = config.Path()
 	o1.WorkingPath = working.Path()
+	o1.RepositoryPath = config.Parent().Path()
+	o1.Path = config.Parent().Path()
 	return nil
 }
 

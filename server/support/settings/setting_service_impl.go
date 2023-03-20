@@ -122,6 +122,7 @@ func (inst *SettingServiceImpl) dto2map(src *dto.Settings) map[string]string {
 	s.SetInt(settings.IgnorePackageRevision, src.IgnorePackageRevision)
 	s.SetString(settings.IgnorePackageVersion, src.IgnorePackageVersion)
 	s.SetString(settings.IgnorePackageSum, src.IgnorePackageSum.String())
+	s.SetBool(settings.SetupDone, src.SetupDone)
 
 	return p.Export(dst)
 }
@@ -139,6 +140,7 @@ func (inst *SettingServiceImpl) map2dto(src map[string]string) *dto.Settings {
 	dst.IgnorePackageRevision = g.GetInt(settings.IgnorePackageRevision, 0)
 	dst.IgnorePackageVersion = g.GetString(settings.IgnorePackageVersion, "")
 	dst.IgnorePackageSum = util.Hex(g.GetString(settings.IgnorePackageSum, ""))
+	dst.SetupDone = g.GetBool(settings.SetupDone, false)
 
 	return dst
 }

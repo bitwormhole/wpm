@@ -10,7 +10,8 @@ type Settings struct {
 	// example:
 	Value1 string `json:"value1"`
 	Value2 int    `json:"value2"`
-	Value3 bool   `json:"value3"`
+
+	SetupDone bool `json:"setup_done"`
 
 	IgnorePackageVersion  string   `json:"ignore.package.version"`
 	IgnorePackageRevision int      `json:"ignore.package.revision"`

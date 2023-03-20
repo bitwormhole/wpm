@@ -16,13 +16,16 @@ import (
 	backups0xe44d54 "github.com/bitwormhole/wpm/server/support/backups"
 	checkupdate0xea1855 "github.com/bitwormhole/wpm/server/support/checkupdate"
 	contenttypes0x61ca37 "github.com/bitwormhole/wpm/server/support/contenttypes"
+	executables0xd3773a "github.com/bitwormhole/wpm/server/support/executables"
 	impldao0x73998b "github.com/bitwormhole/wpm/server/support/impldao"
 	implservice0x22327c "github.com/bitwormhole/wpm/server/support/implservice"
+	init0xc984bc "github.com/bitwormhole/wpm/server/support/init"
 	mediae0xf005e2 "github.com/bitwormhole/wpm/server/support/mediae"
 	platforms0xb539c0 "github.com/bitwormhole/wpm/server/support/platforms"
 	projects0x4d85c7 "github.com/bitwormhole/wpm/server/support/projects"
 	projecttypes0x53bffe "github.com/bitwormhole/wpm/server/support/projecttypes"
 	settings0x19237d "github.com/bitwormhole/wpm/server/support/settings"
+	setup0xd9ff02 "github.com/bitwormhole/wpm/server/support/setup"
 	filequery0xca51d2 "github.com/bitwormhole/wpm/server/utils/filequery"
 	handlers0x162741 "github.com/bitwormhole/wpm/server/utils/filequery/handlers"
 	intents0xec84e7 "github.com/bitwormhole/wpm/server/utils/intents"
@@ -38,8 +41,8 @@ type pComGormDBAgentImpl struct {
 }
 
 
-type pComController struct {
-	instance *backups0xe44d54.Controller
+type pComWpmBackupController struct {
+	instance *backups0xe44d54.WpmBackupController
 	 markup0x23084a.Component `id:"" class:"rest-controller"`
 	BackupService service0x3e063d.DatabaseBackupService `inject:"#DatabaseBackupService"`
 	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
@@ -79,17 +82,51 @@ type pComContentTypeServiceImpl struct {
 }
 
 
-type pComExampleDaoImpl struct {
-	instance *impldao0x73998b.ExampleDaoImpl
-	 markup0x23084a.Component `id:"ExampleDAO"`
+type pComExecutableController struct {
+	instance *executables0xd3773a.ExecutableController
+	 markup0x23084a.RestController `class:"rest-controller"`
+	ExecutableService service0x3e063d.ExecutableService `inject:"#ExecutableService"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
+type pComExecutableDaoImpl struct {
+	instance *executables0xd3773a.ExecutableDaoImpl
+	 markup0x23084a.Component `id:"ExecutableDAO"`
 	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
 	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
 }
 
 
-type pComExecutableDaoImpl struct {
-	instance *impldao0x73998b.ExecutableDaoImpl
-	 markup0x23084a.Component `id:"ExecutableDAO"`
+type pComExecutableImportController struct {
+	instance *executables0xd3773a.ExecutableImportController
+	 markup0x23084a.RestController `class:"rest-controller"`
+	ExecutableImportService service0x3e063d.ExecutableImportService `inject:"#ExecutableImportService"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
+type pComExecutableImportServiceImpl struct {
+	instance *executables0xd3773a.ExecutableImportServiceImpl
+	 markup0x23084a.Component `id:"ExecutableImportService"`
+	AC application0x67f6c5.Context `inject:"context"`
+	ExecutableService service0x3e063d.ExecutableService `inject:"#ExecutableService"`
+	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
+}
+
+
+type pComExecutableServiceImpl struct {
+	instance *executables0xd3773a.ExecutableServiceImpl
+	 markup0x23084a.Component `id:"ExecutableService"`
+	ExecutableDAO dao0x5af8d0.ExecutableDAO `inject:"#ExecutableDAO"`
+	IconService service0x3e063d.AppIconService `inject:"#AppIconService"`
+	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
+}
+
+
+type pComExampleDaoImpl struct {
+	instance *impldao0x73998b.ExampleDaoImpl
+	 markup0x23084a.Component `id:"ExampleDAO"`
 	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
 	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
 }
@@ -143,22 +180,6 @@ type pComAppIconServiceImpl struct {
 type pComExampleServiceImpl struct {
 	instance *implservice0x22327c.ExampleServiceImpl
 	 markup0x23084a.Component `id:"ExampleService"`
-}
-
-
-type pComExecutableImportServiceImpl struct {
-	instance *implservice0x22327c.ExecutableImportServiceImpl
-	 markup0x23084a.Component `id:"ExecutableImportService"`
-	ExecutableService service0x3e063d.ExecutableService `inject:"#ExecutableService"`
-}
-
-
-type pComExecutableServiceImpl struct {
-	instance *implservice0x22327c.ExecutableServiceImpl
-	 markup0x23084a.Component `id:"ExecutableService"`
-	ExecutableDAO dao0x5af8d0.ExecutableDAO `inject:"#ExecutableDAO"`
-	IconService service0x3e063d.AppIconService `inject:"#AppIconService"`
-	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
 }
 
 
@@ -252,6 +273,24 @@ type pComRunIntentServiceImpl struct {
 type pComUUIDGenServiceImpl struct {
 	instance *implservice0x22327c.UUIDGenServiceImpl
 	 markup0x23084a.Component `id:"UUIDGenService" initMethod:"Init"`
+}
+
+
+type pComWpmInitController struct {
+	instance *init0xc984bc.WpmInitController
+	 markup0x23084a.RestController `class:"rest-controller"`
+	InitService service0x3e063d.InitService `inject:"#InitService"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
+type pComImpInitService struct {
+	instance *init0xc984bc.ImpInitService
+	 markup0x23084a.Component `id:"InitService"`
+	ProjectTypeService service0x3e063d.ProjectTypeService `inject:"#ProjectTypeService"`
+	ExecutableService service0x3e063d.ExecutableService `inject:"#ExecutableService"`
+	CheckUpdateService service0x3e063d.CheckUpdateService `inject:"#CheckUpdateService"`
+	SetupService service0x3e063d.SetupService `inject:"#SetupService"`
 }
 
 
@@ -416,6 +455,25 @@ type pComSettingServiceImpl struct {
 }
 
 
+type pComWpmSetupController struct {
+	instance *setup0xd9ff02.WpmSetupController
+	 markup0x23084a.Component `class:"rest-controller"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+	SetupService service0x3e063d.SetupService `inject:"#SetupService"`
+}
+
+
+type pComImpSetupService struct {
+	instance *setup0xd9ff02.ImpSetupService
+	 markup0x23084a.Component `id:"SetupService"`
+	ExecutableService service0x3e063d.ExecutableService `inject:"#ExecutableService"`
+	ExecutableImportService service0x3e063d.ExecutableImportService `inject:"#ExecutableImportService"`
+	MediaService service0x3e063d.MediaService `inject:"#MediaService"`
+	ProjectTypeImportService service0x3e063d.ProjectTypeImportService `inject:"#ProjectTypeImportService"`
+	SettingService service0x3e063d.SettingService `inject:"#SettingService"`
+}
+
+
 type pComWpmDataSource struct {
 	instance *support0xf47d7f.WpmDataSource
 	 markup0x23084a.Component `class:"starter-gorm-source-registry"`
@@ -524,22 +582,6 @@ type pComAuthController struct {
 type pComExampleController struct {
 	instance *controller0x9dc399.ExampleController
 	 markup0x23084a.RestController `class:"rest-controller"`
-	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
-}
-
-
-type pComExecutableController struct {
-	instance *controller0x9dc399.ExecutableController
-	 markup0x23084a.RestController `class:"rest-controller"`
-	ExecutableService service0x3e063d.ExecutableService `inject:"#ExecutableService"`
-	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
-}
-
-
-type pComExecutableImportController struct {
-	instance *controller0x9dc399.ExecutableImportController
-	 markup0x23084a.RestController `class:"rest-controller"`
-	ExecutableImportService service0x3e063d.ExecutableImportService `inject:"#ExecutableImportService"`
 	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
 }
 

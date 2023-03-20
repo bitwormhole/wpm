@@ -17,4 +17,6 @@ type VO struct {
 	ProjectTypeTable      []*entity.ProjectType
 	RemoteRepositoryTable []*entity.RemoteRepository
 	SettingTable          []*entity.Setting
+	UserTable             []*entity.User
+	WorktreeTable         []*entity.Worktree
 }
