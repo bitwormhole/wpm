@@ -9,6 +9,7 @@ import (
 	"github.com/bitwormhole/starter/application"
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/wpm/server/service"
+	"github.com/bitwormhole/wpm/server/utils"
 	"github.com/bitwormhole/wpm/server/web/dto"
 	"github.com/bitwormhole/wpm/server/web/vo"
 )
@@ -110,9 +111,15 @@ func (inst *myAboutModuleInfoLoader) makeDTO(src application.Module) *dto.Module
 	if src == nil {
 		return dst
 	}
-	dst.Name = src.GetName()
+
+	name := src.GetName()
+	hName := utils.ComputeSHA256sum([]byte(name))
+
+	dst.Name = name
 	dst.Version = src.GetVersion()
 	dst.Revision = src.GetRevision()
+	dst.HexName = hName.String()
+
 	return dst
 }
 

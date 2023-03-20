@@ -8,4 +8,5 @@ type Module struct {
 	Name     string `json:"name"`
 	Version  string `json:"version"`
 	Revision int    `json:"revision"`
+	HexName  string `json:"hex_name"`
 }
