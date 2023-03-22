@@ -20,6 +20,7 @@ import (
 	impldao0x73998b "github.com/bitwormhole/wpm/server/support/impldao"
 	implservice0x22327c "github.com/bitwormhole/wpm/server/support/implservice"
 	init0xc984bc "github.com/bitwormhole/wpm/server/support/init"
+	intenttemplates0x2e3dcf "github.com/bitwormhole/wpm/server/support/intenttemplates"
 	mediae0xf005e2 "github.com/bitwormhole/wpm/server/support/mediae"
 	platforms0xb539c0 "github.com/bitwormhole/wpm/server/support/platforms"
 	projects0x4d85c7 "github.com/bitwormhole/wpm/server/support/projects"
@@ -132,14 +133,6 @@ type pComExampleDaoImpl struct {
 }
 
 
-type pComIntentTemplateDaoImpl struct {
-	instance *impldao0x73998b.IntentTemplateDaoImpl
-	 markup0x23084a.Component `id:"IntentTemplateDAO"`
-	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
-	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
-}
-
-
 type pComRepositoryDaoImpl struct {
 	instance *impldao0x73998b.RepositoryDaoImpl
 	 markup0x23084a.Component `id:"LocalRepositoryDAO"`
@@ -193,13 +186,6 @@ type pComFileQueryServiceImpl struct {
 type pComFileSystemServiceImpl struct {
 	instance *implservice0x22327c.FileSystemServiceImpl
 	 markup0x23084a.Component `id:"FileSystemService"`
-}
-
-
-type pComIntentTemplateServiceImpl struct {
-	instance *implservice0x22327c.IntentTemplateServiceImpl
-	 markup0x23084a.Component `id:"IntentTemplateService"`
-	IntentTempDAO dao0x5af8d0.IntentTemplateDAO `inject:"#IntentTemplateDAO"`
 }
 
 
@@ -291,6 +277,29 @@ type pComImpInitService struct {
 	ExecutableService service0x3e063d.ExecutableService `inject:"#ExecutableService"`
 	CheckUpdateService service0x3e063d.CheckUpdateService `inject:"#CheckUpdateService"`
 	SetupService service0x3e063d.SetupService `inject:"#SetupService"`
+}
+
+
+type pComIntentTemplateController struct {
+	instance *intenttemplates0x2e3dcf.IntentTemplateController
+	 markup0x23084a.RestController `class:"rest-controller"`
+	IntentTemplateService service0x3e063d.IntentTemplateService `inject:"#IntentTemplateService"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
+type pComIntentTemplateDaoImpl struct {
+	instance *intenttemplates0x2e3dcf.IntentTemplateDaoImpl
+	 markup0x23084a.Component `id:"IntentTemplateDAO"`
+	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
+	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
+}
+
+
+type pComIntentTemplateServiceImpl struct {
+	instance *intenttemplates0x2e3dcf.IntentTemplateServiceImpl
+	 markup0x23084a.Component `id:"IntentTemplateService"`
+	IntentTempDAO dao0x5af8d0.IntentTemplateDAO `inject:"#IntentTemplateDAO"`
 }
 
 
@@ -598,14 +607,6 @@ type pComRunIntentController struct {
 	instance *controller0x9dc399.RunIntentController
 	 markup0x23084a.RestController `class:"rest-controller"`
 	IntentService service0x3e063d.IntentService `inject:"#IntentService"`
-	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
-}
-
-
-type pComIntentTemplateController struct {
-	instance *controller0x9dc399.IntentTemplateController
-	 markup0x23084a.RestController `class:"rest-controller"`
-	IntentTemplateService service0x3e063d.IntentTemplateService `inject:"#IntentTemplateService"`
 	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
 }
 

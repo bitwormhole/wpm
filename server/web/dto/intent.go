@@ -35,6 +35,15 @@ type IntentTemplate struct {
 	ID dxo.IntentTemplateID `json:"id"`
 	Base
 
+	Name        string `json:"name"`
+	Description string `json:"description"`
+
+	// as cli
+	Command   string            `json:"command"`
+	Arguments []string          `json:"args"`
+	Env       map[string]string `json:"env"`
+	WD        string            `json:"wd"`
+
 	// Exe *IntentExecutable `json:"exe"`
 	// Web *IntentWeb        `json:"web"`
 	// CLI *IntentCLI        `json:"cli"`

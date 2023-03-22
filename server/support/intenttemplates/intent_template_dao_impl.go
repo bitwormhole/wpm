@@ -1,4 +1,4 @@
-package impldao
+package intenttemplates
 
 import (
 	"errors"
@@ -49,15 +49,38 @@ func (inst *IntentTemplateDaoImpl) ListAll() ([]*entity.IntentTemplate, error) {
 
 // Insert ...
 func (inst *IntentTemplateDaoImpl) Insert(o *entity.IntentTemplate) (*entity.IntentTemplate, error) {
-	return nil, errors.New("no impl")
+
+	o.ID = 0
+	o.UUID = inst.UUIDGenService.GenerateUUID(o.Name + "|entity.IntentTemplate|")
+
+	db := inst.Agent.DB()
+	res := db.Create(o)
+	if res.Error != nil {
+		return nil, res.Error
+	}
+	return o, nil
 }
 
 // Update ...
 func (inst *IntentTemplateDaoImpl) Update(id dxo.IntentTemplateID, o *entity.IntentTemplate) (*entity.IntentTemplate, error) {
-	return nil, errors.New("no impl")
+	m := inst.model()
+	db := inst.Agent.DB()
+	res := db.Find(m, id)
+	if res.Error != nil {
+		return nil, res.Error
+	}
+
+	m.Name = o.Name
+	m.Description = o.Description
+
+	res = db.Save(m)
+	return m, res.Error
 }
 
 // Remove ...
 func (inst *IntentTemplateDaoImpl) Remove(id dxo.IntentTemplateID) error {
-	return errors.New("no impl")
+	m := inst.model()
+	db := inst.Agent.DB()
+	res := db.Unscoped().Delete(&m, id)
+	return res.Error
 }

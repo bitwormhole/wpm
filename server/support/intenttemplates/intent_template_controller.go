@@ -1,4 +1,4 @@
-package controller
+package intenttemplates
 
 import (
 	"net/http"
@@ -196,10 +196,21 @@ func (inst *myIntentTemplateRequest) doPost() error {
 }
 
 func (inst *myIntentTemplateRequest) doPut() error {
+	ctx := inst.gc
+	ser := inst.controller.IntentTemplateService
+	id := inst.id
+	o1 := inst.body1.Templates[0]
+	o2, err := ser.Update(ctx, id, o1)
+	if err != nil {
+		return err
+	}
+	inst.body2.Templates = []*dto.IntentTemplate{o2}
 	return nil
 }
 
 func (inst *myIntentTemplateRequest) doDelete() error {
-
-	return nil
+	ctx := inst.gc
+	ser := inst.controller.IntentTemplateService
+	id := inst.id
+	return ser.Remove(ctx, id)
 }
