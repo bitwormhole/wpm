@@ -16,6 +16,9 @@ type Project struct {
 	IsDir           bool
 	ProjectTypeName string
 	ConfigFileName  string
-	ProjectType     dxo.ProjectTypeID
 	OwnerRepository dxo.LocalRepositoryID
+
+	TypeID   dxo.ProjectTypeID
+	TypeKey  dxo.ProjectTypeKey
+	TypeName dxo.ProjectTypeName
 }

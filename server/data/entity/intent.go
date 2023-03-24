@@ -19,7 +19,7 @@ type IntentTemplate struct {
 	Title       string
 	Description string
 
-	Selector   dxo.IntentTemplateSelector // 已废弃，用（Action + TargetType + ExecutableName）
+	Selector   dxo.IntentTemplateSelector `gorm:"index:,unique"` // 根据（Action + TargetType + ExecutableName）生成
 	Action     string
 	Executable string // the name of exe
 	Target     string // the type of target

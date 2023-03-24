@@ -8,4 +8,5 @@ type Context struct {
 	MediaService             service.MediaService
 	ProjectTypeImportService service.ProjectTypeImportService
 	SettingService           service.SettingService
+	IntentTemplateService    service.IntentTemplateService
 }

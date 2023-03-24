@@ -8,6 +8,7 @@ import (
 	"github.com/bitwormhole/starter/collection"
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/starter/vlog"
+	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/service"
 	"github.com/bitwormhole/wpm/server/web/dto"
 )
@@ -70,11 +71,13 @@ func (inst *ProjectTypeImportServiceImpl) loadPT(p collection.Properties, prefix
 	pt := &dto.ProjectType{}
 	getter := p.Getter()
 
+	typeName := getter.GetString(k1+".name", "")
+	typeKey := getter.GetString(k1+".key", "")
+
 	pt.AsDir = getter.GetBool(k1+".as-dir", false)
 	pt.AsFile = getter.GetBool(k1+".as-file", false)
-
-	pt.Name = getter.GetString(k1+".name", "")
-	pt.Type = getter.GetString(k1+".type", "")
+	pt.Key = dxo.ProjectTypeKey(typeKey)
+	pt.Name = dxo.ProjectTypeName(typeName)
 	pt.Label = getter.GetString(k1+".label", "")
 	pt.Description = getter.GetString(k1+".description", "")
 

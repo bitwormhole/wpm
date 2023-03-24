@@ -7,10 +7,10 @@ type ProjectType struct {
 	ID dxo.ProjectTypeID `json:"id"`
 	Base
 
-	Name        string `json:"name"`
-	Type        string `json:"type"`
-	Label       string `json:"label"`
-	Description string `json:"description"`
+	Name        dxo.ProjectTypeName `json:"name"`
+	Key         dxo.ProjectTypeKey  `json:"key"`
+	Label       string              `json:"label"`
+	Description string              `json:"description"`
 
 	Priority int  `json:"priority"` // 优先级，数值越高越先处理
 	AsFile   bool `json:"as_file"`

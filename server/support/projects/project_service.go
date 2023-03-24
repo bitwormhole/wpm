@@ -51,10 +51,12 @@ func (inst *ProjectServiceImpl) dto2entity(c context.Context, o1 *dto.Project) (
 	o2.Name = o1.Name
 	o2.OwnerRepository = o1.OwnerRepository
 	o2.PathInWorktree = o1.PathInWorktree
-	o2.ProjectType = o1.ProjectType
-	o2.ProjectTypeName = o1.ProjectTypeName
 	o2.ProjectDir = o1.ProjectDir
 	o2.ConfigFileName = o1.ConfigFileName
+
+	o2.TypeID = o1.TypeID
+	o2.TypeKey = o1.TypeKey
+	o2.TypeName = o1.TypeName
 
 	return o2, nil
 }
@@ -75,10 +77,12 @@ func (inst *ProjectServiceImpl) entity2dto(o1 *entity.Project, opt *service.Proj
 	o2.Name = o1.Name
 	o2.OwnerRepository = o1.OwnerRepository
 	o2.PathInWorktree = o1.PathInWorktree
-	o2.ProjectType = o1.ProjectType
-	o2.ProjectTypeName = o1.ProjectTypeName
 	o2.ProjectDir = o1.ProjectDir
 	o2.ConfigFileName = o1.ConfigFileName
+
+	o2.TypeID = o1.TypeID
+	o2.TypeKey = o1.TypeKey
+	o2.TypeName = o1.TypeName
 
 	if opt.WithFileState {
 		o2.State = inst.checkProjectFileState(o1)
@@ -141,6 +145,19 @@ func (inst *ProjectServiceImpl) FindByOwnerRepository(ctx context.Context, id dx
 		return nil, err
 	}
 	return inst.entity2dtoList(items1, options)
+}
+
+// Locate ...
+func (inst *ProjectServiceImpl) Locate(ctx context.Context, o1 *dto.Project) (*dto.Project, error) {
+	o2, err := inst.dto2entity(ctx, o1)
+	if err != nil {
+		return nil, err
+	}
+	err = (&myProjectRepoPathFinder{ser: inst}).locate(o2)
+	if err != nil {
+		return nil, err
+	}
+	return inst.entity2dto(o2, nil)
 }
 
 // Insert ...

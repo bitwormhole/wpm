@@ -26,8 +26,10 @@ import (
 	platforms0xb539c0 "github.com/bitwormhole/wpm/server/support/platforms"
 	projects0x4d85c7 "github.com/bitwormhole/wpm/server/support/projects"
 	projecttypes0x53bffe "github.com/bitwormhole/wpm/server/support/projecttypes"
+	repositoryworktreeproject0x399028 "github.com/bitwormhole/wpm/server/support/repositoryworktreeproject"
 	settings0x19237d "github.com/bitwormhole/wpm/server/support/settings"
 	setup0xd9ff02 "github.com/bitwormhole/wpm/server/support/setup"
+	worktrees0xa762f3 "github.com/bitwormhole/wpm/server/support/worktrees"
 	filequery0xca51d2 "github.com/bitwormhole/wpm/server/utils/filequery"
 	handlers0x162741 "github.com/bitwormhole/wpm/server/utils/filequery/handlers"
 	intents0xec84e7 "github.com/bitwormhole/wpm/server/utils/intents"
@@ -453,6 +455,24 @@ type pComProjectTypeServiceImpl struct {
 }
 
 
+type pComRepoWorktreeProjectController struct {
+	instance *repositoryworktreeproject0x399028.RepoWorktreeProjectController
+	 markup0x23084a.RestController `class:"rest-controller"`
+	RWPService service0x3e063d.RepositoryWorktreeProjectService `inject:"#RepositoryWorktreeProjectService"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
+type pComRWPServiceImpl struct {
+	instance *repositoryworktreeproject0x399028.RWPServiceImpl
+	 markup0x23084a.Component `id:"RepositoryWorktreeProjectService"`
+	Repositories service0x3e063d.LocalRepositoryService `inject:"#LocalRepositoryService"`
+	Worktrees service0x3e063d.WorktreeService `inject:"#WorktreeService"`
+	Projects service0x3e063d.ProjectService `inject:"#ProjectService"`
+	GitLib store0x8467b3.LibAgent `inject:"#git-lib-agent"`
+}
+
+
 type pComSettingController struct {
 	instance *settings0x19237d.SettingController
 	 markup0x23084a.RestController `class:"rest-controller"`
@@ -489,9 +509,16 @@ type pComImpSetupService struct {
 	 markup0x23084a.Component `id:"SetupService"`
 	ExecutableService service0x3e063d.ExecutableService `inject:"#ExecutableService"`
 	ExecutableImportService service0x3e063d.ExecutableImportService `inject:"#ExecutableImportService"`
+	IntentTemplateService service0x3e063d.IntentTemplateService `inject:"#IntentTemplateService"`
 	MediaService service0x3e063d.MediaService `inject:"#MediaService"`
 	ProjectTypeImportService service0x3e063d.ProjectTypeImportService `inject:"#ProjectTypeImportService"`
 	SettingService service0x3e063d.SettingService `inject:"#SettingService"`
+}
+
+
+type pComImpWorktreeService struct {
+	instance *worktrees0xa762f3.ImpWorktreeService
+	 markup0x23084a.Component `id:"WorktreeService"`
 }
 
 

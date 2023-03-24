@@ -29,7 +29,7 @@ func (inst *ProjectTypeServiceImpl) dto2entity(o1 *dto.ProjectType) (*entity.Pro
 
 	// todo ...
 	o2.Name = o1.Name
-	o2.Type = o1.Type
+	o2.Key = o1.Key
 	o2.Label = o1.Label
 	o2.Description = o1.Description
 	o2.AsDir = o1.AsDir
@@ -45,7 +45,7 @@ func (inst *ProjectTypeServiceImpl) entity2dto(o1 *entity.ProjectType) (*dto.Pro
 
 	// todo ...
 	o2.Name = o1.Name
-	o2.Type = o1.Type
+	o2.Key = o1.Key
 	o2.Label = o1.Label
 	o2.Description = o1.Description
 	o2.AsDir = o1.AsDir

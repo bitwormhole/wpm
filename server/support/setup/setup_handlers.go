@@ -26,7 +26,8 @@ func (inst *mySetupHanlders) doImportPresetMediaFiles(c context.Context, req *dt
 }
 
 func (inst *mySetupHanlders) doImportPresetIntentTemplates(c context.Context, req *dto.Setup) error {
-	return fmt.Errorf("no impl")
+	ser := inst.context.IntentTemplateService
+	return ser.ImportPreset(c)
 }
 
 func (inst *mySetupHanlders) doImportCommonExecutables(c context.Context, req *dto.Setup) error {

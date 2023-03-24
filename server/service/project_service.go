@@ -24,6 +24,8 @@ type ProjectService interface {
 	ListAll(ctx context.Context, options *ProjectOptions) ([]*dto.Project, error)
 	ListByIds(ctx context.Context, ids []dxo.ProjectID, options *ProjectOptions) ([]*dto.Project, error)
 
+	Locate(ctx context.Context, o *dto.Project) (*dto.Project, error)
+
 	Insert(ctx context.Context, o *dto.Project) (*dto.Project, error)
 	Update(ctx context.Context, id dxo.ProjectID, o *dto.Project) (*dto.Project, error)
 	Remove(ctx context.Context, id dxo.ProjectID) error

@@ -15,6 +15,7 @@ type ImpSetupService struct {
 
 	ExecutableService        service.ExecutableService        `inject:"#ExecutableService"`
 	ExecutableImportService  service.ExecutableImportService  `inject:"#ExecutableImportService"`
+	IntentTemplateService    service.IntentTemplateService    `inject:"#IntentTemplateService"`
 	MediaService             service.MediaService             `inject:"#MediaService"`
 	ProjectTypeImportService service.ProjectTypeImportService `inject:"#ProjectTypeImportService"`
 	SettingService           service.SettingService           `inject:"#SettingService"`
@@ -104,6 +105,7 @@ func (inst *ImpSetupService) listSetupRegs() []*service.SetupRegistration {
 func (inst *ImpSetupService) makeContext() *Context {
 	return &Context{
 		ExecutableImportService:  inst.ExecutableImportService,
+		IntentTemplateService:    inst.IntentTemplateService,
 		MediaService:             inst.MediaService,
 		ProjectTypeImportService: inst.ProjectTypeImportService,
 		SettingService:           inst.SettingService,

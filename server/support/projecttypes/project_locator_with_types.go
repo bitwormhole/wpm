@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"bitwormhole.com/starter/afs"
+	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/data/entity"
 	"github.com/bitwormhole/wpm/server/web/dto"
 )
@@ -57,7 +58,7 @@ func (inst *myProjectLocatorWithTypes) checkParams() error {
 
 func (inst *myProjectLocatorWithTypes) loadTypes() error {
 	ptdao := inst.parent.ProjectTypeDAO
-	tid := inst.project.ProjectType
+	tid := inst.project.TypeID
 	if tid == 0 {
 		// load all
 		all, err := ptdao.ListAll()
@@ -116,7 +117,7 @@ func (inst *myProjectLocatorWithTypes) tryLocateProject(dir afs.Path, pt *entity
 
 func (inst *myProjectLocatorWithTypes) isTypeMatch(path afs.Path, pt *entity.ProjectType) bool {
 
-	nameWant := pt.Name
+	nameWant := pt.Key.String()
 	nameHave := path.GetName()
 	if !inst.isFileNameMatch(nameWant, nameHave) {
 		return false
@@ -181,12 +182,19 @@ func (inst *myProjectLocatorWithTypes) normalizeFileName(name string) string {
 	return name
 }
 
+func (inst *myProjectLocatorWithTypes) normalizeTypeName(name1 dxo.ProjectTypeName) dxo.ProjectTypeName {
+	name := strings.TrimSpace(string(name1))
+	name = strings.ToLower(name)
+	return dxo.ProjectTypeName(name)
+}
+
 func (inst *myProjectLocatorWithTypes) apply(projectFile afs.Path, pt *entity.ProjectType) error {
 
 	p := inst.project
 
-	p.ProjectType = pt.ID
-	p.ProjectTypeName = pt.Name
+	p.TypeID = pt.ID
+	p.TypeKey = pt.Key
+	p.TypeName = pt.Name
 	p.ProjectDir = projectFile.GetParent().GetPath()
 	p.FullPath = projectFile.GetPath()
 	p.ConfigFileName = projectFile.GetName()

@@ -55,8 +55,10 @@ func (inst *ProjectTypeDaoImpl) ListAll() ([]*entity.ProjectType, error) {
 func (inst *ProjectTypeDaoImpl) Insert(o *entity.ProjectType) (*entity.ProjectType, error) {
 
 	// compute fields
+	strKey := o.Key.String()
+	strName := o.Name.String()
 	o.ID = 0
-	o.UUID = inst.UUIDGenService.GenerateUUID(o.Name + "|entity.ProjectType|" + o.Type)
+	o.UUID = inst.UUIDGenService.GenerateUUID(strName + "|entity.ProjectType|" + strKey)
 
 	db := inst.Agent.DB()
 	res := db.Create(o)
@@ -79,7 +81,7 @@ func (inst *ProjectTypeDaoImpl) Update(id dxo.ProjectTypeID, o1 *entity.ProjectT
 	o2.AsFile = o1.AsFile
 	o2.Priority = o1.Priority
 
-	o2.Type = o1.Type
+	o2.Key = o1.Key
 	o2.Name = o1.Name
 	o2.Label = o1.Label
 	o2.Description = o1.Description
