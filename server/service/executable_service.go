@@ -12,6 +12,7 @@ import (
 type ExecutableService interface {
 	Find(ctx context.Context, id dxo.ExecutableID) (*dto.Executable, error)
 	FindByPath(ctx context.Context, path string) (*dto.Executable, error)
+	FindByName(ctx context.Context, name string) (*dto.Executable, error)
 
 	ListAll(ctx context.Context) ([]*dto.Executable, error)
 

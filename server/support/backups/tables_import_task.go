@@ -20,6 +20,7 @@ func (inst *tablesImportTask) importAll() error {
 	all = append(all, inst.importMediae)
 	all = append(all, inst.importProjectTypes)
 	all = append(all, inst.importProjects)
+	all = append(all, inst.importIntentTemplate)
 
 	for _, fn := range all {
 		err := fn()
@@ -41,6 +42,16 @@ func (inst *tablesImportTask) handleError(err error) {
 func (inst *tablesImportTask) importProjects() error {
 	db := inst.db
 	list := inst.view.ProjectTable
+	for _, item := range list {
+		res := db.FirstOrCreate(item, item.ID)
+		inst.handleError(res.Error)
+	}
+	return nil
+}
+
+func (inst *tablesImportTask) importIntentTemplate() error {
+	db := inst.db
+	list := inst.view.IntentTemplateTable
 	for _, item := range list {
 		res := db.FirstOrCreate(item, item.ID)
 		inst.handleError(res.Error)

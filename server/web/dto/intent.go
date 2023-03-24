@@ -11,13 +11,16 @@ type Intent struct {
 	// Web *IntentWeb        `json:"web"`
 	// CLI *IntentCLI        `json:"cli"`
 
-	Options []string `json:"options"` // used for filters
+	Options    []string          `json:"options"`    // used for filters
+	Properties map[string]string `json:"properties"` // used for filters
 
 	// as exe
 	Executable *Executable      `json:"executable"`
 	Repository *LocalRepository `json:"repository"`
+	Worktree   *Worktree        `json:"worktree"`
 	Project    *Project         `json:"project"`
 	Location   *File            `json:"location"`
+	Template   *IntentTemplate  `json:"template"`
 
 	// as web
 	Method string `json:"method"`
@@ -36,13 +39,19 @@ type IntentTemplate struct {
 	Base
 
 	Name        string `json:"name"`
+	Title       string `json:"title"`
 	Description string `json:"description"`
 
+	Selector   dxo.IntentTemplateSelector `json:"selector"`
+	Action     string                     `json:"action"`
+	Target     string                     `json:"target"`     // the type of target
+	Executable string                     `json:"executable"` // the name of exe
+
 	// as cli
-	Command   string            `json:"command"`
-	Arguments []string          `json:"args"`
-	Env       map[string]string `json:"env"`
-	WD        string            `json:"wd"`
+	Command   string             `json:"command"`
+	Arguments dxo.StringListCRLF `json:"args"`
+	Env       dxo.StringMap      `json:"env"`
+	WD        string             `json:"wd"`
 
 	// Exe *IntentExecutable `json:"exe"`
 	// Web *IntentWeb        `json:"web"`

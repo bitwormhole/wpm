@@ -18,11 +18,18 @@ type IntentTemplateService interface {
 
 	ListAll(ctx context.Context) ([]*dto.IntentTemplate, error)
 
+	ListMacroProperties(ctx context.Context) (map[string]string, error)
+
+	// find items by Action & Executable & Target
+	ListByAET(ctx context.Context, sel *dto.IntentTemplate) ([]*dto.IntentTemplate, error)
+
 	Insert(ctx context.Context, o *dto.IntentTemplate) (*dto.IntentTemplate, error)
 
 	Update(ctx context.Context, id dxo.IntentTemplateID, o *dto.IntentTemplate) (*dto.IntentTemplate, error)
 
 	Remove(ctx context.Context, id dxo.IntentTemplateID) error
+
+	ImportPreset(ctx context.Context) error
 }
 
 // IntentHandlerService ...

@@ -1,12 +1,14 @@
 package intents
 
 import (
+	"context"
+
 	"github.com/bitwormhole/wpm/server/web/dto"
 )
 
 // Filter ...
 type Filter interface {
-	Filter(i *dto.Intent) (*dto.Intent, error)
+	Filter(c context.Context, i *dto.Intent) (*dto.Intent, error)
 }
 
 // FilterRegistry ... [inject:".intent-filter-registry"]
@@ -16,6 +18,7 @@ type FilterRegistry interface {
 
 // FilterRegistration ...
 type FilterRegistration struct {
-	Filter Filter
-	Order  int
+	Filter  Filter
+	Order   int
+	Enabled bool
 }

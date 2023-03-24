@@ -1,6 +1,7 @@
 package intents
 
 import (
+	"context"
 	"sort"
 
 	"github.com/bitwormhole/starter/markup"
@@ -29,11 +30,11 @@ func (inst *FilterManagerImpl) _Impl() FilterManager {
 }
 
 // Filter ...
-func (inst *FilterManagerImpl) Filter(intent *dto.Intent) (*dto.Intent, error) {
+func (inst *FilterManagerImpl) Filter(c context.Context, intent *dto.Intent) (*dto.Intent, error) {
 	p := intent
 	all := inst.getFilterList()
 	for _, reg := range all {
-		p2, err := inst.doFilter(reg, p)
+		p2, err := inst.doFilter(c, reg, p)
 		if err != nil {
 			return nil, err
 		} else if p2 == nil {
@@ -44,7 +45,7 @@ func (inst *FilterManagerImpl) Filter(intent *dto.Intent) (*dto.Intent, error) {
 	return p, nil
 }
 
-func (inst *FilterManagerImpl) doFilter(r *FilterRegistration, i *dto.Intent) (*dto.Intent, error) {
+func (inst *FilterManagerImpl) doFilter(c context.Context, r *FilterRegistration, i *dto.Intent) (*dto.Intent, error) {
 	if r == nil || i == nil {
 		return i, nil
 	}
@@ -52,7 +53,7 @@ func (inst *FilterManagerImpl) doFilter(r *FilterRegistration, i *dto.Intent) (*
 	if f == nil {
 		return i, nil
 	}
-	return f.Filter(i)
+	return f.Filter(c, i)
 }
 
 func (inst *FilterManagerImpl) getFilterList() []*FilterRegistration {
@@ -71,7 +72,11 @@ func (inst *FilterManagerImpl) loadFilterList() []*FilterRegistration {
 
 	for _, r1 := range src {
 		rlist := r1.GetRegistrationList()
-		dst = append(dst, rlist...)
+		for _, r2 := range rlist {
+			if r2.Enabled && (r2.Filter != nil) {
+				dst = append(dst, r2)
+			}
+		}
 	}
 
 	inst.loading = dst

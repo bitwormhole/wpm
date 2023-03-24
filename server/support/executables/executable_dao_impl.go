@@ -108,3 +108,14 @@ func (inst *ExecutableDaoImpl) FindByPath(path string) (*entity.Executable, erro
 	}
 	return o, nil
 }
+
+// FindByName ...
+func (inst *ExecutableDaoImpl) FindByName(name string) (*entity.Executable, error) {
+	db := inst.Agent.DB()
+	o := inst.model()
+	res := db.Where("name=?", name).First(&o)
+	if res.Error != nil {
+		return nil, res.Error
+	}
+	return o, nil
+}

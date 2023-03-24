@@ -1,6 +1,8 @@
 package filters
 
 import (
+	"context"
+
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/wpm/server/utils/intents"
 	"github.com/bitwormhole/wpm/server/web/dto"
@@ -24,7 +26,7 @@ func (inst *IntentFilterForCmd) GetRegistrationList() []*intents.FilterRegistrat
 }
 
 // Filter ...
-func (inst *IntentFilterForCmd) Filter(i *dto.Intent) (*dto.Intent, error) {
+func (inst *IntentFilterForCmd) Filter(c context.Context, i *dto.Intent) (*dto.Intent, error) {
 	if !inst.hit(i) {
 		return i, nil // bypass
 	}

@@ -2,6 +2,7 @@ package intenttemplates
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/wpm/server/data/dao"
@@ -47,6 +48,37 @@ func (inst *IntentTemplateDaoImpl) ListAll() ([]*entity.IntentTemplate, error) {
 	return list, nil
 }
 
+// ListByAET ...
+func (inst *IntentTemplateDaoImpl) ListByAET(sel *entity.IntentTemplate) ([]*entity.IntentTemplate, error) {
+
+	if sel == nil {
+		return nil, fmt.Errorf("no param")
+	}
+
+	// select by exe
+	list1 := inst.modelList()
+	db := inst.Agent.DB()
+	res := db.Where("executable = ?", sel.Executable).Find(&list1)
+	if res.Error != nil {
+		return nil, res.Error
+	}
+
+	// filter by action & target
+	a1 := sel.Action
+	t1 := sel.Target
+	list2 := inst.modelList()
+	for _, item := range list1 {
+		if a1 != "" && a1 != item.Action {
+			continue
+		}
+		if t1 != "" && t1 != item.Target {
+			continue
+		}
+		list2 = append(list2, item)
+	}
+	return list2, nil
+}
+
 // Insert ...
 func (inst *IntentTemplateDaoImpl) Insert(o *entity.IntentTemplate) (*entity.IntentTemplate, error) {
 
@@ -71,7 +103,18 @@ func (inst *IntentTemplateDaoImpl) Update(id dxo.IntentTemplateID, o *entity.Int
 	}
 
 	m.Name = o.Name
+	m.Title = o.Title
 	m.Description = o.Description
+
+	m.Action = o.Action
+	m.Executable = o.Executable
+	m.Target = o.Target
+	m.Selector = o.Selector
+
+	m.Command = o.Command
+	m.Arguments = o.Arguments
+	m.Env = o.Env
+	m.WD = o.WD
 
 	res = db.Save(m)
 	return m, res.Error

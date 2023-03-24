@@ -13,5 +13,6 @@ type Intent struct {
 type IntentTemplate struct {
 	Base
 
-	Templates []*dto.IntentTemplate `json:"intent_templates"`
+	Templates  []*dto.IntentTemplate `json:"intent_templates"`
+	MacroProps map[string]string     `json:"macro_properties"`
 }

@@ -1,9 +1,9 @@
-package implservice
+package intents
 
 import (
 	"fmt"
+	"os"
 	"os/exec"
-	"sort"
 	"strings"
 
 	"github.com/bitwormhole/starter/markup"
@@ -48,14 +48,24 @@ func (inst *IntentHandlerImpl) HandleIntent(i *dto.Intent) error {
 }
 
 func (inst *IntentHandlerImpl) makeEnv(src map[string]string) []string {
+	old := os.Environ()
 	dst := make([]string, 0)
+	dst = append(dst, old...)
+	cnt := 0
 	for k, v := range src {
 		k = strings.TrimSpace(k)
 		v = strings.TrimSpace(v)
+		if k == "" && v == "" {
+			continue
+		}
 		str := k + "=" + v
 		dst = append(dst, str)
+		cnt++
 	}
-	sort.Strings(dst)
+	if cnt == 0 {
+		return nil
+	}
+	// sort.Strings(dst)
 	return dst
 }
 

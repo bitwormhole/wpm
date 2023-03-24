@@ -3,12 +3,16 @@ package intenttemplates
 import (
 	"context"
 	"errors"
+	"strings"
 
+	"github.com/bitwormhole/starter/application"
+	"github.com/bitwormhole/starter/collection"
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/wpm/server/data/dao"
 	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/data/entity"
 	"github.com/bitwormhole/wpm/server/service"
+	"github.com/bitwormhole/wpm/server/utils/intents"
 	"github.com/bitwormhole/wpm/server/web/dto"
 )
 
@@ -16,24 +20,45 @@ import (
 type IntentTemplateServiceImpl struct {
 	markup.Component `id:"IntentTemplateService"`
 
-	IntentTempDAO dao.IntentTemplateDAO `inject:"#IntentTemplateDAO"`
+	AC                  application.Context   `inject:"context"`
+	IntentTempDAO       dao.IntentTemplateDAO `inject:"#IntentTemplateDAO"`
+	IntentFilterManager intents.FilterManager `inject:"#intent-filter-manager"`
 }
 
 func (inst *IntentTemplateServiceImpl) _Impl() service.IntentTemplateService {
 	return inst
 }
 
+func (inst *IntentTemplateServiceImpl) normalizeText(text string) string {
+	text = strings.TrimSpace(text)
+	text = strings.ToLower(text)
+	return text
+}
+
 func (inst *IntentTemplateServiceImpl) dto2entity(o1 *dto.IntentTemplate) (*entity.IntentTemplate, error) {
+
+	selbuilder := dxo.IntentTemplateSelectorBuilder{
+		Action: o1.Action,
+		Target: o1.Target,
+		With:   o1.Executable,
+	}
+
 	o2 := &entity.IntentTemplate{}
 	o2.ID = o1.ID
 	o2.UUID = o1.UUID
 
 	o2.Name = o1.Name
+	o2.Title = o1.Title
 	o2.Description = o1.Description
 
-	o2.Arguments = dxo.NewStringListCRLF(o1.Arguments)
+	o2.Executable = inst.normalizeText(o1.Executable)
+	o2.Action = inst.normalizeText(o1.Action)
+	o2.Target = inst.normalizeText(o1.Target)
+	o2.Selector = selbuilder.Create()
+
+	o2.Arguments = o1.Arguments
 	o2.Command = o1.Command
-	o2.Env = dxo.NewStringMap(o1.Env)
+	o2.Env = o1.Env
 	o2.WD = o1.WD
 
 	// todo ...
@@ -46,11 +71,17 @@ func (inst *IntentTemplateServiceImpl) entity2dto(o1 *entity.IntentTemplate) (*d
 	o2.UUID = o1.UUID
 
 	o2.Name = o1.Name
+	o2.Title = o1.Title
 	o2.Description = o1.Description
 
-	o2.Arguments = o1.Arguments.Array()
+	o2.Executable = inst.normalizeText(o1.Executable)
+	o2.Action = inst.normalizeText(o1.Action)
+	o2.Target = inst.normalizeText(o1.Target)
+	o2.Selector = o1.Selector
+
+	o2.Arguments = o1.Arguments
 	o2.Command = o1.Command
-	o2.Env = o1.Env.Map()
+	o2.Env = o1.Env
 	o2.WD = o1.WD
 
 	// todo ...
@@ -72,6 +103,19 @@ func (inst *IntentTemplateServiceImpl) entity2dtoList(src []*entity.IntentTempla
 // ListAll ...
 func (inst *IntentTemplateServiceImpl) ListAll(ctx context.Context) ([]*dto.IntentTemplate, error) {
 	src, err := inst.IntentTempDAO.ListAll()
+	if err != nil {
+		return nil, err
+	}
+	return inst.entity2dtoList(src)
+}
+
+// ListByAET ...
+func (inst *IntentTemplateServiceImpl) ListByAET(ctx context.Context, sel *dto.IntentTemplate) ([]*dto.IntentTemplate, error) {
+	aet, err := inst.dto2entity(sel)
+	if err != nil {
+		return nil, err
+	}
+	src, err := inst.IntentTempDAO.ListByAET(aet)
 	if err != nil {
 		return nil, err
 	}
@@ -111,4 +155,33 @@ func (inst *IntentTemplateServiceImpl) Update(ctx context.Context, id dxo.Intent
 // Remove ...
 func (inst *IntentTemplateServiceImpl) Remove(ctx context.Context, id dxo.IntentTemplateID) error {
 	return inst.IntentTempDAO.Remove(id)
+}
+
+// ImportPreset ...
+func (inst *IntentTemplateServiceImpl) ImportPreset(ctx context.Context) error {
+	im := &myPresetTemplatesImport{parent: inst}
+	return im.Import(ctx)
+}
+
+// ListMacroProperties ...
+func (inst *IntentTemplateServiceImpl) ListMacroProperties(ctx context.Context) (map[string]string, error) {
+
+	const path = "res:///intent-macro-list.properties"
+	text, err := inst.AC.GetResources().GetText(path)
+	if err != nil {
+		return nil, err
+	}
+
+	props, err := collection.ParseProperties(text, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	src := intents.ListMacroNames()
+	dst := make(map[string]string)
+	for _, name := range src {
+		value := props.GetProperty(name, name)
+		dst[name] = value
+	}
+	return dst, nil
 }

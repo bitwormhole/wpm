@@ -1,4 +1,4 @@
-package implservice
+package intents
 
 import (
 	"context"
@@ -37,7 +37,7 @@ func (inst *RunIntentServiceImpl) Run(ctx context.Context, o *dto.Intent) (*dto.
 }
 
 func (inst *RunIntentServiceImpl) preprocessWithFilters(ctx context.Context, o1 *dto.Intent) (*dto.Intent, error) {
-	return inst.IntentFilterManager.Filter(o1)
+	return inst.IntentFilterManager.Filter(ctx, o1)
 }
 
 func (inst *RunIntentServiceImpl) runAsCLI(ctx context.Context, intent1 *dto.Intent) (*dto.Intent, error) {

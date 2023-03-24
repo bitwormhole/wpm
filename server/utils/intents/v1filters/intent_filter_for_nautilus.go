@@ -1,22 +1,24 @@
 package filters
 
 import (
+	"context"
+
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/wpm/server/utils/intents"
 	"github.com/bitwormhole/wpm/server/web/dto"
 )
 
-// IntentFilterForVscode ...
-type IntentFilterForVscode struct {
+// IntentFilterForNautilus ...
+type IntentFilterForNautilus struct {
 	markup.Component `class:"intent-filter-registry"`
 }
 
-func (inst *IntentFilterForVscode) _Impl() (intents.Filter, intents.FilterRegistry) {
+func (inst *IntentFilterForNautilus) _Impl() (intents.Filter, intents.FilterRegistry) {
 	return inst, inst
 }
 
 // GetRegistrationList ...
-func (inst *IntentFilterForVscode) GetRegistrationList() []*intents.FilterRegistration {
+func (inst *IntentFilterForNautilus) GetRegistrationList() []*intents.FilterRegistration {
 	reg := &intents.FilterRegistration{
 		Filter: inst,
 	}
@@ -24,7 +26,7 @@ func (inst *IntentFilterForVscode) GetRegistrationList() []*intents.FilterRegist
 }
 
 // Filter ...
-func (inst *IntentFilterForVscode) Filter(i *dto.Intent) (*dto.Intent, error) {
+func (inst *IntentFilterForNautilus) Filter(c context.Context, i *dto.Intent) (*dto.Intent, error) {
 	if !inst.hit(i) {
 		return i, nil // bypass
 	}
@@ -33,6 +35,6 @@ func (inst *IntentFilterForVscode) Filter(i *dto.Intent) (*dto.Intent, error) {
 	return i, nil
 }
 
-func (inst *IntentFilterForVscode) hit(i *dto.Intent) bool {
-	return hit(i, []string{"code", "code.exe", "code.cmd"})
+func (inst *IntentFilterForNautilus) hit(i *dto.Intent) bool {
+	return hit(i, []string{"nautilus"})
 }

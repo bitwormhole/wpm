@@ -31,9 +31,12 @@ func (inst *IntentTemplateController) Init(ec glass.EngineConnection) error {
 	ec = ec.RequestMapping("intent-templates")
 
 	ec.Handle(http.MethodGet, "", inst.handleGetList)
-	ec.Handle(http.MethodPost, "", inst.handlePost)
-
 	ec.Handle(http.MethodGet, ":id", inst.handleGetOne)
+	ec.Handle(http.MethodGet, "macro/properties", inst.handleGetMacroProps)
+
+	ec.Handle(http.MethodPost, "", inst.handlePostInsert)
+	ec.Handle(http.MethodPost, "import-preset", inst.handlePostImportPreset)
+
 	ec.Handle(http.MethodPut, ":id", inst.handlePut)
 	ec.Handle(http.MethodDelete, ":id", inst.handleDelete)
 
@@ -68,7 +71,21 @@ func (inst *IntentTemplateController) handleGetOne(c *gin.Context) {
 	req.send(err)
 }
 
-func (inst *IntentTemplateController) handlePost(c *gin.Context) {
+func (inst *IntentTemplateController) handleGetMacroProps(c *gin.Context) {
+	req := &myIntentTemplateRequest{
+		gc:              c,
+		controller:      inst,
+		wantRequestID:   false,
+		wantRequestBody: false,
+	}
+	err := req.open()
+	if err == nil {
+		err = req.doGetMacroProps()
+	}
+	req.send(err)
+}
+
+func (inst *IntentTemplateController) handlePostInsert(c *gin.Context) {
 	req := &myIntentTemplateRequest{
 		gc:              c,
 		controller:      inst,
@@ -77,7 +94,21 @@ func (inst *IntentTemplateController) handlePost(c *gin.Context) {
 	}
 	err := req.open()
 	if err == nil {
-		err = req.doPost()
+		err = req.doPostInsert()
+	}
+	req.send(err)
+}
+
+func (inst *IntentTemplateController) handlePostImportPreset(c *gin.Context) {
+	req := &myIntentTemplateRequest{
+		gc:              c,
+		controller:      inst,
+		wantRequestID:   false,
+		wantRequestBody: true,
+	}
+	err := req.open()
+	if err == nil {
+		err = req.doPostImportPreset()
 	}
 	req.send(err)
 }
@@ -172,6 +203,17 @@ func (inst *myIntentTemplateRequest) doGetOne() error {
 	return nil
 }
 
+func (inst *myIntentTemplateRequest) doGetMacroProps() error {
+	ctx := inst.gc
+	ser := inst.controller.IntentTemplateService
+	props, err := ser.ListMacroProperties(ctx)
+	if err != nil {
+		return err
+	}
+	inst.body2.MacroProps = props
+	return nil
+}
+
 func (inst *myIntentTemplateRequest) doGetList() error {
 	ctx := inst.gc
 	ser := inst.controller.IntentTemplateService
@@ -183,7 +225,7 @@ func (inst *myIntentTemplateRequest) doGetList() error {
 	return nil
 }
 
-func (inst *myIntentTemplateRequest) doPost() error {
+func (inst *myIntentTemplateRequest) doPostInsert() error {
 	ctx := inst.gc
 	ser := inst.controller.IntentTemplateService
 	o1 := inst.body1.Templates[0]
@@ -193,6 +235,12 @@ func (inst *myIntentTemplateRequest) doPost() error {
 	}
 	inst.body2.Templates = []*dto.IntentTemplate{o2}
 	return nil
+}
+
+func (inst *myIntentTemplateRequest) doPostImportPreset() error {
+	ctx := inst.gc
+	ser := inst.controller.IntentTemplateService
+	return ser.ImportPreset(ctx)
 }
 
 func (inst *myIntentTemplateRequest) doPut() error {

@@ -11,6 +11,9 @@ type IntentTemplateDAO interface {
 
 	ListAll() ([]*entity.IntentTemplate, error)
 
+	// find items by Action & Executable & Target
+	ListByAET(o *entity.IntentTemplate) ([]*entity.IntentTemplate, error)
+
 	Insert(o *entity.IntentTemplate) (*entity.IntentTemplate, error)
 
 	Update(id dxo.IntentTemplateID, o *entity.IntentTemplate) (*entity.IntentTemplate, error)

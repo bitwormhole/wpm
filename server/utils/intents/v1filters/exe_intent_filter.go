@@ -1,6 +1,8 @@
 package filters
 
 import (
+	"context"
+
 	"bitwormhole.com/starter/afs/files"
 	"github.com/bitwormhole/gitlib/git/store"
 	"github.com/bitwormhole/starter/markup"
@@ -29,7 +31,7 @@ func (inst *ExecuteIntentFilter) GetRegistrationList() []*intents.FilterRegistra
 }
 
 // Filter ...
-func (inst *ExecuteIntentFilter) Filter(i *dto.Intent) (*dto.Intent, error) {
+func (inst *ExecuteIntentFilter) Filter(c context.Context, i *dto.Intent) (*dto.Intent, error) {
 
 	err := inst.processCommand(i)
 	if err != nil {

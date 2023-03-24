@@ -152,3 +152,12 @@ func (inst *ExecutableServiceImpl) FindByPath(ctx context.Context, path string) 
 	}
 	return inst.entity2dto(e1)
 }
+
+// FindByName ...
+func (inst *ExecutableServiceImpl) FindByName(ctx context.Context, name string) (*dto.Executable, error) {
+	e1, err := inst.ExecutableDAO.FindByName(name)
+	if err != nil {
+		return nil, err
+	}
+	return inst.entity2dto(e1)
+}

@@ -5,9 +5,11 @@ import (
 	"github.com/bitwormhole/wpm/server/data/entity"
 )
 
+// ExecutableDAO ...
 type ExecutableDAO interface {
 	Find(id dxo.ExecutableID) (*entity.Executable, error)
 	FindByPath(path string) (*entity.Executable, error)
+	FindByName(name string) (*entity.Executable, error)
 
 	ListAll() ([]*entity.Executable, error)
 

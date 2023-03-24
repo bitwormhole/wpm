@@ -1,22 +1,24 @@
 package filters
 
 import (
+	"context"
+
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/wpm/server/utils/intents"
 	"github.com/bitwormhole/wpm/server/web/dto"
 )
 
-// IntentFilterForChrome ...
-type IntentFilterForChrome struct {
+// IntentFilterForFirefox ...
+type IntentFilterForFirefox struct {
 	markup.Component `class:"intent-filter-registry"`
 }
 
-func (inst *IntentFilterForChrome) _Impl() (intents.Filter, intents.FilterRegistry) {
+func (inst *IntentFilterForFirefox) _Impl() (intents.Filter, intents.FilterRegistry) {
 	return inst, inst
 }
 
 // GetRegistrationList ...
-func (inst *IntentFilterForChrome) GetRegistrationList() []*intents.FilterRegistration {
+func (inst *IntentFilterForFirefox) GetRegistrationList() []*intents.FilterRegistration {
 	reg := &intents.FilterRegistration{
 		Filter: inst,
 	}
@@ -24,7 +26,7 @@ func (inst *IntentFilterForChrome) GetRegistrationList() []*intents.FilterRegist
 }
 
 // Filter ...
-func (inst *IntentFilterForChrome) Filter(i *dto.Intent) (*dto.Intent, error) {
+func (inst *IntentFilterForFirefox) Filter(c context.Context, i *dto.Intent) (*dto.Intent, error) {
 	if !inst.hit(i) {
 		return i, nil // bypass
 	}
@@ -32,6 +34,6 @@ func (inst *IntentFilterForChrome) Filter(i *dto.Intent) (*dto.Intent, error) {
 	return i, nil
 }
 
-func (inst *IntentFilterForChrome) hit(i *dto.Intent) bool {
+func (inst *IntentFilterForFirefox) hit(i *dto.Intent) bool {
 	return hit(i, []string{"a", "b"})
 }
