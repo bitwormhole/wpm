@@ -19,16 +19,27 @@ type ProjectOptions struct {
 
 // ProjectService ...
 type ProjectService interface {
+
+	// getter
 	Find(ctx context.Context, id dxo.ProjectID, options *ProjectOptions) (*dto.Project, error)
+
 	FindByOwnerRepository(ctx context.Context, id dxo.LocalRepositoryID, options *ProjectOptions) ([]*dto.Project, error)
+
+	FindByPath(ctx context.Context, path string, options *ProjectOptions) (*dto.Project, error)
+
 	ListAll(ctx context.Context, options *ProjectOptions) ([]*dto.Project, error)
+
 	ListByIds(ctx context.Context, ids []dxo.ProjectID, options *ProjectOptions) ([]*dto.Project, error)
 
-	Locate(ctx context.Context, o *dto.Project) (*dto.Project, error)
+	Locate(ctx context.Context, o *dto.Project, options *ProjectOptions) (*dto.Project, error)
+
+	// setter
 
 	Insert(ctx context.Context, o *dto.Project) (*dto.Project, error)
 	Update(ctx context.Context, id dxo.ProjectID, o *dto.Project) (*dto.Project, error)
 	Remove(ctx context.Context, id dxo.ProjectID) error
+
+	InsertOrFetch(ctx context.Context, o *dto.Project, options *ProjectOptions) (*dto.Project, error)
 }
 
 // ProjectImportService ...

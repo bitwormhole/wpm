@@ -10,6 +10,8 @@ type ProjectDAO interface {
 	Find(id dxo.ProjectID) (*entity.Project, error)
 	FindByOwnerRepository(id dxo.LocalRepositoryID) ([]*entity.Project, error)
 
+	FindByPath(path string) (*entity.Project, error)
+
 	ListAll() ([]*entity.Project, error)
 	ListByIds(ids []dxo.ProjectID) ([]*entity.Project, error)
 

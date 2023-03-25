@@ -60,15 +60,22 @@ type LocalRepositoryOptions struct {
 
 // LocalRepositoryService ...
 type LocalRepositoryService interface {
+
+	// getter
 	Find(ctx context.Context, id dxo.LocalRepositoryID, opt *LocalRepositoryOptions) (*dto.LocalRepository, error)
 	FindByName(ctx context.Context, name string, opt *LocalRepositoryOptions) (*dto.LocalRepository, error)
+	FindByPath(ctx context.Context, path string, opt *LocalRepositoryOptions) (*dto.LocalRepository, error)
 	ListAll(ctx context.Context, opt *LocalRepositoryOptions) ([]*dto.LocalRepository, error)
 	ListByIds(ctx context.Context, ids []dxo.LocalRepositoryID, opt *LocalRepositoryOptions) ([]*dto.LocalRepository, error)
 
+	// setter
 	Insert(ctx context.Context, o *dto.LocalRepository) (*dto.LocalRepository, error)
 	Update(ctx context.Context, id dxo.LocalRepositoryID, o *dto.LocalRepository) (*dto.LocalRepository, error)
 	Remove(ctx context.Context, id dxo.LocalRepositoryID) error
 
+	InsertOrFetch(ctx context.Context, o *dto.LocalRepository, opt *LocalRepositoryOptions) (*dto.LocalRepository, error)
+
+	// helper
 	ConvertEntityToDto(e *entity.LocalRepository) (*dto.LocalRepository, error)
 	ConvertDtoToEntity(e *dto.LocalRepository) (*entity.LocalRepository, error)
 }

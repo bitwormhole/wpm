@@ -11,6 +11,7 @@ import (
 	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/data/entity"
 	"github.com/bitwormhole/wpm/server/service"
+	"github.com/bitwormhole/wpm/server/utils"
 	"github.com/bitwormhole/wpm/server/web/dto"
 )
 
@@ -165,6 +166,18 @@ func (inst *LocalRepositoryServiceImpl) Find(ctx context.Context, id dxo.LocalRe
 	return inst.entity2dto(ctx, o1, opt)
 }
 
+// FindByPath ...
+func (inst *LocalRepositoryServiceImpl) FindByPath(ctx context.Context, path string, opt *service.LocalRepositoryOptions) (*dto.LocalRepository, error) {
+
+	lrdao := inst.LocalRepositoryDAO
+	ent, err := lrdao.FindByPath(path)
+	if err != nil {
+		return nil, err
+	}
+
+	return inst.entity2dto(ctx, ent, opt)
+}
+
 // FindByName ...
 func (inst *LocalRepositoryServiceImpl) FindByName(ctx context.Context, name string, opt *service.LocalRepositoryOptions) (*dto.LocalRepository, error) {
 	o1, err := inst.LocalRepositoryDAO.FindByName(name)
@@ -172,6 +185,39 @@ func (inst *LocalRepositoryServiceImpl) FindByName(ctx context.Context, name str
 		return nil, err
 	}
 	return inst.entity2dto(ctx, o1, opt)
+}
+
+// InsertOrFetch ...
+func (inst *LocalRepositoryServiceImpl) InsertOrFetch(ctx context.Context, o1 *dto.LocalRepository, opt *service.LocalRepositoryOptions) (*dto.LocalRepository, error) {
+
+	o2, err := inst.Insert(ctx, o1)
+	if o2 != nil && err == nil {
+		return o2, nil
+	}
+
+	errlist := &utils.ErrorList{}
+	errlist.Append(err)
+
+	paths := make([]string, 0)
+	paths = append(paths, o1.ConfigFile)
+	paths = append(paths, o1.RepositoryPath)
+	paths = append(paths, o1.DotGitPath)
+	paths = append(paths, o1.WorkingPath)
+	paths = append(paths, o1.Path)
+
+	for _, wantPath := range paths {
+		wantPath = strings.TrimSpace(wantPath)
+		if wantPath == "" {
+			continue
+		}
+		o2, err := inst.FindByPath(ctx, wantPath, opt)
+		if o2 != nil && err == nil {
+			return o2, nil
+		}
+		errlist.Append(err)
+	}
+
+	return nil, errlist.First()
 }
 
 // Insert ...

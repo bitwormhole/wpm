@@ -2,6 +2,8 @@ package impldao
 
 import (
 	"errors"
+	"fmt"
+	"strings"
 
 	"github.com/bitwormhole/starter/io/fs"
 	"github.com/bitwormhole/starter/markup"
@@ -10,6 +12,7 @@ import (
 	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/data/entity"
 	"github.com/bitwormhole/wpm/server/service"
+	"github.com/bitwormhole/wpm/server/utils"
 )
 
 // RepositoryDaoImpl ...
@@ -87,13 +90,32 @@ func (inst *RepositoryDaoImpl) FindByName(name string) (*entity.LocalRepository,
 
 // FindByPath ...
 func (inst *RepositoryDaoImpl) FindByPath(path string) (*entity.LocalRepository, error) {
+
+	path = strings.TrimSpace(path)
+	if path == "" {
+		return nil, fmt.Errorf("param:`path` is empty")
+	}
+
+	// ConfigFile     string `gorm:"index:,unique"`
+	// DotGitPath     string
+	// Path           string
+	// RepositoryPath string
+	// WorkingPath    string
+	fields := []string{"path", "config_file", "dot_git_path", "working_path", "repository_path"}
+
+	erlist := &utils.ErrorList{}
 	db := inst.Agent.DB()
 	o := inst.model()
-	res := db.Where("path=?", path).First(o)
-	if res.Error != nil {
-		return nil, res.Error
+
+	for _, field := range fields {
+		res := db.Where(field+"=?", path).First(o)
+		if res.Error == nil {
+			return o, nil
+		}
+		erlist.Append(res.Error)
 	}
-	return o, nil
+
+	return nil, erlist.First()
 }
 
 // FindByDotGit ...

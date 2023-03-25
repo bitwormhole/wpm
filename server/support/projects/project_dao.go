@@ -2,6 +2,8 @@ package projects
 
 import (
 	"errors"
+	"fmt"
+	"strings"
 
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/wpm/server/data/dao"
@@ -9,6 +11,7 @@ import (
 	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/data/entity"
 	"github.com/bitwormhole/wpm/server/service"
+	"github.com/bitwormhole/wpm/server/utils"
 )
 
 // ProjectDaoImpl ...
@@ -33,7 +36,40 @@ func (inst *ProjectDaoImpl) modelList() []*entity.Project {
 
 // Find ...
 func (inst *ProjectDaoImpl) Find(id dxo.ProjectID) (*entity.Project, error) {
-	return nil, errors.New("no impl")
+	db := inst.Agent.DB()
+	o2 := inst.model()
+	res := db.First(o2, id)
+	if res.Error != nil {
+		return nil, res.Error
+	}
+	return o2, nil
+}
+
+// FindByPath ...
+func (inst *ProjectDaoImpl) FindByPath(path string) (*entity.Project, error) {
+
+	path = strings.TrimSpace(path)
+	if path == "" {
+		return nil, fmt.Errorf("param:`path` is empty")
+	}
+
+	// FullPath    string
+	// ProjectDir  string
+	fields := []string{"full_path", "project_dir"}
+
+	erlist := &utils.ErrorList{}
+	db := inst.Agent.DB()
+	o := inst.model()
+
+	for _, field := range fields {
+		res := db.Where(field+"=?", path).First(o)
+		if res.Error == nil {
+			return o, nil
+		}
+		erlist.Append(res.Error)
+	}
+
+	return nil, erlist.First()
 }
 
 // FindByOwnerRepository ...

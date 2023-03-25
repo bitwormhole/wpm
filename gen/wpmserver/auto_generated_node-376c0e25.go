@@ -516,9 +516,19 @@ type pComImpSetupService struct {
 }
 
 
+type pComImpWorktreeDao struct {
+	instance *worktrees0xa762f3.ImpWorktreeDao
+	 markup0x23084a.Component `id:"WorktreeDAO"`
+	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
+	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
+}
+
+
 type pComImpWorktreeService struct {
 	instance *worktrees0xa762f3.ImpWorktreeService
 	 markup0x23084a.Component `id:"WorktreeService"`
+	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
+	DAO dao0x5af8d0.WorktreeDAO `inject:"#WorktreeDAO"`
 }
 
 

@@ -12,6 +12,7 @@ import (
 	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/data/entity"
 	"github.com/bitwormhole/wpm/server/service"
+	"github.com/bitwormhole/wpm/server/utils"
 	"github.com/bitwormhole/wpm/server/web/dto"
 )
 
@@ -148,7 +149,7 @@ func (inst *ProjectServiceImpl) FindByOwnerRepository(ctx context.Context, id dx
 }
 
 // Locate ...
-func (inst *ProjectServiceImpl) Locate(ctx context.Context, o1 *dto.Project) (*dto.Project, error) {
+func (inst *ProjectServiceImpl) Locate(ctx context.Context, o1 *dto.Project, options *service.ProjectOptions) (*dto.Project, error) {
 	o2, err := inst.dto2entity(ctx, o1)
 	if err != nil {
 		return nil, err
@@ -157,7 +158,7 @@ func (inst *ProjectServiceImpl) Locate(ctx context.Context, o1 *dto.Project) (*d
 	if err != nil {
 		return nil, err
 	}
-	return inst.entity2dto(o2, nil)
+	return inst.entity2dto(o2, options)
 }
 
 // Insert ...
@@ -179,6 +180,36 @@ func (inst *ProjectServiceImpl) Insert(ctx context.Context, o1 *dto.Project) (*d
 	}
 
 	return inst.entity2dto(o3, nil)
+}
+
+// InsertOrFetch ...
+func (inst *ProjectServiceImpl) InsertOrFetch(ctx context.Context, o1 *dto.Project, opt *service.ProjectOptions) (*dto.Project, error) {
+
+	o2, err := inst.Insert(ctx, o1)
+	if o2 != nil && err == nil {
+		return o2, nil
+	}
+
+	errlist := &utils.ErrorList{}
+	errlist.Append(err)
+
+	paths := make([]string, 0)
+	paths = append(paths, o1.FullPath)
+	paths = append(paths, o1.ProjectDir)
+
+	for _, wantPath := range paths {
+		wantPath = strings.TrimSpace(wantPath)
+		if wantPath == "" {
+			continue
+		}
+		o2, err := inst.FindByPath(ctx, wantPath, opt)
+		if o2 != nil && err == nil {
+			return o2, nil
+		}
+		errlist.Append(err)
+	}
+
+	return nil, errlist.First()
 }
 
 // Update ...
@@ -205,6 +236,16 @@ func (inst *ProjectServiceImpl) Update(ctx context.Context, id dxo.ProjectID, o1
 // Remove ...
 func (inst *ProjectServiceImpl) Remove(ctx context.Context, id dxo.ProjectID) error {
 	return inst.ProjectDAO.Remove(id)
+}
+
+// FindByPath ...
+func (inst *ProjectServiceImpl) FindByPath(ctx context.Context, path string, options *service.ProjectOptions) (*dto.Project, error) {
+	pdao := inst.ProjectDAO
+	ent, err := pdao.FindByPath(path)
+	if err != nil {
+		return nil, err
+	}
+	return inst.entity2dto(ent, options)
 }
 
 ////////////////////////////////////////////////////////////////////////////////

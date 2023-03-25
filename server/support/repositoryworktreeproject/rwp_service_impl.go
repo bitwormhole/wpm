@@ -69,7 +69,10 @@ func (inst *RWPServiceImpl) findRepository(ctx context.Context, layout store.Rep
 	repo.State = dxo.FileStateUntracked
 
 	// try find old
-	// todo ...
+	older, err := inst.findRepositoryOlder(ctx, repo)
+	if older != nil && err == nil {
+		return older, nil
+	}
 
 	return repo, nil
 }
@@ -95,17 +98,22 @@ func (inst *RWPServiceImpl) findWorktree(ctx context.Context, layout store.Repos
 	}
 
 	// try find old
-	// todo ...
+	older, err := inst.findWorktreeOlder(ctx, wktree)
+	if older != nil && err == nil {
+		return older, nil
+	}
 
 	return wktree, nil
 }
 
 func (inst *RWPServiceImpl) findProject(ctx context.Context, path afs.Path) (*dto.Project, error) {
 
+	opt := &service.ProjectOptions{WithFileState: true}
+
 	// locate project
 	project1 := &dto.Project{}
 	project1.FullPath = path.GetPath()
-	project2, err := inst.Projects.Locate(ctx, project1)
+	project2, err := inst.Projects.Locate(ctx, project1, opt)
 	if err != nil {
 		return nil, err
 	}
@@ -113,9 +121,39 @@ func (inst *RWPServiceImpl) findProject(ctx context.Context, path afs.Path) (*dt
 	project2.State = dxo.FileStateUntracked
 
 	// try find old
-	// todo ...
+	older, err := inst.findProjectOlder(ctx, project2)
+	if err == nil && older != nil {
+		return older, nil
+	}
 
 	return project2, nil
+}
+
+func (inst *RWPServiceImpl) findProjectOlder(ctx context.Context, want *dto.Project) (*dto.Project, error) {
+	path := want.FullPath
+	opt := &service.ProjectOptions{
+		WithFileState: true,
+		// WithGitStatus: true,
+	}
+	return inst.Projects.FindByPath(ctx, path, opt)
+}
+
+func (inst *RWPServiceImpl) findRepositoryOlder(ctx context.Context, want *dto.LocalRepository) (*dto.LocalRepository, error) {
+	path := want.ConfigFile
+	opt := &service.LocalRepositoryOptions{
+		WithFileState: true,
+		WithGitStatus: true,
+	}
+	return inst.Repositories.FindByPath(ctx, path, opt)
+}
+
+func (inst *RWPServiceImpl) findWorktreeOlder(ctx context.Context, want *dto.Worktree) (*dto.Worktree, error) {
+	path := want.DotGitPath
+	opt := &service.WorktreeOptions{
+		WithFileState: true,
+		WithGitStatus: false,
+	}
+	return inst.Worktrees.FindByPath(ctx, path, opt)
 }
 
 // Find ...
@@ -157,6 +195,62 @@ func (inst *RWPServiceImpl) Find(ctx context.Context, o *vo.RepositoryWorktreePr
 }
 
 // Save ...
-func (inst *RWPServiceImpl) Save(c context.Context, o *vo.RepositoryWorktreeProject) (*vo.RepositoryWorktreeProject, error) {
-	return nil, fmt.Errorf("no impl")
+func (inst *RWPServiceImpl) Save(c context.Context, o1 *vo.RepositoryWorktreeProject) (*vo.RepositoryWorktreeProject, error) {
+
+	repo1 := o1.Repository
+	worktree1 := o1.Worktree
+	project1 := o1.Project
+	o2 := &vo.RepositoryWorktreeProject{}
+
+	if repo1 != nil {
+		repo2, err := inst.fetchOrInsertRepository(c, repo1)
+		if err != nil {
+			return nil, err
+		}
+		o2.Repository = repo2
+		repo1 = repo2
+	} else {
+		repo1 = &dto.LocalRepository{}
+	}
+
+	if worktree1 != nil {
+		worktree1.OwnerRepository = repo1.ID
+		worktree2, err := inst.fetchOrInsertWorktree(c, worktree1)
+		if err != nil {
+			return nil, err
+		}
+		o2.Worktree = worktree2
+		worktree1 = worktree2
+	} else {
+		worktree1 = &dto.Worktree{}
+	}
+
+	if project1 != nil {
+		project1.OwnerRepository = repo1.ID
+		project2, err := inst.fetchOrInsertProject(c, project1)
+		if err != nil {
+			return nil, err
+		}
+		o2.Project = project2
+	}
+
+	return o2, nil
+}
+
+func (inst *RWPServiceImpl) fetchOrInsertRepository(c context.Context, o1 *dto.LocalRepository) (*dto.LocalRepository, error) {
+	ser := inst.Repositories
+	opt := &service.LocalRepositoryOptions{WithFileState: true}
+	return ser.InsertOrFetch(c, o1, opt)
+}
+
+func (inst *RWPServiceImpl) fetchOrInsertWorktree(c context.Context, o1 *dto.Worktree) (*dto.Worktree, error) {
+	ser := inst.Worktrees
+	opt := &service.WorktreeOptions{WithFileState: true}
+	return ser.InsertOrFetch(c, o1, opt)
+}
+
+func (inst *RWPServiceImpl) fetchOrInsertProject(c context.Context, o1 *dto.Project) (*dto.Project, error) {
+	ser := inst.Projects
+	opt := &service.ProjectOptions{WithFileState: true}
+	return ser.InsertOrFetch(c, o1, opt)
 }
