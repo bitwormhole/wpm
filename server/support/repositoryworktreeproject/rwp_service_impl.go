@@ -7,6 +7,7 @@ import (
 	"bitwormhole.com/starter/afs"
 	"github.com/bitwormhole/gitlib/git/store"
 	"github.com/bitwormhole/starter/markup"
+	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/service"
 	"github.com/bitwormhole/wpm/server/web/dto"
 	"github.com/bitwormhole/wpm/server/web/vo"
@@ -56,9 +57,16 @@ func (inst *RWPServiceImpl) findRepository(ctx context.Context, layout store.Rep
 		}
 	}
 
+	name := repodir.GetName()
+	if name == ".git" {
+		name = repodir.GetParent().GetName()
+	}
+	repo.Name = name
+
 	repo.ConfigFile = config.GetPath()
 	repo.Path = repodir.GetPath()
 	repo.RepositoryPath = repodir.GetPath()
+	repo.State = dxo.FileStateUntracked
 
 	// try find old
 	// todo ...
@@ -75,10 +83,14 @@ func (inst *RWPServiceImpl) findWorktree(ctx context.Context, layout store.Repos
 	dotgit := layout.DotGit()
 	wktree := &dto.Worktree{}
 
+	wktree.State = dxo.FileStateUntracked
+
 	if dotgit != nil {
 		if dotgit.Exists() {
+			dotgitParent := dotgit.GetParent()
+			wktree.Name = dotgitParent.GetName()
+			wktree.WorkingDir = dotgitParent.GetPath()
 			wktree.DotGitPath = dotgit.GetPath()
-			wktree.WorkingDir = dotgit.GetParent().GetPath()
 		}
 	}
 
@@ -97,6 +109,8 @@ func (inst *RWPServiceImpl) findProject(ctx context.Context, path afs.Path) (*dt
 	if err != nil {
 		return nil, err
 	}
+
+	project2.State = dxo.FileStateUntracked
 
 	// try find old
 	// todo ...

@@ -31,6 +31,11 @@ func (LocalRepository) TableName() string {
 }
 
 // TableName ...
+func (Path) TableName() string {
+	return TableNamePrefix + "path"
+}
+
+// TableName ...
 func (Project) TableName() string {
 	return TableNamePrefix + "project"
 }
@@ -62,6 +67,7 @@ func ListPrototypes() []any {
 	list = append(list, &ProjectType{})
 	list = append(list, &LocalRepository{})
 	list = append(list, &Media{})
+	list = append(list, &Path{})
 	list = append(list, &RemoteRepository{})
 	list = append(list, &Setting{})
 	list = append(list, &User{})

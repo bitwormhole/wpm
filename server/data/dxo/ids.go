@@ -26,6 +26,9 @@ type IntentTemplateID int
 // MediaID ...
 type MediaID int
 
+// PathID ...
+type PathID int
+
 // ProjectID ...
 type ProjectID int
 
