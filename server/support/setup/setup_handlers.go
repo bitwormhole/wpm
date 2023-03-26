@@ -44,3 +44,10 @@ func (inst *mySetupHanlders) doImportPresetSettings(c context.Context, req *dto.
 	sett.SetupDone = true
 	return ser.PutSettings(sett)
 }
+
+func (inst *mySetupHanlders) doInitMainRepository(c context.Context, req *dto.Setup) error {
+	h := &myInitMainRepositoryHandler{
+		context: inst.context,
+	}
+	return h.Run()
+}

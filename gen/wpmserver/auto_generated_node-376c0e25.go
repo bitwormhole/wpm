@@ -554,6 +554,8 @@ type pComWpmSetupController struct {
 type pComImpSetupService struct {
 	instance *setup0xd9ff02.ImpSetupService
 	 markup0x23084a.Component `id:"SetupService"`
+	AppDataService service0x3e063d.AppDataService `inject:"#AppDataService"`
+	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
 	ExecutableService service0x3e063d.ExecutableService `inject:"#ExecutableService"`
 	ExecutableImportService service0x3e063d.ExecutableImportService `inject:"#ExecutableImportService"`
 	IntentTemplateService service0x3e063d.IntentTemplateService `inject:"#IntentTemplateService"`

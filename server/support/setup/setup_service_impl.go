@@ -13,6 +13,8 @@ import (
 type ImpSetupService struct {
 	markup.Component `id:"SetupService"`
 
+	AppDataService           service.AppDataService           `inject:"#AppDataService"`
+	FileSystemService        service.FileSystemService        `inject:"#FileSystemService"`
 	ExecutableService        service.ExecutableService        `inject:"#ExecutableService"`
 	ExecutableImportService  service.ExecutableImportService  `inject:"#ExecutableImportService"`
 	IntentTemplateService    service.IntentTemplateService    `inject:"#IntentTemplateService"`
@@ -104,6 +106,8 @@ func (inst *ImpSetupService) listSetupRegs() []*service.SetupRegistration {
 
 func (inst *ImpSetupService) makeContext() *Context {
 	return &Context{
+		AppDataService:           inst.AppDataService,
+		FileSystemService:        inst.FileSystemService,
 		ExecutableImportService:  inst.ExecutableImportService,
 		IntentTemplateService:    inst.IntentTemplateService,
 		MediaService:             inst.MediaService,

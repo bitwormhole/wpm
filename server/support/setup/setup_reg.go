@@ -14,6 +14,7 @@ func (inst *mySetupReg) listAll() []*service.SetupRegistration {
 
 	all := make([]*service.SetupRegistration, 0)
 
+	all = append(all, inst.forInitMainRepository())
 	all = append(all, inst.forImportPresetMediaFiles())
 	all = append(all, inst.forImportPresetProjectTypes())
 	all = append(all, inst.forImportPresetIntentTemplates())
@@ -75,6 +76,22 @@ func (inst *mySetupReg) forImportPresetMediaFiles() *service.SetupRegistration {
 		Name:      p.Name,
 		Prototype: p,
 		Handler:   h.doImportPresetMediaFiles,
+	}
+}
+
+func (inst *mySetupReg) forInitMainRepository() *service.SetupRegistration {
+	p := &dto.Setup{
+		Name:        "init-main-repository",
+		Title:       "初始化主仓库",
+		Description: "初始化主仓库",
+		State:       dto.SetupStateWant,
+	}
+	h := &mySetupHanlders{context: inst.context}
+	return &service.SetupRegistration{
+		ID:        p.ID,
+		Name:      p.Name,
+		Prototype: p,
+		Handler:   h.doInitMainRepository,
 	}
 }
 

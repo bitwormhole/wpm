@@ -6973,6 +6973,8 @@ type comFactory4pComImpSetupService struct {
     mPrototype * setup0xd9ff02.ImpSetupService
 
 	
+	mAppDataServiceSelector config.InjectionSelector
+	mFileSystemServiceSelector config.InjectionSelector
 	mExecutableServiceSelector config.InjectionSelector
 	mExecutableImportServiceSelector config.InjectionSelector
 	mIntentTemplateServiceSelector config.InjectionSelector
@@ -6985,6 +6987,8 @@ type comFactory4pComImpSetupService struct {
 func (inst * comFactory4pComImpSetupService) init() application.ComponentFactory {
 
 	
+	inst.mAppDataServiceSelector = config.NewInjectionSelector("#AppDataService",nil)
+	inst.mFileSystemServiceSelector = config.NewInjectionSelector("#FileSystemService",nil)
 	inst.mExecutableServiceSelector = config.NewInjectionSelector("#ExecutableService",nil)
 	inst.mExecutableImportServiceSelector = config.NewInjectionSelector("#ExecutableImportService",nil)
 	inst.mIntentTemplateServiceSelector = config.NewInjectionSelector("#IntentTemplateService",nil)
@@ -7028,6 +7032,8 @@ func (inst * comFactory4pComImpSetupService) Destroy(instance application.Compon
 func (inst * comFactory4pComImpSetupService) Inject(instance application.ComponentInstance, context application.InstanceContext) error {
 	
 	obj := inst.castObject(instance)
+	obj.AppDataService = inst.getterForFieldAppDataServiceSelector(context)
+	obj.FileSystemService = inst.getterForFieldFileSystemServiceSelector(context)
 	obj.ExecutableService = inst.getterForFieldExecutableServiceSelector(context)
 	obj.ExecutableImportService = inst.getterForFieldExecutableImportServiceSelector(context)
 	obj.IntentTemplateService = inst.getterForFieldIntentTemplateServiceSelector(context)
@@ -7035,6 +7041,42 @@ func (inst * comFactory4pComImpSetupService) Inject(instance application.Compone
 	obj.ProjectTypeImportService = inst.getterForFieldProjectTypeImportServiceSelector(context)
 	obj.SettingService = inst.getterForFieldSettingServiceSelector(context)
 	return context.LastError()
+}
+
+//getterForFieldAppDataServiceSelector
+func (inst * comFactory4pComImpSetupService) getterForFieldAppDataServiceSelector (context application.InstanceContext) service0x3e063d.AppDataService {
+
+	o1 := inst.mAppDataServiceSelector.GetOne(context)
+	o2, ok := o1.(service0x3e063d.AppDataService)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "SetupService")
+		eb.Set("field", "AppDataService")
+		eb.Set("type1", "?")
+		eb.Set("type2", "service0x3e063d.AppDataService")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
+}
+
+//getterForFieldFileSystemServiceSelector
+func (inst * comFactory4pComImpSetupService) getterForFieldFileSystemServiceSelector (context application.InstanceContext) service0x3e063d.FileSystemService {
+
+	o1 := inst.mFileSystemServiceSelector.GetOne(context)
+	o2, ok := o1.(service0x3e063d.FileSystemService)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "SetupService")
+		eb.Set("field", "FileSystemService")
+		eb.Set("type1", "?")
+		eb.Set("type2", "service0x3e063d.FileSystemService")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
 }
 
 //getterForFieldExecutableServiceSelector

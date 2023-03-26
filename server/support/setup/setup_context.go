@@ -4,6 +4,8 @@ import "github.com/bitwormhole/wpm/server/service"
 
 // Context ...
 type Context struct {
+	AppDataService           service.AppDataService
+	FileSystemService        service.FileSystemService
 	ExecutableImportService  service.ExecutableImportService
 	MediaService             service.MediaService
 	ProjectTypeImportService service.ProjectTypeImportService
