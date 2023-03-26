@@ -1,7 +1,6 @@
-package projects
+package locations
 
 import (
-	"errors"
 	"fmt"
 	"strings"
 
@@ -14,28 +13,28 @@ import (
 	"github.com/bitwormhole/wpm/server/utils"
 )
 
-// ProjectDaoImpl ...
-type ProjectDaoImpl struct {
-	markup.Component `id:"ProjectDAO"`
+// ImpLocationDao ...
+type ImpLocationDao struct {
+	markup.Component `id:"LocationDAO"`
 
 	Agent          dbagent.GormDBAgent    `inject:"#GormDBAgent"`
 	UUIDGenService service.UUIDGenService `inject:"#UUIDGenService"`
 }
 
-func (inst *ProjectDaoImpl) _Impl() dao.ProjectDAO {
+func (inst *ImpLocationDao) _Impl() dao.LocationDAO {
 	return inst
 }
 
-func (inst *ProjectDaoImpl) model() *entity.Project {
-	return &entity.Project{}
+func (inst *ImpLocationDao) model() *entity.Location {
+	return &entity.Location{}
 }
 
-func (inst *ProjectDaoImpl) modelList() []*entity.Project {
-	return make([]*entity.Project, 0)
+func (inst *ImpLocationDao) modelList() []*entity.Location {
+	return make([]*entity.Location, 0)
 }
 
 // Find ...
-func (inst *ProjectDaoImpl) Find(id dxo.ProjectID) (*entity.Project, error) {
+func (inst *ImpLocationDao) Find(id dxo.LocationID) (*entity.Location, error) {
 	db := inst.Agent.DB()
 	o2 := inst.model()
 	res := db.First(o2, id)
@@ -46,7 +45,7 @@ func (inst *ProjectDaoImpl) Find(id dxo.ProjectID) (*entity.Project, error) {
 }
 
 // FindByPath ...
-func (inst *ProjectDaoImpl) FindByPath(path string) (*entity.Project, error) {
+func (inst *ImpLocationDao) FindByPath(path string) (*entity.Location, error) {
 
 	path = strings.TrimSpace(path)
 	if path == "" {
@@ -69,13 +68,8 @@ func (inst *ProjectDaoImpl) FindByPath(path string) (*entity.Project, error) {
 	return nil, erlist.First()
 }
 
-// FindByOwnerRepository ...
-func (inst *ProjectDaoImpl) FindByOwnerRepository(id dxo.LocalRepositoryID) ([]*entity.Project, error) {
-	return nil, errors.New("no impl")
-}
-
 // ListAll ...
-func (inst *ProjectDaoImpl) ListAll() ([]*entity.Project, error) {
+func (inst *ImpLocationDao) ListAll() ([]*entity.Location, error) {
 	list := inst.modelList()
 	db := inst.Agent.DB()
 	res := db.Find(&list)
@@ -85,32 +79,12 @@ func (inst *ProjectDaoImpl) ListAll() ([]*entity.Project, error) {
 	return list, nil
 }
 
-// ListByIds ...
-func (inst *ProjectDaoImpl) ListByIds(ids []dxo.ProjectID) ([]*entity.Project, error) {
-
-	if ids == nil {
-		return []*entity.Project{}, nil
-	}
-
-	if len(ids) == 0 {
-		return []*entity.Project{}, nil
-	}
-
-	list := inst.modelList()
-	db := inst.Agent.DB()
-	res := db.Find(&list, ids)
-	if res.Error != nil {
-		return nil, res.Error
-	}
-	return list, nil
-}
-
 // Insert ...
-func (inst *ProjectDaoImpl) Insert(o *entity.Project) (*entity.Project, error) {
+func (inst *ImpLocationDao) Insert(o *entity.Location) (*entity.Location, error) {
 
 	// compute fields
 	o.ID = 0
-	o.UUID = inst.UUIDGenService.GenerateUUID(o.Path + "|entity.Project|")
+	o.UUID = inst.UUIDGenService.GenerateUUID(o.Path + "|entity.Location|")
 
 	// save
 	db := inst.Agent.DB()
@@ -123,7 +97,8 @@ func (inst *ProjectDaoImpl) Insert(o *entity.Project) (*entity.Project, error) {
 }
 
 // Update ...
-func (inst *ProjectDaoImpl) Update(id dxo.ProjectID, o1 *entity.Project) (*entity.Project, error) {
+func (inst *ImpLocationDao) Update(id dxo.LocationID, o1 *entity.Location) (*entity.Location, error) {
+
 	db := inst.Agent.DB()
 	o2 := inst.model()
 	res := db.First(o2, id)
@@ -132,18 +107,14 @@ func (inst *ProjectDaoImpl) Update(id dxo.ProjectID, o1 *entity.Project) (*entit
 	}
 
 	// todo ...
-	o2.ConfigFileName = o1.ConfigFileName
-	o2.Description = o1.Description
 	o2.Path = o1.Path
-	o2.IsDir = o1.IsDir
-	o2.IsFile = o1.IsFile
-	o2.Name = o1.Name
-	o2.OwnerRepository = o1.OwnerRepository
-	o2.PathInWorktree = o1.PathInWorktree
-	o2.ProjectDir = o1.ProjectDir
-	o2.TypeID = o1.TypeID
-	o2.TypeKey = o1.TypeKey
-	o2.TypeName = o1.TypeName
+	o2.Class = o1.Class
+	o2.AsDir = o1.AsDir
+	o2.AsFile = o1.AsFile
+
+	// o2.TypeID = o1.TypeID
+	// o2.TypeKey = o1.TypeKey
+	// o2.TypeName = o1.TypeName
 
 	res = db.Save(o2)
 	if res.Error != nil {
@@ -153,7 +124,7 @@ func (inst *ProjectDaoImpl) Update(id dxo.ProjectID, o1 *entity.Project) (*entit
 }
 
 // Remove ...
-func (inst *ProjectDaoImpl) Remove(id dxo.ProjectID) error {
+func (inst *ImpLocationDao) Remove(id dxo.LocationID) error {
 	db := inst.Agent.DB()
 	m := inst.model()
 	res := db.Unscoped().Delete(m, id)

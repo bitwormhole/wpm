@@ -118,7 +118,7 @@ func (inst *LocalRepositoryStateLoaderImpl) loadEntityAsDTO(ctx context.Context,
 	if err != nil {
 		return nil, err
 	}
-	return inst.LocalRepoService.ConvertEntityToDto(ent)
+	return inst.LocalRepoService.ConvertEntityToDto(ctx, ent)
 }
 
 func (inst *LocalRepositoryStateLoaderImpl) loadEntity(ctx context.Context, repo *dto.LocalRepository) (*entity.LocalRepository, error) {

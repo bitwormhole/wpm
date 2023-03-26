@@ -407,7 +407,7 @@ func (inst *myIntentPropertiesMaker) makeProject(o *dto.Project, dst map[string]
 		return nil
 	}
 	dst[intents.ProjectName] = o.Name
-	dst[intents.ProjectFullPath] = o.FullPath
+	dst[intents.ProjectFullPath] = o.Path
 	return nil
 }
 

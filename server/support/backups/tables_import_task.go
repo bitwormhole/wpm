@@ -17,6 +17,7 @@ func (inst *tablesImportTask) importAll() error {
 
 	all = append(all, inst.importExecutables)
 	all = append(all, inst.importLocalRepositories)
+	all = append(all, inst.importLocations)
 	all = append(all, inst.importMediae)
 	all = append(all, inst.importProjectTypes)
 	all = append(all, inst.importProjects)
@@ -72,6 +73,16 @@ func (inst *tablesImportTask) importProjectTypes() error {
 func (inst *tablesImportTask) importLocalRepositories() error {
 	db := inst.db
 	list := inst.view.LocalRepositoryTable
+	for _, item := range list {
+		res := db.FirstOrCreate(item, item.ID)
+		inst.handleError(res.Error)
+	}
+	return nil
+}
+
+func (inst *tablesImportTask) importLocations() error {
+	db := inst.db
+	list := inst.view.LocationTable
 	for _, item := range list {
 		res := db.FirstOrCreate(item, item.ID)
 		inst.handleError(res.Error)

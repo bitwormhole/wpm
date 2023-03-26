@@ -22,6 +22,7 @@ import (
 	init0xc984bc "github.com/bitwormhole/wpm/server/support/init"
 	intents0x8ee0e0 "github.com/bitwormhole/wpm/server/support/intents"
 	intenttemplates0x2e3dcf "github.com/bitwormhole/wpm/server/support/intenttemplates"
+	locations0xb36349 "github.com/bitwormhole/wpm/server/support/locations"
 	mediae0xf005e2 "github.com/bitwormhole/wpm/server/support/mediae"
 	platforms0xb539c0 "github.com/bitwormhole/wpm/server/support/platforms"
 	projects0x4d85c7 "github.com/bitwormhole/wpm/server/support/projects"
@@ -126,6 +127,7 @@ type pComExecutableServiceImpl struct {
 	ExecutableDAO dao0x5af8d0.ExecutableDAO `inject:"#ExecutableDAO"`
 	IconService service0x3e063d.AppIconService `inject:"#AppIconService"`
 	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
+	LocationService service0x3e063d.LocationService `inject:"#LocationService"`
 }
 
 
@@ -208,6 +210,7 @@ type pComLocalRepositoryServiceImpl struct {
 	RepoFinder service0x3e063d.LocalRepositoryFinder `inject:"#LocalRepositoryFinder"`
 	LrStateLoader service0x3e063d.LocalRepositoryStateLoader `inject:"#LocalRepositoryStateLoader"`
 	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
+	LocationService service0x3e063d.LocationService `inject:"#LocationService"`
 	GitLibAgent store0x8467b3.LibAgent `inject:"#git-lib-agent"`
 }
 
@@ -317,6 +320,21 @@ type pComIntentTemplateServiceImpl struct {
 }
 
 
+type pComImpLocationDao struct {
+	instance *locations0xb36349.ImpLocationDao
+	 markup0x23084a.Component `id:"LocationDAO"`
+	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
+	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
+}
+
+
+type pComImpLocationService struct {
+	instance *locations0xb36349.ImpLocationService
+	 markup0x23084a.Component `id:"LocationService"`
+	DAO dao0x5af8d0.LocationDAO `inject:"#LocationDAO"`
+}
+
+
 type pComMediaController struct {
 	instance *mediae0xf005e2.MediaController
 	 markup0x23084a.RestController `class:"rest-controller"`
@@ -409,6 +427,7 @@ type pComProjectServiceImpl struct {
 	LocalRepoService service0x3e063d.LocalRepositoryService `inject:"#LocalRepositoryService"`
 	ProjectTypeService service0x3e063d.ProjectTypeService `inject:"#ProjectTypeService"`
 	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
+	LocationService service0x3e063d.LocationService `inject:"#LocationService"`
 	ProjectDAO dao0x5af8d0.ProjectDAO `inject:"#ProjectDAO"`
 	LocalRepoDAO dao0x5af8d0.LocalRepositoryDAO `inject:"#LocalRepositoryDAO"`
 	GitLibAgent store0x8467b3.LibAgent `inject:"#git-lib-agent"`
@@ -528,6 +547,8 @@ type pComImpWorktreeService struct {
 	instance *worktrees0xa762f3.ImpWorktreeService
 	 markup0x23084a.Component `id:"WorktreeService"`
 	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
+	LocationService service0x3e063d.LocationService `inject:"#LocationService"`
+	RepoFinder service0x3e063d.LocalRepositoryFinder `inject:"#LocalRepositoryFinder"`
 	DAO dao0x5af8d0.WorktreeDAO `inject:"#WorktreeDAO"`
 }
 

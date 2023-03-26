@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/bitwormhole/starter/markup"
+	"github.com/bitwormhole/starter/util"
 	"github.com/bitwormhole/wpm/server/data/dao"
 	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/data/entity"
@@ -42,6 +43,9 @@ func (inst *ProjectTypeServiceImpl) dto2entity(o1 *dto.ProjectType) (*entity.Pro
 func (inst *ProjectTypeServiceImpl) entity2dto(o1 *entity.ProjectType) (*dto.ProjectType, error) {
 	o2 := &dto.ProjectType{}
 	o2.ID = o1.ID
+	o2.UUID = o1.UUID
+	o2.CreatedAt = util.NewTime(o1.CreatedAt)
+	o2.UpdatedAt = util.NewTime(o1.UpdatedAt)
 
 	// todo ...
 	o2.Name = o1.Name

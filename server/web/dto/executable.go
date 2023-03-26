@@ -13,7 +13,6 @@ type Executable struct {
 	Name             string                  `json:"name"`
 	Title            string                  `json:"title"`
 	Description      string                  `json:"description"`
-	Path             string                  `json:"path"`
 	IconURL          string                  `json:"icon"`
 	SHA256SUM        util.Hex                `json:"sha256sum"`
 	Remark           string                  `json:"remark"`
@@ -23,4 +22,8 @@ type Executable struct {
 	State            dxo.FileState           `json:"state"`
 	Tags             dxo.StringList          `json:"tags"`
 	OpenWithPriority int                     `json:"open_with_priority"` // 如果 value<=0, 表示 disable
+
+	Path     string            `json:"path"`
+	Class    dxo.LocationClass `json:"location_class"`
+	Location dxo.LocationID    `json:"location"`
 }

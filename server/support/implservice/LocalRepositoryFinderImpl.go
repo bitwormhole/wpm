@@ -49,28 +49,44 @@ func (inst *LocalRepositoryFinderImpl) Search(ctx context.Context, path string, 
 // Locate ...
 func (inst *LocalRepositoryFinderImpl) Locate(ctx context.Context, path string) (*dto.LocalRepository, error) {
 
+	layout, err := inst.LocateLayout(ctx, path)
+	if err != nil {
+		return nil, err
+	}
+
+	dotgit := layout.DotGit()
+	config := layout.Config()
+	bare := (dotgit == nil)
+	errBadRepo := fmt.Errorf("it is not a git repository at " + path)
+
+	if config == nil {
+		return nil, errBadRepo
+	}
+	if !config.IsFile() {
+		return nil, errBadRepo
+	}
+
+	repodir := config.GetParent()
+	o := &dto.LocalRepository{}
+
+	o.Path = repodir.GetPath()
+	o.RepositoryPath = repodir.GetPath()
+	o.ConfigFile = config.GetPath()
+	o.Bare = bare
+	if !bare {
+		o.DotGitPath = dotgit.GetPath()
+		o.WorkingPath = dotgit.GetParent().GetPath()
+	}
+
+	return o, nil
+}
+
+// LocateLayout ...
+func (inst *LocalRepositoryFinderImpl) LocateLayout(ctx context.Context, path string) (store.RepositoryLayout, error) {
 	lib, err := inst.GitLibAgent.GetLib()
 	if err != nil {
 		return nil, err
 	}
-
 	pwd := lib.FS().NewPath(path)
-	layout, err := lib.RepositoryLocator().Locate(pwd)
-	if err != nil {
-		return nil, err
-	}
-
-	targetPath := layout.DotGit()
-	if targetPath == nil {
-		targetPath = layout.Repository()
-	}
-	if targetPath == nil {
-		return nil, fmt.Errorf("repo path not found")
-	}
-
-	result := &dto.LocalRepository{
-		Path: targetPath.GetPath(),
-	}
-
-	return result, nil
+	return lib.RepositoryLocator().Locate(pwd)
 }

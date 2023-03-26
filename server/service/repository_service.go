@@ -76,14 +76,15 @@ type LocalRepositoryService interface {
 	InsertOrFetch(ctx context.Context, o *dto.LocalRepository, opt *LocalRepositoryOptions) (*dto.LocalRepository, error)
 
 	// helper
-	ConvertEntityToDto(e *entity.LocalRepository) (*dto.LocalRepository, error)
-	ConvertDtoToEntity(e *dto.LocalRepository) (*entity.LocalRepository, error)
+	ConvertEntityToDto(ctx context.Context, e *entity.LocalRepository) (*dto.LocalRepository, error)
+	ConvertDtoToEntity(ctx context.Context, e *dto.LocalRepository) (*entity.LocalRepository, error)
 }
 
 // LocalRepositoryFinder 。。。
 type LocalRepositoryFinder interface {
 	Search(ctx context.Context, path string, depthLimit int) ([]*dto.LocalRepository, error)
 	Locate(ctx context.Context, path string) (*dto.LocalRepository, error)
+	LocateLayout(ctx context.Context, path string) (store.RepositoryLayout, error)
 }
 
 // LocalRepositoryStateLoader 。。。

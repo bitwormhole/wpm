@@ -5,6 +5,7 @@ import (
 	"errors"
 
 	"github.com/bitwormhole/starter/markup"
+	"github.com/bitwormhole/starter/util"
 	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/data/entity"
 	"github.com/bitwormhole/wpm/server/service"
@@ -31,8 +32,13 @@ func (inst *ExampleServiceImpl) dto2entity(o1 *dto.Example) (*entity.Example, er
 }
 
 func (inst *ExampleServiceImpl) entity2dto(o1 *entity.Example) (*dto.Example, error) {
+
 	o2 := &dto.Example{}
 	o2.ID = o1.ID
+	o2.UUID = o1.UUID
+	o2.CreatedAt = util.NewTime(o1.CreatedAt)
+	o2.UpdatedAt = util.NewTime(o1.UpdatedAt)
+
 	// o2.Executable = o1.Executable
 	// todo ...
 	return o2, nil

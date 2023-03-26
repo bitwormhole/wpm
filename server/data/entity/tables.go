@@ -31,8 +31,8 @@ func (LocalRepository) TableName() string {
 }
 
 // TableName ...
-func (Path) TableName() string {
-	return TableNamePrefix + "path"
+func (Location) TableName() string {
+	return TableNamePrefix + "location"
 }
 
 // TableName ...
@@ -55,6 +55,11 @@ func (User) TableName() string {
 	return TableNamePrefix + "user"
 }
 
+// TableName ...
+func (Worktree) TableName() string {
+	return TableNamePrefix + "worktree"
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 // ListPrototypes 罗列出所有的 entity 原型
@@ -67,7 +72,7 @@ func ListPrototypes() []any {
 	list = append(list, &ProjectType{})
 	list = append(list, &LocalRepository{})
 	list = append(list, &Media{})
-	list = append(list, &Path{})
+	list = append(list, &Location{})
 	list = append(list, &RemoteRepository{})
 	list = append(list, &Setting{})
 	list = append(list, &User{})

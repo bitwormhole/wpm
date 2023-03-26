@@ -48,7 +48,7 @@ func (inst *myProjectLocatorWithTypes) checkParams() error {
 		return fmt.Errorf("param is nil")
 	}
 	if inst.path == "" {
-		inst.path = inst.project.FullPath
+		inst.path = inst.project.Path
 	}
 	if inst.path == "" {
 		return fmt.Errorf("no param: 'path'")
@@ -196,7 +196,7 @@ func (inst *myProjectLocatorWithTypes) apply(projectFile afs.Path, pt *entity.Pr
 	p.TypeKey = pt.Key
 	p.TypeName = pt.Name
 	p.ProjectDir = projectFile.GetParent().GetPath()
-	p.FullPath = projectFile.GetPath()
+	p.Path = projectFile.GetPath()
 	p.ConfigFileName = projectFile.GetName()
 
 	if p.Name == "" {

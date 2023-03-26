@@ -96,16 +96,10 @@ func (inst *RepositoryDaoImpl) FindByPath(path string) (*entity.LocalRepository,
 		return nil, fmt.Errorf("param:`path` is empty")
 	}
 
-	// ConfigFile     string `gorm:"index:,unique"`
-	// DotGitPath     string
-	// Path           string
-	// RepositoryPath string
-	// WorkingPath    string
-	fields := []string{"path", "config_file", "dot_git_path", "working_path", "repository_path"}
-
 	erlist := &utils.ErrorList{}
 	db := inst.Agent.DB()
 	o := inst.model()
+	fields := o.ListPathFields()
 
 	for _, field := range fields {
 		res := db.Where(field+"=?", path).First(o)

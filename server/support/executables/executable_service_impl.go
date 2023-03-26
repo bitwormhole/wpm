@@ -6,6 +6,7 @@ import (
 
 	"github.com/bitwormhole/starter/io/fs"
 	"github.com/bitwormhole/starter/markup"
+	"github.com/bitwormhole/starter/util"
 	"github.com/bitwormhole/wpm/server/data/dao"
 	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/data/entity"
@@ -20,38 +21,70 @@ type ExecutableServiceImpl struct {
 	ExecutableDAO     dao.ExecutableDAO         `inject:"#ExecutableDAO"`
 	IconService       service.AppIconService    `inject:"#AppIconService"`
 	FileSystemService service.FileSystemService `inject:"#FileSystemService"`
+	LocationService   service.LocationService   `inject:"#LocationService"`
 }
 
 func (inst *ExecutableServiceImpl) _Impl() service.ExecutableService {
 	return inst
 }
 
-func (inst *ExecutableServiceImpl) dto2entity(o1 *dto.Executable) (*entity.Executable, error) {
+func (inst *ExecutableServiceImpl) prepareLocation(c context.Context, o1 *entity.Executable) error {
+	path := o1.Path
+	location := &dto.Location{
+		Path:   path,
+		Class:  dxo.LocationExecutable,
+		AsFile: true,
+		AsDir:  true,
+	}
+	location, err := inst.LocationService.InsertOrFetch(c, location, nil)
+	if err != nil {
+		return err
+	}
+	// o1.Path = location.Path
+	o1.Location = location.ID
+	o1.Class = location.Class
+	return nil
+}
+
+func (inst *ExecutableServiceImpl) dto2entity(c context.Context, o1 *dto.Executable) (*entity.Executable, error) {
+
 	o2 := &entity.Executable{}
 	o2.ID = o1.ID
 	o2.Name = o1.Name
 	o2.Title = o1.Title
-	o2.Path = o1.Path
 	o2.Size = o1.Size
 	o2.SHA256SUM = o1.SHA256SUM
 	o2.Description = o1.Description
 	o2.IconURL = o1.IconURL
 	o2.OpenWithPriority = o1.OpenWithPriority
+
+	o2.Path = o1.Path
+	o2.Location = o1.Location
+	o2.Class = o1.Class
+
 	// todo ...
 	return o2, nil
 }
 
 func (inst *ExecutableServiceImpl) entity2dto(o1 *entity.Executable) (*dto.Executable, error) {
+
 	o2 := &dto.Executable{}
 	o2.ID = o1.ID
+	o2.UUID = o1.UUID
+	o2.CreatedAt = util.NewTime(o1.CreatedAt)
+	o2.UpdatedAt = util.NewTime(o1.UpdatedAt)
+
 	o2.Name = o1.Name
 	o2.Title = o1.Title
-	o2.Path = o1.Path
 	o2.Size = o1.Size
 	o2.SHA256SUM = o1.SHA256SUM
 	o2.Description = o1.Description
 	o2.IconURL = o1.IconURL
 	o2.OpenWithPriority = o1.OpenWithPriority
+
+	o2.Path = o1.Path
+	o2.Location = o1.Location
+	o2.Class = o1.Class
 
 	// todo ...
 	o2.State = inst.checkExeFileState(o1)
@@ -115,7 +148,11 @@ func (inst *ExecutableServiceImpl) Insert(ctx context.Context, o1 *dto.Executabl
 	if err != nil {
 		return nil, err
 	}
-	e1, err := inst.dto2entity(o1)
+	e1, err := inst.dto2entity(ctx, o1)
+	if err != nil {
+		return nil, err
+	}
+	err = inst.prepareLocation(ctx, e1)
 	if err != nil {
 		return nil, err
 	}
@@ -128,7 +165,11 @@ func (inst *ExecutableServiceImpl) Insert(ctx context.Context, o1 *dto.Executabl
 
 // Update ...
 func (inst *ExecutableServiceImpl) Update(ctx context.Context, id dxo.ExecutableID, o1 *dto.Executable) (*dto.Executable, error) {
-	o2, err := inst.dto2entity(o1)
+	o2, err := inst.dto2entity(ctx, o1)
+	if err != nil {
+		return nil, err
+	}
+	err = inst.prepareLocation(ctx, o2)
 	if err != nil {
 		return nil, err
 	}

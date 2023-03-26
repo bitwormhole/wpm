@@ -8,6 +8,7 @@ import (
 	"bitwormhole.com/starter/afs"
 	"github.com/bitwormhole/gitlib/git/store"
 	"github.com/bitwormhole/starter/markup"
+	"github.com/bitwormhole/starter/util"
 	"github.com/bitwormhole/wpm/server/data/dao"
 	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/data/entity"
@@ -24,6 +25,7 @@ type ProjectServiceImpl struct {
 	LocalRepoService   service.LocalRepositoryService `inject:"#LocalRepositoryService"`
 	ProjectTypeService service.ProjectTypeService     `inject:"#ProjectTypeService"`
 	FileSystemService  service.FileSystemService      `inject:"#FileSystemService"`
+	LocationService    service.LocationService        `inject:"#LocationService"`
 
 	ProjectDAO   dao.ProjectDAO         `inject:"#ProjectDAO"`
 	LocalRepoDAO dao.LocalRepositoryDAO `inject:"#LocalRepositoryDAO"`
@@ -35,6 +37,24 @@ func (inst *ProjectServiceImpl) _Impl() service.ProjectService {
 	return inst
 }
 
+func (inst *ProjectServiceImpl) prepareLocation(c context.Context, o1 *entity.Project) error {
+	path := o1.Path
+	location := &dto.Location{
+		Path:   path,
+		Class:  dxo.LocationProject,
+		AsFile: true,
+		AsDir:  true,
+	}
+	location, err := inst.LocationService.InsertOrFetch(c, location, nil)
+	if err != nil {
+		return err
+	}
+	// o1.Path = location.Path
+	o1.Location = location.ID
+	o1.Class = location.Class
+	return nil
+}
+
 func (inst *ProjectServiceImpl) dto2entity(c context.Context, o1 *dto.Project) (*entity.Project, error) {
 
 	err := inst.ProjectTypeService.LocateProject(c, o1, "")
@@ -42,11 +62,12 @@ func (inst *ProjectServiceImpl) dto2entity(c context.Context, o1 *dto.Project) (
 		return nil, err
 	}
 
+	// convert
+
 	o2 := &entity.Project{}
 	o2.ID = o1.ID
 
 	o2.Description = o1.Description
-	o2.FullPath = o1.FullPath
 	o2.IsDir = o1.IsDir
 	o2.IsFile = o1.IsFile
 	o2.Name = o1.Name
@@ -54,6 +75,10 @@ func (inst *ProjectServiceImpl) dto2entity(c context.Context, o1 *dto.Project) (
 	o2.PathInWorktree = o1.PathInWorktree
 	o2.ProjectDir = o1.ProjectDir
 	o2.ConfigFileName = o1.ConfigFileName
+
+	o2.Path = o1.Path
+	o2.Location = o1.Location
+	o2.Class = o1.Class
 
 	o2.TypeID = o1.TypeID
 	o2.TypeKey = o1.TypeKey
@@ -70,16 +95,23 @@ func (inst *ProjectServiceImpl) entity2dto(o1 *entity.Project, opt *service.Proj
 
 	o2 := &dto.Project{}
 	o2.ID = o1.ID
+	o2.UUID = o1.UUID
+	o2.CreatedAt = util.NewTime(o1.CreatedAt)
+	o2.UpdatedAt = util.NewTime(o1.UpdatedAt)
 
 	o2.Description = o1.Description
-	o2.FullPath = o1.FullPath
 	o2.IsDir = o1.IsDir
 	o2.IsFile = o1.IsFile
 	o2.Name = o1.Name
 	o2.OwnerRepository = o1.OwnerRepository
+
 	o2.PathInWorktree = o1.PathInWorktree
 	o2.ProjectDir = o1.ProjectDir
 	o2.ConfigFileName = o1.ConfigFileName
+
+	o2.Path = o1.Path
+	o2.Class = o1.Class
+	o2.Location = o1.Location
 
 	o2.TypeID = o1.TypeID
 	o2.TypeKey = o1.TypeKey
@@ -105,7 +137,7 @@ func (inst *ProjectServiceImpl) entity2dtoList(src []*entity.Project, opt *servi
 }
 
 func (inst *ProjectServiceImpl) checkProjectFileState(o1 *entity.Project) dxo.FileState {
-	path := inst.FileSystemService.Path(o1.FullPath)
+	path := inst.FileSystemService.Path(o1.Path)
 	if path.Exists() {
 		return dxo.FileStateReady
 	}
@@ -174,6 +206,11 @@ func (inst *ProjectServiceImpl) Insert(ctx context.Context, o1 *dto.Project) (*d
 		return nil, err
 	}
 
+	err = inst.prepareLocation(ctx, o2)
+	if err != nil {
+		return nil, err
+	}
+
 	o3, err := inst.ProjectDAO.Insert(o2)
 	if err != nil {
 		return nil, err
@@ -194,7 +231,7 @@ func (inst *ProjectServiceImpl) InsertOrFetch(ctx context.Context, o1 *dto.Proje
 	errlist.Append(err)
 
 	paths := make([]string, 0)
-	paths = append(paths, o1.FullPath)
+	paths = append(paths, o1.Path)
 	paths = append(paths, o1.ProjectDir)
 
 	for _, wantPath := range paths {
@@ -221,6 +258,11 @@ func (inst *ProjectServiceImpl) Update(ctx context.Context, id dxo.ProjectID, o1
 	}
 
 	err = (&myProjectRepoPathFinder{ser: inst}).locate(o2)
+	if err != nil {
+		return nil, err
+	}
+
+	err = inst.prepareLocation(ctx, o2)
 	if err != nil {
 		return nil, err
 	}
@@ -269,7 +311,7 @@ func (inst *myProjectRepoPathFinder) getGitLib() (store.Lib, error) {
 }
 
 func (inst *myProjectRepoPathFinder) locate(p *entity.Project) error {
-	fullpath := p.FullPath
+	fullpath := p.Path
 	gl, err := inst.getGitLib()
 	if err != nil {
 		return err

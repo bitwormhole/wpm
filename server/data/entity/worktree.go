@@ -7,9 +7,19 @@ type Worktree struct {
 	ID dxo.WorktreeID `gorm:"primaryKey"`
 	Base
 
-	Name             string
-	DotGitPath       string `gorm:"index:,unique"`
+	Name string
+
+	DotGitPath       string
 	WorkingDirectory string
 
+	Path     string         // this.Path == Location.Path == DotGitPath
+	Location dxo.LocationID `gorm:"index:,unique"`
+	Class    dxo.LocationClass
+
 	OwnerRepository dxo.LocalRepositoryID
+}
+
+// ListPathFields ...
+func (Worktree) ListPathFields() []string {
+	return []string{"path", "dot_git_path", "working_directory"}
 }

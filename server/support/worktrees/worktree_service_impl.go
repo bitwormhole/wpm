@@ -2,9 +2,11 @@ package worktrees
 
 import (
 	"context"
+	"fmt"
 	"strings"
 
 	"github.com/bitwormhole/starter/markup"
+	"github.com/bitwormhole/starter/util"
 	"github.com/bitwormhole/wpm/server/data/dao"
 	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/data/entity"
@@ -17,12 +19,71 @@ import (
 type ImpWorktreeService struct {
 	markup.Component `id:"WorktreeService"`
 
-	FileSystemService service.FileSystemService `inject:"#FileSystemService"`
-	DAO               dao.WorktreeDAO           `inject:"#WorktreeDAO"`
+	FileSystemService service.FileSystemService     `inject:"#FileSystemService"`
+	LocationService   service.LocationService       `inject:"#LocationService"`
+	RepoFinder        service.LocalRepositoryFinder `inject:"#LocalRepositoryFinder"`
+	DAO               dao.WorktreeDAO               `inject:"#WorktreeDAO"`
 }
 
 func (inst *ImpWorktreeService) _Impl() service.WorktreeService {
 	return inst
+}
+
+func (inst *ImpWorktreeService) prepareLocation(c context.Context, o1 *entity.Worktree) error {
+	path := o1.Path
+	location := &dto.Location{
+		Path:   path,
+		Class:  dxo.LocationGitWorktree,
+		AsFile: true,
+		AsDir:  true,
+	}
+	location, err := inst.LocationService.InsertOrFetch(c, location, nil)
+	if err != nil {
+		return err
+	}
+	// o1.Path = location.Path
+	o1.Location = location.ID
+	o1.Class = location.Class
+	return nil
+}
+
+func (inst *ImpWorktreeService) prepareLocateWorktree(c context.Context, o1 *entity.Worktree) error {
+
+	layout, err := inst.RepoFinder.LocateLayout(c, o1.Path)
+	if err != nil {
+		return err
+	}
+
+	dotgit := layout.DotGit()
+	errBadWorktree := fmt.Errorf("It is not a git worktree. path=" + o1.Path)
+	if dotgit == nil {
+		return errBadWorktree
+	}
+	if !dotgit.Exists() {
+		return errBadWorktree
+	}
+
+	wkdir := dotgit.GetParent()
+	o1.Path = wkdir.GetPath()
+	o1.WorkingDirectory = wkdir.GetPath()
+	o1.DotGitPath = dotgit.GetPath()
+
+	return nil
+}
+
+func (inst *ImpWorktreeService) prepareBeforeWrite(c context.Context, o1 *entity.Worktree) error {
+
+	err := inst.prepareLocateWorktree(c, o1)
+	if err != nil {
+		return err
+	}
+
+	err = inst.prepareLocation(c, o1)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (inst *ImpWorktreeService) entity2dto(c context.Context, o1 *entity.Worktree, opt *service.WorktreeOptions) (*dto.Worktree, error) {
@@ -32,14 +93,19 @@ func (inst *ImpWorktreeService) entity2dto(c context.Context, o1 *entity.Worktre
 	}
 
 	o2 := &dto.Worktree{}
-
 	o2.ID = o1.ID
-	o2.Name = o1.Name
 	o2.UUID = o1.UUID
+	o2.CreatedAt = util.NewTime(o1.CreatedAt)
+	o2.UpdatedAt = util.NewTime(o1.UpdatedAt)
+
+	o2.Name = o1.Name
 	o2.OwnerRepository = o1.OwnerRepository
 
 	o2.WorkingDir = o1.WorkingDirectory
 	o2.DotGitPath = o1.DotGitPath
+	o2.Path = o1.Path
+	o2.Class = o1.Class
+	o2.Location = o1.Location
 
 	if opt.WithFileState {
 		o2.State = inst.checkFileState(o1)
@@ -48,7 +114,7 @@ func (inst *ImpWorktreeService) entity2dto(c context.Context, o1 *entity.Worktre
 	return o2, nil
 }
 
-func (inst *ImpWorktreeService) dto2entity(o1 *dto.Worktree) (*entity.Worktree, error) {
+func (inst *ImpWorktreeService) dto2entity(c context.Context, o1 *dto.Worktree) (*entity.Worktree, error) {
 
 	o2 := &entity.Worktree{}
 
@@ -59,6 +125,9 @@ func (inst *ImpWorktreeService) dto2entity(o1 *dto.Worktree) (*entity.Worktree, 
 
 	o2.WorkingDirectory = o1.WorkingDir
 	o2.DotGitPath = o1.DotGitPath
+	o2.Path = o1.Path
+	o2.Class = o1.Class
+	o2.Location = o1.Location
 
 	return o2, nil
 }
@@ -119,14 +188,22 @@ func (inst *ImpWorktreeService) ListAll(ctx context.Context, opt *service.Worktr
 
 // Insert ...
 func (inst *ImpWorktreeService) Insert(ctx context.Context, o1 *dto.Worktree) (*dto.Worktree, error) {
-	o2, err := inst.dto2entity(o1)
+
+	o2, err := inst.dto2entity(ctx, o1)
 	if err != nil {
 		return nil, err
 	}
+
+	err = inst.prepareBeforeWrite(ctx, o2)
+	if err != nil {
+		return nil, err
+	}
+
 	o3, err := inst.DAO.Insert(o2)
 	if err != nil {
 		return nil, err
 	}
+
 	opt := &service.WorktreeOptions{WithFileState: true}
 	return inst.entity2dto(ctx, o3, opt)
 }
@@ -163,14 +240,22 @@ func (inst *ImpWorktreeService) InsertOrFetch(ctx context.Context, o1 *dto.Workt
 
 // Update ...
 func (inst *ImpWorktreeService) Update(ctx context.Context, id dxo.WorktreeID, o1 *dto.Worktree) (*dto.Worktree, error) {
-	o2, err := inst.dto2entity(o1)
+
+	o2, err := inst.dto2entity(ctx, o1)
 	if err != nil {
 		return nil, err
 	}
+
+	err = inst.prepareBeforeWrite(ctx, o2)
+	if err != nil {
+		return nil, err
+	}
+
 	o3, err := inst.DAO.Update(id, o2)
 	if err != nil {
 		return nil, err
 	}
+
 	opt := &service.WorktreeOptions{WithFileState: true}
 	return inst.entity2dto(ctx, o3, opt)
 }

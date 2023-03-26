@@ -11,6 +11,7 @@ type RepositoryBase struct {
 	Description string                  `json:"description"`
 	IconURL     string                  `json:"icon"`
 	Ready       bool                    `json:"ready"`
+	Bare        bool                    `json:"bare"`
 	Group       dxo.RepositoryGroupName `json:"group"`
 	State       dxo.FileState           `json:"state"`
 	Tags        dxo.StringList          `json:"tags"`
@@ -22,11 +23,14 @@ type LocalRepository struct {
 
 	RepositoryBase
 
-	Path           string `json:"path"`
 	DotGitPath     string `json:"dot_git_path"`
 	RepositoryPath string `json:"repository_path"`
 	WorkingPath    string `json:"workspace_path"`
 	ConfigFile     string `json:"config_file_path"`
+
+	Path     string            `json:"path"` // this.Path == this.RepositoryPath
+	Location dxo.LocationID    `json:"location"`
+	Class    dxo.LocationClass `json:"location_class"`
 
 	Projects []*Project `json:"projects"`
 }

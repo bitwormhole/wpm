@@ -2,11 +2,12 @@ package implservice
 
 import (
 	"context"
+	"fmt"
 	"strings"
 
 	"github.com/bitwormhole/gitlib/git/store"
-	"github.com/bitwormhole/starter/io/fs"
 	"github.com/bitwormhole/starter/markup"
+	"github.com/bitwormhole/starter/util"
 	"github.com/bitwormhole/wpm/server/data/dao"
 	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/data/entity"
@@ -24,6 +25,7 @@ type LocalRepositoryServiceImpl struct {
 	RepoFinder         service.LocalRepositoryFinder      `inject:"#LocalRepositoryFinder"`
 	LrStateLoader      service.LocalRepositoryStateLoader `inject:"#LocalRepositoryStateLoader"`
 	FileSystemService  service.FileSystemService          `inject:"#FileSystemService"`
+	LocationService    service.LocationService            `inject:"#LocationService"`
 	GitLibAgent        store.LibAgent                     `inject:"#git-lib-agent"`
 }
 
@@ -31,7 +33,42 @@ func (inst *LocalRepositoryServiceImpl) _Impl() service.LocalRepositoryService {
 	return inst
 }
 
-func (inst *LocalRepositoryServiceImpl) dto2entity(o1 *dto.LocalRepository) (*entity.LocalRepository, error) {
+func (inst *LocalRepositoryServiceImpl) prepareLocation(c context.Context, o1 *entity.LocalRepository) error {
+	path := o1.Path
+	location := &dto.Location{
+		Path:   path,
+		Class:  dxo.LocationGitConfig,
+		AsFile: true,
+		AsDir:  true,
+	}
+	location, err := inst.LocationService.InsertOrFetch(c, location, nil)
+	if err != nil {
+		return err
+	}
+	// o1.Path = location.Path
+	o1.Location = location.ID
+	o1.Class = location.Class
+	return nil
+}
+
+func (inst *LocalRepositoryServiceImpl) prepareBeforeWrite(ctx context.Context, o1 *entity.LocalRepository) error {
+
+	err := inst.prepareEntity(ctx, o1)
+	if err != nil {
+		return err
+	}
+
+	err = inst.prepareLocation(ctx, o1)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (inst *LocalRepositoryServiceImpl) dto2entity(c context.Context, o1 *dto.LocalRepository) (*entity.LocalRepository, error) {
+
+	// convert
 
 	o2 := &entity.LocalRepository{}
 
@@ -42,10 +79,15 @@ func (inst *LocalRepositoryServiceImpl) dto2entity(o1 *dto.LocalRepository) (*en
 	o2.Description = o1.Description
 
 	o2.Path = o1.Path
+	o2.Class = o1.Class
+	o2.Location = o1.Location
+
 	o2.ConfigFile = o1.ConfigFile
 	o2.DotGitPath = o1.DotGitPath
 	o2.RepositoryPath = o1.RepositoryPath
 	o2.WorkingPath = o1.WorkingPath
+
+	o2.Bare = o1.Bare
 
 	return o2, nil
 }
@@ -53,21 +95,27 @@ func (inst *LocalRepositoryServiceImpl) dto2entity(o1 *dto.LocalRepository) (*en
 func (inst *LocalRepositoryServiceImpl) entity2dto(ctx context.Context, o1 *entity.LocalRepository, opt *service.LocalRepositoryOptions) (*dto.LocalRepository, error) {
 
 	opt = inst.normalizeOptions(opt)
-	o2 := &dto.LocalRepository{}
 
-	// todo ... fields
+	o2 := &dto.LocalRepository{}
 	o2.ID = o1.ID
+	o2.UUID = o1.UUID
+	o2.CreatedAt = util.NewTime(o1.CreatedAt)
+	o2.UpdatedAt = util.NewTime(o1.UpdatedAt)
+
 	o2.Name = o1.Name
 	o2.DisplayName = o1.DisplayName
 	o2.Description = o1.Description
 
-	o2.Path = o1.Path
 	o2.ConfigFile = o1.ConfigFile
 	o2.DotGitPath = o1.DotGitPath
 	o2.RepositoryPath = o1.RepositoryPath
 	o2.WorkingPath = o1.WorkingPath
 
-	// o2.Ready =o1
+	o2.Path = o1.Path
+	o2.Class = o1.Class
+	o2.Location = o1.Location
+
+	o2.Bare = o1.Bare
 
 	if opt.WithFileState {
 		inst.LrStateLoader.LoadState(ctx, o2)
@@ -92,34 +140,51 @@ func (inst *LocalRepositoryServiceImpl) normalizeOptions(opt *service.LocalRepos
 }
 
 // ConvertEntityToDto ...
-func (inst *LocalRepositoryServiceImpl) ConvertEntityToDto(o1 *entity.LocalRepository) (*dto.LocalRepository, error) {
-	ctx := context.Background()
+func (inst *LocalRepositoryServiceImpl) ConvertEntityToDto(ctx context.Context, o1 *entity.LocalRepository) (*dto.LocalRepository, error) {
+	// ctx := context.Background()
 	return inst.entity2dto(ctx, o1, nil)
 }
 
 // ConvertDtoToEntity ...
-func (inst *LocalRepositoryServiceImpl) ConvertDtoToEntity(o1 *dto.LocalRepository) (*entity.LocalRepository, error) {
-	return inst.dto2entity(o1)
+func (inst *LocalRepositoryServiceImpl) ConvertDtoToEntity(ctx context.Context, o1 *dto.LocalRepository) (*entity.LocalRepository, error) {
+	return inst.dto2entity(ctx, o1)
 }
 
 func (inst *LocalRepositoryServiceImpl) prepareEntity(ctx context.Context, o1 *entity.LocalRepository) error {
 
-	deffs := fs.Default()
-	path := o1.Path
-	o2, err := inst.RepoFinder.Locate(ctx, path)
+	layout, err := inst.RepoFinder.LocateLayout(ctx, o1.Path)
 	if err != nil {
 		return err
 	}
 
-	dotgit := deffs.GetPath(o2.Path)
-	config := dotgit.GetChild("config")
-	working := dotgit.Parent()
+	dotgit := layout.DotGit()
+	config := layout.Config()
 
-	o1.DotGitPath = dotgit.Path()
-	o1.ConfigFile = config.Path()
-	o1.WorkingPath = working.Path()
-	o1.RepositoryPath = config.Parent().Path()
-	o1.Path = config.Parent().Path()
+	if config == nil {
+		return fmt.Errorf("it's not a git repository: " + o1.Path)
+	}
+	if !config.IsFile() {
+		return fmt.Errorf("it's not a git repository: " + o1.Path)
+	}
+
+	bare := true // default is bare
+	repodir := config.GetParent()
+
+	if dotgit != nil {
+		if dotgit.Exists() {
+			bare = false
+		}
+	}
+
+	o1.Bare = bare
+	o1.ConfigFile = config.GetPath()
+	o1.RepositoryPath = repodir.GetPath()
+	o1.Path = repodir.GetPath()
+	if !bare {
+		o1.DotGitPath = dotgit.GetPath()
+		o1.WorkingPath = dotgit.GetParent().GetPath()
+	}
+
 	return nil
 }
 
@@ -222,12 +287,13 @@ func (inst *LocalRepositoryServiceImpl) InsertOrFetch(ctx context.Context, o1 *d
 
 // Insert ...
 func (inst *LocalRepositoryServiceImpl) Insert(ctx context.Context, o1 *dto.LocalRepository) (*dto.LocalRepository, error) {
-	o2, err := inst.dto2entity(o1)
+
+	o2, err := inst.dto2entity(ctx, o1)
 	if err != nil {
 		return nil, err
 	}
 
-	err = inst.prepareEntity(ctx, o2)
+	err = inst.prepareBeforeWrite(ctx, o2)
 	if err != nil {
 		return nil, err
 	}
@@ -236,17 +302,19 @@ func (inst *LocalRepositoryServiceImpl) Insert(ctx context.Context, o1 *dto.Loca
 	if err != nil {
 		return nil, err
 	}
+
 	return inst.entity2dto(ctx, o3, nil)
 }
 
 // Update ...
 func (inst *LocalRepositoryServiceImpl) Update(ctx context.Context, id dxo.LocalRepositoryID, o1 *dto.LocalRepository) (*dto.LocalRepository, error) {
-	o2, err := inst.dto2entity(o1)
+
+	o2, err := inst.dto2entity(ctx, o1)
 	if err != nil {
 		return nil, err
 	}
 
-	err = inst.prepareEntity(ctx, o2)
+	err = inst.prepareBeforeWrite(ctx, o2)
 	if err != nil {
 		return nil, err
 	}
@@ -255,6 +323,7 @@ func (inst *LocalRepositoryServiceImpl) Update(ctx context.Context, id dxo.Local
 	if err != nil {
 		return nil, err
 	}
+
 	return inst.entity2dto(ctx, o3, nil)
 }
 
@@ -289,15 +358,15 @@ func (inst *LocalRepositoryServiceImpl) loadProjects(ctx context.Context, repo *
 			i2 := len(key) - len(suffix)
 			item := &dto.Project{}
 			item.Name = key[i1:i2]
-			item.FullPath = value
+			item.Path = value
 			dst = append(dst, item)
 		}
 	}
 
 	sorter := &dto.ProjectSorter{}
 	sorter.Sort(dst, func(o1, o2 *dto.Project) bool {
-		s1 := o1.FullPath
-		s2 := o2.FullPath
+		s1 := o1.Path
+		s2 := o2.Path
 		return strings.Compare(s1, s2) < 0
 	})
 

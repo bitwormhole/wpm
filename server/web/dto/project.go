@@ -21,7 +21,10 @@ type Project struct {
 
 	ConfigFileName string `json:"config_file_name"`
 	PathInWorktree string `json:"path_in_worktree"`
-	FullPath       string `json:"full_path"`
+
+	Path     string            `json:"path"`
+	Location dxo.LocationID    `json:"location"`
+	Class    dxo.LocationClass `json:"location_class"`
 
 	OwnerRepository dxo.LocalRepositoryID `json:"owner_repository"`
 	Group           dxo.ProjectGroupName  `json:"group"`

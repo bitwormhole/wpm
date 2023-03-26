@@ -52,13 +52,10 @@ func (inst *ImpWorktreeDao) FindByPath(path string) (*entity.Worktree, error) {
 		return nil, fmt.Errorf("param:`path` is empty")
 	}
 
-	// DotGitPath        string
-	// WorkingDirectory  string
-	fields := []string{"dot_git_path", "working_directory"}
-
 	erlist := &utils.ErrorList{}
 	db := inst.Agent.DB()
 	o := inst.model()
+	fields := o.ListPathFields()
 
 	for _, field := range fields {
 		res := db.Where(field+"=?", path).First(o)

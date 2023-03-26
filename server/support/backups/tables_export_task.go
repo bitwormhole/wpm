@@ -19,6 +19,7 @@ func (inst *tablesExportTask) exportAll() error {
 	all = append(all, inst.exportExecutableTable)
 	all = append(all, inst.exportIntentTemplateTable)
 	all = append(all, inst.exportLocalRepositoryTable)
+	all = append(all, inst.exportLocationTable)
 	all = append(all, inst.exportMediaTable)
 	all = append(all, inst.exportProjectTable)
 	all = append(all, inst.exportProjectTypeTable)
@@ -90,6 +91,21 @@ func (inst *tablesExportTask) exportLocalRepositoryTable() error {
 	err := res.Error
 	if err == nil {
 		view.LocalRepositoryTable = table
+	}
+	return err
+}
+
+func (inst *tablesExportTask) exportLocationTable() error {
+
+	db := inst.db
+	view := inst.view
+	table := view.LocationTable
+	table = make([]*entity.Location, 0)
+
+	res := db.Find(&table)
+	err := res.Error
+	if err == nil {
+		view.LocationTable = table
 	}
 	return err
 }

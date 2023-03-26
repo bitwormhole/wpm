@@ -94,6 +94,7 @@ func (inst *RWPServiceImpl) findWorktree(ctx context.Context, layout store.Repos
 			wktree.Name = dotgitParent.GetName()
 			wktree.WorkingDir = dotgitParent.GetPath()
 			wktree.DotGitPath = dotgit.GetPath()
+			wktree.Path = dotgitParent.GetPath()
 		}
 	}
 
@@ -112,7 +113,7 @@ func (inst *RWPServiceImpl) findProject(ctx context.Context, path afs.Path) (*dt
 
 	// locate project
 	project1 := &dto.Project{}
-	project1.FullPath = path.GetPath()
+	project1.Path = path.GetPath()
 	project2, err := inst.Projects.Locate(ctx, project1, opt)
 	if err != nil {
 		return nil, err
@@ -130,7 +131,7 @@ func (inst *RWPServiceImpl) findProject(ctx context.Context, path afs.Path) (*dt
 }
 
 func (inst *RWPServiceImpl) findProjectOlder(ctx context.Context, want *dto.Project) (*dto.Project, error) {
-	path := want.FullPath
+	path := want.Path
 	opt := &service.ProjectOptions{
 		WithFileState: true,
 		// WithGitStatus: true,

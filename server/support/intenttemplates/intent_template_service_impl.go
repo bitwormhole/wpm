@@ -8,6 +8,7 @@ import (
 	"github.com/bitwormhole/starter/application"
 	"github.com/bitwormhole/starter/collection"
 	"github.com/bitwormhole/starter/markup"
+	"github.com/bitwormhole/starter/util"
 	"github.com/bitwormhole/wpm/server/data/dao"
 	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/data/entity"
@@ -66,9 +67,12 @@ func (inst *IntentTemplateServiceImpl) dto2entity(o1 *dto.IntentTemplate) (*enti
 }
 
 func (inst *IntentTemplateServiceImpl) entity2dto(o1 *entity.IntentTemplate) (*dto.IntentTemplate, error) {
+
 	o2 := &dto.IntentTemplate{}
 	o2.ID = o1.ID
 	o2.UUID = o1.UUID
+	o2.CreatedAt = util.NewTime(o1.CreatedAt)
+	o2.UpdatedAt = util.NewTime(o1.UpdatedAt)
 
 	o2.Name = o1.Name
 	o2.Title = o1.Title

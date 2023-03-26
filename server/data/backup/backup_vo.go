@@ -12,6 +12,7 @@ type VO struct {
 	ExecutableTable       []*entity.Executable
 	IntentTemplateTable   []*entity.IntentTemplate
 	LocalRepositoryTable  []*entity.LocalRepository
+	LocationTable         []*entity.Location
 	MediaTable            []*entity.Media
 	ProjectTable          []*entity.Project
 	ProjectTypeTable      []*entity.ProjectType
