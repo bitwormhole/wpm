@@ -155,6 +155,7 @@ type pComAboutServiceImpl struct {
 	Title string `inject:"${application.about.title}"`
 	Copyright string `inject:"${application.about.copyright}"`
 	ServerPort int `inject:"${server.port}"`
+	EnableDebug bool `inject:"${wpm.debug.enabled}"`
 	PlatformService service0x3e063d.PlatformService `inject:"#PlatformService"`
 	ProfileService service0x3e063d.ProfileService `inject:"#ProfileService"`
 }
@@ -262,7 +263,8 @@ type pComWpmInitController struct {
 
 type pComImpInitService struct {
 	instance *init0xc984bc.ImpInitService
-	 markup0x23084a.Component `id:"InitService"`
+	 markup0x23084a.Component `id:"InitService" class:"life"`
+	AboutService service0x3e063d.AboutService `inject:"#AboutService"`
 	ProjectTypeService service0x3e063d.ProjectTypeService `inject:"#ProjectTypeService"`
 	ExecutableService service0x3e063d.ExecutableService `inject:"#ExecutableService"`
 	CheckUpdateService service0x3e063d.CheckUpdateService `inject:"#CheckUpdateService"`
@@ -558,6 +560,7 @@ type pComWpmDataSource struct {
 	 markup0x23084a.Component `class:"starter-gorm-source-registry"`
 	DM datasource0x68a737.DriverManager `inject:"#starter-gorm-driver-manager"`
 	AppDataService service0x3e063d.AppDataService `inject:"#AppDataService"`
+	AboutService service0x3e063d.AboutService `inject:"#AboutService"`
 	Driver string `inject:"${datasource.wpm.driver}"`
 	Host string `inject:"${datasource.wpm.host}"`
 	Port int `inject:"${datasource.wpm.port}"`

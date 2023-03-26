@@ -5,7 +5,6 @@ import (
 
 	"github.com/bitwormhole/starter-gin/glass"
 	"github.com/bitwormhole/starter/markup"
-	"github.com/bitwormhole/starter/vlog"
 	"github.com/gin-gonic/gin"
 )
 
@@ -37,7 +36,7 @@ func (inst *HostFilter) filter(c *gin.Context) {
 
 func (inst *HostFilter) accept(c *gin.Context) bool {
 	ip := c.ClientIP()
-	vlog.Warn("http access with host:", ip)
+	// vlog.Warn("http access with host:", ip)
 	if ip == "127.0.0.1" {
 		return true
 	} else if ip == "::1" {

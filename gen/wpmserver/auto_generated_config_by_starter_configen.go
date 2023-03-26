@@ -302,7 +302,7 @@ func autoGenConfig(cb application.ConfigBuilder) error {
 
 	// component: InitService
 	cominfobuilder.Next()
-	cominfobuilder.ID("InitService").Class("").Aliases("").Scope("")
+	cominfobuilder.ID("InitService").Class("life").Aliases("").Scope("")
 	cominfobuilder.Factory((&comFactory4pComImpInitService{}).init())
 	err = cominfobuilder.CreateTo(cb)
 	if err != nil {
@@ -2152,6 +2152,7 @@ type comFactory4pComAboutServiceImpl struct {
 	mTitleSelector config.InjectionSelector
 	mCopyrightSelector config.InjectionSelector
 	mServerPortSelector config.InjectionSelector
+	mEnableDebugSelector config.InjectionSelector
 	mPlatformServiceSelector config.InjectionSelector
 	mProfileServiceSelector config.InjectionSelector
 
@@ -2165,6 +2166,7 @@ func (inst * comFactory4pComAboutServiceImpl) init() application.ComponentFactor
 	inst.mTitleSelector = config.NewInjectionSelector("${application.about.title}",nil)
 	inst.mCopyrightSelector = config.NewInjectionSelector("${application.about.copyright}",nil)
 	inst.mServerPortSelector = config.NewInjectionSelector("${server.port}",nil)
+	inst.mEnableDebugSelector = config.NewInjectionSelector("${wpm.debug.enabled}",nil)
 	inst.mPlatformServiceSelector = config.NewInjectionSelector("#PlatformService",nil)
 	inst.mProfileServiceSelector = config.NewInjectionSelector("#ProfileService",nil)
 
@@ -2209,6 +2211,7 @@ func (inst * comFactory4pComAboutServiceImpl) Inject(instance application.Compon
 	obj.Title = inst.getterForFieldTitleSelector(context)
 	obj.Copyright = inst.getterForFieldCopyrightSelector(context)
 	obj.ServerPort = inst.getterForFieldServerPortSelector(context)
+	obj.EnableDebug = inst.getterForFieldEnableDebugSelector(context)
 	obj.PlatformService = inst.getterForFieldPlatformServiceSelector(context)
 	obj.ProfileService = inst.getterForFieldProfileServiceSelector(context)
 	return context.LastError()
@@ -2237,6 +2240,11 @@ func (inst * comFactory4pComAboutServiceImpl) getterForFieldCopyrightSelector (c
 //getterForFieldServerPortSelector
 func (inst * comFactory4pComAboutServiceImpl) getterForFieldServerPortSelector (context application.InstanceContext) int {
     return inst.mServerPortSelector.GetInt(context)
+}
+
+//getterForFieldEnableDebugSelector
+func (inst * comFactory4pComAboutServiceImpl) getterForFieldEnableDebugSelector (context application.InstanceContext) bool {
+    return inst.mEnableDebugSelector.GetBool(context)
 }
 
 //getterForFieldPlatformServiceSelector
@@ -3423,6 +3431,7 @@ type comFactory4pComImpInitService struct {
     mPrototype * init0xc984bc.ImpInitService
 
 	
+	mAboutServiceSelector config.InjectionSelector
 	mProjectTypeServiceSelector config.InjectionSelector
 	mExecutableServiceSelector config.InjectionSelector
 	mCheckUpdateServiceSelector config.InjectionSelector
@@ -3433,6 +3442,7 @@ type comFactory4pComImpInitService struct {
 func (inst * comFactory4pComImpInitService) init() application.ComponentFactory {
 
 	
+	inst.mAboutServiceSelector = config.NewInjectionSelector("#AboutService",nil)
 	inst.mProjectTypeServiceSelector = config.NewInjectionSelector("#ProjectTypeService",nil)
 	inst.mExecutableServiceSelector = config.NewInjectionSelector("#ExecutableService",nil)
 	inst.mCheckUpdateServiceSelector = config.NewInjectionSelector("#CheckUpdateService",nil)
@@ -3474,11 +3484,30 @@ func (inst * comFactory4pComImpInitService) Destroy(instance application.Compone
 func (inst * comFactory4pComImpInitService) Inject(instance application.ComponentInstance, context application.InstanceContext) error {
 	
 	obj := inst.castObject(instance)
+	obj.AboutService = inst.getterForFieldAboutServiceSelector(context)
 	obj.ProjectTypeService = inst.getterForFieldProjectTypeServiceSelector(context)
 	obj.ExecutableService = inst.getterForFieldExecutableServiceSelector(context)
 	obj.CheckUpdateService = inst.getterForFieldCheckUpdateServiceSelector(context)
 	obj.SetupService = inst.getterForFieldSetupServiceSelector(context)
 	return context.LastError()
+}
+
+//getterForFieldAboutServiceSelector
+func (inst * comFactory4pComImpInitService) getterForFieldAboutServiceSelector (context application.InstanceContext) service0x3e063d.AboutService {
+
+	o1 := inst.mAboutServiceSelector.GetOne(context)
+	o2, ok := o1.(service0x3e063d.AboutService)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "InitService")
+		eb.Set("field", "AboutService")
+		eb.Set("type1", "?")
+		eb.Set("type2", "service0x3e063d.AboutService")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
 }
 
 //getterForFieldProjectTypeServiceSelector
@@ -7050,6 +7079,7 @@ type comFactory4pComWpmDataSource struct {
 	
 	mDMSelector config.InjectionSelector
 	mAppDataServiceSelector config.InjectionSelector
+	mAboutServiceSelector config.InjectionSelector
 	mDriverSelector config.InjectionSelector
 	mHostSelector config.InjectionSelector
 	mPortSelector config.InjectionSelector
@@ -7064,6 +7094,7 @@ func (inst * comFactory4pComWpmDataSource) init() application.ComponentFactory {
 	
 	inst.mDMSelector = config.NewInjectionSelector("#starter-gorm-driver-manager",nil)
 	inst.mAppDataServiceSelector = config.NewInjectionSelector("#AppDataService",nil)
+	inst.mAboutServiceSelector = config.NewInjectionSelector("#AboutService",nil)
 	inst.mDriverSelector = config.NewInjectionSelector("${datasource.wpm.driver}",nil)
 	inst.mHostSelector = config.NewInjectionSelector("${datasource.wpm.host}",nil)
 	inst.mPortSelector = config.NewInjectionSelector("${datasource.wpm.port}",nil)
@@ -7109,6 +7140,7 @@ func (inst * comFactory4pComWpmDataSource) Inject(instance application.Component
 	obj := inst.castObject(instance)
 	obj.DM = inst.getterForFieldDMSelector(context)
 	obj.AppDataService = inst.getterForFieldAppDataServiceSelector(context)
+	obj.AboutService = inst.getterForFieldAboutServiceSelector(context)
 	obj.Driver = inst.getterForFieldDriverSelector(context)
 	obj.Host = inst.getterForFieldHostSelector(context)
 	obj.Port = inst.getterForFieldPortSelector(context)
@@ -7148,6 +7180,24 @@ func (inst * comFactory4pComWpmDataSource) getterForFieldAppDataServiceSelector 
 		eb.Set("field", "AppDataService")
 		eb.Set("type1", "?")
 		eb.Set("type2", "service0x3e063d.AppDataService")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
+}
+
+//getterForFieldAboutServiceSelector
+func (inst * comFactory4pComWpmDataSource) getterForFieldAboutServiceSelector (context application.InstanceContext) service0x3e063d.AboutService {
+
+	o1 := inst.mAboutServiceSelector.GetOne(context)
+	o2, ok := o1.(service0x3e063d.AboutService)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "com62-support0xf47d7f.WpmDataSource")
+		eb.Set("field", "AboutService")
+		eb.Set("type1", "?")
+		eb.Set("type2", "service0x3e063d.AboutService")
 		context.HandleError(eb.Create())
 		return nil
 	}

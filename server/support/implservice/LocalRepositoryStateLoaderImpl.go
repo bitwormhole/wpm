@@ -43,6 +43,8 @@ func (inst *LocalRepositoryStateLoaderImpl) LoadState(ctx context.Context, repo0
 			repo = repo2
 			isInDB = true
 		}
+	} else {
+		isInDB = true
 	}
 
 	err := inst.loadStateFromFileSystem(ctx, repo)

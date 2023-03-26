@@ -10,6 +10,9 @@ import (
 // AboutService ...
 type AboutService interface {
 	GetInfo(ctx context.Context) (*vo.About, error)
+
+	IsDebug() bool
+	IsRelease() bool
 }
 
 ////////////////////////////////////////////////////////////////////////////////

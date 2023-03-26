@@ -25,6 +25,8 @@ type AboutServiceImpl struct {
 	Copyright  string `inject:"${application.about.copyright}"`
 	ServerPort int    `inject:"${server.port}"`
 
+	EnableDebug bool `inject:"${wpm.debug.enabled}"`
+
 	PlatformService service.PlatformService `inject:"#PlatformService"`
 	ProfileService  service.ProfileService  `inject:"#ProfileService"`
 }
@@ -80,6 +82,16 @@ func (inst *AboutServiceImpl) loadWebInfo(ctx context.Context, view *vo.About) e
 	port := strconv.Itoa(inst.ServerPort)
 	view.WebURL = "http://localhost:" + port
 	return nil
+}
+
+// IsDebug ...
+func (inst *AboutServiceImpl) IsDebug() bool {
+	return inst.EnableDebug
+}
+
+// IsRelease ...
+func (inst *AboutServiceImpl) IsRelease() bool {
+	return !inst.EnableDebug
 }
 
 ////////////////////////////////////////////////////////////////////////////////
