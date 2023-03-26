@@ -1,4 +1,4 @@
-package controller
+package repositories
 
 // // UserMainRepositoryController 仓库控制器
 // type UserMainRepositoryController struct {

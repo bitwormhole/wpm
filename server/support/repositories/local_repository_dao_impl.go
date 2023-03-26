@@ -1,4 +1,4 @@
-package impldao
+package repositories
 
 import (
 	"errors"

@@ -1,4 +1,4 @@
-package controller
+package repositories
 
 import (
 	"net/http"

@@ -1,4 +1,4 @@
-package implservice
+package repositories
 
 // // UserMainRepositoryServiceImpl ...
 // type UserMainRepositoryServiceImpl struct {
