@@ -52,10 +52,12 @@ type RemoteRepositoryService interface {
 
 // LocalRepositoryOptions ...
 type LocalRepositoryOptions struct {
-	WithFileState bool
-	WithGitStatus bool
-	WithProjects  bool
-	All           bool
+	WithFileState  bool
+	WithGitStatus  bool
+	WithProjects   bool
+	WithWorktrees  bool
+	WithSubmodules bool
+	All            bool
 }
 
 // LocalRepositoryService ...

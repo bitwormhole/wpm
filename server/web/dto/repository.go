@@ -32,7 +32,9 @@ type LocalRepository struct {
 	Location dxo.LocationID    `json:"location"`
 	Class    dxo.LocationClass `json:"location_class"`
 
-	Projects []*Project `json:"projects"`
+	Projects   []*Project   `json:"projects"`
+	Worktrees  []*Worktree  `json:"worktrees"`
+	Submodules []*Submodule `json:"submodules"`
 }
 
 // MainRepository ...

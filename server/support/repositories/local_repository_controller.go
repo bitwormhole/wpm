@@ -161,6 +161,8 @@ func (inst *myLocalRepositoryRequest) open() error {
 		inst.options.WithFileState = inst.hasFlag(c, "with-file-state")
 		inst.options.WithGitStatus = inst.hasFlag(c, "with-git-status")
 		inst.options.WithProjects = inst.hasFlag(c, "with-projects")
+		inst.options.WithSubmodules = inst.hasFlag(c, "with-submodules")
+		inst.options.WithWorktrees = inst.hasFlag(c, "with-worktrees")
 	}
 
 	if inst.wantRequestBody {

@@ -3,7 +3,7 @@ module github.com/bitwormhole/wpm
 go 1.18
 
 require (
-	github.com/bitwormhole/gitlib v0.0.13
+	github.com/bitwormhole/gitlib v0.0.15
 	github.com/bitwormhole/starter v0.1.6
 	github.com/bitwormhole/starter-gin v0.1.4
 	github.com/gin-gonic/gin v1.8.2

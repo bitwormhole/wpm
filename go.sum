@@ -19,6 +19,10 @@ github.com/bitwormhole/gitlib v0.0.1 h1:2VAkvHHxoYwcJ+JBzRYuZuj2ny2Q7qsNedBgZlfY
 github.com/bitwormhole/gitlib v0.0.1/go.mod h1:nYPx1OmalzMSweV7F9F0UR6aTOZn0jfca6dfk4lBAeo=
 github.com/bitwormhole/gitlib v0.0.13 h1:zI+T6Bx6q+NbyW/f0eiL+SsRHGM2knTxgz4yndNekv8=
 github.com/bitwormhole/gitlib v0.0.13/go.mod h1:rHAjxI4mrs5D6ckaU6T1G2oEogA/2d5VR1z/rJQvz4Y=
+github.com/bitwormhole/gitlib v0.0.14 h1:MpRfMSqqJznK3jyrHRplj3zFxzwEZS8C7TyKktAhz58=
+github.com/bitwormhole/gitlib v0.0.14/go.mod h1:rHAjxI4mrs5D6ckaU6T1G2oEogA/2d5VR1z/rJQvz4Y=
+github.com/bitwormhole/gitlib v0.0.15 h1:76frkVqwCScpUYGN8oyBCwCuHUOCUNI2tccS7phtCpk=
+github.com/bitwormhole/gitlib v0.0.15/go.mod h1:rHAjxI4mrs5D6ckaU6T1G2oEogA/2d5VR1z/rJQvz4Y=
 github.com/bitwormhole/starter v0.0.13/go.mod h1:Mv2MC4cWHU2eUs4793mL7pXL79pmjp1HJyA9bV8ZVMc=
 github.com/bitwormhole/starter v0.0.16 h1:ryQbUpmzAuJVPlKl60vGcpKQ63BdkuraTJHud1mzA1s=
 github.com/bitwormhole/starter v0.0.16/go.mod h1:Mv2MC4cWHU2eUs4793mL7pXL79pmjp1HJyA9bV8ZVMc=

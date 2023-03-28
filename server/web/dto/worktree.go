@@ -2,7 +2,7 @@ package dto
 
 import "github.com/bitwormhole/wpm/server/data/dxo"
 
-// Worktree 表示一颗工作树
+// Worktree 表示一颗工作树, 或者 submodule
 type Worktree struct {
 	ID dxo.WorktreeID `json:"id"`
 	Base
@@ -19,4 +19,13 @@ type Worktree struct {
 	Class    dxo.LocationClass `json:"location_class"`
 
 	OwnerRepository dxo.LocalRepositoryID `json:"owner_repository"`
+}
+
+// Submodule 表示一颗 submodule
+type Submodule struct {
+	Worktree
+
+	Active  bool   `json:"is_active"`
+	RawPath string `json:"raw_path"`
+	URL     string `json:"url"`
 }

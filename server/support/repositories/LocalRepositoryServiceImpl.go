@@ -37,7 +37,7 @@ func (inst *LocalRepositoryServiceImpl) prepareLocation(c context.Context, o1 *e
 	path := o1.Path
 	location := &dto.Location{
 		Path:   path,
-		Class:  dxo.LocationGitConfig,
+		Class:  dxo.LocationGitRepository,
 		AsFile: true,
 		AsDir:  true,
 	}
@@ -123,6 +123,12 @@ func (inst *LocalRepositoryServiceImpl) entity2dto(ctx context.Context, o1 *enti
 
 	if opt.WithProjects {
 		inst.loadProjects(ctx, o2)
+	}
+	if opt.WithSubmodules {
+		inst.loadSubmodules(ctx, o2)
+	}
+	if opt.WithWorktrees {
+		inst.loadWorktrees(ctx, o2)
 	}
 
 	if opt.WithGitStatus {
@@ -332,44 +338,85 @@ func (inst *LocalRepositoryServiceImpl) Remove(ctx context.Context, id dxo.Local
 	return inst.LocalRepositoryDAO.Remove(id)
 }
 
-func (inst *LocalRepositoryServiceImpl) loadProjects(ctx context.Context, repo *dto.LocalRepository) error {
+func (inst *LocalRepositoryServiceImpl) loadWorktrees(ctx context.Context, repo *dto.LocalRepository) error {
 
 	lib, err := inst.GitLibAgent.GetLib()
 	if err != nil {
 		return err
 	}
 
-	path := lib.FS().NewPath(repo.Path)
-	repo2, err := lib.RepositoryLoader().LoadWithPath(path)
+	loader := &myWorktreesLoader{lib}
+	path := repo.Path
+	owner := repo.ID
+	list, err := loader.Load(path, owner)
 	if err != nil {
 		return err
 	}
 
-	props := repo2.Config().Mix().Config().Export()
-	const (
-		prefix = "project."
-		suffix = ".path"
-	)
-	dst := repo.Projects
+	repo.Worktrees = list
+	return nil
+}
 
-	for key, value := range props {
-		if strings.HasPrefix(key, prefix) && strings.HasSuffix(key, suffix) {
-			i1 := len(prefix)
-			i2 := len(key) - len(suffix)
-			item := &dto.Project{}
-			item.Name = key[i1:i2]
-			item.Path = value
-			dst = append(dst, item)
-		}
+func (inst *LocalRepositoryServiceImpl) loadSubmodules(ctx context.Context, repo *dto.LocalRepository) error {
+
+	lib, err := inst.GitLibAgent.GetLib()
+	if err != nil {
+		return err
 	}
 
-	sorter := &dto.ProjectSorter{}
-	sorter.Sort(dst, func(o1, o2 *dto.Project) bool {
-		s1 := o1.Path
-		s2 := o2.Path
-		return strings.Compare(s1, s2) < 0
-	})
+	loader := &mySubmodulesLoader{lib}
+	path := repo.Path
+	owner := repo.ID
+	list, err := loader.Load(path, owner)
+	if err != nil {
+		return err
+	}
 
-	repo.Projects = dst
+	repo.Submodules = list
+	return nil
+}
+
+func (inst *LocalRepositoryServiceImpl) loadProjects(ctx context.Context, repo *dto.LocalRepository) error {
+
+	// lib, err := inst.GitLibAgent.GetLib()
+	// if err != nil {
+	// 	return err
+	// }
+
+	// path := lib.FS().NewPath(repo.Path)
+	// repo2, err := lib.RepositoryLoader().LoadWithPath(path)
+	// if err != nil {
+	// 	return err
+	// }
+
+	// props := repo2.Config().Mix().Config().Export()
+	// const (
+	// 	prefix = "project."
+	// 	suffix = ".path"
+	// )
+	// dst := repo.Projects
+
+	// for key, value := range props {
+	// 	if strings.HasPrefix(key, prefix) && strings.HasSuffix(key, suffix) {
+	// 		i1 := len(prefix)
+	// 		i2 := len(key) - len(suffix)
+	// 		item := &dto.Project{}
+	// 		item.Name = key[i1:i2]
+	// 		item.Path = value
+	// 		dst = append(dst, item)
+	// 	}
+	// }
+
+	// sorter := &dto.ProjectSorter{}
+	// sorter.Sort(dst, func(o1, o2 *dto.Project) bool {
+	// 	s1 := o1.Path
+	// 	s2 := o2.Path
+	// 	return strings.Compare(s1, s2) < 0
+	// })
+
+	// repo.Projects = dst
+
+	// [已过时] 此处代码需要重写！
+
 	return nil
 }
