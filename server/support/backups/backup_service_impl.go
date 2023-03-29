@@ -4,10 +4,13 @@ import (
 	"context"
 	"fmt"
 	"strings"
+	"time"
 
 	"bitwormhole.com/starter/afs"
+	"github.com/bitwormhole/starter/application"
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/starter/util"
+	"github.com/bitwormhole/starter/vlog"
 	"github.com/bitwormhole/wpm/server/data/dao"
 	"github.com/bitwormhole/wpm/server/service"
 	"github.com/bitwormhole/wpm/server/web/dto"
@@ -15,15 +18,31 @@ import (
 
 // ImpBackupService ...
 type ImpBackupService struct {
-	markup.Component `id:"DatabaseBackupService" class:""`
+	markup.Component `id:"DatabaseBackupService" class:"life"`
 
 	AppDataService service.AppDataService    `inject:"#AppDataService"`
 	FilesysService service.FileSystemService `inject:"#FileSystemService"`
 	BackupDao      dao.Backup                `inject:"#wpm-database-backup-dao"`
+
+	DoDump bool `inject:"${wpm.db.dump.enabled}"`
 }
 
-func (inst *ImpBackupService) _Impl() service.DatabaseBackupService {
-	return inst
+func (inst *ImpBackupService) _Impl() (service.DatabaseBackupService, application.LifeRegistry) {
+	return inst, inst
+}
+
+// GetLifeRegistration ...
+func (inst *ImpBackupService) GetLifeRegistration() *application.LifeRegistration {
+	return &application.LifeRegistration{
+		OnStop: inst.onStop,
+	}
+}
+
+func (inst *ImpBackupService) onStop() error {
+	if inst.DoDump {
+		return inst.dump()
+	}
+	return nil
 }
 
 func (inst *ImpBackupService) preparePathForExport(o *dto.Backup) (afs.Path, error) {
@@ -166,4 +185,33 @@ func (inst *ImpBackupService) getBackupDir() afs.Path {
 		path2.Mkdirs(nil)
 	}
 	return path2
+}
+
+func (inst *ImpBackupService) dump() error {
+
+	now := time.Now()
+	name := "dump-" + now.Format(time.RFC3339)
+	name = strings.ReplaceAll(name, ":", "")
+	name = strings.ReplaceAll(name, "-", "_")
+	name = strings.ReplaceAll(name, "+", "_")
+	name = strings.ToLower(name)
+
+	bak := &dto.Backup{
+		BackupFileName: name,
+		BackupFilePath: "",
+	}
+
+	file, err := inst.preparePathForExport(bak)
+	if err != nil {
+		return err
+	}
+
+	c := context.Background()
+	_, err = inst.Export(c, bak)
+	if err != nil {
+		return err
+	}
+
+	vlog.Info("dump to file " + file.GetPath())
+	return nil
 }

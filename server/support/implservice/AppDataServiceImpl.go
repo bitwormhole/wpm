@@ -6,9 +6,9 @@ import (
 	"bitwormhole.com/starter/afs"
 	"bitwormhole.com/starter/afs/files"
 	"github.com/bitwormhole/starter/markup"
+	"github.com/bitwormhole/starter/util"
 	"github.com/bitwormhole/starter/vlog"
 	"github.com/bitwormhole/wpm/server/service"
-	"github.com/bitwormhole/wpm/server/utils"
 )
 
 // 定义 app-data 文件名
@@ -22,7 +22,8 @@ const (
 type AppDataServiceImpl struct {
 	markup.Component `id:"AppDataService"`
 
-	ProfileService service.ProfileService `inject:"#ProfileService"`
+	ProfileService    service.ProfileService    `inject:"#ProfileService"`
+	AppRuntimeService service.AppRuntimeService `inject:"#AppRuntimeService"`
 
 	SQLiteDatabaseNameWithAppVersion bool `inject:"${datasource.wpm.database-name-with-version}"`
 
@@ -78,13 +79,21 @@ func (inst *AppDataServiceImpl) GetSQLiteDBFile() string {
 		am := service.GetAppModule()
 		if am != nil {
 			version := am.GetVersion()
-			moduleName := am.GetName()
-			moduleHex := utils.ComputeSHA256sum([]byte(moduleName))
-			hexName := moduleHex.String()[0:7]
+			sum := inst.getThisExeSha256sum()
+			hexName := sum.String()[0:7]
 			name = "wpm-" + hexName + "-" + version + ".db"
 		}
 	}
 	return inst.forPathString(name)
+}
+
+func (inst *AppDataServiceImpl) getThisExeSha256sum() util.Hex {
+	hex, _ := inst.AppRuntimeService.GetAppHash()
+	str := hex.String()
+	if len(str) < 20 {
+		hex = "00000000000000000000"
+	}
+	return hex
 }
 
 // GetMainRepositoryPath ...

@@ -9,7 +9,6 @@ import (
 	"github.com/bitwormhole/starter/application"
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/wpm/server/service"
-	"github.com/bitwormhole/wpm/server/utils"
 	"github.com/bitwormhole/wpm/server/web/dto"
 	"github.com/bitwormhole/wpm/server/web/vo"
 )
@@ -27,8 +26,9 @@ type AboutServiceImpl struct {
 
 	EnableDebug bool `inject:"${wpm.debug.enabled}"`
 
-	PlatformService service.PlatformService `inject:"#PlatformService"`
-	ProfileService  service.ProfileService  `inject:"#ProfileService"`
+	PlatformService   service.PlatformService   `inject:"#PlatformService"`
+	ProfileService    service.ProfileService    `inject:"#ProfileService"`
+	AppRuntimeService service.AppRuntimeService `inject:"#AppRuntimeService"`
 }
 
 func (inst *AboutServiceImpl) _Impl() service.AboutService {
@@ -48,6 +48,7 @@ func (inst *AboutServiceImpl) GetInfo(ctx context.Context) (*vo.About, error) {
 	inst.loadProfile(ctx, o)
 	inst.loadAppModule(ctx, o)
 	inst.loadWebInfo(ctx, o)
+	inst.loadAppRuntimeInfo(ctx, o)
 
 	return o, nil
 }
@@ -81,6 +82,15 @@ func (inst *AboutServiceImpl) loadAppModule(ctx context.Context, view *vo.About)
 func (inst *AboutServiceImpl) loadWebInfo(ctx context.Context, view *vo.About) error {
 	port := strconv.Itoa(inst.ServerPort)
 	view.WebURL = "http://localhost:" + port
+	return nil
+}
+
+func (inst *AboutServiceImpl) loadAppRuntimeInfo(ctx context.Context, view *vo.About) error {
+	sum, err := inst.AppRuntimeService.GetAppHash()
+	if err != nil {
+		return err
+	}
+	view.SHA256SUM = sum
 	return nil
 }
 
@@ -125,12 +135,12 @@ func (inst *myAboutModuleInfoLoader) makeDTO(src application.Module) *dto.Module
 	}
 
 	name := src.GetName()
-	hName := utils.ComputeSHA256sum([]byte(name))
+	// hName := utils.ComputeSHA256sum([]byte(name))
 
 	dst.Name = name
 	dst.Version = src.GetVersion()
 	dst.Revision = src.GetRevision()
-	dst.HexName = hName.String()
+	// dst.HexName = hName.String()
 
 	return dst
 }

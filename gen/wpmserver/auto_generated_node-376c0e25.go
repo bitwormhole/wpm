@@ -13,6 +13,7 @@ import (
 	dbagent0x9f90fb "github.com/bitwormhole/wpm/server/data/dbagent"
 	service0x3e063d "github.com/bitwormhole/wpm/server/service"
 	support0xf47d7f "github.com/bitwormhole/wpm/server/support"
+	appruntime0x8dfe0a "github.com/bitwormhole/wpm/server/support/appruntime"
 	backups0xe44d54 "github.com/bitwormhole/wpm/server/support/backups"
 	checkupdate0xea1855 "github.com/bitwormhole/wpm/server/support/checkupdate"
 	contenttypes0x61ca37 "github.com/bitwormhole/wpm/server/support/contenttypes"
@@ -48,6 +49,15 @@ type pComGormDBAgentImpl struct {
 }
 
 
+type pComImpAppRuntimeService struct {
+	instance *appruntime0x8dfe0a.ImpAppRuntimeService
+	 markup0x23084a.Component `id:"AppRuntimeService" class:"life"`
+	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
+	AppDataService service0x3e063d.AppDataService `inject:"#AppDataService"`
+	MediaService service0x3e063d.MediaService `inject:"#MediaService"`
+}
+
+
 type pComWpmBackupController struct {
 	instance *backups0xe44d54.WpmBackupController
 	 markup0x23084a.Component `id:"" class:"rest-controller"`
@@ -65,10 +75,11 @@ type pComImpBackupServiceDAO struct {
 
 type pComImpBackupService struct {
 	instance *backups0xe44d54.ImpBackupService
-	 markup0x23084a.Component `id:"DatabaseBackupService" class:""`
+	 markup0x23084a.Component `id:"DatabaseBackupService" class:"life"`
 	AppDataService service0x3e063d.AppDataService `inject:"#AppDataService"`
 	FilesysService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
 	BackupDao dao0x5af8d0.Backup `inject:"#wpm-database-backup-dao"`
+	DoDump bool `inject:"${wpm.db.dump.enabled}"`
 }
 
 
@@ -151,6 +162,7 @@ type pComAboutServiceImpl struct {
 	EnableDebug bool `inject:"${wpm.debug.enabled}"`
 	PlatformService service0x3e063d.PlatformService `inject:"#PlatformService"`
 	ProfileService service0x3e063d.ProfileService `inject:"#ProfileService"`
+	AppRuntimeService service0x3e063d.AppRuntimeService `inject:"#AppRuntimeService"`
 }
 
 
@@ -158,6 +170,7 @@ type pComAppDataServiceImpl struct {
 	instance *implservice0x22327c.AppDataServiceImpl
 	 markup0x23084a.Component `id:"AppDataService"`
 	ProfileService service0x3e063d.ProfileService `inject:"#ProfileService"`
+	AppRuntimeService service0x3e063d.AppRuntimeService `inject:"#AppRuntimeService"`
 	SQLiteDatabaseNameWithAppVersion bool `inject:"${datasource.wpm.database-name-with-version}"`
 }
 

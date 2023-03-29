@@ -234,3 +234,12 @@ func (inst *MediaServiceImpl) getSystemMediaDir(ctx context.Context) (afs.Path, 
 	p := objs.GetParent().GetChild("files/media")
 	return p, nil
 }
+
+// ComputeMediaPath ...
+func (inst *MediaServiceImpl) ComputeMediaPath(ctx context.Context, me *dto.Media) (afs.Path, error) {
+	mediaDir, err := inst.getSystemMediaDir(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return makeMediaLocalPath(me, mediaDir)
+}

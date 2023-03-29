@@ -21,3 +21,12 @@ type VO struct {
 	UserTable             []*entity.User
 	WorktreeTable         []*entity.Worktree
 }
+
+// StartupVO 这个VO用来记录 wpm 的启动日志
+type StartupVO struct {
+	WPM dto.Module
+
+	Versions map[string]*entity.Executable // map[version] exe
+
+	Logs []*entity.Executable
+}

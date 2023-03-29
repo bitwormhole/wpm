@@ -1,20 +1,24 @@
 package vo
 
-import "github.com/bitwormhole/wpm/server/web/dto"
+import (
+	"github.com/bitwormhole/starter/util"
+	"github.com/bitwormhole/wpm/server/web/dto"
+)
 
 // About ...
 type About struct {
 	Base
 
-	Name      string `json:"name"`
-	Title     string `json:"title"`
-	Copyright string `json:"copyright"`
-	Profile   string `json:"profile"`
-	User      string `json:"user"`
-	Home      string `json:"home"`
-	OS        string `json:"os"`
-	Arch      string `json:"arch"`
-	WebURL    string `json:"weburl"`
+	Name      string   `json:"name"`
+	Title     string   `json:"title"`
+	Copyright string   `json:"copyright"`
+	Profile   string   `json:"profile"`
+	User      string   `json:"user"`
+	Home      string   `json:"home"`
+	OS        string   `json:"os"`
+	Arch      string   `json:"arch"`
+	WebURL    string   `json:"weburl"`
+	SHA256SUM util.Hex `json:"sha256sum"`
 
 	// the main module
 	Module     string     `json:"module"`
