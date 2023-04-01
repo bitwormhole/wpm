@@ -7,30 +7,31 @@ type Intent struct {
 	ID dxo.IntentID `json:"id"`
 	Base
 
-	// Exe *IntentExecutable `json:"exe"`
-	// Web *IntentWeb        `json:"web"`
-	// CLI *IntentCLI        `json:"cli"`
-
-	Options    []string          `json:"options"`    // used for filters
-	Properties map[string]string `json:"properties"` // used for filters
+	Action     string            `json:"action"`
+	Options    []string          `json:"options"` // used for filters
+	Properties map[string]string `json:"properties"`
 
 	// as exe
-	Executable *Executable      `json:"executable"`
-	Repository *LocalRepository `json:"repository"`
-	Worktree   *Worktree        `json:"worktree"`
-	Project    *Project         `json:"project"`
-	Location   *File            `json:"location"`
-	Template   *IntentTemplate  `json:"template"`
+	Executable *Executable       `json:"executable"`
+	Repository *LocalRepository  `json:"repository"`
+	Worktree   *Worktree         `json:"worktree"`
+	Submodule  *Submodule        `json:"submodule"`
+	Project    *Project          `json:"project"`
+	File       *File             `json:"file"`
+	Folder     *File             `json:"folder"`
+	Template   []*IntentTemplate `json:"templates"`
 
 	// as web
-	Method string `json:"method"`
-	URL    string `json:"url"`
+	Web *WebRequest `json:"web"`
 
 	// as cli
-	Command   string            `json:"command"`
-	Arguments []string          `json:"args"`
-	Env       map[string]string `json:"env"`
-	WD        string            `json:"wd"`
+	CLI *CommandRequest `json:"cli"`
+
+	// result
+	WantProperties []*IntentPropertyDescriptor `json:"want_properties"`
+	Message        string                      `json:"message"`
+	Error          string                      `json:"error"`
+	Status         int                         `json:"status"` // use http.Status
 }
 
 // IntentTemplate 表示一个命令模板
@@ -39,42 +40,44 @@ type IntentTemplate struct {
 	Base
 
 	Name        string `json:"name"`
+	IconURL     string `json:"icon"`
 	Title       string `json:"title"`
 	Description string `json:"description"`
 
 	Selector   dxo.IntentTemplateSelector `json:"selector"`
 	Action     string                     `json:"action"`
 	Target     string                     `json:"target"`     // the type of target
-	Executable string                     `json:"executable"` // the name of exe
+	Executable dxo.ExecutableURN          `json:"executable"` // the URN of exe
+
+	WantProperties []*IntentPropertyDescriptor `json:"want_properties"`
 
 	// as cli
 	Command   string             `json:"command"`
 	Arguments dxo.StringListCRLF `json:"args"`
 	Env       dxo.StringMap      `json:"env"`
 	WD        string             `json:"wd"`
-
-	// Exe *IntentExecutable `json:"exe"`
-	// Web *IntentWeb        `json:"web"`
-	// CLI *IntentCLI        `json:"cli"`
 }
 
-// // IntentExecutable ...
-// type IntentExecutable struct {
-// 	Executable *Executable      `json:"executable"`
-// 	Repository *LocalRepository `json:"repository"`
-// 	Path       string           `json:"path"` // 相对路径，基于工作区目录
-// }
+// WebRequest ...
+type WebRequest struct {
+	Method string `json:"method"`
+	URL    string `json:"url"`
+}
 
-// // IntentWeb ...
-// type IntentWeb struct {
-// 	Method string `json:"method"`
-// 	URL    string `json:"url"`
-// }
+// CommandRequest ...
+type CommandRequest struct {
+	Command   string            `json:"command"`
+	Arguments []string          `json:"args"`
+	Env       map[string]string `json:"env"`
+	WD        string            `json:"wd"`
+}
 
-// // IntentCLI ...
-// type IntentCLI struct {
-// 	Command   string            `json:"command"`
-// 	Arguments []string          `json:"args"`
-// 	Env       map[string]string `json:"env"`
-// 	WD        string            `json:"wd"`
-// }
+// IntentPropertyDescriptor ...
+type IntentPropertyDescriptor struct {
+	Name         string
+	Description  string
+	ValueDefault string
+	Type         string   // [string|int|bool|float|enum|...]
+	Options      []string // for enum
+	Required     bool
+}

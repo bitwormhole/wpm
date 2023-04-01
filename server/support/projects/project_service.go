@@ -79,10 +79,7 @@ func (inst *ProjectServiceImpl) dto2entity(c context.Context, o1 *dto.Project) (
 	o2.Path = o1.Path
 	o2.Location = o1.Location
 	o2.Class = o1.Class
-
-	o2.TypeID = o1.TypeID
-	o2.TypeKey = o1.TypeKey
-	o2.TypeName = o1.TypeName
+	o2.Type = o1.Type
 
 	return o2, nil
 }
@@ -110,12 +107,9 @@ func (inst *ProjectServiceImpl) entity2dto(o1 *entity.Project, opt *service.Proj
 	o2.ConfigFileName = o1.ConfigFileName
 
 	o2.Path = o1.Path
-	o2.Class = o1.Class
 	o2.Location = o1.Location
-
-	o2.TypeID = o1.TypeID
-	o2.TypeKey = o1.TypeKey
-	o2.TypeName = o1.TypeName
+	o2.Class = o1.Class
+	o2.Type = o1.Type
 
 	if opt.WithFileState {
 		o2.State = inst.checkProjectFileState(o1)

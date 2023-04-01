@@ -39,7 +39,7 @@ func (inst *ProjectTypeImportServiceImpl) prepare(c context.Context) ([]*dto.Pro
 	const (
 		path   = "res:///project-types.properties"
 		prefix = "projecttype."
-		suffix = ".name"
+		suffix = ".type"
 	)
 
 	text, err := inst.AC.GetResources().GetText(path)
@@ -71,15 +71,16 @@ func (inst *ProjectTypeImportServiceImpl) loadPT(p collection.Properties, prefix
 	pt := &dto.ProjectType{}
 	getter := p.Getter()
 
-	typeName := getter.GetString(k1+".name", "")
-	typeKey := getter.GetString(k1+".key", "")
+	typeName := getter.GetString(k1+".type", "")
+	typePattern := getter.GetString(k1+".pattern", "")
 
 	pt.AsDir = getter.GetBool(k1+".as-dir", false)
 	pt.AsFile = getter.GetBool(k1+".as-file", false)
-	pt.Key = dxo.ProjectTypeKey(typeKey)
-	pt.Name = dxo.ProjectTypeName(typeName)
+	pt.Pattern = typePattern
+	pt.TypeName = dxo.ProjectTypeName(typeName)
 	pt.Label = getter.GetString(k1+".label", "")
 	pt.Description = getter.GetString(k1+".description", "")
+	pt.Priority = getter.GetInt(k1+".priority", 0)
 
 	return pt, nil
 }

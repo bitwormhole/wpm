@@ -19,4 +19,5 @@ type Media struct {
 	LocalFilePath string `json:"local_file_path"`
 	Name          string `json:"name"`
 	URL           string `json:"url"`
+	Source        string `json:"source"`
 }

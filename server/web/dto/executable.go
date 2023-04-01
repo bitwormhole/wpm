@@ -7,10 +7,14 @@ import (
 
 // Executable ...
 type Executable struct {
-	ID dxo.ExecutableID `json:"id"`
+	ID  dxo.ExecutableID  `json:"id"`
+	URN dxo.ExecutableURN `json:"urn"`
+
 	Base
 
 	Name             string                  `json:"name"`
+	Aliases          dxo.StringList          `json:"aliases"`
+	Namespace        dxo.NamespaceURN        `json:"namespace"`
 	Title            string                  `json:"title"`
 	Description      string                  `json:"description"`
 	IconURL          string                  `json:"icon"`
@@ -22,6 +26,9 @@ type Executable struct {
 	State            dxo.FileState           `json:"state"`
 	Tags             dxo.StringList          `json:"tags"`
 	OpenWithPriority int                     `json:"open_with_priority"` // 如果 value<=0, 表示 disable
+
+	OS   string `json:"os"`   // 操作系统
+	Arch string `json:"arch"` // 处理器架构
 
 	Path     string            `json:"path"`
 	Class    dxo.LocationClass `json:"location_class"`

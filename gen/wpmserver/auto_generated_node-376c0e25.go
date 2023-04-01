@@ -9,6 +9,7 @@ import (
 	datasource0x68a737 "github.com/bitwormhole/starter-gorm/datasource"
 	application0x67f6c5 "github.com/bitwormhole/starter/application"
 	markup0x23084a "github.com/bitwormhole/starter/markup"
+	intents0x8557f3 "github.com/bitwormhole/wpm/server/components/intents"
 	dao0x5af8d0 "github.com/bitwormhole/wpm/server/data/dao"
 	dbagent0x9f90fb "github.com/bitwormhole/wpm/server/data/dbagent"
 	service0x3e063d "github.com/bitwormhole/wpm/server/service"
@@ -25,6 +26,7 @@ import (
 	intenttemplates0x2e3dcf "github.com/bitwormhole/wpm/server/support/intenttemplates"
 	locations0xb36349 "github.com/bitwormhole/wpm/server/support/locations"
 	mediae0xf005e2 "github.com/bitwormhole/wpm/server/support/mediae"
+	namespaces0xceefcf "github.com/bitwormhole/wpm/server/support/namespaces"
 	platforms0xb539c0 "github.com/bitwormhole/wpm/server/support/platforms"
 	projects0x4d85c7 "github.com/bitwormhole/wpm/server/support/projects"
 	projecttypes0x53bffe "github.com/bitwormhole/wpm/server/support/projecttypes"
@@ -35,9 +37,6 @@ import (
 	worktrees0xa762f3 "github.com/bitwormhole/wpm/server/support/worktrees"
 	filequery0xca51d2 "github.com/bitwormhole/wpm/server/utils/filequery"
 	handlers0x162741 "github.com/bitwormhole/wpm/server/utils/filequery/handlers"
-	intents0xec84e7 "github.com/bitwormhole/wpm/server/utils/intents"
-	v1filters0xff0a7d "github.com/bitwormhole/wpm/server/utils/intents/v1filters"
-	v2filters0x798a00 "github.com/bitwormhole/wpm/server/utils/intents/v2filters"
 	controller0x9dc399 "github.com/bitwormhole/wpm/server/web/controller"
 	filter0x8aa8f6 "github.com/bitwormhole/wpm/server/web/filter"
 )
@@ -235,6 +234,13 @@ type pComRunIntentController struct {
 }
 
 
+type pComFilterManagerImpl struct {
+	instance *intents0x8ee0e0.FilterManagerImpl
+	 markup0x23084a.Component `id:"wpm-intent-filter-manager"`
+	FilterRegistryList []intents0x8557f3.FilterRegistry `inject:".wpm-intent-filter"`
+}
+
+
 type pComIntentHandlerImpl struct {
 	instance *intents0x8ee0e0.IntentHandlerImpl
 	 markup0x23084a.Component `id:"IntentHandlerService"`
@@ -245,7 +251,7 @@ type pComRunIntentServiceImpl struct {
 	instance *intents0x8ee0e0.RunIntentServiceImpl
 	 markup0x23084a.Component `id:"IntentService"`
 	GitLibAgent store0x8467b3.LibAgent `inject:"#git-lib-agent"`
-	IntentFilterManager intents0xec84e7.FilterManager `inject:"#intent-filter-manager"`
+	IntentFilterManager intents0x8557f3.FilterManager `inject:"#wpm-intent-filter-manager"`
 	LocalRepositoryService service0x3e063d.LocalRepositoryService `inject:"#LocalRepositoryService"`
 	ExecutableService service0x3e063d.ExecutableService `inject:"#ExecutableService"`
 	IntentHandlerService service0x3e063d.IntentHandlerService `inject:"#IntentHandlerService"`
@@ -273,7 +279,7 @@ type pComIntentTemplateServiceImpl struct {
 	 markup0x23084a.Component `id:"IntentTemplateService"`
 	AC application0x67f6c5.Context `inject:"context"`
 	IntentTempDAO dao0x5af8d0.IntentTemplateDAO `inject:"#IntentTemplateDAO"`
-	IntentFilterManager intents0xec84e7.FilterManager `inject:"#intent-filter-manager"`
+	IntentFilterManager intents0x8557f3.FilterManager `inject:"#wpm-intent-filter-manager"`
 }
 
 
@@ -318,6 +324,28 @@ type pComMediaServiceImpl struct {
 	ContentTypeService service0x3e063d.ContentTypeService `inject:"#ContentTypeService"`
 	ResPathPrefix string `inject:"${wpm.presets.res-path-prefix}"`
 	WebPathPrefix string `inject:"${wpm.presets.web-path-prefix}"`
+}
+
+
+type pComNamespaceController struct {
+	instance *namespaces0xceefcf.NamespaceController
+	 markup0x23084a.RestController `class:"rest-controller"`
+	NamespaceService service0x3e063d.NamespaceService `inject:"#NamespaceService"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
+type pComImpNamespaceDao struct {
+	instance *namespaces0xceefcf.ImpNamespaceDao
+	 markup0x23084a.Component `id:"NamespaceDAO"`
+	AC application0x67f6c5.Context `inject:"context"`
+}
+
+
+type pComImpNamespaceService struct {
+	instance *namespaces0xceefcf.ImpNamespaceService
+	 markup0x23084a.Component `id:"NamespaceService"`
+	MyDAO dao0x5af8d0.NamespaceDAO `inject:"#NamespaceDAO"`
 }
 
 
@@ -614,89 +642,6 @@ type pComWpmDataSource struct {
 type pComFileSystemHandler struct {
 	instance *handlers0x162741.FileSystemHandler
 	 markup0x23084a.Component `class:"filequery-handler-registry"`
-}
-
-
-type pComFilterManagerImpl struct {
-	instance *intents0xec84e7.FilterManagerImpl
-	 markup0x23084a.Component `id:"intent-filter-manager"`
-	Filters []intents0xec84e7.FilterRegistry `inject:".intent-filter-registry"`
-}
-
-
-type pComExecuteIntentFilter struct {
-	instance *v1filters0xff0a7d.ExecuteIntentFilter
-	 markup0x23084a.Component `class:"intent-filter-registry"`
-	GitLibAgent store0x8467b3.LibAgent `inject:"#git-lib-agent"`
-}
-
-
-type pComIntentFilterFor struct {
-	instance *v1filters0xff0a7d.IntentFilterFor
-	 markup0x23084a.Component `class:"intent-filter-registry"`
-}
-
-
-type pComIntentFilterForChrome struct {
-	instance *v1filters0xff0a7d.IntentFilterForChrome
-	 markup0x23084a.Component `class:"intent-filter-registry"`
-}
-
-
-type pComIntentFilterForCmd struct {
-	instance *v1filters0xff0a7d.IntentFilterForCmd
-	 markup0x23084a.Component `class:"intent-filter-registry"`
-}
-
-
-type pComIntentFilterForExplorer struct {
-	instance *v1filters0xff0a7d.IntentFilterForExplorer
-	 markup0x23084a.Component `class:"intent-filter-registry"`
-}
-
-
-type pComIntentFilterForFirefox struct {
-	instance *v1filters0xff0a7d.IntentFilterForFirefox
-	 markup0x23084a.Component `class:"intent-filter-registry"`
-}
-
-
-type pComIntentFilterForMsEdge struct {
-	instance *v1filters0xff0a7d.IntentFilterForMsEdge
-	 markup0x23084a.Component `class:"intent-filter-registry"`
-}
-
-
-type pComIntentFilterForNautilus struct {
-	instance *v1filters0xff0a7d.IntentFilterForNautilus
-	 markup0x23084a.Component `class:"intent-filter-registry"`
-}
-
-
-type pComIntentFilterForPowerShell struct {
-	instance *v1filters0xff0a7d.IntentFilterForPowerShell
-	 markup0x23084a.Component `class:"intent-filter-registry"`
-}
-
-
-type pComIntentFilterForVscode struct {
-	instance *v1filters0xff0a7d.IntentFilterForVscode
-	 markup0x23084a.Component `class:"intent-filter-registry"`
-}
-
-
-type pComExampleFilter struct {
-	instance *v2filters0x798a00.ExampleFilter
-	 markup0x23084a.Component `class:"intent-filter-registry"`
-}
-
-
-type pComIntentTemplateFilter struct {
-	instance *v2filters0x798a00.IntentTemplateFilter
-	 markup0x23084a.Component `class:"intent-filter-registry"`
-	ExecutableService service0x3e063d.ExecutableService `inject:"#ExecutableService"`
-	LocalRepositoryService service0x3e063d.LocalRepositoryService `inject:"#LocalRepositoryService"`
-	IntentTemplateService service0x3e063d.IntentTemplateService `inject:"#IntentTemplateService"`
 }
 
 

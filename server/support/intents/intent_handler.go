@@ -25,21 +25,25 @@ func (inst *IntentHandlerImpl) _Impl() service.IntentHandlerService {
 func (inst *IntentHandlerImpl) HandleIntent(i *dto.Intent) error {
 
 	if i == nil {
-		return nil
+		return fmt.Errorf("intent is nil")
 	}
 
-	params := i
-	if params == nil {
-		return fmt.Errorf("intent-cli is nil")
+	cli := i.CLI
+	if cli == nil {
+		return fmt.Errorf("intent.cli is nil")
 	}
 
-	c := inst.makeCmd(params)
-	env := params.Env
+	c := inst.makeCmd(cli)
+	if c == nil {
+		return fmt.Errorf("intent-cmd is nil")
+	}
+
+	env := cli.Env
 	if env != nil {
 		c.Env = inst.makeEnv(env)
 	}
 
-	wd := strings.TrimSpace(params.WD)
+	wd := strings.TrimSpace(cli.WD)
 	if wd != "" {
 		c.Dir = wd
 	}
@@ -69,11 +73,11 @@ func (inst *IntentHandlerImpl) makeEnv(src map[string]string) []string {
 	return dst
 }
 
-func (inst *IntentHandlerImpl) makeCmd(p *dto.Intent) *exec.Cmd {
-	if p.Arguments == nil {
-		return exec.Command(p.Command)
+func (inst *IntentHandlerImpl) makeCmd(req *dto.CommandRequest) *exec.Cmd {
+	if req.Arguments == nil {
+		return exec.Command(req.Command)
 	}
-	return exec.Command(p.Command, p.Arguments...)
+	return exec.Command(req.Command, req.Arguments...)
 }
 
 func (inst *IntentHandlerImpl) handleError(x any) {

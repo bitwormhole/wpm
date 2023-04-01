@@ -23,5 +23,6 @@ type SoftwarePackage struct {
 	Size        int64     `json:"size"`         // 包文件大小
 	WebPageURL  string    `json:"web_page_url"` // 下载页面 URL
 	DownloadURL string    `json:"download_url"` // 下载地址 URL
+	MetaURL     string    `json:"meta_url"`     // 包的元数据下载 URL
 	ReleaseAt   util.Time `json:"release_at"`   // 发布时间
 }

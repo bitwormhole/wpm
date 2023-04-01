@@ -7,10 +7,14 @@ import (
 
 // Executable ...
 type Executable struct {
-	ID dxo.ExecutableID `gorm:"primaryKey"`
+	ID  dxo.ExecutableID  `gorm:"primaryKey"`
+	URN dxo.ExecutableURN // 同名，不同location的多个实体表示 同一个应用的不同版本
+
 	Base
 
 	Name             string
+	Aliases          dxo.StringList
+	Namespace        dxo.NamespaceURN
 	Title            string
 	IconURL          string
 	Description      string

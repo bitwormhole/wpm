@@ -9,6 +9,8 @@ import (
 type ProjectTypeDAO interface {
 	Find(id dxo.ProjectTypeID) (*entity.ProjectType, error)
 
+	FindByURN(urn dxo.ProjectTypeURN) (*entity.ProjectType, error)
+
 	ListAll() ([]*entity.ProjectType, error)
 
 	Insert(o *entity.ProjectType) (*entity.ProjectType, error)

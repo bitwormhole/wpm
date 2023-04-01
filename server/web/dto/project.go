@@ -11,18 +11,15 @@ type Project struct {
 	ID dxo.ProjectID `json:"id"`
 	Base
 
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	ProjectDir  string `json:"project_dir"`
-
-	TypeID   dxo.ProjectTypeID   `json:"project_type_id"`   // like '6'
-	TypeKey  dxo.ProjectTypeKey  `json:"project_type_key"`  // like 'pom.xml'
-	TypeName dxo.ProjectTypeName `json:"project_type_name"` // like 'java/pom'
+	Name        string             `json:"name"`
+	Description string             `json:"description"`
+	Type        dxo.ProjectTypeURN `json:"project_type"`
 
 	ConfigFileName string `json:"config_file_name"`
 	PathInWorktree string `json:"path_in_worktree"`
+	Path           string `json:"path"`
+	ProjectDir     string `json:"project_dir"`
 
-	Path     string            `json:"path"`
 	Location dxo.LocationID    `json:"location"`
 	Class    dxo.LocationClass `json:"location_class"`
 

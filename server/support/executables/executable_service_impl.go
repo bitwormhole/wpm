@@ -50,7 +50,11 @@ func (inst *ExecutableServiceImpl) dto2entity(c context.Context, o1 *dto.Executa
 
 	o2 := &entity.Executable{}
 	o2.ID = o1.ID
+	o2.URN = o1.URN
+
 	o2.Name = o1.Name
+	o2.Aliases = o1.Aliases
+	o2.Namespace = o1.Namespace
 	o2.Title = o1.Title
 	o2.Size = o1.Size
 	o2.SHA256SUM = o1.SHA256SUM
@@ -73,8 +77,11 @@ func (inst *ExecutableServiceImpl) entity2dto(o1 *entity.Executable) (*dto.Execu
 	o2.UUID = o1.UUID
 	o2.CreatedAt = util.NewTime(o1.CreatedAt)
 	o2.UpdatedAt = util.NewTime(o1.UpdatedAt)
+	o2.URN = o1.URN
 
 	o2.Name = o1.Name
+	o2.Aliases = o1.Aliases
+	o2.Namespace = o1.Namespace
 	o2.Title = o1.Title
 	o2.Size = o1.Size
 	o2.SHA256SUM = o1.SHA256SUM

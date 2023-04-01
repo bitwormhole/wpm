@@ -58,8 +58,8 @@ func (inst *myProjectLocatorWithTypes) checkParams() error {
 
 func (inst *myProjectLocatorWithTypes) loadTypes() error {
 	ptdao := inst.parent.ProjectTypeDAO
-	tid := inst.project.TypeID
-	if tid == 0 {
+	pType := inst.project.Type
+	if pType == "" {
 		// load all
 		all, err := ptdao.ListAll()
 		if err != nil {
@@ -68,7 +68,7 @@ func (inst *myProjectLocatorWithTypes) loadTypes() error {
 		inst.types = all
 	} else {
 		// get one
-		ent, err := ptdao.Find(tid)
+		ent, err := ptdao.FindByURN(pType)
 		if err != nil {
 			return err
 		}
@@ -117,7 +117,7 @@ func (inst *myProjectLocatorWithTypes) tryLocateProject(dir afs.Path, pt *entity
 
 func (inst *myProjectLocatorWithTypes) isTypeMatch(path afs.Path, pt *entity.ProjectType) bool {
 
-	nameWant := pt.Key.String()
+	nameWant := pt.Pattern
 	nameHave := path.GetName()
 	if !inst.isFileNameMatch(nameWant, nameHave) {
 		return false
@@ -192,9 +192,7 @@ func (inst *myProjectLocatorWithTypes) apply(projectFile afs.Path, pt *entity.Pr
 
 	p := inst.project
 
-	p.TypeID = pt.ID
-	p.TypeKey = pt.Key
-	p.TypeName = pt.Name
+	p.Type = pt.URN
 	p.ProjectDir = projectFile.GetParent().GetPath()
 	p.Path = projectFile.GetPath()
 	p.ConfigFileName = projectFile.GetName()

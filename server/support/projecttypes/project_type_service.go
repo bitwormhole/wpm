@@ -27,15 +27,18 @@ func (inst *ProjectTypeServiceImpl) _Impl() service.ProjectTypeService {
 func (inst *ProjectTypeServiceImpl) dto2entity(o1 *dto.ProjectType) (*entity.ProjectType, error) {
 	o2 := &entity.ProjectType{}
 	o2.ID = o1.ID
+	o2.UUID = o1.UUID
 
 	// todo ...
-	o2.Name = o1.Name
-	o2.Key = o1.Key
+	o2.Name = o1.TypeName
+	o2.Pattern = o1.Pattern
 	o2.Label = o1.Label
 	o2.Description = o1.Description
 	o2.AsDir = o1.AsDir
 	o2.AsFile = o1.AsFile
 	o2.Priority = o1.Priority
+
+	o2.URN = dxo.NewProjectTypeURN(o1.TypeName.String())
 
 	return o2, nil
 }
@@ -44,12 +47,13 @@ func (inst *ProjectTypeServiceImpl) entity2dto(o1 *entity.ProjectType) (*dto.Pro
 	o2 := &dto.ProjectType{}
 	o2.ID = o1.ID
 	o2.UUID = o1.UUID
+	o2.URN = o1.URN
 	o2.CreatedAt = util.NewTime(o1.CreatedAt)
 	o2.UpdatedAt = util.NewTime(o1.UpdatedAt)
 
 	// todo ...
-	o2.Name = o1.Name
-	o2.Key = o1.Key
+	o2.TypeName = o1.Name
+	o2.Pattern = o1.Pattern
 	o2.Label = o1.Label
 	o2.Description = o1.Description
 	o2.AsDir = o1.AsDir
@@ -91,6 +95,10 @@ func (inst *ProjectTypeServiceImpl) Insert(ctx context.Context, o1 *dto.ProjectT
 	if err != nil {
 		return nil, err
 	}
+
+	// prepare for insert
+	o2.URN = dxo.NewProjectTypeURN(o2.Name.String())
+
 	o3, err := inst.ProjectTypeDAO.Insert(o2)
 	if err != nil {
 		return nil, err

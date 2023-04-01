@@ -139,9 +139,12 @@ func (inst *myRunIntentRequest) doPost() error {
 	for _, o1 := range olist1 {
 		_, err := ser.Run(ctx, o1)
 		if err != nil {
-			return err
+			o1.Status = http.StatusInternalServerError
+			o1.Error = err.Error()
+			// return err
 		}
 	}
+	inst.body2.Intents = olist1
 	return nil
 }
 

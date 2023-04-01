@@ -4,11 +4,13 @@ import "github.com/bitwormhole/wpm/server/data/dxo"
 
 // ProjectType 表示一个命令模板
 type ProjectType struct {
-	ID dxo.ProjectTypeID `json:"id"`
+	ID  dxo.ProjectTypeID  `json:"id"`
+	URN dxo.ProjectTypeURN `json:"urn"`
+
 	Base
 
-	Name        dxo.ProjectTypeName `json:"name"`
-	Key         dxo.ProjectTypeKey  `json:"key"`
+	TypeName    dxo.ProjectTypeName `json:"type"`
+	Pattern     string              `json:"pattern"`
 	Label       string              `json:"label"`
 	Description string              `json:"description"`
 

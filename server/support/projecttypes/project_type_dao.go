@@ -40,6 +40,17 @@ func (inst *ProjectTypeDaoImpl) Find(id dxo.ProjectTypeID) (*entity.ProjectType,
 	return m, nil
 }
 
+// FindByURN ...
+func (inst *ProjectTypeDaoImpl) FindByURN(urn dxo.ProjectTypeURN) (*entity.ProjectType, error) {
+	m := inst.model()
+	db := inst.Agent.DB()
+	res := db.Where("urn = ?", urn).First(m)
+	if res.Error != nil {
+		return nil, res.Error
+	}
+	return m, nil
+}
+
 // ListAll ...
 func (inst *ProjectTypeDaoImpl) ListAll() ([]*entity.ProjectType, error) {
 	list := inst.modelList()
@@ -55,7 +66,7 @@ func (inst *ProjectTypeDaoImpl) ListAll() ([]*entity.ProjectType, error) {
 func (inst *ProjectTypeDaoImpl) Insert(o *entity.ProjectType) (*entity.ProjectType, error) {
 
 	// compute fields
-	strKey := o.Key.String()
+	strKey := o.Pattern
 	strName := o.Name.String()
 	o.ID = 0
 	o.UUID = inst.UUIDGenService.GenerateUUID(strName + "|entity.ProjectType|" + strKey)
@@ -81,7 +92,7 @@ func (inst *ProjectTypeDaoImpl) Update(id dxo.ProjectTypeID, o1 *entity.ProjectT
 	o2.AsFile = o1.AsFile
 	o2.Priority = o1.Priority
 
-	o2.Key = o1.Key
+	o2.Pattern = o1.Pattern
 	o2.Name = o1.Name
 	o2.Label = o1.Label
 	o2.Description = o1.Description

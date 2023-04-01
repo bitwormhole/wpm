@@ -44,6 +44,7 @@ func (inst *MediaServiceImpl) dto2entity(o1 *dto.Media) (*entity.Media, error) {
 	o2.Label = o1.Label
 	o2.Name = o1.Name
 	o2.SHA256SUM = o1.SHA256SUM
+	o2.Source = o1.Source
 	o2.URL = o1.URL
 
 	return o2, nil
@@ -67,6 +68,7 @@ func (inst *MediaServiceImpl) entity2dto(o1 *entity.Media, opt *service.MediaOpt
 	o2.Label = o1.Label
 	o2.Name = o1.Name
 	o2.SHA256SUM = o1.SHA256SUM
+	o2.Source = o1.Source
 	o2.URL = o1.URL
 
 	return o2, nil

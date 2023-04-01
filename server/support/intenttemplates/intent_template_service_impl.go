@@ -9,11 +9,11 @@ import (
 	"github.com/bitwormhole/starter/collection"
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/starter/util"
+	"github.com/bitwormhole/wpm/server/components/intents"
 	"github.com/bitwormhole/wpm/server/data/dao"
 	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/data/entity"
 	"github.com/bitwormhole/wpm/server/service"
-	"github.com/bitwormhole/wpm/server/utils/intents"
 	"github.com/bitwormhole/wpm/server/web/dto"
 )
 
@@ -23,7 +23,7 @@ type IntentTemplateServiceImpl struct {
 
 	AC                  application.Context   `inject:"context"`
 	IntentTempDAO       dao.IntentTemplateDAO `inject:"#IntentTemplateDAO"`
-	IntentFilterManager intents.FilterManager `inject:"#intent-filter-manager"`
+	IntentFilterManager intents.FilterManager `inject:"#wpm-intent-filter-manager"`
 }
 
 func (inst *IntentTemplateServiceImpl) _Impl() service.IntentTemplateService {
@@ -41,7 +41,7 @@ func (inst *IntentTemplateServiceImpl) dto2entity(o1 *dto.IntentTemplate) (*enti
 	selbuilder := dxo.IntentTemplateSelectorBuilder{
 		Action: o1.Action,
 		Target: o1.Target,
-		With:   o1.Executable,
+		With:   o1.Executable.String(),
 	}
 
 	o2 := &entity.IntentTemplate{}
@@ -50,9 +50,10 @@ func (inst *IntentTemplateServiceImpl) dto2entity(o1 *dto.IntentTemplate) (*enti
 
 	o2.Name = o1.Name
 	o2.Title = o1.Title
+	o2.IconURL = o1.IconURL
 	o2.Description = o1.Description
 
-	o2.Executable = inst.normalizeText(o1.Executable)
+	o2.Executable = o1.Executable
 	o2.Action = inst.normalizeText(o1.Action)
 	o2.Target = inst.normalizeText(o1.Target)
 	o2.Selector = selbuilder.Create()
@@ -77,8 +78,9 @@ func (inst *IntentTemplateServiceImpl) entity2dto(o1 *entity.IntentTemplate) (*d
 	o2.Name = o1.Name
 	o2.Title = o1.Title
 	o2.Description = o1.Description
+	o2.IconURL = o1.IconURL
 
-	o2.Executable = inst.normalizeText(o1.Executable)
+	o2.Executable = o1.Executable
 	o2.Action = inst.normalizeText(o1.Action)
 	o2.Target = inst.normalizeText(o1.Target)
 	o2.Selector = o1.Selector
@@ -126,6 +128,7 @@ func (inst *IntentTemplateServiceImpl) ListByAET(ctx context.Context, sel *dto.I
 	return inst.entity2dtoList(src)
 }
 
+// Find ...
 func (inst *IntentTemplateServiceImpl) Find(ctx context.Context, id dxo.IntentTemplateID) (*dto.IntentTemplate, error) {
 	return nil, errors.New("no impl")
 }

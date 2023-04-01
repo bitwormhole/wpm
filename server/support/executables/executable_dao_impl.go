@@ -71,6 +71,8 @@ func (inst *ExecutableDaoImpl) Update(id dxo.ExecutableID, o1 *entity.Executable
 	}
 
 	o2.Name = o1.Name
+	o2.Namespace = o1.Namespace
+	o2.URN = o1.URN
 	o2.Title = o1.Title
 	o2.IconURL = o1.IconURL
 	o2.Description = o1.Description

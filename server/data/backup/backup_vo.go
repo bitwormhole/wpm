@@ -14,6 +14,7 @@ type VO struct {
 	LocalRepositoryTable  []*entity.LocalRepository
 	LocationTable         []*entity.Location
 	MediaTable            []*entity.Media
+	NamespaceTable        []*entity.Namespace
 	ProjectTable          []*entity.Project
 	ProjectTypeTable      []*entity.ProjectType
 	RemoteRepositoryTable []*entity.RemoteRepository

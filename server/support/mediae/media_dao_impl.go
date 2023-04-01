@@ -100,6 +100,7 @@ func (inst *MediaDaoImpl) Update(id dxo.MediaID, o1 *entity.Media) (*entity.Medi
 	o2.Bucket = o1.Bucket
 	o2.Label = o1.Label
 	o2.Name = o1.Name
+	o2.Source = o1.Source
 
 	res = db.Save(o2)
 	if res.Error != nil {

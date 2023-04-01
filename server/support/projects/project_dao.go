@@ -141,9 +141,7 @@ func (inst *ProjectDaoImpl) Update(id dxo.ProjectID, o1 *entity.Project) (*entit
 	o2.OwnerRepository = o1.OwnerRepository
 	o2.PathInWorktree = o1.PathInWorktree
 	o2.ProjectDir = o1.ProjectDir
-	o2.TypeID = o1.TypeID
-	o2.TypeKey = o1.TypeKey
-	o2.TypeName = o1.TypeName
+	o2.Type = o1.Type
 
 	res = db.Save(o2)
 	if res.Error != nil {

@@ -12,6 +12,7 @@ type Media struct {
 
 	Name        string
 	URL         string `gorm:"index:,unique"`
+	Source      string // Source 表示资源的原始来源URL，如果本地没有该资源，可以通过此URL下载
 	Bucket      string
 	Label       string
 	ContentType string

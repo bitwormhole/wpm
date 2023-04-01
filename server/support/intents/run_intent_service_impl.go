@@ -2,11 +2,12 @@ package intents
 
 import (
 	"context"
+	"net/http"
 
 	"github.com/bitwormhole/gitlib/git/store"
 	"github.com/bitwormhole/starter/markup"
+	"github.com/bitwormhole/wpm/server/components/intents"
 	"github.com/bitwormhole/wpm/server/service"
-	"github.com/bitwormhole/wpm/server/utils/intents"
 	"github.com/bitwormhole/wpm/server/web/dto"
 )
 
@@ -16,7 +17,7 @@ type RunIntentServiceImpl struct {
 
 	GitLibAgent store.LibAgent `inject:"#git-lib-agent"`
 
-	IntentFilterManager intents.FilterManager `inject:"#intent-filter-manager"`
+	IntentFilterManager intents.FilterManager `inject:"#wpm-intent-filter-manager"`
 
 	LocalRepositoryService service.LocalRepositoryService `inject:"#LocalRepositoryService"`
 	ExecutableService      service.ExecutableService      `inject:"#ExecutableService"`
@@ -29,43 +30,43 @@ func (inst *RunIntentServiceImpl) _Impl() service.IntentService {
 
 // Run ...
 func (inst *RunIntentServiceImpl) Run(ctx context.Context, o *dto.Intent) (*dto.Intent, error) {
-	o, err := inst.preprocessWithFilters(ctx, o)
+	ch := inst.IntentFilterManager.Chain()
+	err := ch.Handle(ctx, o)
 	if err != nil {
 		return nil, err
 	}
-	return inst.runAsCLI(ctx, o)
-}
-
-func (inst *RunIntentServiceImpl) preprocessWithFilters(ctx context.Context, o1 *dto.Intent) (*dto.Intent, error) {
-	return inst.IntentFilterManager.Filter(ctx, o1)
-}
-
-func (inst *RunIntentServiceImpl) runAsCLI(ctx context.Context, intent1 *dto.Intent) (*dto.Intent, error) {
-
-	err := inst.IntentHandlerService.HandleIntent(intent1)
-	if err != nil {
-		return nil, err
+	if o.Status == 0 {
+		o.Status = http.StatusOK
 	}
-	return intent1, nil
+	return o, nil
 }
 
-// func (inst *RunIntentServiceImpl) runAsWeb(ctx context.Context, o *dto.Intent) (*dto.Intent, error) {
-// 	return nil, fmt.Errorf("no impl: RunIntentServiceImpl.runAsWeb")
+// func (inst *RunIntentServiceImpl) isReadyForRun(ctx context.Context, o1 *dto.Intent) bool {
+// 	if o1.CLI == nil {
+// 		return false
+// 	}
+// 	return true
 // }
 
-// func (inst *RunIntentServiceImpl) runAsExe(ctx context.Context, intent *dto.Intent) (*dto.Intent, error) {
-// 	runner := &intents.ObjectIntentRunner{
-// 		GitLibAgent:            inst.GitLibAgent,
-// 		IntentHandlerService:   inst.IntentHandlerService,
-// 		ExecutableService:      inst.ExecutableService,
-// 		LocalRepositoryService: inst.LocalRepositoryService,
-// 		IntentFilters:          inst.IntentFilterManager,
+// func (inst *RunIntentServiceImpl) run(ctx context.Context, intent1 *dto.Intent) (*dto.Intent, error) {
+
+// 	ready := inst.isReadyForRun(ctx, intent1)
+// 	if !ready {
+// 		e := intent1.Error
+// 		if e == "" {
+// 			intent1.Status = 0
+// 			return intent1, nil
+// 		}
+// 		return nil, fmt.Errorf(e)
 // 	}
-// 	err := runner.Run(ctx, intent)
+
+// 	err := inst.IntentHandlerService.HandleIntent(intent1)
 // 	if err != nil {
 // 		return nil, err
 // 	}
-// 	return intent, nil
+
+// 	intent1.Status = http.StatusOK
+// 	return intent1, nil
 // }
 
 ////////////////////////////////////////////////////////////////////////////////

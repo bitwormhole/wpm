@@ -1,10 +1,10 @@
 package dxo
 
-// ProjectTypeKey ... like 'pom.xml'
-type ProjectTypeKey string
+// // ProjectTypeKey ... like 'pom.xml'
+// type ProjectTypePattern  string
 
-////////////////////////////////////////////////////////////////////////////////
+// ////////////////////////////////////////////////////////////////////////////////
 
-func (value ProjectTypeKey) String() string {
-	return string(value)
-}
+// func (value ProjectTypeKey) String() string {
+// 	return string(value)
+// }

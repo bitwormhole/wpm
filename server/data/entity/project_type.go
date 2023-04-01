@@ -8,11 +8,13 @@ import (
 
 // ProjectType ...
 type ProjectType struct {
-	ID dxo.ProjectTypeID `gorm:"primaryKey"`
+	ID  dxo.ProjectTypeID  `gorm:"primaryKey"`
+	URN dxo.ProjectTypeURN `gorm:"index:,unique"`
+
 	Base
 
-	Name dxo.ProjectTypeName `gorm:"index:,unique"`
-	Key  dxo.ProjectTypeKey
+	Name    dxo.ProjectTypeName
+	Pattern string
 
 	Label       string
 	Description string

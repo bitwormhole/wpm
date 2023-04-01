@@ -26,6 +26,9 @@ type IntentTemplateID int
 // MediaID ...
 type MediaID int
 
+// NamespaceID ...
+type NamespaceID int
+
 // LocationID ...
 type LocationID int
 
