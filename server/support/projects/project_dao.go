@@ -1,7 +1,6 @@
 package projects
 
 import (
-	"errors"
 	"fmt"
 	"strings"
 
@@ -71,7 +70,13 @@ func (inst *ProjectDaoImpl) FindByPath(path string) (*entity.Project, error) {
 
 // FindByOwnerRepository ...
 func (inst *ProjectDaoImpl) FindByOwnerRepository(id dxo.LocalRepositoryID) ([]*entity.Project, error) {
-	return nil, errors.New("no impl")
+	list := inst.modelList()
+	db := inst.Agent.DB()
+	res := db.Where("owner_repository = ?", id).Find(&list)
+	if res.Error != nil {
+		return nil, res.Error
+	}
+	return list, nil
 }
 
 // ListAll ...

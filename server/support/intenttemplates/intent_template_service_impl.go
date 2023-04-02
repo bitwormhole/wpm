@@ -121,7 +121,7 @@ func (inst *IntentTemplateServiceImpl) ListAll(ctx context.Context) ([]*dto.Inte
 	return inst.entity2dtoList(src)
 }
 
-// ListByAET ...
+// ListBySelector ...
 func (inst *IntentTemplateServiceImpl) ListBySelector(ctx context.Context, sel *dto.IntentTemplate) ([]*dto.IntentTemplate, error) {
 	selector, err := inst.dto2entity(sel)
 	if err != nil {

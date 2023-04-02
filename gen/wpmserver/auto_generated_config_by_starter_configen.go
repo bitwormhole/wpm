@@ -571,6 +571,24 @@ func autoGenConfig(cb application.ConfigBuilder) error {
 		return err
 	}
 
+	// component: com57-repositories0x637d5e.LocalRepositoryController
+	cominfobuilder.Next()
+	cominfobuilder.ID("com57-repositories0x637d5e.LocalRepositoryController").Class("rest-controller").Aliases("").Scope("")
+	cominfobuilder.Factory((&comFactory4pComLocalRepositoryController{}).init())
+	err = cominfobuilder.CreateTo(cb)
+	if err != nil {
+		return err
+	}
+
+	// component: LocalRepositoryDAO
+	cominfobuilder.Next()
+	cominfobuilder.ID("LocalRepositoryDAO").Class("").Aliases("").Scope("")
+	cominfobuilder.Factory((&comFactory4pComRepositoryDaoImpl{}).init())
+	err = cominfobuilder.CreateTo(cb)
+	if err != nil {
+		return err
+	}
+
 	// component: LocalRepositoryFinder
 	cominfobuilder.Next()
 	cominfobuilder.ID("LocalRepositoryFinder").Class("").Aliases("").Scope("")
@@ -598,28 +616,19 @@ func autoGenConfig(cb application.ConfigBuilder) error {
 		return err
 	}
 
-	// component: com60-repositories0x637d5e.LocalRepositoryController
-	cominfobuilder.Next()
-	cominfobuilder.ID("com60-repositories0x637d5e.LocalRepositoryController").Class("rest-controller").Aliases("").Scope("")
-	cominfobuilder.Factory((&comFactory4pComLocalRepositoryController{}).init())
-	err = cominfobuilder.CreateTo(cb)
-	if err != nil {
-		return err
-	}
-
-	// component: LocalRepositoryDAO
-	cominfobuilder.Next()
-	cominfobuilder.ID("LocalRepositoryDAO").Class("").Aliases("").Scope("")
-	cominfobuilder.Factory((&comFactory4pComRepositoryDaoImpl{}).init())
-	err = cominfobuilder.CreateTo(cb)
-	if err != nil {
-		return err
-	}
-
 	// component: MainRepositoryService
 	cominfobuilder.Next()
 	cominfobuilder.ID("MainRepositoryService").Class("").Aliases("").Scope("")
 	cominfobuilder.Factory((&comFactory4pComMainRepositoryServiceImpl{}).init())
+	err = cominfobuilder.CreateTo(cb)
+	if err != nil {
+		return err
+	}
+
+	// component: com63-repositories0x637d5e.RemoteRepositoryController
+	cominfobuilder.Next()
+	cominfobuilder.ID("com63-repositories0x637d5e.RemoteRepositoryController").Class("rest-controller").Aliases("").Scope("")
+	cominfobuilder.Factory((&comFactory4pComRemoteRepositoryController{}).init())
 	err = cominfobuilder.CreateTo(cb)
 	if err != nil {
 		return err
@@ -634,10 +643,10 @@ func autoGenConfig(cb application.ConfigBuilder) error {
 		return err
 	}
 
-	// component: com64-repositories0x637d5e.RemoteRepositoryController
+	// component: com65-repositories0x637d5e.RepositoryImportController
 	cominfobuilder.Next()
-	cominfobuilder.ID("com64-repositories0x637d5e.RemoteRepositoryController").Class("rest-controller").Aliases("").Scope("")
-	cominfobuilder.Factory((&comFactory4pComRemoteRepositoryController{}).init())
+	cominfobuilder.ID("com65-repositories0x637d5e.RepositoryImportController").Class("rest-controller").Aliases("").Scope("")
+	cominfobuilder.Factory((&comFactory4pComRepositoryImportController{}).init())
 	err = cominfobuilder.CreateTo(cb)
 	if err != nil {
 		return err
@@ -647,15 +656,6 @@ func autoGenConfig(cb application.ConfigBuilder) error {
 	cominfobuilder.Next()
 	cominfobuilder.ID("RepositoryImportService").Class("").Aliases("").Scope("")
 	cominfobuilder.Factory((&comFactory4pComRepositoryImportServiceImpl{}).init())
-	err = cominfobuilder.CreateTo(cb)
-	if err != nil {
-		return err
-	}
-
-	// component: com66-repositories0x637d5e.RepositoryImportController
-	cominfobuilder.Next()
-	cominfobuilder.ID("com66-repositories0x637d5e.RepositoryImportController").Class("rest-controller").Aliases("").Scope("")
-	cominfobuilder.Factory((&comFactory4pComRepositoryImportController{}).init())
 	err = cominfobuilder.CreateTo(cb)
 	if err != nil {
 		return err
@@ -6110,6 +6110,202 @@ func (inst * comFactory4pComProjectServiceImpl) getterForFieldGitLibAgentSelecto
 
 ////////////////////////////////////////////////////////////////////////////////
 
+// comFactory4pComLocalRepositoryController : the factory of component: com57-repositories0x637d5e.LocalRepositoryController
+type comFactory4pComLocalRepositoryController struct {
+
+    mPrototype * repositories0x637d5e.LocalRepositoryController
+
+	
+	mRepoServiceSelector config.InjectionSelector
+	mResponderSelector config.InjectionSelector
+
+}
+
+func (inst * comFactory4pComLocalRepositoryController) init() application.ComponentFactory {
+
+	
+	inst.mRepoServiceSelector = config.NewInjectionSelector("#LocalRepositoryService",nil)
+	inst.mResponderSelector = config.NewInjectionSelector("#glass-main-responder",nil)
+
+
+	inst.mPrototype = inst.newObject()
+    return inst
+}
+
+func (inst * comFactory4pComLocalRepositoryController) newObject() * repositories0x637d5e.LocalRepositoryController {
+	return & repositories0x637d5e.LocalRepositoryController {}
+}
+
+func (inst * comFactory4pComLocalRepositoryController) castObject(instance application.ComponentInstance) * repositories0x637d5e.LocalRepositoryController {
+	return instance.Get().(*repositories0x637d5e.LocalRepositoryController)
+}
+
+func (inst * comFactory4pComLocalRepositoryController) GetPrototype() lang.Object {
+	return inst.mPrototype
+}
+
+func (inst * comFactory4pComLocalRepositoryController) NewInstance() application.ComponentInstance {
+	return config.SimpleInstance(inst, inst.newObject())
+}
+
+func (inst * comFactory4pComLocalRepositoryController) AfterService() application.ComponentAfterService {
+	return inst
+}
+
+func (inst * comFactory4pComLocalRepositoryController) Init(instance application.ComponentInstance) error {
+	return nil
+}
+
+func (inst * comFactory4pComLocalRepositoryController) Destroy(instance application.ComponentInstance) error {
+	return nil
+}
+
+func (inst * comFactory4pComLocalRepositoryController) Inject(instance application.ComponentInstance, context application.InstanceContext) error {
+	
+	obj := inst.castObject(instance)
+	obj.RepoService = inst.getterForFieldRepoServiceSelector(context)
+	obj.Responder = inst.getterForFieldResponderSelector(context)
+	return context.LastError()
+}
+
+//getterForFieldRepoServiceSelector
+func (inst * comFactory4pComLocalRepositoryController) getterForFieldRepoServiceSelector (context application.InstanceContext) service0x3e063d.LocalRepositoryService {
+
+	o1 := inst.mRepoServiceSelector.GetOne(context)
+	o2, ok := o1.(service0x3e063d.LocalRepositoryService)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "com57-repositories0x637d5e.LocalRepositoryController")
+		eb.Set("field", "RepoService")
+		eb.Set("type1", "?")
+		eb.Set("type2", "service0x3e063d.LocalRepositoryService")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
+}
+
+//getterForFieldResponderSelector
+func (inst * comFactory4pComLocalRepositoryController) getterForFieldResponderSelector (context application.InstanceContext) glass0x47343f.MainResponder {
+
+	o1 := inst.mResponderSelector.GetOne(context)
+	o2, ok := o1.(glass0x47343f.MainResponder)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "com57-repositories0x637d5e.LocalRepositoryController")
+		eb.Set("field", "Responder")
+		eb.Set("type1", "?")
+		eb.Set("type2", "glass0x47343f.MainResponder")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+// comFactory4pComRepositoryDaoImpl : the factory of component: LocalRepositoryDAO
+type comFactory4pComRepositoryDaoImpl struct {
+
+    mPrototype * repositories0x637d5e.RepositoryDaoImpl
+
+	
+	mAgentSelector config.InjectionSelector
+	mUUIDGenServiceSelector config.InjectionSelector
+
+}
+
+func (inst * comFactory4pComRepositoryDaoImpl) init() application.ComponentFactory {
+
+	
+	inst.mAgentSelector = config.NewInjectionSelector("#GormDBAgent",nil)
+	inst.mUUIDGenServiceSelector = config.NewInjectionSelector("#UUIDGenService",nil)
+
+
+	inst.mPrototype = inst.newObject()
+    return inst
+}
+
+func (inst * comFactory4pComRepositoryDaoImpl) newObject() * repositories0x637d5e.RepositoryDaoImpl {
+	return & repositories0x637d5e.RepositoryDaoImpl {}
+}
+
+func (inst * comFactory4pComRepositoryDaoImpl) castObject(instance application.ComponentInstance) * repositories0x637d5e.RepositoryDaoImpl {
+	return instance.Get().(*repositories0x637d5e.RepositoryDaoImpl)
+}
+
+func (inst * comFactory4pComRepositoryDaoImpl) GetPrototype() lang.Object {
+	return inst.mPrototype
+}
+
+func (inst * comFactory4pComRepositoryDaoImpl) NewInstance() application.ComponentInstance {
+	return config.SimpleInstance(inst, inst.newObject())
+}
+
+func (inst * comFactory4pComRepositoryDaoImpl) AfterService() application.ComponentAfterService {
+	return inst
+}
+
+func (inst * comFactory4pComRepositoryDaoImpl) Init(instance application.ComponentInstance) error {
+	return nil
+}
+
+func (inst * comFactory4pComRepositoryDaoImpl) Destroy(instance application.ComponentInstance) error {
+	return nil
+}
+
+func (inst * comFactory4pComRepositoryDaoImpl) Inject(instance application.ComponentInstance, context application.InstanceContext) error {
+	
+	obj := inst.castObject(instance)
+	obj.Agent = inst.getterForFieldAgentSelector(context)
+	obj.UUIDGenService = inst.getterForFieldUUIDGenServiceSelector(context)
+	return context.LastError()
+}
+
+//getterForFieldAgentSelector
+func (inst * comFactory4pComRepositoryDaoImpl) getterForFieldAgentSelector (context application.InstanceContext) dbagent0x9f90fb.GormDBAgent {
+
+	o1 := inst.mAgentSelector.GetOne(context)
+	o2, ok := o1.(dbagent0x9f90fb.GormDBAgent)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "LocalRepositoryDAO")
+		eb.Set("field", "Agent")
+		eb.Set("type1", "?")
+		eb.Set("type2", "dbagent0x9f90fb.GormDBAgent")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
+}
+
+//getterForFieldUUIDGenServiceSelector
+func (inst * comFactory4pComRepositoryDaoImpl) getterForFieldUUIDGenServiceSelector (context application.InstanceContext) service0x3e063d.UUIDGenService {
+
+	o1 := inst.mUUIDGenServiceSelector.GetOne(context)
+	o2, ok := o1.(service0x3e063d.UUIDGenService)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "LocalRepositoryDAO")
+		eb.Set("field", "UUIDGenService")
+		eb.Set("type1", "?")
+		eb.Set("type2", "service0x3e063d.UUIDGenService")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+
 // comFactory4pComLocalRepositoryFinderImpl : the factory of component: LocalRepositoryFinder
 type comFactory4pComLocalRepositoryFinderImpl struct {
 
@@ -6193,26 +6389,28 @@ type comFactory4pComLocalRepositoryServiceImpl struct {
     mPrototype * repositories0x637d5e.LocalRepositoryServiceImpl
 
 	
+	mGitLibAgentSelector config.InjectionSelector
 	mLocalRepositoryDAOSelector config.InjectionSelector
 	mUUIDGenServiceSelector config.InjectionSelector
 	mRepoFinderSelector config.InjectionSelector
 	mLrStateLoaderSelector config.InjectionSelector
 	mFileSystemServiceSelector config.InjectionSelector
 	mLocationServiceSelector config.InjectionSelector
-	mGitLibAgentSelector config.InjectionSelector
+	mProjectServiceSelector config.InjectionSelector
 
 }
 
 func (inst * comFactory4pComLocalRepositoryServiceImpl) init() application.ComponentFactory {
 
 	
+	inst.mGitLibAgentSelector = config.NewInjectionSelector("#git-lib-agent",nil)
 	inst.mLocalRepositoryDAOSelector = config.NewInjectionSelector("#LocalRepositoryDAO",nil)
 	inst.mUUIDGenServiceSelector = config.NewInjectionSelector("#UUIDGenService",nil)
 	inst.mRepoFinderSelector = config.NewInjectionSelector("#LocalRepositoryFinder",nil)
 	inst.mLrStateLoaderSelector = config.NewInjectionSelector("#LocalRepositoryStateLoader",nil)
 	inst.mFileSystemServiceSelector = config.NewInjectionSelector("#FileSystemService",nil)
 	inst.mLocationServiceSelector = config.NewInjectionSelector("#LocationService",nil)
-	inst.mGitLibAgentSelector = config.NewInjectionSelector("#git-lib-agent",nil)
+	inst.mProjectServiceSelector = config.NewInjectionSelector("#ProjectService",nil)
 
 
 	inst.mPrototype = inst.newObject()
@@ -6250,14 +6448,33 @@ func (inst * comFactory4pComLocalRepositoryServiceImpl) Destroy(instance applica
 func (inst * comFactory4pComLocalRepositoryServiceImpl) Inject(instance application.ComponentInstance, context application.InstanceContext) error {
 	
 	obj := inst.castObject(instance)
+	obj.GitLibAgent = inst.getterForFieldGitLibAgentSelector(context)
 	obj.LocalRepositoryDAO = inst.getterForFieldLocalRepositoryDAOSelector(context)
 	obj.UUIDGenService = inst.getterForFieldUUIDGenServiceSelector(context)
 	obj.RepoFinder = inst.getterForFieldRepoFinderSelector(context)
 	obj.LrStateLoader = inst.getterForFieldLrStateLoaderSelector(context)
 	obj.FileSystemService = inst.getterForFieldFileSystemServiceSelector(context)
 	obj.LocationService = inst.getterForFieldLocationServiceSelector(context)
-	obj.GitLibAgent = inst.getterForFieldGitLibAgentSelector(context)
+	obj.ProjectService = inst.getterForFieldProjectServiceSelector(context)
 	return context.LastError()
+}
+
+//getterForFieldGitLibAgentSelector
+func (inst * comFactory4pComLocalRepositoryServiceImpl) getterForFieldGitLibAgentSelector (context application.InstanceContext) store0x8467b3.LibAgent {
+
+	o1 := inst.mGitLibAgentSelector.GetOne(context)
+	o2, ok := o1.(store0x8467b3.LibAgent)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "LocalRepositoryService")
+		eb.Set("field", "GitLibAgent")
+		eb.Set("type1", "?")
+		eb.Set("type2", "store0x8467b3.LibAgent")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
 }
 
 //getterForFieldLocalRepositoryDAOSelector
@@ -6368,18 +6585,18 @@ func (inst * comFactory4pComLocalRepositoryServiceImpl) getterForFieldLocationSe
 	return o2
 }
 
-//getterForFieldGitLibAgentSelector
-func (inst * comFactory4pComLocalRepositoryServiceImpl) getterForFieldGitLibAgentSelector (context application.InstanceContext) store0x8467b3.LibAgent {
+//getterForFieldProjectServiceSelector
+func (inst * comFactory4pComLocalRepositoryServiceImpl) getterForFieldProjectServiceSelector (context application.InstanceContext) service0x3e063d.ProjectService {
 
-	o1 := inst.mGitLibAgentSelector.GetOne(context)
-	o2, ok := o1.(store0x8467b3.LibAgent)
+	o1 := inst.mProjectServiceSelector.GetOne(context)
+	o2, ok := o1.(service0x3e063d.ProjectService)
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
 		eb.Set("com", "LocalRepositoryService")
-		eb.Set("field", "GitLibAgent")
+		eb.Set("field", "ProjectService")
 		eb.Set("type1", "?")
-		eb.Set("type2", "store0x8467b3.LibAgent")
+		eb.Set("type2", "service0x3e063d.ProjectService")
 		context.HandleError(eb.Create())
 		return nil
 	}
@@ -6509,202 +6726,6 @@ func (inst * comFactory4pComLocalRepositoryStateLoaderImpl) getterForFieldGitLib
 
 ////////////////////////////////////////////////////////////////////////////////
 
-// comFactory4pComLocalRepositoryController : the factory of component: com60-repositories0x637d5e.LocalRepositoryController
-type comFactory4pComLocalRepositoryController struct {
-
-    mPrototype * repositories0x637d5e.LocalRepositoryController
-
-	
-	mRepoServiceSelector config.InjectionSelector
-	mResponderSelector config.InjectionSelector
-
-}
-
-func (inst * comFactory4pComLocalRepositoryController) init() application.ComponentFactory {
-
-	
-	inst.mRepoServiceSelector = config.NewInjectionSelector("#LocalRepositoryService",nil)
-	inst.mResponderSelector = config.NewInjectionSelector("#glass-main-responder",nil)
-
-
-	inst.mPrototype = inst.newObject()
-    return inst
-}
-
-func (inst * comFactory4pComLocalRepositoryController) newObject() * repositories0x637d5e.LocalRepositoryController {
-	return & repositories0x637d5e.LocalRepositoryController {}
-}
-
-func (inst * comFactory4pComLocalRepositoryController) castObject(instance application.ComponentInstance) * repositories0x637d5e.LocalRepositoryController {
-	return instance.Get().(*repositories0x637d5e.LocalRepositoryController)
-}
-
-func (inst * comFactory4pComLocalRepositoryController) GetPrototype() lang.Object {
-	return inst.mPrototype
-}
-
-func (inst * comFactory4pComLocalRepositoryController) NewInstance() application.ComponentInstance {
-	return config.SimpleInstance(inst, inst.newObject())
-}
-
-func (inst * comFactory4pComLocalRepositoryController) AfterService() application.ComponentAfterService {
-	return inst
-}
-
-func (inst * comFactory4pComLocalRepositoryController) Init(instance application.ComponentInstance) error {
-	return nil
-}
-
-func (inst * comFactory4pComLocalRepositoryController) Destroy(instance application.ComponentInstance) error {
-	return nil
-}
-
-func (inst * comFactory4pComLocalRepositoryController) Inject(instance application.ComponentInstance, context application.InstanceContext) error {
-	
-	obj := inst.castObject(instance)
-	obj.RepoService = inst.getterForFieldRepoServiceSelector(context)
-	obj.Responder = inst.getterForFieldResponderSelector(context)
-	return context.LastError()
-}
-
-//getterForFieldRepoServiceSelector
-func (inst * comFactory4pComLocalRepositoryController) getterForFieldRepoServiceSelector (context application.InstanceContext) service0x3e063d.LocalRepositoryService {
-
-	o1 := inst.mRepoServiceSelector.GetOne(context)
-	o2, ok := o1.(service0x3e063d.LocalRepositoryService)
-	if !ok {
-		eb := &util.ErrorBuilder{}
-		eb.Message("bad cast")
-		eb.Set("com", "com60-repositories0x637d5e.LocalRepositoryController")
-		eb.Set("field", "RepoService")
-		eb.Set("type1", "?")
-		eb.Set("type2", "service0x3e063d.LocalRepositoryService")
-		context.HandleError(eb.Create())
-		return nil
-	}
-	return o2
-}
-
-//getterForFieldResponderSelector
-func (inst * comFactory4pComLocalRepositoryController) getterForFieldResponderSelector (context application.InstanceContext) glass0x47343f.MainResponder {
-
-	o1 := inst.mResponderSelector.GetOne(context)
-	o2, ok := o1.(glass0x47343f.MainResponder)
-	if !ok {
-		eb := &util.ErrorBuilder{}
-		eb.Message("bad cast")
-		eb.Set("com", "com60-repositories0x637d5e.LocalRepositoryController")
-		eb.Set("field", "Responder")
-		eb.Set("type1", "?")
-		eb.Set("type2", "glass0x47343f.MainResponder")
-		context.HandleError(eb.Create())
-		return nil
-	}
-	return o2
-}
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-
-// comFactory4pComRepositoryDaoImpl : the factory of component: LocalRepositoryDAO
-type comFactory4pComRepositoryDaoImpl struct {
-
-    mPrototype * repositories0x637d5e.RepositoryDaoImpl
-
-	
-	mAgentSelector config.InjectionSelector
-	mUUIDGenServiceSelector config.InjectionSelector
-
-}
-
-func (inst * comFactory4pComRepositoryDaoImpl) init() application.ComponentFactory {
-
-	
-	inst.mAgentSelector = config.NewInjectionSelector("#GormDBAgent",nil)
-	inst.mUUIDGenServiceSelector = config.NewInjectionSelector("#UUIDGenService",nil)
-
-
-	inst.mPrototype = inst.newObject()
-    return inst
-}
-
-func (inst * comFactory4pComRepositoryDaoImpl) newObject() * repositories0x637d5e.RepositoryDaoImpl {
-	return & repositories0x637d5e.RepositoryDaoImpl {}
-}
-
-func (inst * comFactory4pComRepositoryDaoImpl) castObject(instance application.ComponentInstance) * repositories0x637d5e.RepositoryDaoImpl {
-	return instance.Get().(*repositories0x637d5e.RepositoryDaoImpl)
-}
-
-func (inst * comFactory4pComRepositoryDaoImpl) GetPrototype() lang.Object {
-	return inst.mPrototype
-}
-
-func (inst * comFactory4pComRepositoryDaoImpl) NewInstance() application.ComponentInstance {
-	return config.SimpleInstance(inst, inst.newObject())
-}
-
-func (inst * comFactory4pComRepositoryDaoImpl) AfterService() application.ComponentAfterService {
-	return inst
-}
-
-func (inst * comFactory4pComRepositoryDaoImpl) Init(instance application.ComponentInstance) error {
-	return nil
-}
-
-func (inst * comFactory4pComRepositoryDaoImpl) Destroy(instance application.ComponentInstance) error {
-	return nil
-}
-
-func (inst * comFactory4pComRepositoryDaoImpl) Inject(instance application.ComponentInstance, context application.InstanceContext) error {
-	
-	obj := inst.castObject(instance)
-	obj.Agent = inst.getterForFieldAgentSelector(context)
-	obj.UUIDGenService = inst.getterForFieldUUIDGenServiceSelector(context)
-	return context.LastError()
-}
-
-//getterForFieldAgentSelector
-func (inst * comFactory4pComRepositoryDaoImpl) getterForFieldAgentSelector (context application.InstanceContext) dbagent0x9f90fb.GormDBAgent {
-
-	o1 := inst.mAgentSelector.GetOne(context)
-	o2, ok := o1.(dbagent0x9f90fb.GormDBAgent)
-	if !ok {
-		eb := &util.ErrorBuilder{}
-		eb.Message("bad cast")
-		eb.Set("com", "LocalRepositoryDAO")
-		eb.Set("field", "Agent")
-		eb.Set("type1", "?")
-		eb.Set("type2", "dbagent0x9f90fb.GormDBAgent")
-		context.HandleError(eb.Create())
-		return nil
-	}
-	return o2
-}
-
-//getterForFieldUUIDGenServiceSelector
-func (inst * comFactory4pComRepositoryDaoImpl) getterForFieldUUIDGenServiceSelector (context application.InstanceContext) service0x3e063d.UUIDGenService {
-
-	o1 := inst.mUUIDGenServiceSelector.GetOne(context)
-	o2, ok := o1.(service0x3e063d.UUIDGenService)
-	if !ok {
-		eb := &util.ErrorBuilder{}
-		eb.Message("bad cast")
-		eb.Set("com", "LocalRepositoryDAO")
-		eb.Set("field", "UUIDGenService")
-		eb.Set("type1", "?")
-		eb.Set("type2", "service0x3e063d.UUIDGenService")
-		context.HandleError(eb.Create())
-		return nil
-	}
-	return o2
-}
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-
 // comFactory4pComMainRepositoryServiceImpl : the factory of component: MainRepositoryService
 type comFactory4pComMainRepositoryServiceImpl struct {
 
@@ -6803,61 +6824,7 @@ func (inst * comFactory4pComMainRepositoryServiceImpl) getterForFieldGitLASelect
 
 ////////////////////////////////////////////////////////////////////////////////
 
-// comFactory4pComRemoteRepositoryServiceImpl : the factory of component: RemoteRepositoryService
-type comFactory4pComRemoteRepositoryServiceImpl struct {
-
-    mPrototype * repositories0x637d5e.RemoteRepositoryServiceImpl
-
-	
-
-}
-
-func (inst * comFactory4pComRemoteRepositoryServiceImpl) init() application.ComponentFactory {
-
-	
-
-
-	inst.mPrototype = inst.newObject()
-    return inst
-}
-
-func (inst * comFactory4pComRemoteRepositoryServiceImpl) newObject() * repositories0x637d5e.RemoteRepositoryServiceImpl {
-	return & repositories0x637d5e.RemoteRepositoryServiceImpl {}
-}
-
-func (inst * comFactory4pComRemoteRepositoryServiceImpl) castObject(instance application.ComponentInstance) * repositories0x637d5e.RemoteRepositoryServiceImpl {
-	return instance.Get().(*repositories0x637d5e.RemoteRepositoryServiceImpl)
-}
-
-func (inst * comFactory4pComRemoteRepositoryServiceImpl) GetPrototype() lang.Object {
-	return inst.mPrototype
-}
-
-func (inst * comFactory4pComRemoteRepositoryServiceImpl) NewInstance() application.ComponentInstance {
-	return config.SimpleInstance(inst, inst.newObject())
-}
-
-func (inst * comFactory4pComRemoteRepositoryServiceImpl) AfterService() application.ComponentAfterService {
-	return inst
-}
-
-func (inst * comFactory4pComRemoteRepositoryServiceImpl) Init(instance application.ComponentInstance) error {
-	return nil
-}
-
-func (inst * comFactory4pComRemoteRepositoryServiceImpl) Destroy(instance application.ComponentInstance) error {
-	return nil
-}
-
-func (inst * comFactory4pComRemoteRepositoryServiceImpl) Inject(instance application.ComponentInstance, context application.InstanceContext) error {
-	return nil
-}
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-
-// comFactory4pComRemoteRepositoryController : the factory of component: com64-repositories0x637d5e.RemoteRepositoryController
+// comFactory4pComRemoteRepositoryController : the factory of component: com63-repositories0x637d5e.RemoteRepositoryController
 type comFactory4pComRemoteRepositoryController struct {
 
     mPrototype * repositories0x637d5e.RemoteRepositoryController
@@ -6923,7 +6890,7 @@ func (inst * comFactory4pComRemoteRepositoryController) getterForFieldRepoServic
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com64-repositories0x637d5e.RemoteRepositoryController")
+		eb.Set("com", "com63-repositories0x637d5e.RemoteRepositoryController")
 		eb.Set("field", "RepoService")
 		eb.Set("type1", "?")
 		eb.Set("type2", "service0x3e063d.RemoteRepositoryService")
@@ -6941,7 +6908,180 @@ func (inst * comFactory4pComRemoteRepositoryController) getterForFieldResponderS
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com64-repositories0x637d5e.RemoteRepositoryController")
+		eb.Set("com", "com63-repositories0x637d5e.RemoteRepositoryController")
+		eb.Set("field", "Responder")
+		eb.Set("type1", "?")
+		eb.Set("type2", "glass0x47343f.MainResponder")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+// comFactory4pComRemoteRepositoryServiceImpl : the factory of component: RemoteRepositoryService
+type comFactory4pComRemoteRepositoryServiceImpl struct {
+
+    mPrototype * repositories0x637d5e.RemoteRepositoryServiceImpl
+
+	
+
+}
+
+func (inst * comFactory4pComRemoteRepositoryServiceImpl) init() application.ComponentFactory {
+
+	
+
+
+	inst.mPrototype = inst.newObject()
+    return inst
+}
+
+func (inst * comFactory4pComRemoteRepositoryServiceImpl) newObject() * repositories0x637d5e.RemoteRepositoryServiceImpl {
+	return & repositories0x637d5e.RemoteRepositoryServiceImpl {}
+}
+
+func (inst * comFactory4pComRemoteRepositoryServiceImpl) castObject(instance application.ComponentInstance) * repositories0x637d5e.RemoteRepositoryServiceImpl {
+	return instance.Get().(*repositories0x637d5e.RemoteRepositoryServiceImpl)
+}
+
+func (inst * comFactory4pComRemoteRepositoryServiceImpl) GetPrototype() lang.Object {
+	return inst.mPrototype
+}
+
+func (inst * comFactory4pComRemoteRepositoryServiceImpl) NewInstance() application.ComponentInstance {
+	return config.SimpleInstance(inst, inst.newObject())
+}
+
+func (inst * comFactory4pComRemoteRepositoryServiceImpl) AfterService() application.ComponentAfterService {
+	return inst
+}
+
+func (inst * comFactory4pComRemoteRepositoryServiceImpl) Init(instance application.ComponentInstance) error {
+	return nil
+}
+
+func (inst * comFactory4pComRemoteRepositoryServiceImpl) Destroy(instance application.ComponentInstance) error {
+	return nil
+}
+
+func (inst * comFactory4pComRemoteRepositoryServiceImpl) Inject(instance application.ComponentInstance, context application.InstanceContext) error {
+	return nil
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+// comFactory4pComRepositoryImportController : the factory of component: com65-repositories0x637d5e.RepositoryImportController
+type comFactory4pComRepositoryImportController struct {
+
+    mPrototype * repositories0x637d5e.RepositoryImportController
+
+	
+	mRepoStateLoaderSelector config.InjectionSelector
+	mImportServiceSelector config.InjectionSelector
+	mResponderSelector config.InjectionSelector
+
+}
+
+func (inst * comFactory4pComRepositoryImportController) init() application.ComponentFactory {
+
+	
+	inst.mRepoStateLoaderSelector = config.NewInjectionSelector("#LocalRepositoryStateLoader",nil)
+	inst.mImportServiceSelector = config.NewInjectionSelector("#RepositoryImportService",nil)
+	inst.mResponderSelector = config.NewInjectionSelector("#glass-main-responder",nil)
+
+
+	inst.mPrototype = inst.newObject()
+    return inst
+}
+
+func (inst * comFactory4pComRepositoryImportController) newObject() * repositories0x637d5e.RepositoryImportController {
+	return & repositories0x637d5e.RepositoryImportController {}
+}
+
+func (inst * comFactory4pComRepositoryImportController) castObject(instance application.ComponentInstance) * repositories0x637d5e.RepositoryImportController {
+	return instance.Get().(*repositories0x637d5e.RepositoryImportController)
+}
+
+func (inst * comFactory4pComRepositoryImportController) GetPrototype() lang.Object {
+	return inst.mPrototype
+}
+
+func (inst * comFactory4pComRepositoryImportController) NewInstance() application.ComponentInstance {
+	return config.SimpleInstance(inst, inst.newObject())
+}
+
+func (inst * comFactory4pComRepositoryImportController) AfterService() application.ComponentAfterService {
+	return inst
+}
+
+func (inst * comFactory4pComRepositoryImportController) Init(instance application.ComponentInstance) error {
+	return nil
+}
+
+func (inst * comFactory4pComRepositoryImportController) Destroy(instance application.ComponentInstance) error {
+	return nil
+}
+
+func (inst * comFactory4pComRepositoryImportController) Inject(instance application.ComponentInstance, context application.InstanceContext) error {
+	
+	obj := inst.castObject(instance)
+	obj.RepoStateLoader = inst.getterForFieldRepoStateLoaderSelector(context)
+	obj.ImportService = inst.getterForFieldImportServiceSelector(context)
+	obj.Responder = inst.getterForFieldResponderSelector(context)
+	return context.LastError()
+}
+
+//getterForFieldRepoStateLoaderSelector
+func (inst * comFactory4pComRepositoryImportController) getterForFieldRepoStateLoaderSelector (context application.InstanceContext) service0x3e063d.LocalRepositoryStateLoader {
+
+	o1 := inst.mRepoStateLoaderSelector.GetOne(context)
+	o2, ok := o1.(service0x3e063d.LocalRepositoryStateLoader)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "com65-repositories0x637d5e.RepositoryImportController")
+		eb.Set("field", "RepoStateLoader")
+		eb.Set("type1", "?")
+		eb.Set("type2", "service0x3e063d.LocalRepositoryStateLoader")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
+}
+
+//getterForFieldImportServiceSelector
+func (inst * comFactory4pComRepositoryImportController) getterForFieldImportServiceSelector (context application.InstanceContext) service0x3e063d.RepositoryImportService {
+
+	o1 := inst.mImportServiceSelector.GetOne(context)
+	o2, ok := o1.(service0x3e063d.RepositoryImportService)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "com65-repositories0x637d5e.RepositoryImportController")
+		eb.Set("field", "ImportService")
+		eb.Set("type1", "?")
+		eb.Set("type2", "service0x3e063d.RepositoryImportService")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
+}
+
+//getterForFieldResponderSelector
+func (inst * comFactory4pComRepositoryImportController) getterForFieldResponderSelector (context application.InstanceContext) glass0x47343f.MainResponder {
+
+	o1 := inst.mResponderSelector.GetOne(context)
+	o2, ok := o1.(glass0x47343f.MainResponder)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "com65-repositories0x637d5e.RepositoryImportController")
 		eb.Set("field", "Responder")
 		eb.Set("type1", "?")
 		eb.Set("type2", "glass0x47343f.MainResponder")
@@ -7043,125 +7183,6 @@ func (inst * comFactory4pComRepositoryImportServiceImpl) getterForFieldRepoFinde
 		eb.Set("field", "RepoFinder")
 		eb.Set("type1", "?")
 		eb.Set("type2", "service0x3e063d.LocalRepositoryFinder")
-		context.HandleError(eb.Create())
-		return nil
-	}
-	return o2
-}
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-
-// comFactory4pComRepositoryImportController : the factory of component: com66-repositories0x637d5e.RepositoryImportController
-type comFactory4pComRepositoryImportController struct {
-
-    mPrototype * repositories0x637d5e.RepositoryImportController
-
-	
-	mRepoStateLoaderSelector config.InjectionSelector
-	mImportServiceSelector config.InjectionSelector
-	mResponderSelector config.InjectionSelector
-
-}
-
-func (inst * comFactory4pComRepositoryImportController) init() application.ComponentFactory {
-
-	
-	inst.mRepoStateLoaderSelector = config.NewInjectionSelector("#LocalRepositoryStateLoader",nil)
-	inst.mImportServiceSelector = config.NewInjectionSelector("#RepositoryImportService",nil)
-	inst.mResponderSelector = config.NewInjectionSelector("#glass-main-responder",nil)
-
-
-	inst.mPrototype = inst.newObject()
-    return inst
-}
-
-func (inst * comFactory4pComRepositoryImportController) newObject() * repositories0x637d5e.RepositoryImportController {
-	return & repositories0x637d5e.RepositoryImportController {}
-}
-
-func (inst * comFactory4pComRepositoryImportController) castObject(instance application.ComponentInstance) * repositories0x637d5e.RepositoryImportController {
-	return instance.Get().(*repositories0x637d5e.RepositoryImportController)
-}
-
-func (inst * comFactory4pComRepositoryImportController) GetPrototype() lang.Object {
-	return inst.mPrototype
-}
-
-func (inst * comFactory4pComRepositoryImportController) NewInstance() application.ComponentInstance {
-	return config.SimpleInstance(inst, inst.newObject())
-}
-
-func (inst * comFactory4pComRepositoryImportController) AfterService() application.ComponentAfterService {
-	return inst
-}
-
-func (inst * comFactory4pComRepositoryImportController) Init(instance application.ComponentInstance) error {
-	return nil
-}
-
-func (inst * comFactory4pComRepositoryImportController) Destroy(instance application.ComponentInstance) error {
-	return nil
-}
-
-func (inst * comFactory4pComRepositoryImportController) Inject(instance application.ComponentInstance, context application.InstanceContext) error {
-	
-	obj := inst.castObject(instance)
-	obj.RepoStateLoader = inst.getterForFieldRepoStateLoaderSelector(context)
-	obj.ImportService = inst.getterForFieldImportServiceSelector(context)
-	obj.Responder = inst.getterForFieldResponderSelector(context)
-	return context.LastError()
-}
-
-//getterForFieldRepoStateLoaderSelector
-func (inst * comFactory4pComRepositoryImportController) getterForFieldRepoStateLoaderSelector (context application.InstanceContext) service0x3e063d.LocalRepositoryStateLoader {
-
-	o1 := inst.mRepoStateLoaderSelector.GetOne(context)
-	o2, ok := o1.(service0x3e063d.LocalRepositoryStateLoader)
-	if !ok {
-		eb := &util.ErrorBuilder{}
-		eb.Message("bad cast")
-		eb.Set("com", "com66-repositories0x637d5e.RepositoryImportController")
-		eb.Set("field", "RepoStateLoader")
-		eb.Set("type1", "?")
-		eb.Set("type2", "service0x3e063d.LocalRepositoryStateLoader")
-		context.HandleError(eb.Create())
-		return nil
-	}
-	return o2
-}
-
-//getterForFieldImportServiceSelector
-func (inst * comFactory4pComRepositoryImportController) getterForFieldImportServiceSelector (context application.InstanceContext) service0x3e063d.RepositoryImportService {
-
-	o1 := inst.mImportServiceSelector.GetOne(context)
-	o2, ok := o1.(service0x3e063d.RepositoryImportService)
-	if !ok {
-		eb := &util.ErrorBuilder{}
-		eb.Message("bad cast")
-		eb.Set("com", "com66-repositories0x637d5e.RepositoryImportController")
-		eb.Set("field", "ImportService")
-		eb.Set("type1", "?")
-		eb.Set("type2", "service0x3e063d.RepositoryImportService")
-		context.HandleError(eb.Create())
-		return nil
-	}
-	return o2
-}
-
-//getterForFieldResponderSelector
-func (inst * comFactory4pComRepositoryImportController) getterForFieldResponderSelector (context application.InstanceContext) glass0x47343f.MainResponder {
-
-	o1 := inst.mResponderSelector.GetOne(context)
-	o2, ok := o1.(glass0x47343f.MainResponder)
-	if !ok {
-		eb := &util.ErrorBuilder{}
-		eb.Message("bad cast")
-		eb.Set("com", "com66-repositories0x637d5e.RepositoryImportController")
-		eb.Set("field", "Responder")
-		eb.Set("type1", "?")
-		eb.Set("type2", "glass0x47343f.MainResponder")
 		context.HandleError(eb.Create())
 		return nil
 	}

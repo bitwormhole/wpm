@@ -20,13 +20,16 @@ import (
 type LocalRepositoryServiceImpl struct {
 	markup.Component `id:"LocalRepositoryService"`
 
-	LocalRepositoryDAO dao.LocalRepositoryDAO             `inject:"#LocalRepositoryDAO"`
-	UUIDGenService     service.UUIDGenService             `inject:"#UUIDGenService"`
-	RepoFinder         service.LocalRepositoryFinder      `inject:"#LocalRepositoryFinder"`
-	LrStateLoader      service.LocalRepositoryStateLoader `inject:"#LocalRepositoryStateLoader"`
-	FileSystemService  service.FileSystemService          `inject:"#FileSystemService"`
-	LocationService    service.LocationService            `inject:"#LocationService"`
-	GitLibAgent        store.LibAgent                     `inject:"#git-lib-agent"`
+	GitLibAgent store.LibAgent `inject:"#git-lib-agent"`
+
+	LocalRepositoryDAO dao.LocalRepositoryDAO `inject:"#LocalRepositoryDAO"`
+
+	UUIDGenService    service.UUIDGenService             `inject:"#UUIDGenService"`
+	RepoFinder        service.LocalRepositoryFinder      `inject:"#LocalRepositoryFinder"`
+	LrStateLoader     service.LocalRepositoryStateLoader `inject:"#LocalRepositoryStateLoader"`
+	FileSystemService service.FileSystemService          `inject:"#FileSystemService"`
+	LocationService   service.LocationService            `inject:"#LocationService"`
+	ProjectService    service.ProjectService             `inject:"#ProjectService"`
 }
 
 func (inst *LocalRepositoryServiceImpl) _Impl() service.LocalRepositoryService {
@@ -377,46 +380,11 @@ func (inst *LocalRepositoryServiceImpl) loadSubmodules(ctx context.Context, repo
 }
 
 func (inst *LocalRepositoryServiceImpl) loadProjects(ctx context.Context, repo *dto.LocalRepository) error {
-
-	// lib, err := inst.GitLibAgent.GetLib()
-	// if err != nil {
-	// 	return err
-	// }
-
-	// path := lib.FS().NewPath(repo.Path)
-	// repo2, err := lib.RepositoryLoader().LoadWithPath(path)
-	// if err != nil {
-	// 	return err
-	// }
-
-	// props := repo2.Config().Mix().Config().Export()
-	// const (
-	// 	prefix = "project."
-	// 	suffix = ".path"
-	// )
-	// dst := repo.Projects
-
-	// for key, value := range props {
-	// 	if strings.HasPrefix(key, prefix) && strings.HasSuffix(key, suffix) {
-	// 		i1 := len(prefix)
-	// 		i2 := len(key) - len(suffix)
-	// 		item := &dto.Project{}
-	// 		item.Name = key[i1:i2]
-	// 		item.Path = value
-	// 		dst = append(dst, item)
-	// 	}
-	// }
-
-	// sorter := &dto.ProjectSorter{}
-	// sorter.Sort(dst, func(o1, o2 *dto.Project) bool {
-	// 	s1 := o1.Path
-	// 	s2 := o2.Path
-	// 	return strings.Compare(s1, s2) < 0
-	// })
-
-	// repo.Projects = dst
-
-	// [已过时] 此处代码需要重写！
-
+	owner := repo.ID
+	src, err := inst.ProjectService.FindByOwnerRepository(ctx, owner, nil)
+	if err != nil {
+		return err
+	}
+	repo.Projects = src
 	return nil
 }

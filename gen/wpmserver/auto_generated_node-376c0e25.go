@@ -495,35 +495,6 @@ type pComProjectServiceImpl struct {
 }
 
 
-type pComLocalRepositoryFinderImpl struct {
-	instance *repositories0x637d5e.LocalRepositoryFinderImpl
-	 markup0x23084a.Component `id:"LocalRepositoryFinder"`
-	GitLibAgent store0x8467b3.LibAgent `inject:"#git-lib-agent"`
-}
-
-
-type pComLocalRepositoryServiceImpl struct {
-	instance *repositories0x637d5e.LocalRepositoryServiceImpl
-	 markup0x23084a.Component `id:"LocalRepositoryService"`
-	LocalRepositoryDAO dao0x5af8d0.LocalRepositoryDAO `inject:"#LocalRepositoryDAO"`
-	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
-	RepoFinder service0x3e063d.LocalRepositoryFinder `inject:"#LocalRepositoryFinder"`
-	LrStateLoader service0x3e063d.LocalRepositoryStateLoader `inject:"#LocalRepositoryStateLoader"`
-	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
-	LocationService service0x3e063d.LocationService `inject:"#LocationService"`
-	GitLibAgent store0x8467b3.LibAgent `inject:"#git-lib-agent"`
-}
-
-
-type pComLocalRepositoryStateLoaderImpl struct {
-	instance *repositories0x637d5e.LocalRepositoryStateLoaderImpl
-	 markup0x23084a.Component `id:"LocalRepositoryStateLoader"`
-	LocalRepoService service0x3e063d.LocalRepositoryService `inject:"#LocalRepositoryService"`
-	Dao dao0x5af8d0.LocalRepositoryDAO `inject:"#LocalRepositoryDAO"`
-	GitLibAgent store0x8467b3.LibAgent `inject:"#git-lib-agent"`
-}
-
-
 type pComLocalRepositoryController struct {
 	instance *repositories0x637d5e.LocalRepositoryController
 	 markup0x23084a.RestController `class:"rest-controller"`
@@ -540,17 +511,41 @@ type pComRepositoryDaoImpl struct {
 }
 
 
+type pComLocalRepositoryFinderImpl struct {
+	instance *repositories0x637d5e.LocalRepositoryFinderImpl
+	 markup0x23084a.Component `id:"LocalRepositoryFinder"`
+	GitLibAgent store0x8467b3.LibAgent `inject:"#git-lib-agent"`
+}
+
+
+type pComLocalRepositoryServiceImpl struct {
+	instance *repositories0x637d5e.LocalRepositoryServiceImpl
+	 markup0x23084a.Component `id:"LocalRepositoryService"`
+	GitLibAgent store0x8467b3.LibAgent `inject:"#git-lib-agent"`
+	LocalRepositoryDAO dao0x5af8d0.LocalRepositoryDAO `inject:"#LocalRepositoryDAO"`
+	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
+	RepoFinder service0x3e063d.LocalRepositoryFinder `inject:"#LocalRepositoryFinder"`
+	LrStateLoader service0x3e063d.LocalRepositoryStateLoader `inject:"#LocalRepositoryStateLoader"`
+	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
+	LocationService service0x3e063d.LocationService `inject:"#LocationService"`
+	ProjectService service0x3e063d.ProjectService `inject:"#ProjectService"`
+}
+
+
+type pComLocalRepositoryStateLoaderImpl struct {
+	instance *repositories0x637d5e.LocalRepositoryStateLoaderImpl
+	 markup0x23084a.Component `id:"LocalRepositoryStateLoader"`
+	LocalRepoService service0x3e063d.LocalRepositoryService `inject:"#LocalRepositoryService"`
+	Dao dao0x5af8d0.LocalRepositoryDAO `inject:"#LocalRepositoryDAO"`
+	GitLibAgent store0x8467b3.LibAgent `inject:"#git-lib-agent"`
+}
+
+
 type pComMainRepositoryServiceImpl struct {
 	instance *repositories0x637d5e.MainRepositoryServiceImpl
 	 markup0x23084a.Component `id:"MainRepositoryService"`
 	AppDataService service0x3e063d.AppDataService `inject:"#AppDataService"`
 	GitLA store0x8467b3.LibAgent `inject:"#git-lib-agent"`
-}
-
-
-type pComRemoteRepositoryServiceImpl struct {
-	instance *repositories0x637d5e.RemoteRepositoryServiceImpl
-	 markup0x23084a.Component `id:"RemoteRepositoryService"`
 }
 
 
@@ -562,11 +557,9 @@ type pComRemoteRepositoryController struct {
 }
 
 
-type pComRepositoryImportServiceImpl struct {
-	instance *repositories0x637d5e.RepositoryImportServiceImpl
-	 markup0x23084a.Component `id:"RepositoryImportService"`
-	RepositoryService service0x3e063d.LocalRepositoryService `inject:"#LocalRepositoryService"`
-	RepoFinder service0x3e063d.LocalRepositoryFinder `inject:"#LocalRepositoryFinder"`
+type pComRemoteRepositoryServiceImpl struct {
+	instance *repositories0x637d5e.RemoteRepositoryServiceImpl
+	 markup0x23084a.Component `id:"RemoteRepositoryService"`
 }
 
 
@@ -576,6 +569,14 @@ type pComRepositoryImportController struct {
 	RepoStateLoader service0x3e063d.LocalRepositoryStateLoader `inject:"#LocalRepositoryStateLoader"`
 	ImportService service0x3e063d.RepositoryImportService `inject:"#RepositoryImportService"`
 	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
+type pComRepositoryImportServiceImpl struct {
+	instance *repositories0x637d5e.RepositoryImportServiceImpl
+	 markup0x23084a.Component `id:"RepositoryImportService"`
+	RepositoryService service0x3e063d.LocalRepositoryService `inject:"#LocalRepositoryService"`
+	RepoFinder service0x3e063d.LocalRepositoryFinder `inject:"#LocalRepositoryFinder"`
 }
 
 
