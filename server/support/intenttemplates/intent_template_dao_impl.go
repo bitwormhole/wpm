@@ -128,6 +128,7 @@ func (inst *IntentTemplateDaoImpl) Update(id dxo.IntentTemplateID, o *entity.Int
 
 	m.Name = o.Name
 	m.Title = o.Title
+	m.Group = o.Group
 	m.Description = o.Description
 
 	m.ContentType = o.ContentType

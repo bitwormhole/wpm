@@ -46,6 +46,7 @@ type IntentTemplate struct {
 	Name        string `json:"name"`
 	IconURL     string `json:"icon"`
 	Title       string `json:"title"`
+	Group       string `json:"group"`
 	Description string `json:"description"`
 
 	// Selector   dxo.IntentTemplateSelector `json:"selector"`

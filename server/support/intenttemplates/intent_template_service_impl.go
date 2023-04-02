@@ -52,6 +52,7 @@ func (inst *IntentTemplateServiceImpl) dto2entity(o1 *dto.IntentTemplate) (*enti
 
 	o2.Name = o1.Name
 	o2.Title = o1.Title
+	o2.Group = o1.Group
 	o2.IconURL = o1.IconURL
 	o2.Description = o1.Description
 
@@ -80,6 +81,7 @@ func (inst *IntentTemplateServiceImpl) entity2dto(o1 *entity.IntentTemplate) (*d
 
 	o2.Name = o1.Name
 	o2.Title = o1.Title
+	o2.Group = o1.Group
 	o2.Description = o1.Description
 	o2.IconURL = o1.IconURL
 

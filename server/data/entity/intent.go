@@ -17,6 +17,7 @@ type IntentTemplate struct {
 
 	Name        string
 	Title       string
+	Group       string
 	Description string
 	IconURL     string
 

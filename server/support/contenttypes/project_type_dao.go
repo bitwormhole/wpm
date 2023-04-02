@@ -133,6 +133,7 @@ func (inst *ProjectTypeDaoImpl) Update(id dxo.ContentTypeID, o1 *entity.ContentT
 
 	o2.AsDir = o1.AsDir
 	o2.AsFile = o1.AsFile
+	o2.AsProject = o1.AsProject
 	o2.Priority = o1.Priority
 
 	o2.Patterns = o1.Patterns
