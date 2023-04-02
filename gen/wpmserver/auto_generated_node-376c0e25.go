@@ -10,6 +10,7 @@ import (
 	application0x67f6c5 "github.com/bitwormhole/starter/application"
 	markup0x23084a "github.com/bitwormhole/starter/markup"
 	intents0x8557f3 "github.com/bitwormhole/wpm/server/components/intents"
+	v3filters0xa6552a "github.com/bitwormhole/wpm/server/components/intents/v3filters"
 	dao0x5af8d0 "github.com/bitwormhole/wpm/server/data/dao"
 	dbagent0x9f90fb "github.com/bitwormhole/wpm/server/data/dbagent"
 	service0x3e063d "github.com/bitwormhole/wpm/server/service"
@@ -40,6 +41,50 @@ import (
 	controller0x9dc399 "github.com/bitwormhole/wpm/server/web/controller"
 	filter0x8aa8f6 "github.com/bitwormhole/wpm/server/web/filter"
 )
+
+type pComCLIMakerFilter struct {
+	instance *v3filters0xa6552a.CLIMakerFilter
+	 markup0x23084a.Component `class:"wpm-intent-filter"`
+}
+
+
+type pComCLIRunnerFilter struct {
+	instance *v3filters0xa6552a.CLIRunnerFilter
+	 markup0x23084a.Component `class:"wpm-intent-filter"`
+	IntentHandlerService service0x3e063d.IntentHandlerService `inject:"#IntentHandlerService"`
+}
+
+
+type pComExampleFilter struct {
+	instance *v3filters0xa6552a.ExampleFilter
+	 markup0x23084a.Component `class:"wpm-intent-filter"`
+}
+
+
+type pComPrepareActionFilter struct {
+	instance *v3filters0xa6552a.PrepareActionFilter
+	 markup0x23084a.Component `class:"wpm-intent-filter"`
+}
+
+
+type pComPreparePropertiesFilter struct {
+	instance *v3filters0xa6552a.PreparePropertiesFilter
+	 markup0x23084a.Component `class:"wpm-intent-filter"`
+}
+
+
+type pComCheckTemplateFilter struct {
+	instance *v3filters0xa6552a.CheckTemplateFilter
+	 markup0x23084a.Component `class:"wpm-intent-filter"`
+}
+
+
+type pComFindTemplateFilter struct {
+	instance *v3filters0xa6552a.FindTemplateFilter
+	 markup0x23084a.Component `class:"wpm-intent-filter"`
+	IntentTemplateService service0x3e063d.IntentTemplateService `inject:"#IntentTemplateService"`
+}
+
 
 type pComGormDBAgentImpl struct {
 	instance *dbagent0x9f90fb.GormDBAgentImpl

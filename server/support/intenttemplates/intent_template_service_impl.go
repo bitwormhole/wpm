@@ -38,10 +38,12 @@ func (inst *IntentTemplateServiceImpl) normalizeText(text string) string {
 
 func (inst *IntentTemplateServiceImpl) dto2entity(o1 *dto.IntentTemplate) (*entity.IntentTemplate, error) {
 
+	action := o1.Action
 	selbuilder := dxo.IntentTemplateSelectorBuilder{
-		Action: o1.Action,
-		Target: o1.Target,
-		With:   o1.Executable.String(),
+		Method: action.Method,
+		Target: action.Target,
+		Type:   action.Type,
+		With:   action.With.String(),
 	}
 
 	o2 := &entity.IntentTemplate{}
@@ -53,9 +55,10 @@ func (inst *IntentTemplateServiceImpl) dto2entity(o1 *dto.IntentTemplate) (*enti
 	o2.IconURL = o1.IconURL
 	o2.Description = o1.Description
 
-	o2.Executable = o1.Executable
-	o2.Action = inst.normalizeText(o1.Action)
-	o2.Target = inst.normalizeText(o1.Target)
+	o2.Executable = action.With
+	o2.Method = inst.normalizeText(action.Method)
+	o2.Target = inst.normalizeText(action.Target)
+	o2.ContentType = inst.normalizeText(action.Type)
 	o2.Selector = selbuilder.Create()
 
 	o2.Arguments = o1.Arguments
@@ -80,10 +83,11 @@ func (inst *IntentTemplateServiceImpl) entity2dto(o1 *entity.IntentTemplate) (*d
 	o2.Description = o1.Description
 	o2.IconURL = o1.IconURL
 
-	o2.Executable = o1.Executable
-	o2.Action = inst.normalizeText(o1.Action)
-	o2.Target = inst.normalizeText(o1.Target)
-	o2.Selector = o1.Selector
+	o2.Action.With = o1.Executable
+	o2.Action.Method = inst.normalizeText(o1.Method)
+	o2.Action.Target = inst.normalizeText(o1.Target)
+	o2.Action.Type = inst.normalizeText(o1.ContentType)
+	o2.Action.Selector = o1.Selector
 
 	o2.Arguments = o1.Arguments
 	o2.Command = o1.Command
@@ -116,12 +120,12 @@ func (inst *IntentTemplateServiceImpl) ListAll(ctx context.Context) ([]*dto.Inte
 }
 
 // ListByAET ...
-func (inst *IntentTemplateServiceImpl) ListByAET(ctx context.Context, sel *dto.IntentTemplate) ([]*dto.IntentTemplate, error) {
-	aet, err := inst.dto2entity(sel)
+func (inst *IntentTemplateServiceImpl) ListBySelector(ctx context.Context, sel *dto.IntentTemplate) ([]*dto.IntentTemplate, error) {
+	selector, err := inst.dto2entity(sel)
 	if err != nil {
 		return nil, err
 	}
-	src, err := inst.IntentTempDAO.ListByAET(aet)
+	src, err := inst.IntentTempDAO.ListBySelector(selector)
 	if err != nil {
 		return nil, err
 	}

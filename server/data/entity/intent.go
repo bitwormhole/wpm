@@ -20,10 +20,11 @@ type IntentTemplate struct {
 	Description string
 	IconURL     string
 
-	Selector   dxo.IntentTemplateSelector `gorm:"index:,unique"` // 根据（Action + TargetType + ExecutableName）生成
-	Action     string
-	Executable dxo.ExecutableURN // the URN of exe
-	Target     string            // the type of target
+	Selector    dxo.IntentTemplateSelector `gorm:"index:,unique"` // 根据（Action + TargetType + ExecutableName）生成
+	Method      string
+	ContentType string            // project-type|content-type
+	Target      string            // the type of target: file|folder|repository|worktree|...|
+	Executable  dxo.ExecutableURN // the URN of exe
 
 	Command   string
 	Arguments dxo.StringListCRLF // as []string

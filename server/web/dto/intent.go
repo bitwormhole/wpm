@@ -7,19 +7,23 @@ type Intent struct {
 	ID dxo.IntentID `json:"id"`
 	Base
 
-	Action     string            `json:"action"`
 	Options    []string          `json:"options"` // used for filters
 	Properties map[string]string `json:"properties"`
 
-	// as exe
-	Executable *Executable       `json:"executable"`
-	Repository *LocalRepository  `json:"repository"`
-	Worktree   *Worktree         `json:"worktree"`
-	Submodule  *Submodule        `json:"submodule"`
-	Project    *Project          `json:"project"`
-	File       *File             `json:"file"`
-	Folder     *File             `json:"folder"`
-	Template   []*IntentTemplate `json:"templates"`
+	// targets
+	Executable *Executable      `json:"executable"`
+	Repository *LocalRepository `json:"repository"`
+	Worktree   *Worktree        `json:"worktree"`
+	Submodule  *Submodule       `json:"submodule"`
+	Project    *Project         `json:"project"`
+	File       *File            `json:"file"`
+	Folder     *File            `json:"folder"`
+
+	// templates
+	Templates []*IntentTemplate `json:"templates"`
+
+	// as action
+	Action ActionRequest `json:"action"`
 
 	// as web
 	Web *WebRequest `json:"web"`
@@ -44,10 +48,11 @@ type IntentTemplate struct {
 	Title       string `json:"title"`
 	Description string `json:"description"`
 
-	Selector   dxo.IntentTemplateSelector `json:"selector"`
-	Action     string                     `json:"action"`
-	Target     string                     `json:"target"`     // the type of target
-	Executable dxo.ExecutableURN          `json:"executable"` // the URN of exe
+	// Selector   dxo.IntentTemplateSelector `json:"selector"`
+	// Action     string                     `json:"action"`
+	// Target     string                     `json:"target"`     // the type of target
+	// Executable dxo.ExecutableURN          `json:"executable"` // the URN of exe
+	Action ActionRequest `json:"action"`
 
 	WantProperties []*IntentPropertyDescriptor `json:"want_properties"`
 
@@ -62,6 +67,15 @@ type IntentTemplate struct {
 type WebRequest struct {
 	Method string `json:"method"`
 	URL    string `json:"url"`
+}
+
+// ActionRequest ...
+type ActionRequest struct {
+	Method   string                     `json:"method"`
+	Target   string                     `json:"target"` // file|folder|repository|worktree|submodule|project
+	Type     string                     `json:"type"`   // project-type | content-type
+	With     dxo.ExecutableURN          `json:"with"`
+	Selector dxo.IntentTemplateSelector `json:"selector"`
 }
 
 // CommandRequest ...

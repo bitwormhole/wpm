@@ -20,8 +20,9 @@ func NewIntentTemplateSelector(sel string) IntentTemplateSelector {
 
 // IntentTemplateSelectorBuilder 用来创建 IntentTemplateSelector
 type IntentTemplateSelectorBuilder struct {
-	Action string // [open|insert|update|edit|...]
+	Method string // [open|insert|update|edit|...]
 	Target string // [repository|worktree|project||]
+	Type   string // [project-type|content-type]
 	With   string // [exe-name]
 }
 
@@ -34,18 +35,39 @@ func (inst *IntentTemplateSelectorBuilder) normalizeName(name string) string {
 // Create build a new IntentTemplateSelector
 func (inst *IntentTemplateSelectorBuilder) Create() IntentTemplateSelector {
 
-	action := inst.normalizeName(inst.Action)
+	method := inst.normalizeName(inst.Method)
 	target := inst.normalizeName(inst.Target)
+	as := inst.normalizeName(inst.Type)
 	with := inst.normalizeName(inst.With)
 	builder := strings.Builder{}
 
-	builder.WriteString(".")
-	builder.WriteString(action)
-	builder.WriteString("(")
-	builder.WriteString(target)
-	builder.WriteString(").with(")
-	builder.WriteString(with)
-	builder.WriteString(")")
+	if method == "" {
+		method = "open"
+	}
+
+	const (
+		keyAS   = "as"
+		keyWith = "with"
+	)
+	keyTarget := method
+	keys := []string{keyTarget, keyAS, keyWith}
+
+	table := make(map[string]string)
+	table[keyTarget] = target
+	table[keyAS] = as
+	table[keyWith] = with
+
+	for _, key := range keys {
+		value := table[key]
+		if value == "" {
+			value = "*"
+		}
+		builder.WriteString(".")
+		builder.WriteString(key)
+		builder.WriteString("(")
+		builder.WriteString(value)
+		builder.WriteString(")")
+	}
 
 	sel := builder.String()
 	sel = strings.ToLower(sel)

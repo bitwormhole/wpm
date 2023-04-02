@@ -3,6 +3,7 @@ package intenttemplates
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/wpm/server/data/dao"
@@ -48,35 +49,58 @@ func (inst *IntentTemplateDaoImpl) ListAll() ([]*entity.IntentTemplate, error) {
 	return list, nil
 }
 
-// ListByAET ...
-func (inst *IntentTemplateDaoImpl) ListByAET(sel *entity.IntentTemplate) ([]*entity.IntentTemplate, error) {
+func (inst *IntentTemplateDaoImpl) normalizeText(s string) string {
+	s = strings.TrimSpace(s)
+	s = strings.ToLower(s)
+	return s
+}
+
+func (inst *IntentTemplateDaoImpl) makeCondsForListBySelector(sel *entity.IntentTemplate) (string, []any, error) {
 
 	if sel == nil {
-		return nil, fmt.Errorf("no param")
+		return "", nil, fmt.Errorf("selector is nil")
 	}
 
-	// select by exe
-	list1 := inst.modelList()
+	table := make(map[string]string)
+	table["executable"] = sel.Executable.String()
+	table["target"] = sel.Target
+	table["content_type"] = sel.ContentType
+	table["method"] = sel.Method
+
+	args := make([]any, 0)
+	query := strings.Builder{}
+	sep := ""
+
+	for k, v := range table {
+		v = inst.normalizeText(v)
+		if v == "" || v == "*" {
+			continue
+		}
+		query.WriteString(sep)
+		query.WriteString(k + " = ?")
+		args = append(args, v)
+		sep = " AND "
+	}
+
+	return query.String(), args, nil
+}
+
+// ListBySelector ...
+func (inst *IntentTemplateDaoImpl) ListBySelector(sel *entity.IntentTemplate) ([]*entity.IntentTemplate, error) {
+
+	query, args, err := inst.makeCondsForListBySelector(sel)
+	if err != nil {
+		return nil, err
+	}
+
+	list := inst.modelList()
 	db := inst.Agent.DB()
-	res := db.Where("executable = ?", sel.Executable).Find(&list1)
+	res := db.Where(query, args...).Find(&list)
 	if res.Error != nil {
 		return nil, res.Error
 	}
 
-	// filter by action & target
-	a1 := sel.Action
-	t1 := sel.Target
-	list2 := inst.modelList()
-	for _, item := range list1 {
-		if a1 != "" && a1 != item.Action {
-			continue
-		}
-		if t1 != "" && t1 != item.Target {
-			continue
-		}
-		list2 = append(list2, item)
-	}
-	return list2, nil
+	return list, nil
 }
 
 // Insert ...
@@ -106,10 +130,11 @@ func (inst *IntentTemplateDaoImpl) Update(id dxo.IntentTemplateID, o *entity.Int
 	m.Title = o.Title
 	m.Description = o.Description
 
-	m.Action = o.Action
+	m.ContentType = o.ContentType
 	m.Executable = o.Executable
-	m.Target = o.Target
+	m.Method = o.Method
 	m.Selector = o.Selector
+	m.Target = o.Target
 
 	m.Command = o.Command
 	m.Arguments = o.Arguments

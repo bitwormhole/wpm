@@ -13,8 +13,10 @@ type ProjectType struct {
 	Pattern     string              `json:"pattern"`
 	Label       string              `json:"label"`
 	Description string              `json:"description"`
+	Icon        string              `json:"icon"`
 
-	Priority int  `json:"priority"` // 优先级，数值越高越先处理
-	AsFile   bool `json:"as_file"`
-	AsDir    bool `json:"as_dir"`
+	Priority  int  `json:"priority"` // 优先级，数值越高越先处理
+	AsFile    bool `json:"as_file"`
+	AsDir     bool `json:"as_dir"`
+	AsProject bool `json:"as_project"`
 }

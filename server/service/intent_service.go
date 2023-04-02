@@ -20,8 +20,8 @@ type IntentTemplateService interface {
 
 	ListMacroProperties(ctx context.Context) (map[string]string, error)
 
-	// find items by Action & Executable & Target
-	ListByAET(ctx context.Context, sel *dto.IntentTemplate) ([]*dto.IntentTemplate, error)
+	// find items by Action & Executable & Target & Type
+	ListBySelector(ctx context.Context, sel *dto.IntentTemplate) ([]*dto.IntentTemplate, error)
 
 	Insert(ctx context.Context, o *dto.IntentTemplate) (*dto.IntentTemplate, error)
 

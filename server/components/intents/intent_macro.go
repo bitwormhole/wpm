@@ -1,5 +1,10 @@
 package intents
 
+import (
+	"github.com/bitwormhole/starter/collection"
+	"github.com/bitwormhole/wpm/server/utils"
+)
+
 // executable
 const (
 	ExecutablePrefix = "executable."
@@ -96,4 +101,62 @@ func ListMacroNames() []string {
 	list = append(list, WorktreeWorkDir)
 
 	return list
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+// MacroResolver ...
+type MacroResolver struct {
+	properties map[string]string
+	errlist    utils.ErrorList
+	vkey       string
+}
+
+// Init ...
+func (inst *MacroResolver) Init(p map[string]string) {
+	if p == nil {
+		p = make(map[string]string)
+	}
+	inst.properties = p
+	inst.vkey = "abdd7cf871de41581402ddf2d6622ecb1dacbc38"
+}
+
+func (inst *MacroResolver) Error() error {
+	return inst.errlist.First()
+}
+
+// ResolveStringMap ...
+func (inst *MacroResolver) ResolveStringMap(src map[string]string) map[string]string {
+	dst := make(map[string]string)
+	for k, v := range src {
+		k = inst.ResolveString(k)
+		v = inst.ResolveString(v)
+		dst[k] = v
+	}
+	return dst
+}
+
+// ResolveStringArray ...
+func (inst *MacroResolver) ResolveStringArray(src []string) []string {
+	dst := make([]string, 0)
+	for _, item1 := range src {
+		item2 := inst.ResolveString(item1)
+		dst = append(dst, item2)
+	}
+	return dst
+}
+
+// ResolveString ...
+func (inst *MacroResolver) ResolveString(s string) string {
+	const (
+		t1 = "${"
+		t2 = "}"
+	)
+	key := inst.vkey
+	props := collection.CreateProperties()
+	props.Import(inst.properties)
+	props.SetProperty(key, s)
+	err := collection.ResolvePropertiesVarWithTokens(t1, t2, props)
+	inst.errlist.Append(err)
+	return props.GetProperty(key, s)
 }

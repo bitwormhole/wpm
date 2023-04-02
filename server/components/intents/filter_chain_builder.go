@@ -86,7 +86,7 @@ func (inst *FilterChainBuilder) Len() int {
 func (inst *FilterChainBuilder) Less(i1, i2 int) bool {
 	o1 := inst.items[i1]
 	o2 := inst.items[i2]
-	return o1.Order < o2.Order
+	return o1.Order > o2.Order
 }
 
 func (inst *FilterChainBuilder) Swap(i1, i2 int) {

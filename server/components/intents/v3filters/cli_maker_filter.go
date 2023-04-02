@@ -29,5 +29,32 @@ func (inst *CLIMakerFilter) GetFilterRegistrationList() []*intents.FilterRegistr
 
 // Handle ...
 func (inst *CLIMakerFilter) Handle(c context.Context, i *dto.Intent, next intents.FilterChain) error {
+
+	cli := i.CLI
+	if cli != nil {
+		return next.Handle(c, i)
+	}
+	cli = &dto.CommandRequest{}
+
+	temp := i.Templates[0]
+	cli.Command = temp.Command
+	cli.Arguments = temp.Arguments.Array()
+	cli.Env = temp.Env.Map()
+	cli.WD = temp.WD
+
+	mr := intents.MacroResolver{}
+	mr.Init(i.Properties)
+	cli.Command = mr.ResolveString(cli.Command)
+	cli.Arguments = mr.ResolveStringArray(cli.Arguments)
+	cli.Env = mr.ResolveStringMap(cli.Env)
+	cli.WD = mr.ResolveString(cli.WD)
+	err := mr.Error()
+	if err != nil {
+		return err
+	}
+
+	i.CLI = cli
 	return next.Handle(c, i)
 }
+
+////////////////////////////////////////////////////////////////////////////////

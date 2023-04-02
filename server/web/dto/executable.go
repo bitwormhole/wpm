@@ -14,7 +14,7 @@ type Executable struct {
 
 	Name             string                  `json:"name"`
 	Aliases          dxo.StringList          `json:"aliases"`
-	Namespace        dxo.NamespaceURN        `json:"namespace"`
+	Namespace        string                  `json:"namespace"`
 	Title            string                  `json:"title"`
 	Description      string                  `json:"description"`
 	IconURL          string                  `json:"icon"`

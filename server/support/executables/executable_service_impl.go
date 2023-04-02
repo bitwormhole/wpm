@@ -3,6 +3,8 @@ package executables
 import (
 	"context"
 	"errors"
+	"sort"
+	"strings"
 
 	"github.com/bitwormhole/starter/io/fs"
 	"github.com/bitwormhole/starter/markup"
@@ -11,6 +13,7 @@ import (
 	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/data/entity"
 	"github.com/bitwormhole/wpm/server/service"
+	"github.com/bitwormhole/wpm/server/utils"
 	"github.com/bitwormhole/wpm/server/web/dto"
 )
 
@@ -66,8 +69,67 @@ func (inst *ExecutableServiceImpl) dto2entity(c context.Context, o1 *dto.Executa
 	o2.Location = o1.Location
 	o2.Class = o1.Class
 
-	// todo ...
+	// compute
+	err := inst.computeEntity(o2)
+	if err != nil {
+		return nil, err
+	}
+
 	return o2, nil
+}
+
+func (inst *ExecutableServiceImpl) computeEntity(o2 *entity.Executable) error {
+
+	file := inst.FileSystemService.Path(o2.Path)
+	name := file.GetName()
+	ns := o2.Namespace
+	aliases := o2.Aliases.Array()
+
+	const suffixExe = ".exe"
+	name = strings.ToLower(name)
+	name = strings.TrimSpace(name)
+	aliases = append(aliases, name)
+	iDot := strings.LastIndex(name, ".")
+	if iDot > 0 {
+		name = name[0:iDot]
+		aliases = append(aliases, name)
+	}
+	aliases = inst.paiChong(aliases)
+
+	if ns == "" {
+		ns = "default" // the default NS
+	}
+
+	sum, err := utils.ComputeFileSHA256sumAFS(file)
+	if err != nil {
+		return err
+	}
+
+	o2.Size = file.GetInfo().Length()
+	o2.SHA256SUM = sum
+	o2.Namespace = ns
+	o2.Name = name
+	o2.URN = dxo.NewExecutableURN(ns + "#" + name)
+	o2.Aliases = dxo.NewStringList(aliases)
+
+	return nil
+}
+
+// 排重
+func (inst *ExecutableServiceImpl) paiChong(src []string) []string {
+	dst := make([]string, 0)
+	table := make(map[string]string)
+	for _, str := range src {
+		str = strings.TrimSpace(str)
+		if str != "" {
+			table[str] = str
+		}
+	}
+	for _, str := range table {
+		dst = append(dst, str)
+	}
+	sort.Strings(dst)
+	return dst
 }
 
 func (inst *ExecutableServiceImpl) entity2dto(o1 *entity.Executable) (*dto.Executable, error) {

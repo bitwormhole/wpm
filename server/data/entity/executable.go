@@ -14,7 +14,7 @@ type Executable struct {
 
 	Name             string
 	Aliases          dxo.StringList
-	Namespace        dxo.NamespaceURN
+	Namespace        string
 	Title            string
 	IconURL          string
 	Description      string

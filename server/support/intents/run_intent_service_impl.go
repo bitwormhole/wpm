@@ -41,32 +41,4 @@ func (inst *RunIntentServiceImpl) Run(ctx context.Context, o *dto.Intent) (*dto.
 	return o, nil
 }
 
-// func (inst *RunIntentServiceImpl) isReadyForRun(ctx context.Context, o1 *dto.Intent) bool {
-// 	if o1.CLI == nil {
-// 		return false
-// 	}
-// 	return true
-// }
-
-// func (inst *RunIntentServiceImpl) run(ctx context.Context, intent1 *dto.Intent) (*dto.Intent, error) {
-
-// 	ready := inst.isReadyForRun(ctx, intent1)
-// 	if !ready {
-// 		e := intent1.Error
-// 		if e == "" {
-// 			intent1.Status = 0
-// 			return intent1, nil
-// 		}
-// 		return nil, fmt.Errorf(e)
-// 	}
-
-// 	err := inst.IntentHandlerService.HandleIntent(intent1)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-
-// 	intent1.Status = http.StatusOK
-// 	return intent1, nil
-// }
-
 ////////////////////////////////////////////////////////////////////////////////

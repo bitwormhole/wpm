@@ -9,6 +9,7 @@ import (
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/service"
+	"github.com/bitwormhole/wpm/server/utils"
 	"github.com/bitwormhole/wpm/server/web/vo"
 	"github.com/gin-gonic/gin"
 )
@@ -133,16 +134,25 @@ func (inst *myRunIntentRequest) send(err error) {
 }
 
 func (inst *myRunIntentRequest) doPost() error {
+
 	ctx := inst.gc
 	ser := inst.controller.IntentService
 	olist1 := inst.body1.Intents
+	errlist := utils.ErrorList{}
+	errCnt := 0
+
 	for _, o1 := range olist1 {
 		_, err := ser.Run(ctx, o1)
 		if err != nil {
 			o1.Status = http.StatusInternalServerError
 			o1.Error = err.Error()
-			// return err
+			errlist.Append(err)
+			errCnt++
 		}
+	}
+
+	if errCnt == 1 {
+		return errlist.First()
 	}
 	inst.body2.Intents = olist1
 	return nil
