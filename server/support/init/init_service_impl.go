@@ -16,7 +16,7 @@ type ImpInitService struct {
 	markup.Component `id:"InitService" class:"life"`
 
 	AboutService       service.AboutService       `inject:"#AboutService"`
-	ProjectTypeService service.ProjectTypeService `inject:"#ProjectTypeService"`
+	ProjectTypeService service.ContentTypeService `inject:"#ContentTypeService"`
 	ExecutableService  service.ExecutableService  `inject:"#ExecutableService"`
 	CheckUpdateService service.CheckUpdateService `inject:"#CheckUpdateService"`
 	SetupService       service.SetupService       `inject:"#SetupService"`

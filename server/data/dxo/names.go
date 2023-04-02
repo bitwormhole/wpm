@@ -12,11 +12,11 @@ type RepositoryGroupName string
 // UserName ...
 type UserName string
 
-// ProjectTypeName ... like 'java/pom'
-type ProjectTypeName string
+// ContentTypeName ... like 'text/html' , 'project/java-pom'
+type ContentTypeName string
 
 ////////////////////////////////////////////////////////////////////////////////
 
-func (value ProjectTypeName) String() string {
+func (value ContentTypeName) String() string {
 	return string(value)
 }

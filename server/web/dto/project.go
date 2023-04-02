@@ -11,9 +11,9 @@ type Project struct {
 	ID dxo.ProjectID `json:"id"`
 	Base
 
-	Name        string             `json:"name"`
-	Description string             `json:"description"`
-	Type        dxo.ProjectTypeURN `json:"project_type"`
+	Name        string              `json:"name"`
+	Description string              `json:"description"`
+	Type        dxo.ContentTypeName `json:"type"`
 
 	ConfigFileName string `json:"config_file_name"`
 	PathInWorktree string `json:"path_in_worktree"`

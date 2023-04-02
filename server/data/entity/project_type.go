@@ -6,39 +6,41 @@ import (
 	"github.com/bitwormhole/wpm/server/data/dxo"
 )
 
-// ProjectType ...
-type ProjectType struct {
-	ID  dxo.ProjectTypeID  `gorm:"primaryKey"`
-	URN dxo.ProjectTypeURN `gorm:"index:,unique"`
+// ContentType ...
+type ContentType struct {
+	ID  dxo.ContentTypeID  `gorm:"primaryKey"`
+	URN dxo.ContentTypeURN `gorm:"index:,unique"`
 
 	Base
 
-	Name    dxo.ProjectTypeName
-	Pattern string
+	Name     dxo.ContentTypeName
+	Patterns dxo.StringList
 
 	Label       string
+	Icon        string
 	Description string
 
-	Priority int // 优先级，数值越高越先处理
-	AsFile   bool
-	AsDir    bool
+	Priority  int // 优先级，数值越高越先处理
+	AsFile    bool
+	AsDir     bool
+	AsProject bool // true 表示这是一个项目类型
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-// ProjectTypeLessFn ...
-type ProjectTypeLessFn func(o1, o2 *ProjectType) bool
+// ContentTypeLessFn ...
+type ContentTypeLessFn func(o1, o2 *ContentType) bool
 
-type myProjectTypeSorter struct {
-	list []*ProjectType
-	fn   ProjectTypeLessFn
+type myContentTypeSorter struct {
+	list []*ContentType
+	fn   ContentTypeLessFn
 }
 
-func (inst *myProjectTypeSorter) Len() int {
+func (inst *myContentTypeSorter) Len() int {
 	return len(inst.list)
 }
 
-func (inst *myProjectTypeSorter) Less(i1, i2 int) bool {
+func (inst *myContentTypeSorter) Less(i1, i2 int) bool {
 	o1 := inst.list[i1]
 	o2 := inst.list[i2]
 	if o1 == nil || o2 == nil {
@@ -47,19 +49,19 @@ func (inst *myProjectTypeSorter) Less(i1, i2 int) bool {
 	return inst.fn(o1, o2)
 }
 
-func (inst *myProjectTypeSorter) Swap(i1, i2 int) {
+func (inst *myContentTypeSorter) Swap(i1, i2 int) {
 	o1 := inst.list[i1]
 	o2 := inst.list[i2]
 	inst.list[i1] = o2
 	inst.list[i2] = o1
 }
 
-// SortProjectTypeArray 对 ProjectType 数组进行排序
-func SortProjectTypeArray(list []*ProjectType, fn ProjectTypeLessFn) {
+// SortContentTypeArray 对 ContentType 数组进行排序
+func SortContentTypeArray(list []*ContentType, fn ContentTypeLessFn) {
 	if list == nil || fn == nil {
 		return
 	}
-	sorter := &myProjectTypeSorter{
+	sorter := &myContentTypeSorter{
 		list: list,
 		fn:   fn,
 	}

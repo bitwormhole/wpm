@@ -35,8 +35,8 @@ type LocationID int
 // ProjectID ...
 type ProjectID int
 
-// ProjectTypeID ... like '8'
-type ProjectTypeID int
+// ContentTypeID ... like '8'
+type ContentTypeID int
 
 // ProjectGroupID ...
 type ProjectGroupID int

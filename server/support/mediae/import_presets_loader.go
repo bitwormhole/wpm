@@ -110,8 +110,9 @@ func (inst *myImportPresetsLoader) makeMedia(name string, r collection.Res) (*dt
 }
 
 func (inst *myImportPresetsLoader) getContentType(name string) string {
+	c := context.Background()
 	ser := inst.parent.ContentTypeService
-	t, _ := ser.GetContentType(name)
+	t, _ := ser.GetContentType(c, name)
 	return t
 }
 

@@ -1,4 +1,4 @@
-package projecttypes
+package contenttypes
 
 import (
 	"context"
@@ -20,7 +20,7 @@ type myProjectLocatorWithTypes struct {
 	path    string
 
 	// var
-	types []*entity.ProjectType
+	types []*entity.ContentType
 }
 
 func (inst *myProjectLocatorWithTypes) Locate() error {
@@ -68,13 +68,13 @@ func (inst *myProjectLocatorWithTypes) loadTypes() error {
 		inst.types = all
 	} else {
 		// get one
-		ent, err := ptdao.FindByURN(pType)
+		ent, err := ptdao.FindByName(pType)
 		if err != nil {
 			return err
 		}
-		inst.types = []*entity.ProjectType{ent}
+		inst.types = []*entity.ContentType{ent}
 	}
-	entity.SortProjectTypeArray(inst.types, func(o1, o2 *entity.ProjectType) bool {
+	entity.SortContentTypeArray(inst.types, func(o1, o2 *entity.ContentType) bool {
 		return o1.Priority > o2.Priority
 	})
 	return nil
@@ -99,7 +99,7 @@ func (inst *myProjectLocatorWithTypes) lookup() error {
 	return fmt.Errorf("no project in path [%v]", inst.path)
 }
 
-func (inst *myProjectLocatorWithTypes) tryLocateProject(dir afs.Path, pt *entity.ProjectType) error {
+func (inst *myProjectLocatorWithTypes) tryLocateProject(dir afs.Path, pt *entity.ContentType) error {
 
 	if !dir.IsDirectory() {
 		return fmt.Errorf("not a dir")
@@ -115,11 +115,11 @@ func (inst *myProjectLocatorWithTypes) tryLocateProject(dir afs.Path, pt *entity
 	return fmt.Errorf("no project")
 }
 
-func (inst *myProjectLocatorWithTypes) isTypeMatch(path afs.Path, pt *entity.ProjectType) bool {
+func (inst *myProjectLocatorWithTypes) isTypeMatch(path afs.Path, pt *entity.ContentType) bool {
 
-	nameWant := pt.Pattern
+	nameWant := pt.Patterns
 	nameHave := path.GetName()
-	if !inst.isFileNameMatch(nameWant, nameHave) {
+	if !inst.isFileNamesMatch(nameWant, nameHave) {
 		return false
 	}
 
@@ -131,6 +131,20 @@ func (inst *myProjectLocatorWithTypes) isTypeMatch(path afs.Path, pt *entity.Pro
 		return true
 	}
 
+	return false
+}
+
+func (inst *myProjectLocatorWithTypes) isFileNamesMatch(wants dxo.StringList, have string) bool {
+	list := wants.Array()
+	for _, want := range list {
+		want = inst.normalizeFileName(want)
+		if want == "" {
+			continue
+		}
+		if inst.isFileNameMatch(want, have) {
+			return true
+		}
+	}
 	return false
 }
 
@@ -182,17 +196,17 @@ func (inst *myProjectLocatorWithTypes) normalizeFileName(name string) string {
 	return name
 }
 
-func (inst *myProjectLocatorWithTypes) normalizeTypeName(name1 dxo.ProjectTypeName) dxo.ProjectTypeName {
+func (inst *myProjectLocatorWithTypes) normalizeTypeName(name1 dxo.ContentTypeName) dxo.ContentTypeName {
 	name := strings.TrimSpace(string(name1))
 	name = strings.ToLower(name)
-	return dxo.ProjectTypeName(name)
+	return dxo.ContentTypeName(name)
 }
 
-func (inst *myProjectLocatorWithTypes) apply(projectFile afs.Path, pt *entity.ProjectType) error {
+func (inst *myProjectLocatorWithTypes) apply(projectFile afs.Path, pt *entity.ContentType) error {
 
 	p := inst.project
 
-	p.Type = pt.URN
+	p.Type = pt.Name
 	p.ProjectDir = projectFile.GetParent().GetPath()
 	p.Path = projectFile.GetPath()
 	p.ConfigFileName = projectFile.GetName()

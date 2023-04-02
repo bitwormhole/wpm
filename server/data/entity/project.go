@@ -23,7 +23,7 @@ type Project struct {
 	Location dxo.LocationID `gorm:"index:,unique"`
 	Class    dxo.LocationClass
 
-	Type dxo.ProjectTypeURN
+	Type dxo.ContentTypeName
 }
 
 // ListPathFields 用于 FindByPath ...

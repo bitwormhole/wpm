@@ -1,4 +1,4 @@
-package projecttypes
+package contenttypes
 
 import (
 	"fmt"
@@ -118,8 +118,8 @@ type myProjectTypeImportRequest struct {
 	wantRequestBody bool
 
 	// id    dxo.ProjectTypeImportID
-	body1 vo.ProjectTypeImport
-	body2 vo.ProjectTypeImport
+	body1 vo.ContentTypeImport
+	body2 vo.ContentTypeImport
 }
 
 func (inst *myProjectTypeImportRequest) open() error {

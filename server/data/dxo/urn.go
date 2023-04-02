@@ -11,8 +11,8 @@ type ExecutableURN URN
 // NamespaceURN like 'urn:namespace:{{name}}'
 type NamespaceURN URN
 
-// ProjectTypeURN like 'urn:projecttype:{{name}}'
-type ProjectTypeURN URN
+// ContentTypeURN like 'urn:projecttype:{{name}}'
+type ContentTypeURN URN
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -52,9 +52,9 @@ func NewExecutableURN(name string) ExecutableURN {
 	return ExecutableURN(urn)
 }
 
-// NewProjectTypeURN ...
-func NewProjectTypeURN(name string) ProjectTypeURN {
-	t := "projecttype"
+// NewContentTypeURN ...
+func NewContentTypeURN(name string) ContentTypeURN {
+	t := "contenttype"
 	urn := NewURN(t, name)
-	return ProjectTypeURN(urn)
+	return ContentTypeURN(urn)
 }

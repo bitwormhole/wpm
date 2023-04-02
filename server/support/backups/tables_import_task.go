@@ -19,7 +19,7 @@ func (inst *tablesImportTask) importAll() error {
 	all = append(all, inst.importLocalRepositories)
 	all = append(all, inst.importLocations)
 	all = append(all, inst.importMediae)
-	all = append(all, inst.importProjectTypes)
+	all = append(all, inst.importContentTypes)
 	all = append(all, inst.importProjects)
 	all = append(all, inst.importIntentTemplate)
 
@@ -60,9 +60,9 @@ func (inst *tablesImportTask) importIntentTemplate() error {
 	return nil
 }
 
-func (inst *tablesImportTask) importProjectTypes() error {
+func (inst *tablesImportTask) importContentTypes() error {
 	db := inst.db
-	list := inst.view.ProjectTypeTable
+	list := inst.view.ContentTypeTable
 	for _, item := range list {
 		res := db.FirstOrCreate(item, item.ID)
 		inst.handleError(res.Error)

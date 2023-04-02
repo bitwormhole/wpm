@@ -1,4 +1,4 @@
-package projecttypes
+package contenttypes
 
 import (
 	"context"
@@ -18,7 +18,7 @@ type ProjectTypeImportServiceImpl struct {
 	markup.Component `id:"ProjectTypeImportService"`
 
 	AC                 application.Context        `inject:"context"`
-	ProjectTypeService service.ProjectTypeService `inject:"#ProjectTypeService"`
+	ProjectTypeService service.ContentTypeService `inject:"#ContentTypeService"`
 }
 
 func (inst *ProjectTypeImportServiceImpl) _Impl() service.ProjectTypeImportService {
@@ -34,7 +34,7 @@ func (inst *ProjectTypeImportServiceImpl) ImportTypesFromPreset(c context.Contex
 	return inst.insertAllTo(c, all)
 }
 
-func (inst *ProjectTypeImportServiceImpl) prepare(c context.Context) ([]*dto.ProjectType, error) {
+func (inst *ProjectTypeImportServiceImpl) prepare(c context.Context) ([]*dto.ContentType, error) {
 
 	const (
 		path   = "res:///project-types.properties"
@@ -53,7 +53,7 @@ func (inst *ProjectTypeImportServiceImpl) prepare(c context.Context) ([]*dto.Pro
 	}
 
 	keys := inst.keys(props, prefix, suffix)
-	dst := make([]*dto.ProjectType, 0)
+	dst := make([]*dto.ContentType, 0)
 	for _, key := range keys {
 		pt, err := inst.loadPT(props, prefix, key)
 		if err == nil {
@@ -65,19 +65,19 @@ func (inst *ProjectTypeImportServiceImpl) prepare(c context.Context) ([]*dto.Pro
 	return dst, nil
 }
 
-func (inst *ProjectTypeImportServiceImpl) loadPT(p collection.Properties, prefix string, key string) (*dto.ProjectType, error) {
+func (inst *ProjectTypeImportServiceImpl) loadPT(p collection.Properties, prefix string, key string) (*dto.ContentType, error) {
 
 	k1 := prefix + key
-	pt := &dto.ProjectType{}
+	pt := &dto.ContentType{}
 	getter := p.Getter()
 
 	typeName := getter.GetString(k1+".type", "")
-	typePattern := getter.GetString(k1+".pattern", "")
+	typePattern := getter.GetString(k1+".patterns", "")
 
 	pt.AsDir = getter.GetBool(k1+".as-dir", false)
 	pt.AsFile = getter.GetBool(k1+".as-file", false)
-	pt.Pattern = typePattern
-	pt.TypeName = dxo.ProjectTypeName(typeName)
+	pt.Patterns = dxo.StringList(typePattern)
+	pt.TypeName = dxo.ContentTypeName(typeName)
 	pt.Label = getter.GetString(k1+".label", "")
 	pt.Description = getter.GetString(k1+".description", "")
 	pt.Priority = getter.GetInt(k1+".priority", 0)
@@ -97,7 +97,7 @@ func (inst *ProjectTypeImportServiceImpl) keys(p collection.Properties, prefix s
 	return dst
 }
 
-func (inst *ProjectTypeImportServiceImpl) insertAllTo(c context.Context, all []*dto.ProjectType) error {
+func (inst *ProjectTypeImportServiceImpl) insertAllTo(c context.Context, all []*dto.ContentType) error {
 	for _, item := range all {
 		_, err := inst.insertOneTo(c, item)
 		if err != nil {
@@ -107,7 +107,7 @@ func (inst *ProjectTypeImportServiceImpl) insertAllTo(c context.Context, all []*
 	return nil
 }
 
-func (inst *ProjectTypeImportServiceImpl) insertOneTo(c context.Context, o *dto.ProjectType) (*dto.ProjectType, error) {
+func (inst *ProjectTypeImportServiceImpl) insertOneTo(c context.Context, o *dto.ContentType) (*dto.ContentType, error) {
 	ser := inst.ProjectTypeService
 	return ser.Insert(c, o)
 }

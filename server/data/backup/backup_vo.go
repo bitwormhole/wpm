@@ -16,7 +16,7 @@ type VO struct {
 	MediaTable            []*entity.Media
 	NamespaceTable        []*entity.Namespace
 	ProjectTable          []*entity.Project
-	ProjectTypeTable      []*entity.ProjectType
+	ContentTypeTable      []*entity.ContentType
 	RemoteRepositoryTable []*entity.RemoteRepository
 	SettingTable          []*entity.Setting
 	UserTable             []*entity.User

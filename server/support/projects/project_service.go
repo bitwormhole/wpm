@@ -23,7 +23,7 @@ type ProjectServiceImpl struct {
 
 	UUIDGenService     service.UUIDGenService         `inject:"#UUIDGenService"`
 	LocalRepoService   service.LocalRepositoryService `inject:"#LocalRepositoryService"`
-	ProjectTypeService service.ProjectTypeService     `inject:"#ProjectTypeService"`
+	ProjectTypeService service.ContentTypeService     `inject:"#ContentTypeService"`
 	FileSystemService  service.FileSystemService      `inject:"#FileSystemService"`
 	LocationService    service.LocationService        `inject:"#LocationService"`
 

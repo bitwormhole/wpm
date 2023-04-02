@@ -5,17 +5,21 @@ import (
 	"github.com/bitwormhole/wpm/server/data/entity"
 )
 
-// ProjectTypeDAO ...
-type ProjectTypeDAO interface {
-	Find(id dxo.ProjectTypeID) (*entity.ProjectType, error)
+// ContentTypeDAO ...
+type ContentTypeDAO interface {
+	Find(id dxo.ContentTypeID) (*entity.ContentType, error)
 
-	FindByURN(urn dxo.ProjectTypeURN) (*entity.ProjectType, error)
+	FindByURN(urn dxo.ContentTypeURN) (*entity.ContentType, error)
 
-	ListAll() ([]*entity.ProjectType, error)
+	FindByName(name dxo.ContentTypeName) (*entity.ContentType, error)
 
-	Insert(o *entity.ProjectType) (*entity.ProjectType, error)
+	ListAll() ([]*entity.ContentType, error)
 
-	Update(id dxo.ProjectTypeID, o *entity.ProjectType) (*entity.ProjectType, error)
+	ListByPattern(pattern string) ([]*entity.ContentType, error)
 
-	Remove(id dxo.ProjectTypeID) error
+	Insert(o *entity.ContentType) (*entity.ContentType, error)
+
+	Update(id dxo.ContentTypeID, o *entity.ContentType) (*entity.ContentType, error)
+
+	Remove(id dxo.ContentTypeID) error
 }

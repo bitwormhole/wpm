@@ -30,7 +30,6 @@ import (
 	namespaces0xceefcf "github.com/bitwormhole/wpm/server/support/namespaces"
 	platforms0xb539c0 "github.com/bitwormhole/wpm/server/support/platforms"
 	projects0x4d85c7 "github.com/bitwormhole/wpm/server/support/projects"
-	projecttypes0x53bffe "github.com/bitwormhole/wpm/server/support/projecttypes"
 	repositories0x637d5e "github.com/bitwormhole/wpm/server/support/repositories"
 	repositoryworktreeproject0x399028 "github.com/bitwormhole/wpm/server/support/repositoryworktreeproject"
 	settings0x19237d "github.com/bitwormhole/wpm/server/support/settings"
@@ -136,11 +135,43 @@ type pComTheCheckUpdateServiceImpl struct {
 }
 
 
-type pComContentTypeServiceImpl struct {
-	instance *contenttypes0x61ca37.ContentTypeServiceImpl
-	 markup0x23084a.Component `id:"ContentTypeService"`
+type pComContentTypeController struct {
+	instance *contenttypes0x61ca37.ContentTypeController
+	 markup0x23084a.RestController `class:"rest-controller"`
+	ContentTypeService service0x3e063d.ContentTypeService `inject:"#ContentTypeService"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
+type pComProjectTypeDaoImpl struct {
+	instance *contenttypes0x61ca37.ProjectTypeDaoImpl
+	 markup0x23084a.Component `id:"ContentTypeDAO"`
+	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
+	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
+}
+
+
+type pComProjectTypeImportController struct {
+	instance *contenttypes0x61ca37.ProjectTypeImportController
+	 markup0x23084a.RestController `class:"rest-controller"`
+	ProjectTypeImportService service0x3e063d.ProjectTypeImportService `inject:"#ProjectTypeImportService"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
+type pComProjectTypeImportServiceImpl struct {
+	instance *contenttypes0x61ca37.ProjectTypeImportServiceImpl
+	 markup0x23084a.Component `id:"ProjectTypeImportService"`
 	AC application0x67f6c5.Context `inject:"context"`
-	PropsFileName string `inject:"${wpm.content-types.properties.filename}"`
+	ProjectTypeService service0x3e063d.ContentTypeService `inject:"#ContentTypeService"`
+}
+
+
+type pComProjectTypeServiceImpl struct {
+	instance *contenttypes0x61ca37.ProjectTypeServiceImpl
+	 markup0x23084a.Component `id:"ContentTypeService"`
+	ProjectTypeDAO dao0x5af8d0.ContentTypeDAO `inject:"#ContentTypeDAO"`
+	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
 }
 
 
@@ -264,7 +295,7 @@ type pComImpInitService struct {
 	instance *init0xc984bc.ImpInitService
 	 markup0x23084a.Component `id:"InitService" class:"life"`
 	AboutService service0x3e063d.AboutService `inject:"#AboutService"`
-	ProjectTypeService service0x3e063d.ProjectTypeService `inject:"#ProjectTypeService"`
+	ProjectTypeService service0x3e063d.ContentTypeService `inject:"#ContentTypeService"`
 	ExecutableService service0x3e063d.ExecutableService `inject:"#ExecutableService"`
 	CheckUpdateService service0x3e063d.CheckUpdateService `inject:"#CheckUpdateService"`
 	SetupService service0x3e063d.SetupService `inject:"#SetupService"`
@@ -455,52 +486,12 @@ type pComProjectServiceImpl struct {
 	 markup0x23084a.Component `id:"ProjectService"`
 	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
 	LocalRepoService service0x3e063d.LocalRepositoryService `inject:"#LocalRepositoryService"`
-	ProjectTypeService service0x3e063d.ProjectTypeService `inject:"#ProjectTypeService"`
+	ProjectTypeService service0x3e063d.ContentTypeService `inject:"#ContentTypeService"`
 	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
 	LocationService service0x3e063d.LocationService `inject:"#LocationService"`
 	ProjectDAO dao0x5af8d0.ProjectDAO `inject:"#ProjectDAO"`
 	LocalRepoDAO dao0x5af8d0.LocalRepositoryDAO `inject:"#LocalRepositoryDAO"`
 	GitLibAgent store0x8467b3.LibAgent `inject:"#git-lib-agent"`
-}
-
-
-type pComProjectTypeController struct {
-	instance *projecttypes0x53bffe.ProjectTypeController
-	 markup0x23084a.RestController `class:"rest-controller"`
-	ProjectTypeService service0x3e063d.ProjectTypeService `inject:"#ProjectTypeService"`
-	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
-}
-
-
-type pComProjectTypeDaoImpl struct {
-	instance *projecttypes0x53bffe.ProjectTypeDaoImpl
-	 markup0x23084a.Component `id:"ProjectTypeDAO"`
-	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
-	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
-}
-
-
-type pComProjectTypeImportController struct {
-	instance *projecttypes0x53bffe.ProjectTypeImportController
-	 markup0x23084a.RestController `class:"rest-controller"`
-	ProjectTypeImportService service0x3e063d.ProjectTypeImportService `inject:"#ProjectTypeImportService"`
-	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
-}
-
-
-type pComProjectTypeImportServiceImpl struct {
-	instance *projecttypes0x53bffe.ProjectTypeImportServiceImpl
-	 markup0x23084a.Component `id:"ProjectTypeImportService"`
-	AC application0x67f6c5.Context `inject:"context"`
-	ProjectTypeService service0x3e063d.ProjectTypeService `inject:"#ProjectTypeService"`
-}
-
-
-type pComProjectTypeServiceImpl struct {
-	instance *projecttypes0x53bffe.ProjectTypeServiceImpl
-	 markup0x23084a.Component `id:"ProjectTypeService"`
-	ProjectTypeDAO dao0x5af8d0.ProjectTypeDAO `inject:"#ProjectTypeDAO"`
-	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
 }
 
 

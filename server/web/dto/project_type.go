@@ -2,15 +2,15 @@ package dto
 
 import "github.com/bitwormhole/wpm/server/data/dxo"
 
-// ProjectType 表示一个命令模板
-type ProjectType struct {
-	ID  dxo.ProjectTypeID  `json:"id"`
-	URN dxo.ProjectTypeURN `json:"urn"`
+// ContentType 表示一个命令模板
+type ContentType struct {
+	ID  dxo.ContentTypeID  `json:"id"`
+	URN dxo.ContentTypeURN `json:"urn"`
 
 	Base
 
-	TypeName    dxo.ProjectTypeName `json:"type"`
-	Pattern     string              `json:"pattern"`
+	TypeName    dxo.ContentTypeName `json:"type"`
+	Patterns    dxo.StringList      `json:"patterns"`
 	Label       string              `json:"label"`
 	Description string              `json:"description"`
 	Icon        string              `json:"icon"`

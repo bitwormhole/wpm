@@ -10,8 +10,8 @@ type Init struct {
 	// check-setup
 	Setup Setup
 
-	// fetch project types
-	ProjectType ProjectType
+	// fetch Content types
+	ContentType ContentType
 
 	// fetch executables
 	Executable Executable

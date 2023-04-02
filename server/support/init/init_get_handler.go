@@ -10,7 +10,7 @@ import (
 type myInitGetHandler struct {
 	// serv            service.InitService
 	ExecutableSer  service.ExecutableService
-	ProjectTypeSer service.ProjectTypeService
+	ProjectTypeSer service.ContentTypeService
 	CheckUpdateSer service.CheckUpdateService
 	SetupSer       service.SetupService
 }
@@ -57,7 +57,7 @@ func (inst *myInitGetHandler) doProjectType(ctx context.Context, view *vo.Init) 
 	if err != nil {
 		return err
 	}
-	view.ProjectType.ProjectTypes = list
+	view.ContentType.ContentTypes = list
 	return nil
 }
 

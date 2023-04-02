@@ -1,4 +1,4 @@
-package projecttypes
+package contenttypes
 
 import (
 	"net/http"
@@ -13,22 +13,22 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// ProjectTypeController ProjectType 控制器
-type ProjectTypeController struct {
+// ContentTypeController ContentType 控制器
+type ContentTypeController struct {
 	markup.RestController `class:"rest-controller"`
 
-	ProjectTypeService service.ProjectTypeService `inject:"#ProjectTypeService"`
+	ContentTypeService service.ContentTypeService `inject:"#ContentTypeService"`
 	Responder          glass.MainResponder        `inject:"#glass-main-responder"`
 }
 
-func (inst *ProjectTypeController) _Impl() glass.Controller {
+func (inst *ContentTypeController) _Impl() glass.Controller {
 	return inst
 }
 
 // Init 初始化
-func (inst *ProjectTypeController) Init(ec glass.EngineConnection) error {
+func (inst *ContentTypeController) Init(ec glass.EngineConnection) error {
 
-	ec = ec.RequestMapping("project-types")
+	ec = ec.RequestMapping("content-types")
 
 	ec.Handle(http.MethodGet, "", inst.handleGetList)
 	ec.Handle(http.MethodPost, "", inst.handlePost)
@@ -39,8 +39,8 @@ func (inst *ProjectTypeController) Init(ec glass.EngineConnection) error {
 	return nil
 }
 
-func (inst *ProjectTypeController) handleGetList(c *gin.Context) {
-	req := &myProjectTypeRequest{
+func (inst *ContentTypeController) handleGetList(c *gin.Context) {
+	req := &myContentTypeRequest{
 		gc:              c,
 		controller:      inst,
 		wantRequestID:   false,
@@ -53,8 +53,8 @@ func (inst *ProjectTypeController) handleGetList(c *gin.Context) {
 	req.send(err)
 }
 
-func (inst *ProjectTypeController) handleGetOne(c *gin.Context) {
-	req := &myProjectTypeRequest{
+func (inst *ContentTypeController) handleGetOne(c *gin.Context) {
+	req := &myContentTypeRequest{
 		gc:              c,
 		controller:      inst,
 		wantRequestID:   true,
@@ -67,8 +67,8 @@ func (inst *ProjectTypeController) handleGetOne(c *gin.Context) {
 	req.send(err)
 }
 
-func (inst *ProjectTypeController) handlePost(c *gin.Context) {
-	req := &myProjectTypeRequest{
+func (inst *ContentTypeController) handlePost(c *gin.Context) {
+	req := &myContentTypeRequest{
 		gc:              c,
 		controller:      inst,
 		wantRequestID:   false,
@@ -81,8 +81,8 @@ func (inst *ProjectTypeController) handlePost(c *gin.Context) {
 	req.send(err)
 }
 
-func (inst *ProjectTypeController) handlePut(c *gin.Context) {
-	req := &myProjectTypeRequest{
+func (inst *ContentTypeController) handlePut(c *gin.Context) {
+	req := &myContentTypeRequest{
 		gc:              c,
 		controller:      inst,
 		wantRequestID:   true,
@@ -95,8 +95,8 @@ func (inst *ProjectTypeController) handlePut(c *gin.Context) {
 	req.send(err)
 }
 
-func (inst *ProjectTypeController) handleDelete(c *gin.Context) {
-	req := &myProjectTypeRequest{
+func (inst *ContentTypeController) handleDelete(c *gin.Context) {
+	req := &myContentTypeRequest{
 		gc:              c,
 		controller:      inst,
 		wantRequestID:   true,
@@ -111,19 +111,19 @@ func (inst *ProjectTypeController) handleDelete(c *gin.Context) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-type myProjectTypeRequest struct {
+type myContentTypeRequest struct {
 	gc         *gin.Context
-	controller *ProjectTypeController
+	controller *ContentTypeController
 
 	wantRequestID   bool
 	wantRequestBody bool
 
-	id    dxo.ProjectTypeID
-	body1 vo.ProjectType
-	body2 vo.ProjectType
+	id    dxo.ContentTypeID
+	body1 vo.ContentType
+	body2 vo.ContentType
 }
 
-func (inst *myProjectTypeRequest) open() error {
+func (inst *myContentTypeRequest) open() error {
 
 	c := inst.gc
 
@@ -133,7 +133,7 @@ func (inst *myProjectTypeRequest) open() error {
 		if err != nil {
 			return err
 		}
-		inst.id = dxo.ProjectTypeID(n)
+		inst.id = dxo.ContentTypeID(n)
 	}
 
 	if inst.wantRequestBody {
@@ -146,7 +146,7 @@ func (inst *myProjectTypeRequest) open() error {
 	return nil
 }
 
-func (inst *myProjectTypeRequest) send(err error) {
+func (inst *myContentTypeRequest) send(err error) {
 	ctx := inst.gc
 	data := &inst.body2
 	status := data.Status
@@ -159,57 +159,57 @@ func (inst *myProjectTypeRequest) send(err error) {
 	inst.controller.Responder.Send(resp)
 }
 
-func (inst *myProjectTypeRequest) doGetOne() error {
+func (inst *myContentTypeRequest) doGetOne() error {
 	id := inst.id
 	ctx := inst.gc
-	ser := inst.controller.ProjectTypeService
+	ser := inst.controller.ContentTypeService
 	o, err := ser.Find(ctx, id)
 	if err != nil {
 		return err
 	}
-	inst.body2.ProjectTypes = []*dto.ProjectType{o}
+	inst.body2.ContentTypes = []*dto.ContentType{o}
 	return nil
 }
 
-func (inst *myProjectTypeRequest) doGetList() error {
+func (inst *myContentTypeRequest) doGetList() error {
 	ctx := inst.gc
-	ser := inst.controller.ProjectTypeService
+	ser := inst.controller.ContentTypeService
 	list, err := ser.ListAll(ctx)
 	if err != nil {
 		return err
 	}
-	inst.body2.ProjectTypes = list
+	inst.body2.ContentTypes = list
 	return nil
 }
 
-func (inst *myProjectTypeRequest) doPost() error {
+func (inst *myContentTypeRequest) doPost() error {
 	ctx := inst.gc
-	ser := inst.controller.ProjectTypeService
-	o1 := inst.body1.ProjectTypes[0]
+	ser := inst.controller.ContentTypeService
+	o1 := inst.body1.ContentTypes[0]
 	o2, err := ser.Insert(ctx, o1)
 	if err != nil {
 		return err
 	}
-	inst.body2.ProjectTypes = []*dto.ProjectType{o2}
+	inst.body2.ContentTypes = []*dto.ContentType{o2}
 	return nil
 }
 
-func (inst *myProjectTypeRequest) doPut() error {
+func (inst *myContentTypeRequest) doPut() error {
 	ctx := inst.gc
-	ser := inst.controller.ProjectTypeService
+	ser := inst.controller.ContentTypeService
 	id := inst.id
-	o1 := inst.body1.ProjectTypes[0]
+	o1 := inst.body1.ContentTypes[0]
 	o2, err := ser.Update(ctx, id, o1)
 	if err != nil {
 		return err
 	}
-	inst.body2.ProjectTypes = []*dto.ProjectType{o2}
+	inst.body2.ContentTypes = []*dto.ContentType{o2}
 	return nil
 }
 
-func (inst *myProjectTypeRequest) doDelete() error {
+func (inst *myContentTypeRequest) doDelete() error {
 	ctx := inst.gc
-	ser := inst.controller.ProjectTypeService
+	ser := inst.controller.ContentTypeService
 	id := inst.id
 	return ser.Remove(ctx, id)
 }

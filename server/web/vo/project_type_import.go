@@ -2,9 +2,9 @@ package vo
 
 import "github.com/bitwormhole/wpm/server/web/dto"
 
-// ProjectTypeImport ...
-type ProjectTypeImport struct {
+// ContentTypeImport ...
+type ContentTypeImport struct {
 	Base
 
-	ProjectTypes []*dto.ProjectType `json:"project_types"`
+	ContentTypes []*dto.ContentType `json:"content_types"`
 }

@@ -159,13 +159,13 @@ func (inst *tablesExportTask) exportProjectTypeTable() error {
 
 	db := inst.db
 	view := inst.view
-	table := view.ProjectTypeTable
-	table = make([]*entity.ProjectType, 0)
+	table := view.ContentTypeTable
+	table = make([]*entity.ContentType, 0)
 
 	res := db.Find(&table)
 	err := res.Error
 	if err == nil {
-		view.ProjectTypeTable = table
+		view.ContentTypeTable = table
 	}
 	return err
 }
