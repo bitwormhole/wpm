@@ -26,10 +26,14 @@ func (inst *ImpNamespaceService) _Impl() service.NamespaceService {
 func (inst *ImpNamespaceService) dto2entity(o1 *dto.Namespace) (*entity.Namespace, error) {
 
 	o2 := &entity.Namespace{}
+
 	o2.ID = o1.ID
 	o2.UUID = o1.UUID
 	o2.URL = o1.URL
 	o2.URN = o1.URN
+	o2.Name = o1.Name
+	o2.OS = o1.OS
+	o2.Arch = o1.Arch
 
 	return o2, nil
 }
@@ -37,10 +41,14 @@ func (inst *ImpNamespaceService) dto2entity(o1 *dto.Namespace) (*entity.Namespac
 func (inst *ImpNamespaceService) entity2dto(o1 *entity.Namespace) (*dto.Namespace, error) {
 
 	o2 := &dto.Namespace{}
+
 	o2.ID = o1.ID
 	o2.UUID = o1.UUID
 	o2.URL = o1.URL
 	o2.URN = o1.URN
+	o2.Name = o1.Name
+	o2.OS = o1.OS
+	o2.Arch = o1.Arch
 
 	return o2, nil
 }

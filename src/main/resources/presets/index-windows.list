@@ -1,0 +1,14 @@
+
+# 这些是各种类型的预置
+res:///presets/content-types/application.json
+res:///presets/content-types/audio.json
+res:///presets/content-types/example.json
+res:///presets/content-types/exe.json
+res:///presets/content-types/font.json
+res:///presets/content-types/image.json
+res:///presets/content-types/message.json
+res:///presets/content-types/model.json
+res:///presets/content-types/multipart.json
+res:///presets/content-types/project.json
+res:///presets/content-types/text.json
+res:///presets/content-types/video.json

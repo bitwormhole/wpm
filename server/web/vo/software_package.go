@@ -8,3 +8,10 @@ type SoftwarePackage struct {
 
 	Packages []*dto.SoftwarePackage `json:"packages"`
 }
+
+// SoftwareSet ... 软件集合信息
+type SoftwareSet struct {
+	Base
+
+	Sets []*dto.SoftwareSet `json:"sets"`
+}

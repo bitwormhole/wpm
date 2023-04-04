@@ -7,27 +7,25 @@ import (
 
 // VO 是用于数据导入/导出的 JSON 结构
 type VO struct {
-	WPM dto.Module
+	WPM dto.Module `json:"wpm"`
 
-	ExecutableTable       []*entity.Executable
-	IntentTemplateTable   []*entity.IntentTemplate
-	LocalRepositoryTable  []*entity.LocalRepository
-	LocationTable         []*entity.Location
-	MediaTable            []*entity.Media
-	NamespaceTable        []*entity.Namespace
-	ProjectTable          []*entity.Project
-	ContentTypeTable      []*entity.ContentType
-	RemoteRepositoryTable []*entity.RemoteRepository
-	SettingTable          []*entity.Setting
-	UserTable             []*entity.User
-	WorktreeTable         []*entity.Worktree
+	ExecutableTable       []*entity.Executable       `json:"executables"`
+	IntentTemplateTable   []*entity.IntentTemplate   `json:"intent_templates"`
+	LocalRepositoryTable  []*entity.LocalRepository  `json:"repositories"`
+	LocationTable         []*entity.Location         `json:"locations"`
+	MediaTable            []*entity.Media            `json:"mediae"`
+	NamespaceTable        []*entity.Namespace        `json:"namespaces"`
+	ProjectTable          []*entity.Project          `json:"projects"`
+	ContentTypeTable      []*entity.ContentType      `json:"content_types"`
+	RemoteRepositoryTable []*entity.RemoteRepository `json:"remotes"`
+	SettingTable          []*entity.Setting          `json:"settings"`
+	UserTable             []*entity.User             `json:"users"`
+	WorktreeTable         []*entity.Worktree         `json:"worktrees"`
 }
 
 // StartupVO 这个VO用来记录 wpm 的启动日志
 type StartupVO struct {
-	WPM dto.Module
-
-	Versions map[string]*entity.Executable // map[version] exe
-
-	Logs []*entity.Executable
+	WPM      dto.Module                    `json:"wpm"`
+	Versions map[string]*entity.Executable `json:"versions"` // map[version] exe
+	Logs     []*entity.Executable          `json:"logs"`
 }

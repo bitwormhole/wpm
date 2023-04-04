@@ -138,6 +138,7 @@ func (inst *ProjectTypeDaoImpl) Update(id dxo.ContentTypeID, o1 *entity.ContentT
 
 	o2.Patterns = o1.Patterns
 	o2.Name = o1.Name
+	o2.Icon = o1.Icon
 	o2.Label = o1.Label
 	o2.Description = o1.Description
 

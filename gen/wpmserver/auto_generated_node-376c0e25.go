@@ -9,6 +9,7 @@ import (
 	datasource0x68a737 "github.com/bitwormhole/starter-gorm/datasource"
 	application0x67f6c5 "github.com/bitwormhole/starter/application"
 	markup0x23084a "github.com/bitwormhole/starter/markup"
+	caches0x9d186b "github.com/bitwormhole/wpm/server/components/caches"
 	intents0x8557f3 "github.com/bitwormhole/wpm/server/components/intents"
 	v3filters0xa6552a "github.com/bitwormhole/wpm/server/components/intents/v3filters"
 	dao0x5af8d0 "github.com/bitwormhole/wpm/server/data/dao"
@@ -17,9 +18,11 @@ import (
 	support0xf47d7f "github.com/bitwormhole/wpm/server/support"
 	appruntime0x8dfe0a "github.com/bitwormhole/wpm/server/support/appruntime"
 	backups0xe44d54 "github.com/bitwormhole/wpm/server/support/backups"
+	caches0xd7996d "github.com/bitwormhole/wpm/server/support/caches"
 	checkupdate0xea1855 "github.com/bitwormhole/wpm/server/support/checkupdate"
 	contenttypes0x61ca37 "github.com/bitwormhole/wpm/server/support/contenttypes"
 	executables0xd3773a "github.com/bitwormhole/wpm/server/support/executables"
+	httpclient0xf20fe2 "github.com/bitwormhole/wpm/server/support/httpclient"
 	impldao0x73998b "github.com/bitwormhole/wpm/server/support/impldao"
 	implservice0x22327c "github.com/bitwormhole/wpm/server/support/implservice"
 	init0xc984bc "github.com/bitwormhole/wpm/server/support/init"
@@ -29,6 +32,8 @@ import (
 	mediae0xf005e2 "github.com/bitwormhole/wpm/server/support/mediae"
 	namespaces0xceefcf "github.com/bitwormhole/wpm/server/support/namespaces"
 	platforms0xb539c0 "github.com/bitwormhole/wpm/server/support/platforms"
+	plugins0x82e34b "github.com/bitwormhole/wpm/server/support/plugins"
+	presets0x875f8b "github.com/bitwormhole/wpm/server/support/presets"
 	projects0x4d85c7 "github.com/bitwormhole/wpm/server/support/projects"
 	repositories0x637d5e "github.com/bitwormhole/wpm/server/support/repositories"
 	repositoryworktreeproject0x399028 "github.com/bitwormhole/wpm/server/support/repositoryworktreeproject"
@@ -126,6 +131,13 @@ type pComImpBackupService struct {
 }
 
 
+type pComImpCacheManager struct {
+	instance *caches0xd7996d.ImpCacheManager
+	 markup0x23084a.Component `id:"CacheService" class:"life"`
+	ProviderRegistryList []caches0x9d186b.ProviderRegistry `inject:".wpm-cache-provider"`
+}
+
+
 type pComTheCheckUpdateServiceImpl struct {
 	instance *checkupdate0xea1855.TheCheckUpdateServiceImpl
 	 markup0x23084a.Component `id:"CheckUpdateService"`
@@ -164,6 +176,7 @@ type pComProjectTypeImportServiceImpl struct {
 	 markup0x23084a.Component `id:"ProjectTypeImportService"`
 	AC application0x67f6c5.Context `inject:"context"`
 	ProjectTypeService service0x3e063d.ContentTypeService `inject:"#ContentTypeService"`
+	PresetService service0x3e063d.PresetService `inject:"#PresetService"`
 }
 
 
@@ -215,6 +228,13 @@ type pComExecutableServiceImpl struct {
 	IconService service0x3e063d.AppIconService `inject:"#AppIconService"`
 	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
 	LocationService service0x3e063d.LocationService `inject:"#LocationService"`
+}
+
+
+type pComImpHTTPClientService struct {
+	instance *httpclient0xf20fe2.ImpHTTPClientService
+	 markup0x23084a.Component `id:"HTTPClientService"`
+	MaxContentLength int `inject:"${wpm.httpclient.max-content-length}"`
 }
 
 
@@ -448,6 +468,62 @@ type pComProfileServiceImpl struct {
 type pComWindowsPlatformServiceImpl struct {
 	instance *platforms0xb539c0.WindowsPlatformServiceImpl
 	 markup0x23084a.Component `class:"PlatformProviderRegistry"`
+}
+
+
+type pComSoftwarePackageController struct {
+	instance *plugins0x82e34b.SoftwarePackageController
+	 markup0x23084a.RestController `class:"rest-controller"`
+	SoftwarePackageService service0x3e063d.SoftwarePackageService `inject:"#SoftwarePackageService"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
+type pComPluginDaoImpl struct {
+	instance *plugins0x82e34b.PluginDaoImpl
+	 markup0x23084a.Component `id:"SoftwarePackageDAO"`
+	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
+	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
+}
+
+
+type pComPluginServiceImpl struct {
+	instance *plugins0x82e34b.PluginServiceImpl
+	 markup0x23084a.Component `id:"SoftwarePackageService"`
+	SoftwarePackageDAO dao0x5af8d0.SoftwarePackageDAO `inject:"#SoftwarePackageDAO"`
+	NamespaceService service0x3e063d.NamespaceService `inject:"#NamespaceService"`
+	HTTPClientService service0x3e063d.HTTPClientService `inject:"#HTTPClientService"`
+}
+
+
+type pComSoftwareSetController struct {
+	instance *plugins0x82e34b.SoftwareSetController
+	 markup0x23084a.RestController `class:"rest-controller"`
+	SoftwareSetService service0x3e063d.SoftwareSetService `inject:"#SoftwareSetService"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
+type pComImpSoftwareSetService struct {
+	instance *plugins0x82e34b.ImpSoftwareSetService
+	 markup0x23084a.Component `id:"SoftwareSetService"`
+	SoftwarePackageService service0x3e063d.SoftwarePackageService `inject:"#SoftwarePackageService"`
+}
+
+
+type pComCacheProvider struct {
+	instance *presets0x875f8b.CacheProvider
+	 markup0x23084a.Component ` id:"PresetCache"  class:"wpm-cache-provider"`
+	AC application0x67f6c5.Context `inject:"context"`
+	CS service0x3e063d.CacheService `inject:"#CacheService"`
+	ListFileName string `inject:"${wpm.presets.list-file-name}"`
+}
+
+
+type pComImpPresetService struct {
+	instance *presets0x875f8b.ImpPresetService
+	 markup0x23084a.Component `id:"PresetService"`
+	Cache presets0x875f8b.Cache `inject:"#PresetCache"`
 }
 
 

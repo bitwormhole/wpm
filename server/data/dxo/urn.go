@@ -14,6 +14,9 @@ type NamespaceURN URN
 // ContentTypeURN like 'urn:projecttype:{{name}}'
 type ContentTypeURN URN
 
+// SoftwarePackageURN like 'urn:package:{{name}}'
+type SoftwarePackageURN URN
+
 ////////////////////////////////////////////////////////////////////////////////
 
 func (name URN) String() string {
@@ -25,6 +28,10 @@ func (name ExecutableURN) String() string {
 }
 
 func (name NamespaceURN) String() string {
+	return string(name)
+}
+
+func (name SoftwarePackageURN) String() string {
 	return string(name)
 }
 
@@ -57,4 +64,11 @@ func NewContentTypeURN(name string) ContentTypeURN {
 	t := "contenttype"
 	urn := NewURN(t, name)
 	return ContentTypeURN(urn)
+}
+
+// NewSoftwarePackageURN ...
+func NewSoftwarePackageURN(name string) SoftwarePackageURN {
+	t := "package"
+	urn := NewURN(t, name)
+	return SoftwarePackageURN(urn)
 }

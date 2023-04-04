@@ -33,6 +33,7 @@ func (inst *ProjectTypeServiceImpl) dto2entity(o1 *dto.ContentType) (*entity.Con
 
 	// todo ...
 	o2.Name = o1.TypeName
+	o2.Icon = o1.Icon
 	o2.Patterns = o1.Patterns
 	o2.Label = o1.Label
 	o2.Description = o1.Description
@@ -56,6 +57,7 @@ func (inst *ProjectTypeServiceImpl) entity2dto(o1 *entity.ContentType) (*dto.Con
 
 	// todo ...
 	o2.TypeName = o1.Name
+	o2.Icon = o1.Icon
 	o2.Patterns = o1.Patterns
 	o2.Label = o1.Label
 	o2.Description = o1.Description

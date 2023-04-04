@@ -36,6 +36,11 @@ func (Location) TableName() string {
 }
 
 // TableName ...
+func (Namespace) TableName() string {
+	return TableNamePrefix + "namespace"
+}
+
+// TableName ...
 func (Project) TableName() string {
 	return TableNamePrefix + "project"
 }
@@ -48,6 +53,11 @@ func (ContentType) TableName() string {
 // TableName ...
 func (Setting) TableName() string {
 	return TableNamePrefix + "setting"
+}
+
+// TableName ...
+func (SoftwarePackage) TableName() string {
+	return TableNamePrefix + "package"
 }
 
 // TableName ...
@@ -66,15 +76,17 @@ func (Worktree) TableName() string {
 func ListPrototypes() []any {
 	list := make([]any, 0)
 
+	list = append(list, &ContentType{})
 	list = append(list, &Executable{})
 	list = append(list, &IntentTemplate{})
-	list = append(list, &Project{})
-	list = append(list, &ContentType{})
 	list = append(list, &LocalRepository{})
-	list = append(list, &Media{})
 	list = append(list, &Location{})
+	list = append(list, &Media{})
+	list = append(list, &Namespace{})
+	list = append(list, &Project{})
 	list = append(list, &RemoteRepository{})
 	list = append(list, &Setting{})
+	list = append(list, &SoftwarePackage{})
 	list = append(list, &User{})
 	list = append(list, &Worktree{})
 

@@ -9,7 +9,7 @@ type Namespace struct {
 
 	Base
 
-	URL  string `json:"url"`
+	URL  string `json:"url"` // 指向命名空间的包列表
 	Name string `json:"name"`
 	OS   string `json:"os"`   // 操作系统
 	Arch string `json:"arch"` // 处理器架构

@@ -68,6 +68,9 @@ type SetupID int
 // SoftwarePackageID ...
 type SoftwarePackageID int
 
+// SoftwareSetID ...
+type SoftwareSetID int
+
 // UserID ...
 type UserID int
 

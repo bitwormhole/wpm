@@ -1,0 +1,33 @@
+{
+    "WPM": {},
+    "contenttypes": [
+        {
+            "id": 1,
+            "as_dir": false,
+            "as_file": true,
+            "as_project": true,
+            "description": "Go 语言项目模块",
+            "icon": "/image/project-icons/go-module.svg",
+            "label": "Go 模块",
+            "patterns": "go.mod",
+            "priority": 1,
+            "type": "project/go-module",
+            "urn": "urn:contenttype:project/go-module",
+            "uuid": "ffffff"
+        },
+        {
+            "id": 1,
+            "as_dir": false,
+            "as_file": true,
+            "as_project": true,
+            "description": "Rust Cargo 项目",
+            "icon": "/image/project-icons/rust-cargo.svg",
+            "label": "Rust Cargo 项目",
+            "patterns": "cargo.toml",
+            "priority": 1,
+            "type": "project/rust-cargo",
+            "urn": "urn:contenttype:project/rust-cargo",
+            "uuid": "ffffff"
+        }
+    ]
+}
