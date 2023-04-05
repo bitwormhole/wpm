@@ -429,6 +429,7 @@ type pComImpNamespaceDao struct {
 	instance *namespaces0xceefcf.ImpNamespaceDao
 	 markup0x23084a.Component `id:"NamespaceDAO"`
 	AC application0x67f6c5.Context `inject:"context"`
+	PresetService service0x3e063d.PresetService `inject:"#PresetService"`
 }
 
 

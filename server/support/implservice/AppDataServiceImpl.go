@@ -2,6 +2,7 @@ package implservice
 
 import (
 	"os"
+	"strings"
 
 	"bitwormhole.com/starter/afs"
 	"bitwormhole.com/starter/afs/files"
@@ -13,9 +14,10 @@ import (
 
 // 定义 app-data 文件名
 const (
-	AppDataFileDB    = "wpm.db"
-	AppDataMainGit   = "main/.git"
-	AppDataBackupDir = "backups"
+	AppDataFileDB        = "wpm.db"
+	AppDataMainGit       = "main/.git"
+	AppDataBackupDumpDir = "backups/dumps"
+	AppDataBackupExeDir  = "backups/executables"
 )
 
 // AppDataServiceImpl ...
@@ -67,9 +69,9 @@ func (inst *AppDataServiceImpl) GetAppDataDirectory() string {
 	return inst.forPathString(".")
 }
 
-// GetBackupDirectory 。。。
-func (inst *AppDataServiceImpl) GetBackupDirectory() string {
-	return inst.forPathString(AppDataBackupDir)
+// GetBackupDumpDirectory 。。。
+func (inst *AppDataServiceImpl) GetBackupDumpDirectory() string {
+	return inst.forPathString(AppDataBackupDumpDir)
 }
 
 // GetSQLiteDBFile ...
@@ -117,4 +119,19 @@ func (inst *AppDataServiceImpl) Setup() error {
 		Mkdirs:     true,
 	}
 	return dir.Mkdirs(opt)
+}
+
+// GetBackupExecutableFile ...
+func (inst *AppDataServiceImpl) GetBackupExecutableFile(sum util.Hex) string {
+	filename := sum.String()
+	filename = strings.TrimSpace(filename)
+	if filename == "" {
+		filename = "unnamed"
+	}
+	b := strings.Builder{}
+	b.WriteString(AppDataBackupExeDir)
+	b.WriteString("/")
+	b.WriteString(filename)
+	path := b.String()
+	return inst.forPathString(path)
 }

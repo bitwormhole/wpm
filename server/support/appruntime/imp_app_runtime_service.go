@@ -1,7 +1,6 @@
 package appruntime
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -18,7 +17,6 @@ import (
 	"github.com/bitwormhole/wpm/server/data/entity"
 	"github.com/bitwormhole/wpm/server/service"
 	"github.com/bitwormhole/wpm/server/utils"
-	"github.com/bitwormhole/wpm/server/web/dto"
 )
 
 // ImpAppRuntimeService ...
@@ -161,24 +159,12 @@ func (inst *ImpAppRuntimeService) backupSelf() error {
 		return err
 	}
 
-	c := context.Background()
 	src := inst.FileSystemService.Path(info.Path)
 	wantSum := info.SHA256SUM
 	wantSize := info.Size
 
-	// prepare media
-	media := &dto.Media{
-		SHA256SUM:   wantSum,
-		FileSize:    wantSize,
-		Name:        info.Name,
-		Label:       info.Title,
-		ContentType: "application/x-executable",
-	}
-
-	dst, err := inst.MediaService.ComputeMediaPath(c, media)
-	if err != nil {
-		return err
-	}
+	pathStr := inst.AppDataService.GetBackupExecutableFile(wantSum)
+	dst := inst.FileSystemService.Path(pathStr)
 
 	// check dst
 	if dst.IsFile() {

@@ -179,7 +179,7 @@ func (inst *ImpBackupService) findAllJSONFileInDir(dir afs.Path) []afs.Path {
 }
 
 func (inst *ImpBackupService) getBackupDir() afs.Path {
-	path1 := inst.AppDataService.GetBackupDirectory()
+	path1 := inst.AppDataService.GetBackupDumpDirectory()
 	path2 := inst.FilesysService.Path(path1)
 	if !path2.Exists() {
 		path2.Mkdirs(nil)

@@ -1,22 +1,23 @@
 package namespaces
 
 import (
-	"encoding/json"
 	"fmt"
 
 	"github.com/bitwormhole/starter/application"
 	"github.com/bitwormhole/starter/markup"
-	"github.com/bitwormhole/wpm/server/data/backup"
 	"github.com/bitwormhole/wpm/server/data/dao"
 	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/data/entity"
+	"github.com/bitwormhole/wpm/server/service"
+	"github.com/bitwormhole/wpm/server/web/dto"
 )
 
 // ImpNamespaceDao ... 目前，entity.Namespace 实际上是从资源文件里加载的
 type ImpNamespaceDao struct {
 	markup.Component `id:"NamespaceDAO"`
 
-	AC application.Context `inject:"context"`
+	AC            application.Context   `inject:"context"`
+	PresetService service.PresetService `inject:"#PresetService"`
 }
 
 func (inst *ImpNamespaceDao) _Impl() dao.NamespaceDAO {
@@ -39,19 +40,32 @@ func (inst *ImpNamespaceDao) Find(id dxo.NamespaceID) (*entity.Namespace, error)
 
 // ListAll ...
 func (inst *ImpNamespaceDao) ListAll() ([]*entity.Namespace, error) {
-	const (
-		name = "res:///namespaces.json"
-	)
-	data, err := inst.AC.GetResources().GetBinary(name)
+	all, err := inst.PresetService.GetPresets()
 	if err != nil {
 		return nil, err
 	}
-	vo := &backup.VO{}
-	err = json.Unmarshal(data, vo)
-	if err != nil {
-		return nil, err
+	src := all.Namespaces
+	dst := make([]*entity.Namespace, 0)
+	for _, item1 := range src {
+		item2 := inst.dto2entity(item1)
+		dst = append(dst, item2)
 	}
-	return vo.NamespaceTable, nil
+	return dst, nil
+}
+
+func (inst *ImpNamespaceDao) dto2entity(src *dto.Namespace) *entity.Namespace {
+
+	dst := &entity.Namespace{}
+
+	dst.ID = src.ID
+	dst.UUID = src.UUID
+	dst.URN = src.URN
+	dst.Name = src.Name
+	dst.URL = src.URL
+	dst.OS = src.OS
+	dst.Arch = src.Arch
+
+	return dst
 }
 
 func (inst *ImpNamespaceDao) Insert(o *entity.Namespace) (*entity.Namespace, error) {

@@ -1,5 +1,7 @@
 package service
 
+import "github.com/bitwormhole/starter/util"
+
 // AppDataService ...
 type AppDataService interface {
 	GetAppDataDirectory() string
@@ -8,7 +10,9 @@ type AppDataService interface {
 
 	GetMainRepositoryPath() string
 
-	GetBackupDirectory() string
+	GetBackupDumpDirectory() string
+
+	GetBackupExecutableFile(sum util.Hex) string
 
 	Ready() bool
 

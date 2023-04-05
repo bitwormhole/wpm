@@ -5347,6 +5347,7 @@ type comFactory4pComImpNamespaceDao struct {
 
 	
 	mACSelector config.InjectionSelector
+	mPresetServiceSelector config.InjectionSelector
 
 }
 
@@ -5354,6 +5355,7 @@ func (inst * comFactory4pComImpNamespaceDao) init() application.ComponentFactory
 
 	
 	inst.mACSelector = config.NewInjectionSelector("context",nil)
+	inst.mPresetServiceSelector = config.NewInjectionSelector("#PresetService",nil)
 
 
 	inst.mPrototype = inst.newObject()
@@ -5392,12 +5394,31 @@ func (inst * comFactory4pComImpNamespaceDao) Inject(instance application.Compone
 	
 	obj := inst.castObject(instance)
 	obj.AC = inst.getterForFieldACSelector(context)
+	obj.PresetService = inst.getterForFieldPresetServiceSelector(context)
 	return context.LastError()
 }
 
 //getterForFieldACSelector
 func (inst * comFactory4pComImpNamespaceDao) getterForFieldACSelector (context application.InstanceContext) application.Context {
     return context.Context()
+}
+
+//getterForFieldPresetServiceSelector
+func (inst * comFactory4pComImpNamespaceDao) getterForFieldPresetServiceSelector (context application.InstanceContext) service0x3e063d.PresetService {
+
+	o1 := inst.mPresetServiceSelector.GetOne(context)
+	o2, ok := o1.(service0x3e063d.PresetService)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "NamespaceDAO")
+		eb.Set("field", "PresetService")
+		eb.Set("type1", "?")
+		eb.Set("type2", "service0x3e063d.PresetService")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
 }
 
 
