@@ -1,11 +1,88 @@
 {
-    "WPM": {
-        "name": "github.com/bitwormhole/wpm#server",
-        "version": "v0.0.15",
-        "revision": 16,
-        "hex_name": ""
-    },
+    "message": "",
+    "error": "",
+    "status": 200,
+    "time": 1680699601301,
+    "timef": "2023-04-05T21:00:01.3012718+08:00",
+    "online": "",
+    "namespaces": null,
+    "packages": null,
+    "contenttypes": null,
+    "intenttemplates": [
+        {
+            "id": 10007,
+            "uuid": "7d75f7489b99e35f2bd7ba861d03b6adefffacdf36399540061b9594d1b4c52d",
+            "created_at": 0,
+            "updated_at": 0,
+            "name": "Explorer",
+            "icon": "",
+            "title": "Windows Explorer",
+            "group": "",
+            "description": "Explorer for repository",
+            "action": {
+                "method": "open",
+                "target": "repository",
+                "type": "",
+                "with": "explorer.exe",
+                "selector": ""
+            },
+            "want_properties": null,
+            "command": "${executable.path}",
+            "args": "${repository.wkdir}",
+            "env": "",
+            "wd": "${repository.wkdir}"
+        },
+        {
+            "id": 10009,
+            "uuid": "458f325cb40e606b6a87782bae55762503a0cee3a174c1c18dfb778f2699e589",
+            "created_at": 0,
+            "updated_at": 0,
+            "name": "PowerShell",
+            "icon": "",
+            "title": "Power Shell",
+            "group": "",
+            "description": "PowerShell for repository",
+            "action": {
+                "method": "open",
+                "target": "repository",
+                "type": "",
+                "with": "powershell.exe",
+                "selector": ""
+            },
+            "want_properties": null,
+            "command": "conhost",
+            "args": "powershell",
+            "env": "aaaa=1\nbbbb=2",
+            "wd": "${repository.wkdir}"
+        },
+        {
+            "id": 10010,
+            "uuid": "c9a1f2c9b27b4f446e0850af636dc917b666c6002b6d2a0c72e0f146bed1203a",
+            "created_at": 0,
+            "updated_at": 0,
+            "name": "conhost",
+            "icon": "",
+            "title": "Windows Console Host",
+            "group": "",
+            "description": "",
+            "action": {
+                "method": "open",
+                "target": "repository",
+                "type": "",
+                "with": "conhost.exe",
+                "selector": ""
+            },
+            "want_properties": null,
+            "command": "${executable.path}",
+            "args": "cmd",
+            "env": "",
+            "wd": "${repository.wkdir}"
+        }
+    ],
     "IntentTemplateTable": [
+        {
+            "//": "以下是老的结构，仅供参考"
+        },
         {
             "ID": 10007,
             "UUID": "7d75f7489b99e35f2bd7ba861d03b6adefffacdf36399540061b9594d1b4c52d",

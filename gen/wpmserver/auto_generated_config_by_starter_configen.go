@@ -4589,6 +4589,7 @@ type comFactory4pComIntentTemplateServiceImpl struct {
 	mACSelector config.InjectionSelector
 	mIntentTempDAOSelector config.InjectionSelector
 	mIntentFilterManagerSelector config.InjectionSelector
+	mPresetServiceSelector config.InjectionSelector
 
 }
 
@@ -4598,6 +4599,7 @@ func (inst * comFactory4pComIntentTemplateServiceImpl) init() application.Compon
 	inst.mACSelector = config.NewInjectionSelector("context",nil)
 	inst.mIntentTempDAOSelector = config.NewInjectionSelector("#IntentTemplateDAO",nil)
 	inst.mIntentFilterManagerSelector = config.NewInjectionSelector("#wpm-intent-filter-manager",nil)
+	inst.mPresetServiceSelector = config.NewInjectionSelector("#PresetService",nil)
 
 
 	inst.mPrototype = inst.newObject()
@@ -4638,6 +4640,7 @@ func (inst * comFactory4pComIntentTemplateServiceImpl) Inject(instance applicati
 	obj.AC = inst.getterForFieldACSelector(context)
 	obj.IntentTempDAO = inst.getterForFieldIntentTempDAOSelector(context)
 	obj.IntentFilterManager = inst.getterForFieldIntentFilterManagerSelector(context)
+	obj.PresetService = inst.getterForFieldPresetServiceSelector(context)
 	return context.LastError()
 }
 
@@ -4676,6 +4679,24 @@ func (inst * comFactory4pComIntentTemplateServiceImpl) getterForFieldIntentFilte
 		eb.Set("field", "IntentFilterManager")
 		eb.Set("type1", "?")
 		eb.Set("type2", "intents0x8557f3.FilterManager")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
+}
+
+//getterForFieldPresetServiceSelector
+func (inst * comFactory4pComIntentTemplateServiceImpl) getterForFieldPresetServiceSelector (context application.InstanceContext) service0x3e063d.PresetService {
+
+	o1 := inst.mPresetServiceSelector.GetOne(context)
+	o2, ok := o1.(service0x3e063d.PresetService)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "IntentTemplateService")
+		eb.Set("field", "PresetService")
+		eb.Set("type1", "?")
+		eb.Set("type2", "service0x3e063d.PresetService")
 		context.HandleError(eb.Create())
 		return nil
 	}

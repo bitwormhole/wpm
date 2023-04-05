@@ -15,3 +15,6 @@ res:///presets/content-types/video.json
 
 # 预置常用程序
 res:///presets/executables/preset-executables-windows.json
+
+# 预置命令模板
+res:///presets/intent-templates/preset-intent-templates.json

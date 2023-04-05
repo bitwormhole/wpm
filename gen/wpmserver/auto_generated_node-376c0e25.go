@@ -369,6 +369,7 @@ type pComIntentTemplateServiceImpl struct {
 	AC application0x67f6c5.Context `inject:"context"`
 	IntentTempDAO dao0x5af8d0.IntentTemplateDAO `inject:"#IntentTemplateDAO"`
 	IntentFilterManager intents0x8557f3.FilterManager `inject:"#wpm-intent-filter-manager"`
+	PresetService service0x3e063d.PresetService `inject:"#PresetService"`
 }
 
 

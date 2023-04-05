@@ -24,6 +24,7 @@ type IntentTemplateServiceImpl struct {
 	AC                  application.Context   `inject:"context"`
 	IntentTempDAO       dao.IntentTemplateDAO `inject:"#IntentTemplateDAO"`
 	IntentFilterManager intents.FilterManager `inject:"#wpm-intent-filter-manager"`
+	PresetService       service.PresetService `inject:"#PresetService"`
 }
 
 func (inst *IntentTemplateServiceImpl) _Impl() service.IntentTemplateService {

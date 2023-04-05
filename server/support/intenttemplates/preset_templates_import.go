@@ -2,12 +2,10 @@ package intenttemplates
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 
 	"github.com/bitwormhole/starter/vlog"
-	"github.com/bitwormhole/wpm/server/data/backup"
-	"github.com/bitwormhole/wpm/server/data/entity"
+	"github.com/bitwormhole/wpm/server/web/dto"
 )
 
 type myPresetTemplatesImport struct {
@@ -16,17 +14,12 @@ type myPresetTemplatesImport struct {
 
 func (inst *myPresetTemplatesImport) Import(c context.Context) error {
 
-	list1, err := inst.loadTemplates("preset-intent-templates.json")
+	list, err := inst.loadTemplates()
 	if err != nil {
 		return err
 	}
 
-	list2, err := inst.parent.entity2dtoList(list1)
-	if err != nil {
-		return err
-	}
-
-	for _, item := range list2 {
+	for _, item := range list {
 		_, err = inst.parent.Insert(c, item)
 		if err != nil {
 			vlog.Warn(err)
@@ -36,23 +29,17 @@ func (inst *myPresetTemplatesImport) Import(c context.Context) error {
 	return nil
 }
 
-func (inst *myPresetTemplatesImport) loadTemplates(name string) ([]*entity.IntentTemplate, error) {
+func (inst *myPresetTemplatesImport) loadTemplates() ([]*dto.IntentTemplate, error) {
 
-	url := "res:///" + name
-	data, err := inst.parent.AC.GetResources().GetBinary(url)
+	ser := inst.parent.PresetService
+	all, err := ser.GetPresets()
 	if err != nil {
 		return nil, err
 	}
 
-	vo := &backup.VO{}
-	err = json.Unmarshal(data, vo)
-	if err != nil {
-		return nil, err
-	}
-
-	list := vo.IntentTemplateTable
-	if list == nil {
-		return nil, fmt.Errorf("the 'IntentTemplateTable' is nil")
+	list := all.IntentTemplates
+	if len(list) < 1 {
+		return nil, fmt.Errorf("no preset Intent-Template")
 	}
 
 	return list, nil
