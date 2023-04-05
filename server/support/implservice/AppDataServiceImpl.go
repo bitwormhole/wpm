@@ -81,7 +81,7 @@ func (inst *AppDataServiceImpl) GetSQLiteDBFile() string {
 			version := am.GetVersion()
 			sum := inst.getThisExeSha256sum()
 			hexName := sum.String()[0:7]
-			name = "wpm-" + hexName + "-" + version + ".db"
+			name = "databases/wpm-" + version + "-" + hexName + ".db"
 		}
 	}
 	return inst.forPathString(name)
