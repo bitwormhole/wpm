@@ -103,6 +103,7 @@ type pComImpAppRuntimeService struct {
 	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
 	AppDataService service0x3e063d.AppDataService `inject:"#AppDataService"`
 	MediaService service0x3e063d.MediaService `inject:"#MediaService"`
+	EnableBackupSelf bool `inject:"${wpm.backup-this-exe.enabled}"`
 }
 
 
@@ -218,6 +219,7 @@ type pComExecutableImportServiceImpl struct {
 	AC application0x67f6c5.Context `inject:"context"`
 	ExecutableService service0x3e063d.ExecutableService `inject:"#ExecutableService"`
 	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
+	PresetService service0x3e063d.PresetService `inject:"#PresetService"`
 }
 
 
@@ -225,7 +227,6 @@ type pComExecutableServiceImpl struct {
 	instance *executables0xd3773a.ExecutableServiceImpl
 	 markup0x23084a.Component `id:"ExecutableService"`
 	ExecutableDAO dao0x5af8d0.ExecutableDAO `inject:"#ExecutableDAO"`
-	IconService service0x3e063d.AppIconService `inject:"#AppIconService"`
 	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
 	LocationService service0x3e063d.LocationService `inject:"#LocationService"`
 }
@@ -267,14 +268,6 @@ type pComAppDataServiceImpl struct {
 	ProfileService service0x3e063d.ProfileService `inject:"#ProfileService"`
 	AppRuntimeService service0x3e063d.AppRuntimeService `inject:"#AppRuntimeService"`
 	SQLiteDatabaseNameWithAppVersion bool `inject:"${datasource.wpm.database-name-with-version}"`
-}
-
-
-type pComAppIconServiceImpl struct {
-	instance *implservice0x22327c.AppIconServiceImpl
-	 markup0x23084a.Component `id:"AppIconService" class:"life"`
-	PropsName string `inject:"${wpm.exe-icons.properties}"`
-	Context application0x67f6c5.Context `inject:"context"`
 }
 
 
@@ -786,6 +779,13 @@ type pComFileQueryController struct {
 	instance *controller0x9dc399.FileQueryController
 	 markup0x23084a.RestController `class:"rest-controller"`
 	FileQueryService service0x3e063d.FileQueryService `inject:"#FileQueryService"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
+type pComOnlineDocumentExampleController struct {
+	instance *controller0x9dc399.OnlineDocumentExampleController
+	 markup0x23084a.RestController `class:"rest-controller"`
 	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
 }
 

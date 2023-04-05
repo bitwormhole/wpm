@@ -21,8 +21,9 @@ import (
 type ExecutableServiceImpl struct {
 	markup.Component `id:"ExecutableService"`
 
+	// IconService       service.AppIconService    `inject:"#AppIconService"` // 【已弃用】
+
 	ExecutableDAO     dao.ExecutableDAO         `inject:"#ExecutableDAO"`
-	IconService       service.AppIconService    `inject:"#AppIconService"`
 	FileSystemService service.FileSystemService `inject:"#FileSystemService"`
 	LocationService   service.LocationService   `inject:"#LocationService"`
 }

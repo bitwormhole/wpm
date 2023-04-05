@@ -51,3 +51,11 @@ func (inst *mySetupHanlders) doInitMainRepository(c context.Context, req *dto.Se
 	}
 	return h.Run()
 }
+
+func (inst *mySetupHanlders) doDumpOlderData(c context.Context, req *dto.Setup) error {
+	return fmt.Errorf("todo: no impl")
+}
+
+func (inst *mySetupHanlders) doImportOlderData(c context.Context, req *dto.Setup) error {
+	return fmt.Errorf("todo: no impl")
+}

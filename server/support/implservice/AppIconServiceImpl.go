@@ -1,87 +1,77 @@
 package implservice
 
-import (
-	"strings"
+// // AppIconServiceImpl ...
+// type AppIconServiceImpl struct {
+// 	markup.Component `id:"AppIconService" class:"life"`
 
-	"github.com/bitwormhole/starter/application"
-	"github.com/bitwormhole/starter/collection"
-	"github.com/bitwormhole/starter/markup"
-	"github.com/bitwormhole/wpm/server/service"
-	"github.com/bitwormhole/wpm/server/web/dto"
-)
+// 	PropsName string              `inject:"${wpm.exe-icons.properties}"`
+// 	Context   application.Context `inject:"context"`
 
-// AppIconServiceImpl ...
-type AppIconServiceImpl struct {
-	markup.Component `id:"AppIconService" class:"life"`
+// 	table map[string]string
+// }
 
-	PropsName string              `inject:"${wpm.exe-icons.properties}"`
-	Context   application.Context `inject:"context"`
+// func (inst *AppIconServiceImpl) _Impl() (service.AppIconService, application.LifeRegistry) {
+// 	return inst, inst
+// }
 
-	table map[string]string
-}
+// // GetLifeRegistration ...
+// func (inst *AppIconServiceImpl) GetLifeRegistration() *application.LifeRegistration {
+// 	return &application.LifeRegistration{
+// 		OnInit: inst.init,
+// 	}
+// }
 
-func (inst *AppIconServiceImpl) _Impl() (service.AppIconService, application.LifeRegistry) {
-	return inst, inst
-}
+// func (inst *AppIconServiceImpl) init() error {
 
-// GetLifeRegistration ...
-func (inst *AppIconServiceImpl) GetLifeRegistration() *application.LifeRegistration {
-	return &application.LifeRegistration{
-		OnInit: inst.init,
-	}
-}
+// 	dst := make(map[string]string)
+// 	file := inst.PropsName
+// 	text, err := inst.Context.GetResources().GetText(file)
+// 	if err != nil {
+// 		return err
+// 	}
 
-func (inst *AppIconServiceImpl) init() error {
+// 	src, err := collection.ParseProperties(text, nil)
+// 	if err != nil {
+// 		return err
+// 	}
 
-	dst := make(map[string]string)
-	file := inst.PropsName
-	text, err := inst.Context.GetResources().GetText(file)
-	if err != nil {
-		return err
-	}
+// 	dst = src.Export(dst)
+// 	inst.table = dst
+// 	return nil
+// }
 
-	src, err := collection.ParseProperties(text, nil)
-	if err != nil {
-		return err
-	}
+// // FillWithIconURL ...
+// func (inst *AppIconServiceImpl) FillWithIconURL(o1 *dto.Executable) error {
+// 	name := o1.Name
+// 	url := inst.findIconURL(name)
+// 	o1.IconURL = url
+// 	return nil
+// }
 
-	dst = src.Export(dst)
-	inst.table = dst
-	return nil
-}
+// func (inst *AppIconServiceImpl) normalizeName(name string) string {
+// 	name = strings.TrimSpace(name)
+// 	name = strings.ToLower(name)
+// 	i := strings.LastIndex(name, ".")
+// 	if i > 0 {
+// 		name = name[0:i]
+// 	}
+// 	return name
+// }
 
-// FillWithIconURL ...
-func (inst *AppIconServiceImpl) FillWithIconURL(o1 *dto.Executable) error {
-	name := o1.Name
-	url := inst.findIconURL(name)
-	o1.IconURL = url
-	return nil
-}
+// func (inst *AppIconServiceImpl) findIconURL(name string) string {
 
-func (inst *AppIconServiceImpl) normalizeName(name string) string {
-	name = strings.TrimSpace(name)
-	name = strings.ToLower(name)
-	i := strings.LastIndex(name, ".")
-	if i > 0 {
-		name = name[0:i]
-	}
-	return name
-}
+// 	name = inst.normalizeName(name)
+// 	key := "icon." + name + ".url"
+// 	url := inst.table[key]
 
-func (inst *AppIconServiceImpl) findIconURL(name string) string {
+// 	if url == "" {
+// 		key = "icon.default.url"
+// 		url = inst.table[key]
+// 	}
 
-	name = inst.normalizeName(name)
-	key := "icon." + name + ".url"
-	url := inst.table[key]
+// 	if url == "" {
+// 		url = "/image/exe-icons/default.png"
+// 	}
 
-	if url == "" {
-		key = "icon.default.url"
-		url = inst.table[key]
-	}
-
-	if url == "" {
-		url = "/image/exe-icons/default.png"
-	}
-
-	return url
-}
+// 	return url
+// }

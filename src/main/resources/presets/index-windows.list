@@ -12,3 +12,6 @@ res:///presets/content-types/multipart.json
 res:///presets/content-types/project.json
 res:///presets/content-types/text.json
 res:///presets/content-types/video.json
+
+# 预置常用程序
+res:///presets/executables/preset-executables-windows.json

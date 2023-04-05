@@ -29,6 +29,8 @@ type ImpAppRuntimeService struct {
 	AppDataService    service.AppDataService    `inject:"#AppDataService"`
 	MediaService      service.MediaService      `inject:"#MediaService"`
 
+	EnableBackupSelf bool `inject:"${wpm.backup-this-exe.enabled}"`
+
 	info *entity.Executable // the cached runtime info
 }
 
@@ -148,6 +150,11 @@ func (inst *ImpAppRuntimeService) getLogFile() afs.Path {
 }
 
 func (inst *ImpAppRuntimeService) backupSelf() error {
+
+	enabled := inst.EnableBackupSelf
+	if !enabled {
+		return nil
+	}
 
 	info, err := inst.getAppRuntimeInfo()
 	if err != nil {

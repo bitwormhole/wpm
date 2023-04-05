@@ -44,6 +44,8 @@ func (inst *myPresetsLoader) loadPresetFile(filename string, dst *vo.Online) err
 
 	dst.ContentTypes = append(dst.ContentTypes, src.ContentTypes...)
 
+	dst.Executables = append(dst.Executables, src.Executables...)
+
 	dst.IntentTemplates = append(dst.IntentTemplates, src.IntentTemplates...)
 
 	dst.Mediae = append(dst.Mediae, src.Mediae...)

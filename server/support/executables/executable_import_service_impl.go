@@ -22,6 +22,7 @@ type ExecutableImportServiceImpl struct {
 	AC                application.Context       `inject:"context"`
 	ExecutableService service.ExecutableService `inject:"#ExecutableService"`
 	FileSystemService service.FileSystemService `inject:"#FileSystemService"`
+	PresetService     service.PresetService     `inject:"#PresetService"`
 }
 
 func (inst *ExecutableImportServiceImpl) _Impl() service.ExecutableImportService {

@@ -4,12 +4,10 @@ import (
 	"context"
 	"fmt"
 	"os/exec"
-	"runtime"
 
 	"github.com/bitwormhole/starter/collection"
 	"github.com/bitwormhole/starter/vlog"
 	"github.com/bitwormhole/wpm/server/data/dxo"
-	"github.com/bitwormhole/wpm/server/utils"
 	"github.com/bitwormhole/wpm/server/web/dto"
 )
 
@@ -19,48 +17,35 @@ type myImportPresetExecutablesHanlder struct {
 }
 
 func (inst *myImportPresetExecutablesHanlder) Import() error {
-
-	props, err := inst.loadProperties()
+	items, err := inst.loadItems()
 	if err != nil {
 		return err
 	}
-
-	items, err := inst.loadItems(props)
-	if err != nil {
-		return err
-	}
-
 	return inst.insertItems(items)
 }
 
-func (inst *myImportPresetExecutablesHanlder) loadProperties() (collection.Properties, error) {
-	osName := runtime.GOOS
-	name := "preset-executables-" + osName + ".properties"
-	res := inst.parent.AC.GetResources()
-	text, err := res.GetText(name)
+// func (inst *myImportPresetExecutablesHanlder) loadProperties() (collection.Properties, error) {
+// 	osName := runtime.GOOS
+// 	name := "preset-executables-" + osName + ".properties"
+// 	res := inst.parent.AC.GetResources()
+// 	text, err := res.GetText(name)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	return collection.ParseProperties(text, nil)
+// }
+
+func (inst *myImportPresetExecutablesHanlder) loadItems() ([]*dto.Executable, error) {
+	ser := inst.parent.PresetService
+	doc, err := ser.GetPresets()
 	if err != nil {
 		return nil, err
 	}
-	return collection.ParseProperties(text, nil)
-}
-
-func (inst *myImportPresetExecutablesHanlder) loadItems(src collection.Properties) ([]*dto.Executable, error) {
-	const (
-		prefix = "executable."
-		suffix = ".name"
-	)
-	dst := make([]*dto.Executable, 0)
-	namelist := (&utils.PropertiesUtil{}).GetNameList(src, prefix, suffix)
-	for _, name := range namelist {
-		item, err := inst.loadItem(src, prefix, name)
-		if err == nil {
-			dst = append(dst, item)
-		} else {
-			// vlog.Warn(err)
-			return nil, err
-		}
+	list := doc.Executables
+	if list == nil {
+		return nil, fmt.Errorf("no preset executable")
 	}
-	return dst, nil
+	return list, nil
 }
 
 func (inst *myImportPresetExecutablesHanlder) loadItem(src collection.Properties, prefix, name string) (*dto.Executable, error) {
