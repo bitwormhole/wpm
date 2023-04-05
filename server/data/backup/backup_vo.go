@@ -10,17 +10,18 @@ type VO struct {
 	WPM dto.Module `json:"wpm"`
 
 	ExecutableTable       []*entity.Executable       `json:"executables"`
-	IntentTemplateTable   []*entity.IntentTemplate   `json:"intent_templates"`
+	IntentTemplateTable   []*entity.IntentTemplate   `json:"intenttemplates"`
 	LocalRepositoryTable  []*entity.LocalRepository  `json:"repositories"`
 	LocationTable         []*entity.Location         `json:"locations"`
 	MediaTable            []*entity.Media            `json:"mediae"`
 	NamespaceTable        []*entity.Namespace        `json:"namespaces"`
 	ProjectTable          []*entity.Project          `json:"projects"`
-	ContentTypeTable      []*entity.ContentType      `json:"content_types"`
+	ContentTypeTable      []*entity.ContentType      `json:"contenttypes"`
 	RemoteRepositoryTable []*entity.RemoteRepository `json:"remotes"`
 	SettingTable          []*entity.Setting          `json:"settings"`
 	UserTable             []*entity.User             `json:"users"`
 	WorktreeTable         []*entity.Worktree         `json:"worktrees"`
+	PackageTable          []*entity.SoftwarePackage  `json:"packages"`
 }
 
 // StartupVO 这个VO用来记录 wpm 的启动日志
