@@ -23,6 +23,7 @@ type ImpSetupService struct {
 	ProjectTypeImportService service.ProjectTypeImportService `inject:"#ProjectTypeImportService"`
 	SettingService           service.SettingService           `inject:"#SettingService"`
 	SoftwarePackageService   service.SoftwarePackageService   `inject:"#SoftwarePackageService"`
+	DatabaseBackupService    service.DatabaseBackupService    `inject:"#DatabaseBackupService"`
 
 	cachedRegs []*service.SetupRegistration
 }
@@ -119,6 +120,7 @@ func (inst *ImpSetupService) makeContext() *Context {
 		ProjectTypeImportService: inst.ProjectTypeImportService,
 		SettingService:           inst.SettingService,
 		SoftwarePackageService:   inst.SoftwarePackageService,
+		DatabaseBackupService:    inst.DatabaseBackupService,
 	}
 }
 

@@ -8698,6 +8698,7 @@ type comFactory4pComImpSetupService struct {
 	mProjectTypeImportServiceSelector config.InjectionSelector
 	mSettingServiceSelector config.InjectionSelector
 	mSoftwarePackageServiceSelector config.InjectionSelector
+	mDatabaseBackupServiceSelector config.InjectionSelector
 
 }
 
@@ -8713,6 +8714,7 @@ func (inst * comFactory4pComImpSetupService) init() application.ComponentFactory
 	inst.mProjectTypeImportServiceSelector = config.NewInjectionSelector("#ProjectTypeImportService",nil)
 	inst.mSettingServiceSelector = config.NewInjectionSelector("#SettingService",nil)
 	inst.mSoftwarePackageServiceSelector = config.NewInjectionSelector("#SoftwarePackageService",nil)
+	inst.mDatabaseBackupServiceSelector = config.NewInjectionSelector("#DatabaseBackupService",nil)
 
 
 	inst.mPrototype = inst.newObject()
@@ -8759,6 +8761,7 @@ func (inst * comFactory4pComImpSetupService) Inject(instance application.Compone
 	obj.ProjectTypeImportService = inst.getterForFieldProjectTypeImportServiceSelector(context)
 	obj.SettingService = inst.getterForFieldSettingServiceSelector(context)
 	obj.SoftwarePackageService = inst.getterForFieldSoftwarePackageServiceSelector(context)
+	obj.DatabaseBackupService = inst.getterForFieldDatabaseBackupServiceSelector(context)
 	return context.LastError()
 }
 
@@ -8918,6 +8921,24 @@ func (inst * comFactory4pComImpSetupService) getterForFieldSoftwarePackageServic
 		eb.Set("field", "SoftwarePackageService")
 		eb.Set("type1", "?")
 		eb.Set("type2", "service0x3e063d.SoftwarePackageService")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
+}
+
+//getterForFieldDatabaseBackupServiceSelector
+func (inst * comFactory4pComImpSetupService) getterForFieldDatabaseBackupServiceSelector (context application.InstanceContext) service0x3e063d.DatabaseBackupService {
+
+	o1 := inst.mDatabaseBackupServiceSelector.GetOne(context)
+	o2, ok := o1.(service0x3e063d.DatabaseBackupService)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "SetupService")
+		eb.Set("field", "DatabaseBackupService")
+		eb.Set("type1", "?")
+		eb.Set("type2", "service0x3e063d.DatabaseBackupService")
 		context.HandleError(eb.Create())
 		return nil
 	}

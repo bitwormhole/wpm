@@ -158,7 +158,7 @@ func (inst *mySetupReg) forDumpOlderSettings() *service.SetupRegistration {
 		ID:        p.ID,
 		Name:      p.Name,
 		Prototype: p,
-		Handler:   h.doDumpOlderData,
+		Handler:   h.doExportDumpData,
 	}
 }
 
@@ -174,7 +174,7 @@ func (inst *mySetupReg) forImportOlderSettings() *service.SetupRegistration {
 		ID:        p.ID,
 		Name:      p.Name,
 		Prototype: p,
-		Handler:   h.doImportOlderData,
+		Handler:   h.doImportDumpData,
 	}
 }
 

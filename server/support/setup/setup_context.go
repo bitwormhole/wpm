@@ -17,4 +17,5 @@ type Context struct {
 	SettingService           service.SettingService
 	IntentTemplateService    service.IntentTemplateService
 	SoftwarePackageService   service.SoftwarePackageService
+	DatabaseBackupService    service.DatabaseBackupService
 }

@@ -712,6 +712,7 @@ type pComImpSetupService struct {
 	ProjectTypeImportService service0x3e063d.ProjectTypeImportService `inject:"#ProjectTypeImportService"`
 	SettingService service0x3e063d.SettingService `inject:"#SettingService"`
 	SoftwarePackageService service0x3e063d.SoftwarePackageService `inject:"#SoftwarePackageService"`
+	DatabaseBackupService service0x3e063d.DatabaseBackupService `inject:"#DatabaseBackupService"`
 }
 
 

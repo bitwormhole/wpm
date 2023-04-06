@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/bitwormhole/starter/util"
 	"github.com/bitwormhole/wpm/server/web/dto"
 )
 
@@ -52,12 +53,16 @@ func (inst *mySetupHanlders) doInitMainRepository(c context.Context, req *dto.Se
 	return h.Run()
 }
 
-func (inst *mySetupHanlders) doDumpOlderData(c context.Context, req *dto.Setup) error {
-	return fmt.Errorf("todo: no impl")
+func (inst *mySetupHanlders) doExportDumpData(c context.Context, req *dto.Setup) error {
+	ser := inst.context.DatabaseBackupService
+	return ser.ExportDumpData(c)
 }
 
-func (inst *mySetupHanlders) doImportOlderData(c context.Context, req *dto.Setup) error {
-	return fmt.Errorf("todo: no impl")
+func (inst *mySetupHanlders) doImportDumpData(c context.Context, req *dto.Setup) error {
+	t1 := inst.context.StartAt
+	t2 := util.Now()
+	ser := inst.context.DatabaseBackupService
+	return ser.ImportDumpData(c, t1, t2)
 }
 
 func (inst *mySetupHanlders) doUpdatePackageList(c context.Context, req *dto.Setup) error {

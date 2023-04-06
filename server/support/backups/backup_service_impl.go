@@ -40,7 +40,7 @@ func (inst *ImpBackupService) GetLifeRegistration() *application.LifeRegistratio
 
 func (inst *ImpBackupService) onStop() error {
 	if inst.DoDump {
-		return inst.dump()
+		return inst.dumpSelf()
 	}
 	return nil
 }
@@ -187,7 +187,7 @@ func (inst *ImpBackupService) getBackupDir() afs.Path {
 	return path2
 }
 
-func (inst *ImpBackupService) dump() error {
+func (inst *ImpBackupService) dumpSelf() error {
 
 	now := time.Now()
 	name := "dump-" + now.Format(time.RFC3339)
@@ -214,4 +214,21 @@ func (inst *ImpBackupService) dump() error {
 
 	vlog.Info("dump to file " + file.GetPath())
 	return nil
+}
+
+// ExportDumpData ...
+func (inst *ImpBackupService) ExportDumpData(c context.Context) error {
+	h := &myDumpExportHandler{context: c}
+	return h.Export()
+}
+
+// ImportDumpData ...
+func (inst *ImpBackupService) ImportDumpData(c context.Context, from, to util.Time) error {
+	h := &myDumpImportHandler{
+		context:               c,
+		AppDataService:        inst.AppDataService,
+		DatabaseBackupService: inst,
+		FileSystemService:     inst.FilesysService,
+	}
+	return h.Import(from, to)
 }
