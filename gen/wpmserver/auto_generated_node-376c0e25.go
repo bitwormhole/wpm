@@ -711,6 +711,7 @@ type pComImpSetupService struct {
 	MediaService service0x3e063d.MediaService `inject:"#MediaService"`
 	ProjectTypeImportService service0x3e063d.ProjectTypeImportService `inject:"#ProjectTypeImportService"`
 	SettingService service0x3e063d.SettingService `inject:"#SettingService"`
+	SoftwarePackageService service0x3e063d.SoftwarePackageService `inject:"#SoftwarePackageService"`
 }
 
 

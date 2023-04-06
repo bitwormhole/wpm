@@ -8697,6 +8697,7 @@ type comFactory4pComImpSetupService struct {
 	mMediaServiceSelector config.InjectionSelector
 	mProjectTypeImportServiceSelector config.InjectionSelector
 	mSettingServiceSelector config.InjectionSelector
+	mSoftwarePackageServiceSelector config.InjectionSelector
 
 }
 
@@ -8711,6 +8712,7 @@ func (inst * comFactory4pComImpSetupService) init() application.ComponentFactory
 	inst.mMediaServiceSelector = config.NewInjectionSelector("#MediaService",nil)
 	inst.mProjectTypeImportServiceSelector = config.NewInjectionSelector("#ProjectTypeImportService",nil)
 	inst.mSettingServiceSelector = config.NewInjectionSelector("#SettingService",nil)
+	inst.mSoftwarePackageServiceSelector = config.NewInjectionSelector("#SoftwarePackageService",nil)
 
 
 	inst.mPrototype = inst.newObject()
@@ -8756,6 +8758,7 @@ func (inst * comFactory4pComImpSetupService) Inject(instance application.Compone
 	obj.MediaService = inst.getterForFieldMediaServiceSelector(context)
 	obj.ProjectTypeImportService = inst.getterForFieldProjectTypeImportServiceSelector(context)
 	obj.SettingService = inst.getterForFieldSettingServiceSelector(context)
+	obj.SoftwarePackageService = inst.getterForFieldSoftwarePackageServiceSelector(context)
 	return context.LastError()
 }
 
@@ -8897,6 +8900,24 @@ func (inst * comFactory4pComImpSetupService) getterForFieldSettingServiceSelecto
 		eb.Set("field", "SettingService")
 		eb.Set("type1", "?")
 		eb.Set("type2", "service0x3e063d.SettingService")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
+}
+
+//getterForFieldSoftwarePackageServiceSelector
+func (inst * comFactory4pComImpSetupService) getterForFieldSoftwarePackageServiceSelector (context application.InstanceContext) service0x3e063d.SoftwarePackageService {
+
+	o1 := inst.mSoftwarePackageServiceSelector.GetOne(context)
+	o2, ok := o1.(service0x3e063d.SoftwarePackageService)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "SetupService")
+		eb.Set("field", "SoftwarePackageService")
+		eb.Set("type1", "?")
+		eb.Set("type2", "service0x3e063d.SoftwarePackageService")
 		context.HandleError(eb.Create())
 		return nil
 	}

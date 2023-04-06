@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/bitwormhole/starter/markup"
+	"github.com/bitwormhole/starter/util"
 	"github.com/bitwormhole/wpm/server/service"
 	"github.com/bitwormhole/wpm/server/web/dto"
 )
@@ -21,6 +22,7 @@ type ImpSetupService struct {
 	MediaService             service.MediaService             `inject:"#MediaService"`
 	ProjectTypeImportService service.ProjectTypeImportService `inject:"#ProjectTypeImportService"`
 	SettingService           service.SettingService           `inject:"#SettingService"`
+	SoftwarePackageService   service.SoftwarePackageService   `inject:"#SoftwarePackageService"`
 
 	cachedRegs []*service.SetupRegistration
 }
@@ -105,7 +107,10 @@ func (inst *ImpSetupService) listSetupRegs() []*service.SetupRegistration {
 }
 
 func (inst *ImpSetupService) makeContext() *Context {
+	now := util.Now()
 	return &Context{
+		StartAt: now,
+
 		AppDataService:           inst.AppDataService,
 		FileSystemService:        inst.FileSystemService,
 		ExecutableImportService:  inst.ExecutableImportService,
@@ -113,6 +118,7 @@ func (inst *ImpSetupService) makeContext() *Context {
 		MediaService:             inst.MediaService,
 		ProjectTypeImportService: inst.ProjectTypeImportService,
 		SettingService:           inst.SettingService,
+		SoftwarePackageService:   inst.SoftwarePackageService,
 	}
 }
 

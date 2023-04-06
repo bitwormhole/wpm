@@ -59,3 +59,8 @@ func (inst *mySetupHanlders) doDumpOlderData(c context.Context, req *dto.Setup) 
 func (inst *mySetupHanlders) doImportOlderData(c context.Context, req *dto.Setup) error {
 	return fmt.Errorf("todo: no impl")
 }
+
+func (inst *mySetupHanlders) doUpdatePackageList(c context.Context, req *dto.Setup) error {
+	ser := inst.context.SoftwarePackageService
+	return ser.UpdateList(c)
+}

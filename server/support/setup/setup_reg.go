@@ -22,6 +22,7 @@ func (inst *mySetupReg) listAll() []*service.SetupRegistration {
 	all = append(all, inst.forImportCommonExecutables())
 	all = append(all, inst.forImportPresetSettings())
 	all = append(all, inst.forImportOlderSettings())
+	all = append(all, inst.forUpdatePackageList())
 
 	// all = append(all, inst.forExample())
 
@@ -174,5 +175,21 @@ func (inst *mySetupReg) forImportOlderSettings() *service.SetupRegistration {
 		Name:      p.Name,
 		Prototype: p,
 		Handler:   h.doImportOlderData,
+	}
+}
+
+func (inst *mySetupReg) forUpdatePackageList() *service.SetupRegistration {
+	p := &dto.Setup{
+		Name:        "update-package-list",
+		Title:       "更新插件列表",
+		Description: "更新插件列表",
+		State:       dto.SetupStateWant,
+	}
+	h := &mySetupHanlders{context: inst.context}
+	return &service.SetupRegistration{
+		ID:        p.ID,
+		Name:      p.Name,
+		Prototype: p,
+		Handler:   h.doUpdatePackageList,
 	}
 }
