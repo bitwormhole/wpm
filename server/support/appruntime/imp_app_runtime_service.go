@@ -212,3 +212,13 @@ func (inst *ImpAppRuntimeService) copyFile(src, dst afs.Path) (int64, error) {
 
 	return io.Copy(w, r)
 }
+
+// ReadStartupLogs ...
+func (inst *ImpAppRuntimeService) ReadStartupLogs() (*backup.StartupVO, error) {
+	o := &backup.StartupVO{}
+	err := inst.loadLogs(o)
+	if err != nil {
+		return nil, err
+	}
+	return o, nil
+}

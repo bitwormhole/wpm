@@ -126,6 +126,7 @@ type pComImpBackupService struct {
 	instance *backups0xe44d54.ImpBackupService
 	 markup0x23084a.Component `id:"DatabaseBackupService" class:"life"`
 	AppDataService service0x3e063d.AppDataService `inject:"#AppDataService"`
+	AppRuntimeService service0x3e063d.AppRuntimeService `inject:"#AppRuntimeService"`
 	FilesysService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
 	BackupDao dao0x5af8d0.Backup `inject:"#wpm-database-backup-dao"`
 	DoDump bool `inject:"${wpm.db.dump.enabled}"`
@@ -742,10 +743,10 @@ type pComWpmDataSource struct {
 	AboutService service0x3e063d.AboutService `inject:"#AboutService"`
 	Driver string `inject:"${datasource.wpm.driver}"`
 	Host string `inject:"${datasource.wpm.host}"`
-	Port int `inject:"${datasource.wpm.port}"`
 	UserName string `inject:"${datasource.wpm.username}"`
 	Password string `inject:"${datasource.wpm.password}"`
 	Database string `inject:"${datasource.wpm.database}"`
+	Port int `inject:"${datasource.wpm.port}"`
 }
 
 

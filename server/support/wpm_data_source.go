@@ -22,10 +22,10 @@ type WpmDataSource struct {
 
 	Driver   string `inject:"${datasource.wpm.driver}"`
 	Host     string `inject:"${datasource.wpm.host}"`
-	Port     int    `inject:"${datasource.wpm.port}"`
 	UserName string `inject:"${datasource.wpm.username}"`
 	Password string `inject:"${datasource.wpm.password}"`
-	Database string `inject:"${datasource.wpm.database}"`
+	Database string `inject:"${datasource.wpm.database}"` // 可以取值为'@'，表示由程序生成数据库文件名
+	Port     int    `inject:"${datasource.wpm.port}"`
 
 	cachedDB *gorm.DB
 }
@@ -112,6 +112,7 @@ func (inst *WpmDataSource) makeLoggerForRelease() logger.Interface {
 }
 
 func (inst *WpmDataSource) config() *datasource.Configuration {
+
 	cfg := &datasource.Configuration{}
 	cfg.Name = "wpm"
 	cfg.Driver = inst.Driver
@@ -121,16 +122,14 @@ func (inst *WpmDataSource) config() *datasource.Configuration {
 	cfg.Username = inst.UserName
 	cfg.Password = inst.Password
 
-	if cfg.Driver == "sqlite" {
-		inst.configForSQLite(cfg)
+	databaseName := cfg.Database
+	if databaseName == "" || databaseName == "@" || databaseName == "@@" {
+		// 如果配置的数据库名称为[''|'@'|'@@'], 就采用程序生成的文件名
+		path := inst.AppDataService.GetSQLiteDBFile()
+		cfg.Database = path
 	}
 
 	return cfg
-}
-
-func (inst *WpmDataSource) configForSQLite(c *datasource.Configuration) {
-	path := inst.AppDataService.GetSQLiteDBFile()
-	c.Database = path
 }
 
 // Close ...

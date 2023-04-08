@@ -20,9 +20,10 @@ import (
 type ImpBackupService struct {
 	markup.Component `id:"DatabaseBackupService" class:"life"`
 
-	AppDataService service.AppDataService    `inject:"#AppDataService"`
-	FilesysService service.FileSystemService `inject:"#FileSystemService"`
-	BackupDao      dao.Backup                `inject:"#wpm-database-backup-dao"`
+	AppDataService    service.AppDataService    `inject:"#AppDataService"`
+	AppRuntimeService service.AppRuntimeService `inject:"#AppRuntimeService"`
+	FilesysService    service.FileSystemService `inject:"#FileSystemService"`
+	BackupDao         dao.Backup                `inject:"#wpm-database-backup-dao"`
 
 	DoDump bool `inject:"${wpm.db.dump.enabled}"`
 }
@@ -218,7 +219,12 @@ func (inst *ImpBackupService) dumpSelf() error {
 
 // ExportDumpData ...
 func (inst *ImpBackupService) ExportDumpData(c context.Context) error {
-	h := &myDumpExportHandler{context: c}
+	h := &myDumpExportHandler{
+		context:           c,
+		AppRuntimeService: inst.AppRuntimeService,
+		AppDataService:    inst.AppDataService,
+		FileSystemService: inst.FilesysService,
+	}
 	return h.Export()
 }
 

@@ -1735,6 +1735,7 @@ type comFactory4pComImpBackupService struct {
 
 	
 	mAppDataServiceSelector config.InjectionSelector
+	mAppRuntimeServiceSelector config.InjectionSelector
 	mFilesysServiceSelector config.InjectionSelector
 	mBackupDaoSelector config.InjectionSelector
 	mDoDumpSelector config.InjectionSelector
@@ -1745,6 +1746,7 @@ func (inst * comFactory4pComImpBackupService) init() application.ComponentFactor
 
 	
 	inst.mAppDataServiceSelector = config.NewInjectionSelector("#AppDataService",nil)
+	inst.mAppRuntimeServiceSelector = config.NewInjectionSelector("#AppRuntimeService",nil)
 	inst.mFilesysServiceSelector = config.NewInjectionSelector("#FileSystemService",nil)
 	inst.mBackupDaoSelector = config.NewInjectionSelector("#wpm-database-backup-dao",nil)
 	inst.mDoDumpSelector = config.NewInjectionSelector("${wpm.db.dump.enabled}",nil)
@@ -1786,6 +1788,7 @@ func (inst * comFactory4pComImpBackupService) Inject(instance application.Compon
 	
 	obj := inst.castObject(instance)
 	obj.AppDataService = inst.getterForFieldAppDataServiceSelector(context)
+	obj.AppRuntimeService = inst.getterForFieldAppRuntimeServiceSelector(context)
 	obj.FilesysService = inst.getterForFieldFilesysServiceSelector(context)
 	obj.BackupDao = inst.getterForFieldBackupDaoSelector(context)
 	obj.DoDump = inst.getterForFieldDoDumpSelector(context)
@@ -1804,6 +1807,24 @@ func (inst * comFactory4pComImpBackupService) getterForFieldAppDataServiceSelect
 		eb.Set("field", "AppDataService")
 		eb.Set("type1", "?")
 		eb.Set("type2", "service0x3e063d.AppDataService")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
+}
+
+//getterForFieldAppRuntimeServiceSelector
+func (inst * comFactory4pComImpBackupService) getterForFieldAppRuntimeServiceSelector (context application.InstanceContext) service0x3e063d.AppRuntimeService {
+
+	o1 := inst.mAppRuntimeServiceSelector.GetOne(context)
+	o2, ok := o1.(service0x3e063d.AppRuntimeService)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "DatabaseBackupService")
+		eb.Set("field", "AppRuntimeService")
+		eb.Set("type1", "?")
+		eb.Set("type2", "service0x3e063d.AppRuntimeService")
 		context.HandleError(eb.Create())
 		return nil
 	}
@@ -9198,10 +9219,10 @@ type comFactory4pComWpmDataSource struct {
 	mAboutServiceSelector config.InjectionSelector
 	mDriverSelector config.InjectionSelector
 	mHostSelector config.InjectionSelector
-	mPortSelector config.InjectionSelector
 	mUserNameSelector config.InjectionSelector
 	mPasswordSelector config.InjectionSelector
 	mDatabaseSelector config.InjectionSelector
+	mPortSelector config.InjectionSelector
 
 }
 
@@ -9213,10 +9234,10 @@ func (inst * comFactory4pComWpmDataSource) init() application.ComponentFactory {
 	inst.mAboutServiceSelector = config.NewInjectionSelector("#AboutService",nil)
 	inst.mDriverSelector = config.NewInjectionSelector("${datasource.wpm.driver}",nil)
 	inst.mHostSelector = config.NewInjectionSelector("${datasource.wpm.host}",nil)
-	inst.mPortSelector = config.NewInjectionSelector("${datasource.wpm.port}",nil)
 	inst.mUserNameSelector = config.NewInjectionSelector("${datasource.wpm.username}",nil)
 	inst.mPasswordSelector = config.NewInjectionSelector("${datasource.wpm.password}",nil)
 	inst.mDatabaseSelector = config.NewInjectionSelector("${datasource.wpm.database}",nil)
+	inst.mPortSelector = config.NewInjectionSelector("${datasource.wpm.port}",nil)
 
 
 	inst.mPrototype = inst.newObject()
@@ -9259,10 +9280,10 @@ func (inst * comFactory4pComWpmDataSource) Inject(instance application.Component
 	obj.AboutService = inst.getterForFieldAboutServiceSelector(context)
 	obj.Driver = inst.getterForFieldDriverSelector(context)
 	obj.Host = inst.getterForFieldHostSelector(context)
-	obj.Port = inst.getterForFieldPortSelector(context)
 	obj.UserName = inst.getterForFieldUserNameSelector(context)
 	obj.Password = inst.getterForFieldPasswordSelector(context)
 	obj.Database = inst.getterForFieldDatabaseSelector(context)
+	obj.Port = inst.getterForFieldPortSelector(context)
 	return context.LastError()
 }
 
@@ -9330,11 +9351,6 @@ func (inst * comFactory4pComWpmDataSource) getterForFieldHostSelector (context a
     return inst.mHostSelector.GetString(context)
 }
 
-//getterForFieldPortSelector
-func (inst * comFactory4pComWpmDataSource) getterForFieldPortSelector (context application.InstanceContext) int {
-    return inst.mPortSelector.GetInt(context)
-}
-
 //getterForFieldUserNameSelector
 func (inst * comFactory4pComWpmDataSource) getterForFieldUserNameSelector (context application.InstanceContext) string {
     return inst.mUserNameSelector.GetString(context)
@@ -9348,6 +9364,11 @@ func (inst * comFactory4pComWpmDataSource) getterForFieldPasswordSelector (conte
 //getterForFieldDatabaseSelector
 func (inst * comFactory4pComWpmDataSource) getterForFieldDatabaseSelector (context application.InstanceContext) string {
     return inst.mDatabaseSelector.GetString(context)
+}
+
+//getterForFieldPortSelector
+func (inst * comFactory4pComWpmDataSource) getterForFieldPortSelector (context application.InstanceContext) int {
+    return inst.mPortSelector.GetInt(context)
 }
 
 
