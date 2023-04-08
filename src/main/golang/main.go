@@ -6,7 +6,25 @@ import (
 )
 
 func main() {
+	runModule1()
+	runModule2()
+}
+
+func runModule1() {
 	i := starter.InitApp()
-	i.Use(wpm.Module())
+	i.Use(wpm.ModuleBoot())
+	rt, err := i.RunEx()
+	if err != nil {
+		panic(err)
+	}
+	err = rt.Loop()
+	if err != nil {
+		panic(err)
+	}
+}
+
+func runModule2() {
+	i := starter.InitApp()
+	i.Use(wpm.ModuleServer())
 	i.Run()
 }

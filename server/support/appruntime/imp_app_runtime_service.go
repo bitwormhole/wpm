@@ -27,7 +27,7 @@ type ImpAppRuntimeService struct {
 	AppDataService    service.AppDataService    `inject:"#AppDataService"`
 	MediaService      service.MediaService      `inject:"#MediaService"`
 
-	EnableBackupSelf bool `inject:"${wpm.backup-this-exe.enabled}"`
+	EnableBackupSelf bool `inject:"${wpm.options.backup-this-exe}"`
 
 	info *entity.Executable // the cached runtime info
 }

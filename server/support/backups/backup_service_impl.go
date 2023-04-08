@@ -25,7 +25,7 @@ type ImpBackupService struct {
 	FilesysService    service.FileSystemService `inject:"#FileSystemService"`
 	BackupDao         dao.Backup                `inject:"#wpm-database-backup-dao"`
 
-	DoDump bool `inject:"${wpm.db.dump.enabled}"`
+	DoDump bool `inject:"${wpm.options.dump}"`
 }
 
 func (inst *ImpBackupService) _Impl() (service.DatabaseBackupService, application.LifeRegistry) {

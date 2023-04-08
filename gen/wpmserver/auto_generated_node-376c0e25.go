@@ -103,7 +103,7 @@ type pComImpAppRuntimeService struct {
 	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
 	AppDataService service0x3e063d.AppDataService `inject:"#AppDataService"`
 	MediaService service0x3e063d.MediaService `inject:"#MediaService"`
-	EnableBackupSelf bool `inject:"${wpm.backup-this-exe.enabled}"`
+	EnableBackupSelf bool `inject:"${wpm.options.backup-this-exe}"`
 }
 
 
@@ -129,7 +129,7 @@ type pComImpBackupService struct {
 	AppRuntimeService service0x3e063d.AppRuntimeService `inject:"#AppRuntimeService"`
 	FilesysService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
 	BackupDao dao0x5af8d0.Backup `inject:"#wpm-database-backup-dao"`
-	DoDump bool `inject:"${wpm.db.dump.enabled}"`
+	DoDump bool `inject:"${wpm.options.dump}"`
 }
 
 
@@ -256,7 +256,7 @@ type pComAboutServiceImpl struct {
 	Title string `inject:"${application.about.title}"`
 	Copyright string `inject:"${application.about.copyright}"`
 	ServerPort int `inject:"${server.port}"`
-	EnableDebug bool `inject:"${wpm.debug.enabled}"`
+	EnableDebug bool `inject:"${wpm.options.debug}"`
 	PlatformService service0x3e063d.PlatformService `inject:"#PlatformService"`
 	ProfileService service0x3e063d.ProfileService `inject:"#ProfileService"`
 	AppRuntimeService service0x3e063d.AppRuntimeService `inject:"#AppRuntimeService"`

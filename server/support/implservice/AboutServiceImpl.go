@@ -24,7 +24,7 @@ type AboutServiceImpl struct {
 	Copyright  string `inject:"${application.about.copyright}"`
 	ServerPort int    `inject:"${server.port}"`
 
-	EnableDebug bool `inject:"${wpm.debug.enabled}"`
+	EnableDebug bool `inject:"${wpm.options.debug}"`
 
 	PlatformService   service.PlatformService   `inject:"#PlatformService"`
 	ProfileService    service.ProfileService    `inject:"#ProfileService"`

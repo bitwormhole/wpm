@@ -1445,7 +1445,7 @@ func (inst * comFactory4pComImpAppRuntimeService) init() application.ComponentFa
 	inst.mFileSystemServiceSelector = config.NewInjectionSelector("#FileSystemService",nil)
 	inst.mAppDataServiceSelector = config.NewInjectionSelector("#AppDataService",nil)
 	inst.mMediaServiceSelector = config.NewInjectionSelector("#MediaService",nil)
-	inst.mEnableBackupSelfSelector = config.NewInjectionSelector("${wpm.backup-this-exe.enabled}",nil)
+	inst.mEnableBackupSelfSelector = config.NewInjectionSelector("${wpm.options.backup-this-exe}",nil)
 
 
 	inst.mPrototype = inst.newObject()
@@ -1749,7 +1749,7 @@ func (inst * comFactory4pComImpBackupService) init() application.ComponentFactor
 	inst.mAppRuntimeServiceSelector = config.NewInjectionSelector("#AppRuntimeService",nil)
 	inst.mFilesysServiceSelector = config.NewInjectionSelector("#FileSystemService",nil)
 	inst.mBackupDaoSelector = config.NewInjectionSelector("#wpm-database-backup-dao",nil)
-	inst.mDoDumpSelector = config.NewInjectionSelector("${wpm.db.dump.enabled}",nil)
+	inst.mDoDumpSelector = config.NewInjectionSelector("${wpm.options.dump}",nil)
 
 
 	inst.mPrototype = inst.newObject()
@@ -3280,7 +3280,7 @@ func (inst * comFactory4pComAboutServiceImpl) init() application.ComponentFactor
 	inst.mTitleSelector = config.NewInjectionSelector("${application.about.title}",nil)
 	inst.mCopyrightSelector = config.NewInjectionSelector("${application.about.copyright}",nil)
 	inst.mServerPortSelector = config.NewInjectionSelector("${server.port}",nil)
-	inst.mEnableDebugSelector = config.NewInjectionSelector("${wpm.debug.enabled}",nil)
+	inst.mEnableDebugSelector = config.NewInjectionSelector("${wpm.options.debug}",nil)
 	inst.mPlatformServiceSelector = config.NewInjectionSelector("#PlatformService",nil)
 	inst.mProfileServiceSelector = config.NewInjectionSelector("#ProfileService",nil)
 	inst.mAppRuntimeServiceSelector = config.NewInjectionSelector("#AppRuntimeService",nil)

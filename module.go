@@ -13,6 +13,7 @@ import (
 	sqlserverd "github.com/bitwormhole/starter-gorm-sqlserver"
 	"github.com/bitwormhole/starter/application"
 	"github.com/bitwormhole/starter/collection"
+	"github.com/bitwormhole/wpm/gen/wpmboot"
 	"github.com/bitwormhole/wpm/gen/wpmserver"
 	"github.com/bitwormhole/wpm/server/service"
 )
@@ -27,8 +28,8 @@ const (
 //go:embed "src/main/resources"
 var theModuleResFS embed.FS
 
-// Module 定义模块:wpm
-func Module() application.Module {
+// ModuleServer 定义模块:wpm-server
+func ModuleServer() application.Module {
 
 	mb := &application.ModuleBuilder{}
 	mb.Name(theModuleName + "#server")
@@ -50,4 +51,21 @@ func Module() application.Module {
 	m := mb.Create()
 	service.SetAppModule(m)
 	return m
+}
+
+// ModuleBoot 定义模块:wpm-boot
+// 该模块用于预先加载配置，并根据配置启动对应的运行模式
+func ModuleBoot() application.Module {
+
+	mb := &application.ModuleBuilder{}
+	mb.Name(theModuleName + "#boot")
+	mb.Version(theModuleVersion)
+	mb.Revision(theModuleRevision)
+
+	mb.OnMount(wpmboot.ExportConfig)
+	mb.Resources(collection.LoadEmbedResources(&theModuleResFS, theModuleResPath))
+
+	mb.Dependency(starter.Module())
+
+	return mb.Create()
 }
