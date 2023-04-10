@@ -3,9 +3,11 @@ package main
 import (
 	"github.com/bitwormhole/starter"
 	"github.com/bitwormhole/wpm"
+	"github.com/bitwormhole/wpm/server/service"
 )
 
 func main() {
+
 	runModule1()
 	runModule2()
 }
@@ -24,7 +26,11 @@ func runModule1() {
 }
 
 func runModule2() {
+
+	m := wpm.ModuleServer()
+	service.SetAppModule(m)
+
 	i := starter.InitApp()
-	i.Use(wpm.ModuleServer())
+	i.Use(m)
 	i.Run()
 }

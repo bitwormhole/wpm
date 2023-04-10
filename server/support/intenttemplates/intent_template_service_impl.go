@@ -180,7 +180,7 @@ func (inst *IntentTemplateServiceImpl) ImportPreset(ctx context.Context) error {
 // ListMacroProperties ...
 func (inst *IntentTemplateServiceImpl) ListMacroProperties(ctx context.Context) (map[string]string, error) {
 
-	const path = "res:///intent-macro-list.properties"
+	const path = "res:///presets/intent-templates/intent-macro-list.properties"
 	text, err := inst.AC.GetResources().GetText(path)
 	if err != nil {
 		return nil, err

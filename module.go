@@ -15,7 +15,6 @@ import (
 	"github.com/bitwormhole/starter/collection"
 	"github.com/bitwormhole/wpm/gen/wpmboot"
 	"github.com/bitwormhole/wpm/gen/wpmserver"
-	"github.com/bitwormhole/wpm/server/service"
 )
 
 const (
@@ -49,7 +48,7 @@ func ModuleServer() application.Module {
 	mb.Dependency(gitlib.Module())
 
 	m := mb.Create()
-	service.SetAppModule(m)
+	// service.SetAppModule(m)
 	return m
 }
 

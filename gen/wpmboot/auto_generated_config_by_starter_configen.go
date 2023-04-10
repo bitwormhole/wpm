@@ -54,6 +54,7 @@ type comFactory4pComInfoLoader struct {
 	mDoDumpSelector config.InjectionSelector
 	mDoLogOptionsSelector config.InjectionSelector
 	mDoRunWithGUISelector config.InjectionSelector
+	mDoRunWithServerSelector config.InjectionSelector
 
 }
 
@@ -66,6 +67,7 @@ func (inst * comFactory4pComInfoLoader) init() application.ComponentFactory {
 	inst.mDoDumpSelector = config.NewInjectionSelector("${wpm.options.dump}",nil)
 	inst.mDoLogOptionsSelector = config.NewInjectionSelector("${wpm.options.log-options}",nil)
 	inst.mDoRunWithGUISelector = config.NewInjectionSelector("${wpm.options.run-with-gui}",nil)
+	inst.mDoRunWithServerSelector = config.NewInjectionSelector("${wpm.options.run-with-server}",nil)
 
 
 	inst.mPrototype = inst.newObject()
@@ -109,6 +111,7 @@ func (inst * comFactory4pComInfoLoader) Inject(instance application.ComponentIns
 	obj.DoDump = inst.getterForFieldDoDumpSelector(context)
 	obj.DoLogOptions = inst.getterForFieldDoLogOptionsSelector(context)
 	obj.DoRunWithGUI = inst.getterForFieldDoRunWithGUISelector(context)
+	obj.DoRunWithServer = inst.getterForFieldDoRunWithServerSelector(context)
 	return context.LastError()
 }
 
@@ -140,6 +143,11 @@ func (inst * comFactory4pComInfoLoader) getterForFieldDoLogOptionsSelector (cont
 //getterForFieldDoRunWithGUISelector
 func (inst * comFactory4pComInfoLoader) getterForFieldDoRunWithGUISelector (context application.InstanceContext) bool {
     return inst.mDoRunWithGUISelector.GetBool(context)
+}
+
+//getterForFieldDoRunWithServerSelector
+func (inst * comFactory4pComInfoLoader) getterForFieldDoRunWithServerSelector (context application.InstanceContext) bool {
+    return inst.mDoRunWithServerSelector.GetBool(context)
 }
 
 

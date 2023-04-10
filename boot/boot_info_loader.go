@@ -15,12 +15,12 @@ type InfoLoader struct {
 
 	AC application.Context `inject:"context"`
 
-	DoBackupExe  bool `inject:"${wpm.options.backup-this-exe}"` // 是否备份当前EXE
-	DoDebug      bool `inject:"${wpm.options.debug}"`           // 是否启用调试模式
-	DoDump       bool `inject:"${wpm.options.dump}"`            // 是否备份转存数据
-	DoLogOptions bool `inject:"${wpm.options.log-options}"`     // 是否打印显示启动选项
-	DoRunWithGUI bool `inject:"${wpm.options.run-with-gui}"`    // 是否显示图形界面
-
+	DoBackupExe     bool `inject:"${wpm.options.backup-this-exe}"` // 是否备份当前EXE
+	DoDebug         bool `inject:"${wpm.options.debug}"`           // 是否启用调试模式
+	DoDump          bool `inject:"${wpm.options.dump}"`            // 是否备份转存数据
+	DoLogOptions    bool `inject:"${wpm.options.log-options}"`     // 是否打印显示启动选项
+	DoRunWithGUI    bool `inject:"${wpm.options.run-with-gui}"`    // 是否显示图形界面
+	DoRunWithServer bool `inject:"${wpm.options.run-with-server}"` // 是否启动后台服务
 }
 
 func (inst *InfoLoader) _Impl() application.LifeRegistry {

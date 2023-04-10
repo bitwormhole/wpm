@@ -18,5 +18,6 @@ type pComInfoLoader struct {
 	DoDump bool `inject:"${wpm.options.dump}"`
 	DoLogOptions bool `inject:"${wpm.options.log-options}"`
 	DoRunWithGUI bool `inject:"${wpm.options.run-with-gui}"`
+	DoRunWithServer bool `inject:"${wpm.options.run-with-server}"`
 }
 
