@@ -13,10 +13,10 @@
             "ID": 2,
             "UUID": "2333333333333333333333333333333002",
             "Name": "ns-2",
-            "URN": "urn:namespace:release.bitwormhole.com/wpm",
-            "URL": "https://release.bitwormhole.com/wpm/namespace.json",
-            "OS": "windows",
-            "Arch": "amd64"
+            "URN": "urn:namespace:bitwormhole.com/wpm",
+            "URL": "https://cdn.bitwormhole.com/packages/wpm/wpm-plug-ins-namespace-windows-amd64.json",
+            "OS": "x-windows",
+            "Arch": "x-amd64"
         }
     ]
 }

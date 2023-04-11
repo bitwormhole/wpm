@@ -2,11 +2,13 @@ package vo
 
 import "github.com/bitwormhole/wpm/server/web/dto"
 
+// // OnlineHead ...
+// type OnlineHead struct {
+// }
+
 // Online ...
 type Online struct {
 	Base
-
-	OnlineURL string `json:"online"`
 
 	Namespaces      []*dto.Namespace       `json:"namespaces"`
 	Packages        []*dto.SoftwarePackage `json:"packages"`

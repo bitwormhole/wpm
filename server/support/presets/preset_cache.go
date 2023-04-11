@@ -23,6 +23,8 @@ type CacheProvider struct {
 
 	CS service.CacheService `inject:"#CacheService"`
 
+	HTC service.HTTPClientExService `inject:"#HTTPClientExService"`
+
 	ListFileName string `inject:"${wpm.presets.list-file-name}"`
 }
 
@@ -51,6 +53,7 @@ func (inst *CacheProvider) New() (any, error) {
 	loader := &myPresetsLoader{
 		ac:           inst.AC,
 		listFileName: inst.ListFileName,
+		httpClientEx: inst.HTC,
 	}
 	o, err := loader.Load()
 	return o, err

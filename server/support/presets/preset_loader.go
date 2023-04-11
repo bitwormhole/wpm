@@ -1,16 +1,18 @@
 package presets
 
 import (
-	"encoding/json"
+	"context"
 	"runtime"
 	"strings"
 
 	"github.com/bitwormhole/starter/application"
+	"github.com/bitwormhole/wpm/server/service"
 	"github.com/bitwormhole/wpm/server/web/vo"
 )
 
 type myPresetsLoader struct {
 	ac           application.Context
+	httpClientEx service.HTTPClientExService
 	listFileName string
 }
 
@@ -31,13 +33,20 @@ func (inst *myPresetsLoader) Load() (*vo.Online, error) {
 
 func (inst *myPresetsLoader) loadPresetFile(filename string, dst *vo.Online) error {
 
-	data, err := inst.ac.GetResources().GetBinary(filename)
-	if err != nil {
-		return err
-	}
+	// data, err := inst.ac.GetResources().GetBinary(filename)
+	// if err != nil {
+	// 	return err
+	// }
 
-	src := &vo.Online{}
-	err = json.Unmarshal(data, src)
+	// src := &vo.Online{}
+	// err = json.Unmarshal(data, src)
+	// if err != nil {
+	// 	return err
+	// }
+
+	ctx := context.Background()
+	url := filename
+	src, err := inst.httpClientEx.FetchOnlineDoc(ctx, url, nil)
 	if err != nil {
 		return err
 	}

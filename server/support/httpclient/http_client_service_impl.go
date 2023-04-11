@@ -6,7 +6,9 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 
+	"github.com/bitwormhole/starter/application"
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/wpm/server/service"
 )
@@ -14,6 +16,8 @@ import (
 // ImpHTTPClientService ....
 type ImpHTTPClientService struct {
 	markup.Component `id:"HTTPClientService"`
+
+	AC application.Context `inject:"context"`
 
 	MaxContentLength int `inject:"${wpm.httpclient.max-content-length}"`
 }
@@ -63,7 +67,43 @@ func (inst *ImpHTTPClientService) prepareOptions(opt *service.HTTPClientOptions)
 	return opt
 }
 
+func (inst *ImpHTTPClientService) isResURL(url string) bool {
+
+	if strings.HasPrefix(url, "res://") {
+		return true
+	}
+
+	if strings.HasPrefix(url, "resource://") {
+		return true
+	}
+
+	if strings.HasPrefix(url, "resources://") {
+		return true
+	}
+
+	return false
+}
+
+func (inst *ImpHTTPClientService) fetchFromRes(ctx context.Context, url string, opt *service.HTTPClientOptions) ([]byte, *service.HTTPClientResult, error) {
+	res := &service.HTTPClientResult{}
+	data, err := inst.AC.GetResources().GetBinary(url)
+	if err == nil {
+		size := len(data)
+		res.Status = http.StatusOK
+		res.StatusText = "OK"
+		res.ContentLength = int64(size)
+		res.ContentType = "application/octet-stream"
+	} else {
+		res.StatusText = err.Error()
+	}
+	return data, res, err
+}
+
 func (inst *ImpHTTPClientService) fetch(ctx context.Context, url string, opt *service.HTTPClientOptions) ([]byte, *service.HTTPClientResult, error) {
+
+	if inst.isResURL(url) {
+		return inst.fetchFromRes(ctx, url, opt)
+	}
 
 	opt = inst.prepareOptions(opt)
 	res := &service.HTTPClientResult{}

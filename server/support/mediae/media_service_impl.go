@@ -37,6 +37,7 @@ func (inst *MediaServiceImpl) _Impl() service.MediaService {
 func (inst *MediaServiceImpl) dto2entity(o1 *dto.Media) (*entity.Media, error) {
 	o2 := &entity.Media{}
 	o2.ID = o1.ID
+	o2.Referer = o1.Referer
 
 	o2.Bucket = o1.Bucket
 	o2.ContentType = o1.ContentType
@@ -61,6 +62,7 @@ func (inst *MediaServiceImpl) entity2dto(o1 *entity.Media, opt *service.MediaOpt
 	o2.UUID = o1.UUID
 	o2.CreatedAt = util.NewTime(o1.CreatedAt)
 	o2.UpdatedAt = util.NewTime(o1.UpdatedAt)
+	o2.Referer = o1.Referer
 
 	o2.Bucket = o1.Bucket
 	o2.ContentType = o1.ContentType

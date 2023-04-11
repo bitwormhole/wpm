@@ -55,6 +55,7 @@ func (inst *ExecutableServiceImpl) dto2entity(c context.Context, o1 *dto.Executa
 	o2 := &entity.Executable{}
 	o2.ID = o1.ID
 	o2.URN = o1.URN
+	o2.Referer = o1.Referer
 
 	o2.Name = o1.Name
 	o2.Aliases = o1.Aliases
@@ -141,6 +142,7 @@ func (inst *ExecutableServiceImpl) entity2dto(o1 *entity.Executable) (*dto.Execu
 	o2.CreatedAt = util.NewTime(o1.CreatedAt)
 	o2.UpdatedAt = util.NewTime(o1.UpdatedAt)
 	o2.URN = o1.URN
+	o2.Referer = o1.Referer
 
 	o2.Name = o1.Name
 	o2.Aliases = o1.Aliases

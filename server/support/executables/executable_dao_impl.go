@@ -81,6 +81,7 @@ func (inst *ExecutableDaoImpl) Update(id dxo.ExecutableID, o1 *entity.Executable
 	o2.SHA256SUM = o1.SHA256SUM
 	o2.OpenWithPriority = o1.OpenWithPriority
 	o2.Aliases = o1.Aliases
+	o2.Referer = o1.Referer
 
 	db := inst.Agent.DB()
 	res := db.Save(o2)

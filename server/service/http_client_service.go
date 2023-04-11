@@ -2,7 +2,11 @@ package service
 
 import (
 	"context"
+
+	"github.com/bitwormhole/wpm/server/web/vo"
 )
+
+////////////////////////////////////////////////////////////////////////////////
 
 // HTTPClientService ...
 type HTTPClientService interface {
@@ -17,6 +21,8 @@ type HTTPClientService interface {
 	FetchJSON(ctx context.Context, url string, obj any, opt *HTTPClientOptions) (*HTTPClientResult, error)
 }
 
+////////////////////////////////////////////////////////////////////////////////
+
 // HTTPClientOptions ...
 type HTTPClientOptions struct {
 	MaxContentLength int64
@@ -29,3 +35,12 @@ type HTTPClientResult struct {
 	Status        int
 	StatusText    string
 }
+
+////////////////////////////////////////////////////////////////////////////////
+
+// HTTPClientExService ...
+type HTTPClientExService interface {
+	FetchOnlineDoc(ctx context.Context, url string, opt *HTTPClientOptions) (*vo.Online, error)
+}
+
+////////////////////////////////////////////////////////////////////////////////

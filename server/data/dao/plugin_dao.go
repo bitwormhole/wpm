@@ -11,6 +11,8 @@ type SoftwarePackageDAO interface {
 
 	ListAll() ([]*entity.SoftwarePackage, error)
 
+	ListByModuleName(moduleName string) ([]*entity.SoftwarePackage, error)
+
 	Insert(o *entity.SoftwarePackage) (*entity.SoftwarePackage, error)
 
 	Update(id dxo.SoftwarePackageID, o *entity.SoftwarePackage) (*entity.SoftwarePackage, error)

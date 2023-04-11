@@ -14,10 +14,10 @@ type SoftwarePackage struct {
 
 	Base
 
-	Name       string
-	FileName   string
-	ModuleName string // = namespace + "#" + name
 	Namespace  string
+	Name       string
+	ModuleName string // = namespace + "#" + name
+	FileName   string
 
 	Icon        string
 	Title       string

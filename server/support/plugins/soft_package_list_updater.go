@@ -7,13 +7,12 @@ import (
 	"github.com/bitwormhole/starter/vlog"
 	"github.com/bitwormhole/wpm/server/service"
 	"github.com/bitwormhole/wpm/server/web/dto"
-	"github.com/bitwormhole/wpm/server/web/vo"
 )
 
 type myPakcageListUpdater struct {
 	namespaceSer  service.NamespaceService
 	packageSer    service.SoftwarePackageService
-	httpclientSer service.HTTPClientService
+	httpclientSer service.HTTPClientExService
 }
 
 func (inst *myPakcageListUpdater) Update(c context.Context) error {
@@ -68,8 +67,9 @@ func (inst *myPakcageListUpdateTask) fetchNamespaces() error {
 	nslist := inst.namespaces
 	for _, item := range nslist {
 		url := item.URL
-		o := &vo.Online{}
-		_, err := htc.FetchJSON(ctx, url, o, nil)
+		// o := &vo.Online{}
+		// _, err := htc.FetchJSON(ctx, url, o, nil)
+		o, err := htc.FetchOnlineDoc(ctx, url, nil)
 		if err != nil {
 			// return err
 			vlog.Warn(err)

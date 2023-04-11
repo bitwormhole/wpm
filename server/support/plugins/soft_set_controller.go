@@ -2,11 +2,13 @@ package plugins
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/bitwormhole/starter-gin/glass"
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/service"
+	"github.com/bitwormhole/wpm/server/web/dto"
 	"github.com/bitwormhole/wpm/server/web/vo"
 	"github.com/gin-gonic/gin"
 )
@@ -29,6 +31,7 @@ func (inst *SoftwareSetController) Init(ec glass.EngineConnection) error {
 	ec = ec.RequestMapping("software-sets")
 
 	ec.Handle(http.MethodGet, "", inst.handleGetList)
+	ec.Handle(http.MethodGet, ":id", inst.handleGetOne)
 
 	ec.Handle(http.MethodPost, "install", inst.handlePostInstall)
 	ec.Handle(http.MethodPost, "re-install", inst.handlePostReInstall)
@@ -48,6 +51,20 @@ func (inst *SoftwareSetController) handleGetList(c *gin.Context) {
 	err := req.open()
 	if err == nil {
 		err = req.doGetList()
+	}
+	req.send(err)
+}
+
+func (inst *SoftwareSetController) handleGetOne(c *gin.Context) {
+	req := &mySoftwareSetRequest{
+		gc:              c,
+		controller:      inst,
+		wantRequestID:   true,
+		wantRequestBody: false,
+	}
+	err := req.open()
+	if err == nil {
+		err = req.doGetOne()
 	}
 	req.send(err)
 }
@@ -117,7 +134,7 @@ type mySoftwareSetRequest struct {
 	wantRequestID   bool
 	wantRequestBody bool
 
-	id    dxo.SoftwareSetID
+	id    dxo.SoftwarePackageID
 	body1 vo.SoftwareSet
 	body2 vo.SoftwareSet
 }
@@ -127,12 +144,12 @@ func (inst *mySoftwareSetRequest) open() error {
 	c := inst.gc
 
 	if inst.wantRequestID {
-		// id := c.Param("id")
-		// n, err := strconv.Atoi(id)
-		// if err != nil {
-		// 	return err
-		// }
-		// inst.id = dxo.SoftwareSetID(n)
+		id := c.Param("id")
+		n, err := strconv.Atoi(id)
+		if err != nil {
+			return err
+		}
+		inst.id = dxo.SoftwarePackageID(n)
 	}
 
 	if inst.wantRequestBody {
@@ -166,6 +183,18 @@ func (inst *mySoftwareSetRequest) doGetList() error {
 		return err
 	}
 	inst.body2.Sets = list
+	return nil
+}
+
+func (inst *mySoftwareSetRequest) doGetOne() error {
+	ctx := inst.gc
+	ser := inst.controller.SoftwareSetService
+	id := inst.id
+	item, err := ser.GetOne(ctx, id)
+	if err != nil {
+		return err
+	}
+	inst.body2.Sets = []*dto.SoftwareSet{item}
 	return nil
 }
 

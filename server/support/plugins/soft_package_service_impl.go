@@ -7,6 +7,7 @@ import (
 
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/starter/util"
+	"github.com/bitwormhole/starter/vlog"
 	"github.com/bitwormhole/wpm/server/data/dao"
 	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/data/entity"
@@ -21,8 +22,9 @@ type PluginServiceImpl struct {
 
 	SoftwarePackageDAO dao.SoftwarePackageDAO `inject:"#SoftwarePackageDAO"`
 
-	NamespaceService  service.NamespaceService  `inject:"#NamespaceService"`
-	HTTPClientService service.HTTPClientService `inject:"#HTTPClientService"`
+	NamespaceService    service.NamespaceService    `inject:"#NamespaceService"`
+	HTTPClientService   service.HTTPClientService   `inject:"#HTTPClientService"`
+	HTTPClientExService service.HTTPClientExService `inject:"#HTTPClientExService"`
 }
 
 func (inst *PluginServiceImpl) _Impl() service.SoftwarePackageService {
@@ -36,6 +38,7 @@ func (inst *PluginServiceImpl) dto2entity(o1 *dto.SoftwarePackage) (*entity.Soft
 	o2.ID = o1.ID
 	o2.URN = o1.URN
 	o2.UUID = o1.UUID
+	o2.Referer = o1.Referer
 
 	o2.Name = o1.Name
 	o2.ModuleName = o1.ModuleName
@@ -72,6 +75,7 @@ func (inst *PluginServiceImpl) entity2dto(o1 *entity.SoftwarePackage) (*dto.Soft
 	o2.ID = o1.ID
 	o2.URN = o1.URN
 	o2.UUID = o1.UUID
+	o2.Referer = o1.Referer
 
 	o2.Name = o1.Name
 	o2.ModuleName = o1.ModuleName
@@ -163,6 +167,16 @@ func (inst *PluginServiceImpl) ListAll(ctx context.Context) ([]*dto.SoftwarePack
 	return inst.entity2dtoList(list1)
 }
 
+// ListByModuleName ...
+func (inst *PluginServiceImpl) ListByModuleName(ctx context.Context, moduleName string) ([]*dto.SoftwarePackage, error) {
+	dao := inst.SoftwarePackageDAO
+	srclist, err := dao.ListByModuleName(moduleName)
+	if err != nil {
+		return nil, err
+	}
+	return inst.entity2dtoList(srclist)
+}
+
 // Insert ...
 func (inst *PluginServiceImpl) Insert(ctx context.Context, o1 *dto.SoftwarePackage) (*dto.SoftwarePackage, error) {
 
@@ -203,16 +217,72 @@ func (inst *PluginServiceImpl) UpdateItem(ctx context.Context, id dxo.SoftwarePa
 
 // UpdateList ...
 func (inst *PluginServiceImpl) UpdateList(ctx context.Context) error {
+
+	// 清除过时的包信息
+	cl := &myPakcageListCleaner{
+		packageSer:    inst,
+		namespaceSer:  inst.NamespaceService,
+		httpclientSer: inst.HTTPClientExService,
+	}
+	err := cl.Clean(ctx)
+	if err != nil {
+		return err
+	}
+
+	// 下载更新的包信息
 	up := &myPakcageListUpdater{
 		packageSer:    inst,
 		namespaceSer:  inst.NamespaceService,
-		httpclientSer: inst.HTTPClientService,
+		httpclientSer: inst.HTTPClientExService,
 	}
-	return up.Update(ctx)
+	err = up.Update(ctx)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // Remove ...
 func (inst *PluginServiceImpl) Remove(ctx context.Context, id dxo.SoftwarePackageID) error {
 	dao := inst.SoftwarePackageDAO
 	return dao.Remove(id)
+}
+
+// Install ...
+func (inst *PluginServiceImpl) Install(ctx context.Context, id dxo.SoftwarePackageID) error {
+
+	dao := inst.SoftwarePackageDAO
+	p, err := dao.Find(id)
+	if err != nil {
+		return err
+	}
+
+	vlog.Warn("todo: no impl : install package:", p.ID, " ", p.URN)
+	p.Installed = true
+	_, err = dao.Update(id, p)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// Uninstall ...
+func (inst *PluginServiceImpl) Uninstall(ctx context.Context, id dxo.SoftwarePackageID) error {
+
+	dao := inst.SoftwarePackageDAO
+	p, err := dao.Find(id)
+	if err != nil {
+		return err
+	}
+
+	vlog.Warn("todo: no impl : uninstall package:", p.ID, " ", p.URN)
+	p.Installed = false
+	_, err = dao.Update(id, p)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

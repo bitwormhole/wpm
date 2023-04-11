@@ -233,9 +233,17 @@ type pComExecutableServiceImpl struct {
 }
 
 
+type pComImpHTTPClientEx struct {
+	instance *httpclient0xf20fe2.ImpHTTPClientEx
+	 markup0x23084a.Component `id:"HTTPClientExService"`
+	HTTPClientService service0x3e063d.HTTPClientService `inject:"#HTTPClientService"`
+}
+
+
 type pComImpHTTPClientService struct {
 	instance *httpclient0xf20fe2.ImpHTTPClientService
 	 markup0x23084a.Component `id:"HTTPClientService"`
+	AC application0x67f6c5.Context `inject:"context"`
 	MaxContentLength int `inject:"${wpm.httpclient.max-content-length}"`
 }
 
@@ -489,6 +497,7 @@ type pComPluginServiceImpl struct {
 	SoftwarePackageDAO dao0x5af8d0.SoftwarePackageDAO `inject:"#SoftwarePackageDAO"`
 	NamespaceService service0x3e063d.NamespaceService `inject:"#NamespaceService"`
 	HTTPClientService service0x3e063d.HTTPClientService `inject:"#HTTPClientService"`
+	HTTPClientExService service0x3e063d.HTTPClientExService `inject:"#HTTPClientExService"`
 }
 
 
@@ -512,6 +521,7 @@ type pComCacheProvider struct {
 	 markup0x23084a.Component ` id:"PresetCache"  class:"wpm-cache-provider"`
 	AC application0x67f6c5.Context `inject:"context"`
 	CS service0x3e063d.CacheService `inject:"#CacheService"`
+	HTC service0x3e063d.HTTPClientExService `inject:"#HTTPClientExService"`
 	ListFileName string `inject:"${wpm.presets.list-file-name}"`
 }
 

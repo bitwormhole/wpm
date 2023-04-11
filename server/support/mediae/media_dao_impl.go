@@ -101,6 +101,7 @@ func (inst *MediaDaoImpl) Update(id dxo.MediaID, o1 *entity.Media) (*entity.Medi
 	o2.Label = o1.Label
 	o2.Name = o1.Name
 	o2.Source = o1.Source
+	o2.Referer = o1.Referer
 
 	res = db.Save(o2)
 	if res.Error != nil {
