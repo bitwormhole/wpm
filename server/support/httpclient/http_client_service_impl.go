@@ -18,7 +18,7 @@ type ImpHTTPClientService struct {
 	markup.Component `id:"HTTPClientService"`
 
 	AC application.Context       `inject:"context"`
-	FS service.FileSystemService `inject:"FileSystemService"`
+	FS service.FileSystemService `inject:"#FileSystemService"`
 
 	MaxContentLength int `inject:"${wpm.httpclient.max-content-length}"`
 }

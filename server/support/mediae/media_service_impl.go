@@ -12,7 +12,6 @@ import (
 	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/data/entity"
 	"github.com/bitwormhole/wpm/server/service"
-	"github.com/bitwormhole/wpm/server/utils"
 	"github.com/bitwormhole/wpm/server/web/dto"
 )
 
@@ -25,6 +24,7 @@ type MediaServiceImpl struct {
 	SysMainRepoService service.MainRepositoryService `inject:"#MainRepositoryService"`
 	FileSystemService  service.FileSystemService     `inject:"#FileSystemService"`
 	ContentTypeService service.ContentTypeService    `inject:"#ContentTypeService"`
+	HTTPClientService  service.HTTPClientService     `inject:"#HTTPClientService"`
 
 	ResPathPrefix string `inject:"${wpm.presets.res-path-prefix}"`
 	WebPathPrefix string `inject:"${wpm.presets.web-path-prefix}"`
@@ -134,55 +134,19 @@ func (inst *MediaServiceImpl) FindByPath(ctx context.Context, path string, opt *
 }
 
 func (inst *MediaServiceImpl) prepareSave(ctx context.Context, o1 *dto.Media, opt *service.MediaOptions) (*entity.Media, error) {
-
 	if opt == nil {
 		opt = &service.MediaOptions{}
 	}
-
-	mdir, err := inst.getSystemMediaDir(ctx)
+	importer := &myMediaImporter{
+		context:    ctx,
+		parent:     inst,
+		fs:         inst.FileSystemService,
+		httpclient: inst.HTTPClientService,
+	}
+	o2, err := importer.Import(o1, opt)
 	if err != nil {
 		return nil, err
 	}
-
-	src := inst.FileSystemService.Path(o1.Source)
-	dst, err := makeMediaLocalPath(o1, mdir)
-	if err != nil {
-		return nil, err
-	}
-
-	url, err := makeMediaWebPath(o1)
-	if err != nil {
-		return nil, err
-	}
-
-	sum, err := utils.ComputeFileSHA256sumAFS(src)
-	if err != nil {
-		return nil, err
-	}
-
-	if !dst.Exists() {
-		if opt.FetchFromSource {
-			// todo ... fetch from soruce
-		}
-	}
-
-	o2 := &dto.Media{}
-	o2.Source = dst.GetPath()
-	o2.URL = url
-	o2.FileSize = src.GetInfo().Length()
-	o2.ContentType = o1.ContentType
-	o2.Name = o1.Name
-	o2.Label = o1.Label
-	o2.Bucket = "default"
-	o2.SHA256SUM = sum
-
-	err = src.CopyTo(dst, &afs.Options{
-		Mkdirs: true, Create: true,
-	})
-	if err != nil {
-		return nil, err
-	}
-
 	return inst.dto2entity(o2)
 }
 

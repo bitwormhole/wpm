@@ -96,3 +96,19 @@ func (inst *PathBuilder) sep2elements(p string) []string {
 	p2 := strings.ReplaceAll(p, sep1, sep2)
 	return strings.Split(p2, sep2)
 }
+
+// IsAbsolutePath 判断是否为（本地）绝对路径
+func IsAbsolutePath(path string) bool {
+
+	if strings.HasPrefix(path, "/") {
+		return true
+	}
+
+	// for windows
+	i := strings.Index(path, ":\\")
+	if i == 1 {
+		return true
+	}
+
+	return false
+}

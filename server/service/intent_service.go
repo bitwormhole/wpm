@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/bitwormhole/wpm/server/data/dxo"
+	"github.com/bitwormhole/wpm/server/data/entity"
 	"github.com/bitwormhole/wpm/server/web/dto"
 )
 
@@ -35,4 +36,9 @@ type IntentTemplateService interface {
 // IntentHandlerService ...
 type IntentHandlerService interface {
 	HandleIntent(i *dto.Intent) error
+}
+
+// IntentTemplateEntityCache ...
+type IntentTemplateEntityCache interface {
+	ListTemplates() ([]*entity.IntentTemplate, error)
 }

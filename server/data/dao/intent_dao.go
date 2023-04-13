@@ -12,7 +12,7 @@ type IntentTemplateDAO interface {
 	ListAll() ([]*entity.IntentTemplate, error)
 
 	// find items by Action & Executable & Target & Type
-	ListBySelector(selector *entity.IntentTemplate) ([]*entity.IntentTemplate, error)
+	// ListBySelector(selector *entity.IntentTemplate) ([]*entity.IntentTemplate, error)
 
 	Insert(o *entity.IntentTemplate) (*entity.IntentTemplate, error)
 

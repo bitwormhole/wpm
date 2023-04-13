@@ -21,10 +21,11 @@ import (
 type IntentTemplateServiceImpl struct {
 	markup.Component `id:"IntentTemplateService"`
 
-	AC                  application.Context   `inject:"context"`
-	IntentTempDAO       dao.IntentTemplateDAO `inject:"#IntentTemplateDAO"`
-	IntentFilterManager intents.FilterManager `inject:"#wpm-intent-filter-manager"`
-	PresetService       service.PresetService `inject:"#PresetService"`
+	AC                  application.Context               `inject:"context"`
+	IntentTempDAO       dao.IntentTemplateDAO             `inject:"#IntentTemplateDAO"`
+	IntentFilterManager intents.FilterManager             `inject:"#wpm-intent-filter-manager"`
+	PresetService       service.PresetService             `inject:"#PresetService"`
+	TemplateCache       service.IntentTemplateEntityCache `inject:"#IntentTemplateEntityCache"`
 }
 
 func (inst *IntentTemplateServiceImpl) _Impl() service.IntentTemplateService {
@@ -63,6 +64,10 @@ func (inst *IntentTemplateServiceImpl) dto2entity(o1 *dto.IntentTemplate) (*enti
 	o2.Target = inst.normalizeText(action.Target)
 	o2.ContentType = inst.normalizeText(action.Type)
 	o2.Selector = selbuilder.Create()
+
+	if o2.Target != "file" && o2.Target != "project" {
+		o2.ContentType = "*"
+	}
 
 	o2.Arguments = o1.Arguments
 	o2.Command = o1.Command
@@ -126,15 +131,40 @@ func (inst *IntentTemplateServiceImpl) ListAll(ctx context.Context) ([]*dto.Inte
 
 // ListBySelector ...
 func (inst *IntentTemplateServiceImpl) ListBySelector(ctx context.Context, sel *dto.IntentTemplate) ([]*dto.IntentTemplate, error) {
-	selector, err := inst.dto2entity(sel)
+
+	want, err := inst.dto2entity(sel)
 	if err != nil {
 		return nil, err
 	}
-	src, err := inst.IntentTempDAO.ListBySelector(selector)
+
+	all, err := inst.TemplateCache.ListTemplates()
 	if err != nil {
 		return nil, err
 	}
-	return inst.entity2dtoList(src)
+
+	dst := make([]*entity.IntentTemplate, 0)
+	for _, item := range all {
+		if inst.isTemplateMatch(item, want) {
+			dst = append(dst, item)
+		}
+	}
+
+	return inst.entity2dtoList(dst)
+}
+
+func (inst *IntentTemplateServiceImpl) isTemplateMatch(have, want *entity.IntentTemplate) bool {
+	b1 := inst.isTextMatch(have.Method, want.Method)
+	b2 := inst.isTextMatch(have.Target, want.Target)
+	b3 := inst.isTextMatch(have.ContentType, want.ContentType)
+	b4 := inst.isTextMatch(have.Executable.String(), want.Executable.String())
+	return (b1 && b2 && b3 && b4)
+}
+
+func (inst *IntentTemplateServiceImpl) isTextMatch(have, want string) bool {
+	if have == "*" || want == "*" {
+		return true
+	}
+	return have == want
 }
 
 // Find ...

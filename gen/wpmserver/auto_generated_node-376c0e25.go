@@ -244,7 +244,7 @@ type pComImpHTTPClientService struct {
 	instance *httpclient0xf20fe2.ImpHTTPClientService
 	 markup0x23084a.Component `id:"HTTPClientService"`
 	AC application0x67f6c5.Context `inject:"context"`
-	FS service0x3e063d.FileSystemService `inject:"FileSystemService"`
+	FS service0x3e063d.FileSystemService `inject:"#FileSystemService"`
 	MaxContentLength int `inject:"${wpm.httpclient.max-content-length}"`
 }
 
@@ -373,6 +373,13 @@ type pComIntentTemplateDaoImpl struct {
 }
 
 
+type pComImpIntentTemplateEntityCache struct {
+	instance *intenttemplates0x2e3dcf.ImpIntentTemplateEntityCache
+	 markup0x23084a.Component `id:"IntentTemplateEntityCache"`
+	DAO dao0x5af8d0.IntentTemplateDAO `inject:"#IntentTemplateDAO"`
+}
+
+
 type pComIntentTemplateServiceImpl struct {
 	instance *intenttemplates0x2e3dcf.IntentTemplateServiceImpl
 	 markup0x23084a.Component `id:"IntentTemplateService"`
@@ -380,6 +387,7 @@ type pComIntentTemplateServiceImpl struct {
 	IntentTempDAO dao0x5af8d0.IntentTemplateDAO `inject:"#IntentTemplateDAO"`
 	IntentFilterManager intents0x8557f3.FilterManager `inject:"#wpm-intent-filter-manager"`
 	PresetService service0x3e063d.PresetService `inject:"#PresetService"`
+	TemplateCache service0x3e063d.IntentTemplateEntityCache `inject:"#IntentTemplateEntityCache"`
 }
 
 
@@ -422,6 +430,7 @@ type pComMediaServiceImpl struct {
 	SysMainRepoService service0x3e063d.MainRepositoryService `inject:"#MainRepositoryService"`
 	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
 	ContentTypeService service0x3e063d.ContentTypeService `inject:"#ContentTypeService"`
+	HTTPClientService service0x3e063d.HTTPClientService `inject:"#HTTPClientService"`
 	ResPathPrefix string `inject:"${wpm.presets.res-path-prefix}"`
 	WebPathPrefix string `inject:"${wpm.presets.web-path-prefix}"`
 }
