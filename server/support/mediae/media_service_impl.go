@@ -37,11 +37,13 @@ func (inst *MediaServiceImpl) _Impl() service.MediaService {
 func (inst *MediaServiceImpl) dto2entity(o1 *dto.Media) (*entity.Media, error) {
 	o2 := &entity.Media{}
 	o2.ID = o1.ID
+	o2.UUID = o1.UUID
 	o2.Referer = o1.Referer
+	o2.Installation = o1.Installation
 
 	o2.Bucket = o1.Bucket
 	o2.ContentType = o1.ContentType
-	o2.FileSize = o1.FileSize
+	o2.ContentLength = o1.FileSize
 	o2.Label = o1.Label
 	o2.Name = o1.Name
 	o2.SHA256SUM = o1.SHA256SUM
@@ -63,10 +65,11 @@ func (inst *MediaServiceImpl) entity2dto(o1 *entity.Media, opt *service.MediaOpt
 	o2.CreatedAt = util.NewTime(o1.CreatedAt)
 	o2.UpdatedAt = util.NewTime(o1.UpdatedAt)
 	o2.Referer = o1.Referer
+	o2.Installation = o1.Installation
 
 	o2.Bucket = o1.Bucket
 	o2.ContentType = o1.ContentType
-	o2.FileSize = o1.FileSize
+	o2.FileSize = o1.ContentLength
 	o2.Label = o1.Label
 	o2.Name = o1.Name
 	o2.SHA256SUM = o1.SHA256SUM
@@ -130,14 +133,18 @@ func (inst *MediaServiceImpl) FindByPath(ctx context.Context, path string, opt *
 	return inst.entity2dto(o1, opt)
 }
 
-func (inst *MediaServiceImpl) prepareInsert(ctx context.Context, o1 *dto.Media) (*entity.Media, error) {
+func (inst *MediaServiceImpl) prepareSave(ctx context.Context, o1 *dto.Media, opt *service.MediaOptions) (*entity.Media, error) {
+
+	if opt == nil {
+		opt = &service.MediaOptions{}
+	}
 
 	mdir, err := inst.getSystemMediaDir(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	src := inst.FileSystemService.Path(o1.LocalFilePath)
+	src := inst.FileSystemService.Path(o1.Source)
 	dst, err := makeMediaLocalPath(o1, mdir)
 	if err != nil {
 		return nil, err
@@ -153,8 +160,14 @@ func (inst *MediaServiceImpl) prepareInsert(ctx context.Context, o1 *dto.Media) 
 		return nil, err
 	}
 
+	if !dst.Exists() {
+		if opt.FetchFromSource {
+			// todo ... fetch from soruce
+		}
+	}
+
 	o2 := &dto.Media{}
-	o2.LocalFilePath = dst.GetPath()
+	o2.Source = dst.GetPath()
 	o2.URL = url
 	o2.FileSize = src.GetInfo().Length()
 	o2.ContentType = o1.ContentType
@@ -174,8 +187,8 @@ func (inst *MediaServiceImpl) prepareInsert(ctx context.Context, o1 *dto.Media) 
 }
 
 // Insert ...
-func (inst *MediaServiceImpl) Insert(ctx context.Context, o *dto.Media) (*dto.Media, error) {
-	o2, err := inst.prepareInsert(ctx, o)
+func (inst *MediaServiceImpl) Insert(ctx context.Context, o *dto.Media, opt *service.MediaOptions) (*dto.Media, error) {
+	o2, err := inst.prepareSave(ctx, o, opt)
 	if err != nil {
 		return nil, err
 	}
@@ -195,15 +208,23 @@ func (inst *MediaServiceImpl) ImportPresets(ctx context.Context) error {
 }
 
 // Update ...
-func (inst *MediaServiceImpl) Update(ctx context.Context, id dxo.MediaID, o *dto.Media) (*dto.Media, error) {
-	o2, err := inst.dto2entity(o)
+func (inst *MediaServiceImpl) Update(ctx context.Context, id dxo.MediaID, o *dto.Media, opt *service.MediaOptions) (*dto.Media, error) {
+
+	o2, err := inst.prepareSave(ctx, o, opt)
 	if err != nil {
 		return nil, err
 	}
+
+	// o2, err := inst.dto2entity(o)
+	// if err != nil {
+	// 	return nil, err
+	// }
+
 	o3, err := inst.MediaDAO.Update(id, o2)
 	if err != nil {
 		return nil, err
 	}
+
 	return inst.entity2dto(o3, nil)
 }
 
@@ -225,7 +246,7 @@ func (inst *MediaServiceImpl) PrepareForDownload(ctx context.Context, me *dto.Me
 		return nil, err
 	}
 
-	me.LocalFilePath = pathDst.GetPath()
+	me.Source = pathDst.GetPath()
 	return me, nil
 }
 

@@ -4,6 +4,8 @@ import (
 	"context"
 	"strconv"
 	"strings"
+	"sync"
+	"time"
 
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/starter/util"
@@ -22,9 +24,16 @@ type PluginServiceImpl struct {
 
 	SoftwarePackageDAO dao.SoftwarePackageDAO `inject:"#SoftwarePackageDAO"`
 
-	NamespaceService    service.NamespaceService    `inject:"#NamespaceService"`
-	HTTPClientService   service.HTTPClientService   `inject:"#HTTPClientService"`
-	HTTPClientExService service.HTTPClientExService `inject:"#HTTPClientExService"`
+	NamespaceService service.NamespaceService    `inject:"#NamespaceService"`
+	HTTPClient       service.HTTPClientService   `inject:"#HTTPClientService"`
+	HTTPClientEx     service.HTTPClientExService `inject:"#HTTPClientExService"`
+
+	IntentTemplateSer service.IntentTemplateService `inject:"#IntentTemplateService"`
+	ExecutableSer     service.ExecutableService     `inject:"#ExecutableService"`
+	ContentTypeSer    service.ContentTypeService    `inject:"#ContentTypeService"`
+	MediaSer          service.MediaService          `inject:"#MediaService"`
+
+	lockerForGenInstaID sync.Mutex
 }
 
 func (inst *PluginServiceImpl) _Impl() service.SoftwarePackageService {
@@ -222,7 +231,7 @@ func (inst *PluginServiceImpl) UpdateList(ctx context.Context) error {
 	cl := &myPakcageListCleaner{
 		packageSer:    inst,
 		namespaceSer:  inst.NamespaceService,
-		httpclientSer: inst.HTTPClientExService,
+		httpclientSer: inst.HTTPClientEx,
 	}
 	err := cl.Clean(ctx)
 	if err != nil {
@@ -233,7 +242,7 @@ func (inst *PluginServiceImpl) UpdateList(ctx context.Context) error {
 	up := &myPakcageListUpdater{
 		packageSer:    inst,
 		namespaceSer:  inst.NamespaceService,
-		httpclientSer: inst.HTTPClientExService,
+		httpclientSer: inst.HTTPClientEx,
 	}
 	err = up.Update(ctx)
 	if err != nil {
@@ -249,18 +258,50 @@ func (inst *PluginServiceImpl) Remove(ctx context.Context, id dxo.SoftwarePackag
 	return dao.Remove(id)
 }
 
+func (inst *PluginServiceImpl) generateInstallationID() dxo.InstallationID {
+	inst.lockerForGenInstaID.Lock()
+	defer func() {
+		inst.lockerForGenInstaID.Unlock()
+	}()
+	time.Sleep(time.Second)
+	n := util.Now().Int64()
+	return dxo.InstallationID(n)
+}
+
 // Install ...
 func (inst *PluginServiceImpl) Install(ctx context.Context, id dxo.SoftwarePackageID) error {
 
-	dao := inst.SoftwarePackageDAO
-	p, err := dao.Find(id)
+	// dao := inst.SoftwarePackageDAO
+
+	// fetch
+	p, err := inst.Find(ctx, id)
+	if err != nil {
+		return err
+	}
+	vlog.Warn("todo: no impl : install package:", p.ID, " ", p.URN)
+
+	installer := myPakcageInstaller{
+		context:      ctx,
+		HTTPClient:   inst.HTTPClient,
+		HTTPClientEx: inst.HTTPClientEx,
+
+		IntentTemplateSer: inst.IntentTemplateSer,
+		ExecutableSer:     inst.ExecutableSer,
+		ContentTypeSer:    inst.ContentTypeSer,
+		MediaSer:          inst.MediaSer,
+	}
+	installer.installation = inst.generateInstallationID()
+	p, err = installer.Install(p)
 	if err != nil {
 		return err
 	}
 
-	vlog.Warn("todo: no impl : install package:", p.ID, " ", p.URN)
+	// update
 	p.Installed = true
-	_, err = dao.Update(id, p)
+	p.Installation = installer.installation
+
+	// save
+	_, err = inst.UpdateItem(ctx, id, p)
 	if err != nil {
 		return err
 	}

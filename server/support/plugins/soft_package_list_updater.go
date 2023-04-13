@@ -22,8 +22,8 @@ func (inst *myPakcageListUpdater) Update(c context.Context) error {
 	}
 	steps := make([]func() error, 0)
 
-	steps = append(steps, t.listNamespaces)
-	steps = append(steps, t.fetchNamespaces)
+	steps = append(steps, t.listSources)
+	steps = append(steps, t.fetchSources)
 	steps = append(steps, t.save)
 
 	for _, step := range steps {
@@ -45,7 +45,7 @@ type myPakcageListUpdateTask struct {
 	packages   []*dto.SoftwarePackage
 }
 
-func (inst *myPakcageListUpdateTask) listNamespaces() error {
+func (inst *myPakcageListUpdateTask) listSources() error {
 	c := inst.context
 	src, err := inst.updater.namespaceSer.ListAll(c)
 	if err != nil {
@@ -61,7 +61,7 @@ func (inst *myPakcageListUpdateTask) listNamespaces() error {
 	return nil
 }
 
-func (inst *myPakcageListUpdateTask) fetchNamespaces() error {
+func (inst *myPakcageListUpdateTask) fetchSources() error {
 	ctx := inst.context
 	htc := inst.updater.httpclientSer
 	nslist := inst.namespaces

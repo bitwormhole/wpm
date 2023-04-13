@@ -118,7 +118,7 @@ func (inst *ImpAppRuntimeService) logSelf() error {
 	o1.WPM.Revision = mod.GetRevision()
 	o1.WPM.HexName = o2.SHA256SUM.String()
 	o1.Versions[o2.SHA256SUM.String()] = o2
-	o1.Logs = append(o1.Logs, o2)
+	// o1.Logs = append(o1.Logs, o2)
 	return inst.saveLogs(o1)
 }
 

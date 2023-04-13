@@ -59,7 +59,7 @@ func (inst *myPresetsLoader) loadPresetFile(filename string, dst *vo.Online) err
 
 	dst.Mediae = append(dst.Mediae, src.Mediae...)
 
-	dst.Namespaces = append(dst.Namespaces, src.Namespaces...)
+	dst.Sources = append(dst.Sources, src.Sources...)
 
 	dst.Packages = append(dst.Packages, src.Packages...)
 

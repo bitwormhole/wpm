@@ -3,6 +3,7 @@ package executables
 import (
 	"context"
 	"errors"
+	"fmt"
 	"sort"
 	"strings"
 
@@ -178,6 +179,9 @@ func (inst *ExecutableServiceImpl) checkExeFileState(o1 *entity.Executable) dxo.
 
 func (inst *ExecutableServiceImpl) checkBeforeInsert(ctx context.Context, o *dto.Executable) error {
 	path := fs.Default().GetPath(o.Path)
+	if path == nil {
+		return fmt.Errorf("bad file path: [%v]", o.Path)
+	}
 	if !path.IsFile() {
 		return errors.New("the file is not a executable, path=" + o.Path)
 	}

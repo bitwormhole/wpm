@@ -96,11 +96,17 @@ func (inst *myOnlineDocumentExampleRequest) doGet() error {
 
 	o2 := &inst.body2
 
+	o2.ContentTypes = append(o2.ContentTypes, &dto.ContentType{})
+
 	o2.Executables = append(o2.Executables, inst.makeExecutable())
 
 	o2.IntentTemplates = append(o2.IntentTemplates, inst.makeIntentTemplate())
 
 	o2.Mediae = append(o2.Mediae, inst.makeMedia())
+
+	o2.Packages = append(o2.Packages, &dto.SoftwarePackage{})
+
+	o2.Sources = append(o2.Sources, &dto.Namespace{})
 
 	return nil
 }

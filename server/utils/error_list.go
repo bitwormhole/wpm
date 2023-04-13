@@ -30,3 +30,12 @@ func (inst *ErrorList) Last() error {
 	}
 	return nil
 }
+
+// All 取全部错误
+func (inst *ErrorList) All() []error {
+	all := inst.list
+	if all == nil {
+		all = make([]error, 0)
+	}
+	return all
+}

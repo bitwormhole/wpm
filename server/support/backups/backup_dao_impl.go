@@ -23,7 +23,7 @@ func (inst *ImpBackupServiceDAO) _Impl() dao.Backup {
 	return inst
 }
 
-func (inst *ImpBackupServiceDAO) exportThisExeInfo(o *backup.VO) error {
+func (inst *ImpBackupServiceDAO) exportThisExeInfo(o *backup.StoreVO) error {
 	m := service.GetAppModule()
 	o.WPM.Name = m.GetName()
 	o.WPM.Version = m.GetVersion()
@@ -31,7 +31,7 @@ func (inst *ImpBackupServiceDAO) exportThisExeInfo(o *backup.VO) error {
 	return nil
 }
 
-func (inst *ImpBackupServiceDAO) exportTables(o *backup.VO) error {
+func (inst *ImpBackupServiceDAO) exportTables(o *backup.StoreVO) error {
 	db := inst.Agent.DB()
 	task := &tablesExportTask{
 		view: o,
@@ -43,7 +43,7 @@ func (inst *ImpBackupServiceDAO) exportTables(o *backup.VO) error {
 // Export ...
 func (inst *ImpBackupServiceDAO) Export(file afs.Path) error {
 
-	o := &backup.VO{}
+	o := &backup.StoreVO{}
 	err := inst.exportTables(o)
 	if err != nil {
 		return err
@@ -71,7 +71,7 @@ func (inst *ImpBackupServiceDAO) Export(file afs.Path) error {
 
 // Import ...
 func (inst *ImpBackupServiceDAO) Import(file afs.Path) error {
-	view := &backup.VO{}
+	view := &backup.StoreVO{}
 	data, err := file.GetIO().ReadBinary(nil)
 	if err != nil {
 		return err

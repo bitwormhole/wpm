@@ -17,7 +17,8 @@ import (
 type ImpHTTPClientService struct {
 	markup.Component `id:"HTTPClientService"`
 
-	AC application.Context `inject:"context"`
+	AC application.Context       `inject:"context"`
+	FS service.FileSystemService `inject:"FileSystemService"`
 
 	MaxContentLength int `inject:"${wpm.httpclient.max-content-length}"`
 }
@@ -67,20 +68,21 @@ func (inst *ImpHTTPClientService) prepareOptions(opt *service.HTTPClientOptions)
 	return opt
 }
 
+func (inst *ImpHTTPClientService) isWebURL(url string) bool {
+	return strings.HasPrefix(url, "https://") || strings.HasPrefix(url, "http://")
+}
+
+func (inst *ImpHTTPClientService) isFileURL(url string) bool {
+	return strings.HasPrefix(url, "file:/")
+}
+
 func (inst *ImpHTTPClientService) isResURL(url string) bool {
-
-	if strings.HasPrefix(url, "res://") {
-		return true
+	accepts := []string{"res://", "resource://", "resources://"}
+	for _, prefix := range accepts {
+		if strings.HasPrefix(url, prefix) {
+			return true
+		}
 	}
-
-	if strings.HasPrefix(url, "resource://") {
-		return true
-	}
-
-	if strings.HasPrefix(url, "resources://") {
-		return true
-	}
-
 	return false
 }
 
@@ -99,13 +101,39 @@ func (inst *ImpHTTPClientService) fetchFromRes(ctx context.Context, url string, 
 	return data, res, err
 }
 
-func (inst *ImpHTTPClientService) fetch(ctx context.Context, url string, opt *service.HTTPClientOptions) ([]byte, *service.HTTPClientResult, error) {
+func (inst *ImpHTTPClientService) fetchFromLocalFS(ctx context.Context, url string, opt *service.HTTPClientOptions) ([]byte, *service.HTTPClientResult, error) {
 
-	if inst.isResURL(url) {
-		return inst.fetchFromRes(ctx, url, opt)
+	const prefix = "file:/"
+	path := url
+	if strings.HasPrefix(url, prefix) {
+		path = url[len(prefix):]
 	}
 
-	opt = inst.prepareOptions(opt)
+	errNoFile := fmt.Errorf("no file at [%v]", url)
+	file := inst.FS.Path(path)
+	if file == nil {
+		return nil, nil, errNoFile
+	}
+	if !file.IsFile() {
+		return nil, nil, errNoFile
+	}
+
+	res := &service.HTTPClientResult{}
+	data, err := file.GetIO().ReadBinary(nil)
+	if err == nil {
+		size := len(data)
+		res.Status = http.StatusOK
+		res.StatusText = "OK"
+		res.ContentLength = int64(size)
+		res.ContentType = "application/octet-stream"
+	} else {
+		res.StatusText = err.Error()
+	}
+	return data, res, err
+}
+
+func (inst *ImpHTTPClientService) fetchFromWeb(ctx context.Context, url string, opt *service.HTTPClientOptions) ([]byte, *service.HTTPClientResult, error) {
+
 	res := &service.HTTPClientResult{}
 
 	resp, err := http.Get(url)
@@ -139,4 +167,19 @@ func (inst *ImpHTTPClientService) fetch(ctx context.Context, url string, opt *se
 	}
 
 	return data, res, nil
+}
+
+func (inst *ImpHTTPClientService) fetch(ctx context.Context, url string, opt *service.HTTPClientOptions) ([]byte, *service.HTTPClientResult, error) {
+
+	opt = inst.prepareOptions(opt)
+
+	if inst.isResURL(url) {
+		return inst.fetchFromRes(ctx, url, opt)
+	} else if inst.isFileURL(url) {
+		return inst.fetchFromLocalFS(ctx, url, opt)
+	} else if inst.isWebURL(url) {
+		return inst.fetchFromWeb(ctx, url, opt)
+	}
+
+	return nil, nil, fmt.Errorf("bad URL [%v]", url)
 }

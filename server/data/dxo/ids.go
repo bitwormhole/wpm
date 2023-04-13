@@ -18,7 +18,7 @@ type ExecutableID int
 type ExecutableGroupID int
 
 // InstallationID ...
-type InstallationID int
+type InstallationID int64
 
 // IntentID ...
 type IntentID int

@@ -39,7 +39,7 @@ func (inst *FindTemplateFilter) Handle(c context.Context, i *dto.Intent, next in
 	}
 
 	sel := &dto.IntentTemplate{}
-	sel.Action = i.Action
+	sel.ActionRequest = i.Action
 	list, err := inst.IntentTemplateService.ListBySelector(c, sel)
 	if err != nil {
 		return err

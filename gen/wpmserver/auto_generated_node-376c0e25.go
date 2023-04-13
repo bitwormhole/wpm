@@ -244,6 +244,7 @@ type pComImpHTTPClientService struct {
 	instance *httpclient0xf20fe2.ImpHTTPClientService
 	 markup0x23084a.Component `id:"HTTPClientService"`
 	AC application0x67f6c5.Context `inject:"context"`
+	FS service0x3e063d.FileSystemService `inject:"FileSystemService"`
 	MaxContentLength int `inject:"${wpm.httpclient.max-content-length}"`
 }
 
@@ -496,8 +497,12 @@ type pComPluginServiceImpl struct {
 	 markup0x23084a.Component `id:"SoftwarePackageService"`
 	SoftwarePackageDAO dao0x5af8d0.SoftwarePackageDAO `inject:"#SoftwarePackageDAO"`
 	NamespaceService service0x3e063d.NamespaceService `inject:"#NamespaceService"`
-	HTTPClientService service0x3e063d.HTTPClientService `inject:"#HTTPClientService"`
-	HTTPClientExService service0x3e063d.HTTPClientExService `inject:"#HTTPClientExService"`
+	HTTPClient service0x3e063d.HTTPClientService `inject:"#HTTPClientService"`
+	HTTPClientEx service0x3e063d.HTTPClientExService `inject:"#HTTPClientExService"`
+	IntentTemplateSer service0x3e063d.IntentTemplateService `inject:"#IntentTemplateService"`
+	ExecutableSer service0x3e063d.ExecutableService `inject:"#ExecutableService"`
+	ContentTypeSer service0x3e063d.ContentTypeService `inject:"#ContentTypeService"`
+	MediaSer service0x3e063d.MediaService `inject:"#MediaService"`
 }
 
 

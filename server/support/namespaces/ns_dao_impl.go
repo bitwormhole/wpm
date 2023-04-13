@@ -44,7 +44,7 @@ func (inst *ImpNamespaceDao) ListAll() ([]*entity.Namespace, error) {
 	if err != nil {
 		return nil, err
 	}
-	src := all.Namespaces
+	src := all.Sources
 	dst := make([]*entity.Namespace, 0)
 	for _, item1 := range src {
 		item2 := inst.dto2entity(item1)

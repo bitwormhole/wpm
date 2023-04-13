@@ -76,6 +76,9 @@ func (inst *ImpHTTPClientEx) normalizeNamespace(head *vo.BaseHead, ns string) st
 }
 
 func (inst *ImpHTTPClientEx) resolveURL(head *vo.BaseHead, url string) string {
+	if url == "" {
+		return ""
+	}
 	if head == nil {
 		return url
 	}

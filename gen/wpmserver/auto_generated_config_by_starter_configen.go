@@ -3185,6 +3185,7 @@ type comFactory4pComImpHTTPClientService struct {
 
 	
 	mACSelector config.InjectionSelector
+	mFSSelector config.InjectionSelector
 	mMaxContentLengthSelector config.InjectionSelector
 
 }
@@ -3193,6 +3194,7 @@ func (inst * comFactory4pComImpHTTPClientService) init() application.ComponentFa
 
 	
 	inst.mACSelector = config.NewInjectionSelector("context",nil)
+	inst.mFSSelector = config.NewInjectionSelector("FileSystemService",nil)
 	inst.mMaxContentLengthSelector = config.NewInjectionSelector("${wpm.httpclient.max-content-length}",nil)
 
 
@@ -3232,6 +3234,7 @@ func (inst * comFactory4pComImpHTTPClientService) Inject(instance application.Co
 	
 	obj := inst.castObject(instance)
 	obj.AC = inst.getterForFieldACSelector(context)
+	obj.FS = inst.getterForFieldFSSelector(context)
 	obj.MaxContentLength = inst.getterForFieldMaxContentLengthSelector(context)
 	return context.LastError()
 }
@@ -3239,6 +3242,24 @@ func (inst * comFactory4pComImpHTTPClientService) Inject(instance application.Co
 //getterForFieldACSelector
 func (inst * comFactory4pComImpHTTPClientService) getterForFieldACSelector (context application.InstanceContext) application.Context {
     return context.Context()
+}
+
+//getterForFieldFSSelector
+func (inst * comFactory4pComImpHTTPClientService) getterForFieldFSSelector (context application.InstanceContext) service0x3e063d.FileSystemService {
+
+	o1 := inst.mFSSelector.GetOne(context)
+	o2, ok := o1.(service0x3e063d.FileSystemService)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "HTTPClientService")
+		eb.Set("field", "FS")
+		eb.Set("type1", "?")
+		eb.Set("type2", "service0x3e063d.FileSystemService")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
 }
 
 //getterForFieldMaxContentLengthSelector
@@ -6078,8 +6099,12 @@ type comFactory4pComPluginServiceImpl struct {
 	
 	mSoftwarePackageDAOSelector config.InjectionSelector
 	mNamespaceServiceSelector config.InjectionSelector
-	mHTTPClientServiceSelector config.InjectionSelector
-	mHTTPClientExServiceSelector config.InjectionSelector
+	mHTTPClientSelector config.InjectionSelector
+	mHTTPClientExSelector config.InjectionSelector
+	mIntentTemplateSerSelector config.InjectionSelector
+	mExecutableSerSelector config.InjectionSelector
+	mContentTypeSerSelector config.InjectionSelector
+	mMediaSerSelector config.InjectionSelector
 
 }
 
@@ -6088,8 +6113,12 @@ func (inst * comFactory4pComPluginServiceImpl) init() application.ComponentFacto
 	
 	inst.mSoftwarePackageDAOSelector = config.NewInjectionSelector("#SoftwarePackageDAO",nil)
 	inst.mNamespaceServiceSelector = config.NewInjectionSelector("#NamespaceService",nil)
-	inst.mHTTPClientServiceSelector = config.NewInjectionSelector("#HTTPClientService",nil)
-	inst.mHTTPClientExServiceSelector = config.NewInjectionSelector("#HTTPClientExService",nil)
+	inst.mHTTPClientSelector = config.NewInjectionSelector("#HTTPClientService",nil)
+	inst.mHTTPClientExSelector = config.NewInjectionSelector("#HTTPClientExService",nil)
+	inst.mIntentTemplateSerSelector = config.NewInjectionSelector("#IntentTemplateService",nil)
+	inst.mExecutableSerSelector = config.NewInjectionSelector("#ExecutableService",nil)
+	inst.mContentTypeSerSelector = config.NewInjectionSelector("#ContentTypeService",nil)
+	inst.mMediaSerSelector = config.NewInjectionSelector("#MediaService",nil)
 
 
 	inst.mPrototype = inst.newObject()
@@ -6129,8 +6158,12 @@ func (inst * comFactory4pComPluginServiceImpl) Inject(instance application.Compo
 	obj := inst.castObject(instance)
 	obj.SoftwarePackageDAO = inst.getterForFieldSoftwarePackageDAOSelector(context)
 	obj.NamespaceService = inst.getterForFieldNamespaceServiceSelector(context)
-	obj.HTTPClientService = inst.getterForFieldHTTPClientServiceSelector(context)
-	obj.HTTPClientExService = inst.getterForFieldHTTPClientExServiceSelector(context)
+	obj.HTTPClient = inst.getterForFieldHTTPClientSelector(context)
+	obj.HTTPClientEx = inst.getterForFieldHTTPClientExSelector(context)
+	obj.IntentTemplateSer = inst.getterForFieldIntentTemplateSerSelector(context)
+	obj.ExecutableSer = inst.getterForFieldExecutableSerSelector(context)
+	obj.ContentTypeSer = inst.getterForFieldContentTypeSerSelector(context)
+	obj.MediaSer = inst.getterForFieldMediaSerSelector(context)
 	return context.LastError()
 }
 
@@ -6170,16 +6203,16 @@ func (inst * comFactory4pComPluginServiceImpl) getterForFieldNamespaceServiceSel
 	return o2
 }
 
-//getterForFieldHTTPClientServiceSelector
-func (inst * comFactory4pComPluginServiceImpl) getterForFieldHTTPClientServiceSelector (context application.InstanceContext) service0x3e063d.HTTPClientService {
+//getterForFieldHTTPClientSelector
+func (inst * comFactory4pComPluginServiceImpl) getterForFieldHTTPClientSelector (context application.InstanceContext) service0x3e063d.HTTPClientService {
 
-	o1 := inst.mHTTPClientServiceSelector.GetOne(context)
+	o1 := inst.mHTTPClientSelector.GetOne(context)
 	o2, ok := o1.(service0x3e063d.HTTPClientService)
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
 		eb.Set("com", "SoftwarePackageService")
-		eb.Set("field", "HTTPClientService")
+		eb.Set("field", "HTTPClient")
 		eb.Set("type1", "?")
 		eb.Set("type2", "service0x3e063d.HTTPClientService")
 		context.HandleError(eb.Create())
@@ -6188,18 +6221,90 @@ func (inst * comFactory4pComPluginServiceImpl) getterForFieldHTTPClientServiceSe
 	return o2
 }
 
-//getterForFieldHTTPClientExServiceSelector
-func (inst * comFactory4pComPluginServiceImpl) getterForFieldHTTPClientExServiceSelector (context application.InstanceContext) service0x3e063d.HTTPClientExService {
+//getterForFieldHTTPClientExSelector
+func (inst * comFactory4pComPluginServiceImpl) getterForFieldHTTPClientExSelector (context application.InstanceContext) service0x3e063d.HTTPClientExService {
 
-	o1 := inst.mHTTPClientExServiceSelector.GetOne(context)
+	o1 := inst.mHTTPClientExSelector.GetOne(context)
 	o2, ok := o1.(service0x3e063d.HTTPClientExService)
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
 		eb.Set("com", "SoftwarePackageService")
-		eb.Set("field", "HTTPClientExService")
+		eb.Set("field", "HTTPClientEx")
 		eb.Set("type1", "?")
 		eb.Set("type2", "service0x3e063d.HTTPClientExService")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
+}
+
+//getterForFieldIntentTemplateSerSelector
+func (inst * comFactory4pComPluginServiceImpl) getterForFieldIntentTemplateSerSelector (context application.InstanceContext) service0x3e063d.IntentTemplateService {
+
+	o1 := inst.mIntentTemplateSerSelector.GetOne(context)
+	o2, ok := o1.(service0x3e063d.IntentTemplateService)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "SoftwarePackageService")
+		eb.Set("field", "IntentTemplateSer")
+		eb.Set("type1", "?")
+		eb.Set("type2", "service0x3e063d.IntentTemplateService")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
+}
+
+//getterForFieldExecutableSerSelector
+func (inst * comFactory4pComPluginServiceImpl) getterForFieldExecutableSerSelector (context application.InstanceContext) service0x3e063d.ExecutableService {
+
+	o1 := inst.mExecutableSerSelector.GetOne(context)
+	o2, ok := o1.(service0x3e063d.ExecutableService)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "SoftwarePackageService")
+		eb.Set("field", "ExecutableSer")
+		eb.Set("type1", "?")
+		eb.Set("type2", "service0x3e063d.ExecutableService")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
+}
+
+//getterForFieldContentTypeSerSelector
+func (inst * comFactory4pComPluginServiceImpl) getterForFieldContentTypeSerSelector (context application.InstanceContext) service0x3e063d.ContentTypeService {
+
+	o1 := inst.mContentTypeSerSelector.GetOne(context)
+	o2, ok := o1.(service0x3e063d.ContentTypeService)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "SoftwarePackageService")
+		eb.Set("field", "ContentTypeSer")
+		eb.Set("type1", "?")
+		eb.Set("type2", "service0x3e063d.ContentTypeService")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
+}
+
+//getterForFieldMediaSerSelector
+func (inst * comFactory4pComPluginServiceImpl) getterForFieldMediaSerSelector (context application.InstanceContext) service0x3e063d.MediaService {
+
+	o1 := inst.mMediaSerSelector.GetOne(context)
+	o2, ok := o1.(service0x3e063d.MediaService)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "SoftwarePackageService")
+		eb.Set("field", "MediaSer")
+		eb.Set("type1", "?")
+		eb.Set("type2", "service0x3e063d.MediaService")
 		context.HandleError(eb.Create())
 		return nil
 	}

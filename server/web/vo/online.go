@@ -10,7 +10,7 @@ import "github.com/bitwormhole/wpm/server/web/dto"
 type Online struct {
 	Base
 
-	Namespaces      []*dto.Namespace       `json:"namespaces"`
+	Sources         []*dto.Namespace       `json:"sources"`
 	Packages        []*dto.SoftwarePackage `json:"packages"`
 	Mediae          []*dto.Media           `json:"mediae"`
 	Executables     []*dto.Executable      `json:"executables"`

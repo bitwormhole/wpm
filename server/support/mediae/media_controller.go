@@ -266,7 +266,7 @@ func (inst *myMediaRequest) doPost() error {
 	ctx := inst.gc
 	ser := inst.controller.MediaService
 	o1 := inst.body1.Mediae[0]
-	o2, err := ser.Insert(ctx, o1)
+	o2, err := ser.Insert(ctx, o1, nil)
 	if err != nil {
 		return err
 	}
@@ -285,7 +285,7 @@ func (inst *myMediaRequest) doPut() error {
 	ser := inst.controller.MediaService
 	id := inst.id
 	o1 := inst.body1.Mediae[0]
-	o2, err := ser.Update(ctx, id, o1)
+	o2, err := ser.Update(ctx, id, o1, nil)
 	if err != nil {
 		return err
 	}
@@ -319,6 +319,6 @@ func (inst *myMediaRequest) doGetFile(c *gin.Context) error {
 		return err
 	}
 
-	c.File(me.LocalFilePath)
+	c.File(me.Source)
 	return nil
 }

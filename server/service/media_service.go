@@ -29,13 +29,16 @@ type MediaService interface {
 
 	ImportPresets(ctx context.Context) error
 
-	Insert(ctx context.Context, o *dto.Media) (*dto.Media, error)
-	Update(ctx context.Context, id dxo.MediaID, o *dto.Media) (*dto.Media, error)
+	Insert(ctx context.Context, o *dto.Media, opt *MediaOptions) (*dto.Media, error)
+
+	Update(ctx context.Context, id dxo.MediaID, o *dto.Media, opt *MediaOptions) (*dto.Media, error)
+
 	Remove(ctx context.Context, id dxo.MediaID) error
 }
 
 // MediaOptions ...
 type MediaOptions struct {
-	All           bool
-	WithFileState bool
+	All             bool
+	WithFileState   bool
+	FetchFromSource bool // 如果本地没有对应的缓存内容，就从源 URL 拉取
 }

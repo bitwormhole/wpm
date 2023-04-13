@@ -39,7 +39,7 @@ func (inst *IntentTemplateServiceImpl) normalizeText(text string) string {
 
 func (inst *IntentTemplateServiceImpl) dto2entity(o1 *dto.IntentTemplate) (*entity.IntentTemplate, error) {
 
-	action := o1.Action
+	action := o1.ActionRequest
 	selbuilder := dxo.IntentTemplateSelectorBuilder{
 		Method: action.Method,
 		Target: action.Target,
@@ -50,6 +50,7 @@ func (inst *IntentTemplateServiceImpl) dto2entity(o1 *dto.IntentTemplate) (*enti
 	o2 := &entity.IntentTemplate{}
 	o2.ID = o1.ID
 	o2.UUID = o1.UUID
+	o2.Installation = o1.Installation
 
 	o2.Name = o1.Name
 	o2.Title = o1.Title
@@ -77,6 +78,7 @@ func (inst *IntentTemplateServiceImpl) entity2dto(o1 *entity.IntentTemplate) (*d
 	o2 := &dto.IntentTemplate{}
 	o2.ID = o1.ID
 	o2.UUID = o1.UUID
+	o2.Installation = o1.Installation
 	o2.CreatedAt = util.NewTime(o1.CreatedAt)
 	o2.UpdatedAt = util.NewTime(o1.UpdatedAt)
 
@@ -86,11 +88,11 @@ func (inst *IntentTemplateServiceImpl) entity2dto(o1 *entity.IntentTemplate) (*d
 	o2.Description = o1.Description
 	o2.IconURL = o1.IconURL
 
-	o2.Action.With = o1.Executable
-	o2.Action.Method = inst.normalizeText(o1.Method)
-	o2.Action.Target = inst.normalizeText(o1.Target)
-	o2.Action.Type = inst.normalizeText(o1.ContentType)
-	o2.Action.Selector = o1.Selector
+	o2.With = o1.Executable
+	o2.Method = inst.normalizeText(o1.Method)
+	o2.Target = inst.normalizeText(o1.Target)
+	o2.Type = inst.normalizeText(o1.ContentType)
+	o2.Selector = o1.Selector
 
 	o2.Arguments = o1.Arguments
 	o2.Command = o1.Command

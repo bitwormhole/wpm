@@ -24,3 +24,10 @@ type Base struct {
 
 	Installation dxo.InstallationID // 用来跟踪软件包安装资源项
 }
+
+// HasDeletedAt 判断是否被软删除
+func HasDeletedAt(at gorm.DeletedAt) bool {
+	const limit = 3600 * 24 * 7
+	n := at.Time.Unix()
+	return n > limit
+}

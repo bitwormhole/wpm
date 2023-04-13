@@ -19,5 +19,5 @@ res:///presets/executables/preset-executables-windows.json
 # 预置命令模板
 res:///presets/intent-templates/preset-intent-templates.json
 
-# 预置命名空间
-res:///presets/namespaces/namespaces.json
+# 软件源
+res:///presets/sources/sources.json

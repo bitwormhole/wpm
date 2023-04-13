@@ -9,7 +9,7 @@ import (
 
 type tablesExportTask struct {
 	db   *gorm.DB
-	view *backup.VO
+	view *backup.StoreVO
 }
 
 func (inst *tablesExportTask) exportAll() error {
@@ -178,13 +178,13 @@ func (inst *tablesExportTask) exportNamespaces() error {
 
 	db := inst.db
 	view := inst.view
-	table := view.NamespaceTable
+	table := view.SourceTable
 	table = make([]*entity.Namespace, 0)
 
 	res := db.Find(&table)
 	err := res.Error
 	if err == nil {
-		view.NamespaceTable = table
+		view.SourceTable = table
 	}
 	return err
 }

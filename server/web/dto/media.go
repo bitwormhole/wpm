@@ -13,11 +13,13 @@ type Media struct {
 	FileSize  int64    `json:"size"`
 	SHA256SUM util.Hex `json:"sha256sum"`
 
-	Bucket        string `json:"bucket"`
-	ContentType   string `json:"content_type"`
-	Label         string `json:"label"`
-	LocalFilePath string `json:"local_file_path"`
-	Name          string `json:"name"`
-	URL           string `json:"url"`
-	Source        string `json:"source"`
+	Bucket      string `json:"bucket"`
+	ContentType string `json:"content_type"`
+	Label       string `json:"label"`
+	Name        string `json:"name"`
+	URL         string `json:"url"`
+	Source      string `json:"source"` // 一个URL，file:// 或者 https://
+
+	// LocalFilePath string `json:"local_file_path"` // 已经废弃，用 Source 代替
+
 }

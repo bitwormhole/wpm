@@ -41,6 +41,7 @@ func (inst *ProjectTypeServiceImpl) dto2entity(o1 *dto.ContentType) (*entity.Con
 	o2.AsFile = o1.AsFile
 	o2.AsProject = o1.AsProject
 	o2.Priority = o1.Priority
+	o2.Installation = o1.Installation
 
 	o2.URN = dxo.NewContentTypeURN(o1.TypeName.String())
 
@@ -65,6 +66,7 @@ func (inst *ProjectTypeServiceImpl) entity2dto(o1 *entity.ContentType) (*dto.Con
 	o2.AsFile = o1.AsFile
 	o2.AsProject = o1.AsProject
 	o2.Priority = o1.Priority
+	o2.Installation = o1.Installation
 
 	return o2, nil
 }

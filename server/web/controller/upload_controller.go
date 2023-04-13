@@ -129,7 +129,7 @@ func (inst *myUploadRequest) uploadMedia(tmp afs.Path) (*dto.Media, error) {
 
 	media := &dto.Media{}
 	media.URL = ""
-	media.LocalFilePath = tmp.GetPath()
+	media.Source = tmp.GetPath()
 	media.Bucket = "temp"
 	media.ContentType = ctype
 	media.FileSize = tmp.GetInfo().Length()

@@ -53,7 +53,7 @@ type IntentTemplate struct {
 	// Action     string                     `json:"action"`
 	// Target     string                     `json:"target"`     // the type of target
 	// Executable dxo.ExecutableURN          `json:"executable"` // the URN of exe
-	Action ActionRequest `json:"action"`
+	ActionRequest // `json:"action"`
 
 	WantProperties []*IntentPropertyDescriptor `json:"want_properties"`
 

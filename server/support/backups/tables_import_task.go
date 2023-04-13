@@ -8,7 +8,7 @@ import (
 
 type tablesImportTask struct {
 	db   *gorm.DB
-	view *backup.VO
+	view *backup.StoreVO
 }
 
 func (inst *tablesImportTask) importAll() error {

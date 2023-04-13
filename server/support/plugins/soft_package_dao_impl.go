@@ -85,7 +85,7 @@ func (inst *PluginDaoImpl) retryInsert(o *entity.SoftwarePackage, db *gorm.DB) (
 		return nil, res.Error
 	}
 
-	if old.DeletedAt.Valid {
+	if entity.HasDeletedAt(old.DeletedAt) {
 		del := inst.model()
 		res = db.Unscoped().Delete(del, old.ID)
 		if res.Error != nil {
