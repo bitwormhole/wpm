@@ -8,17 +8,31 @@ import (
 	"github.com/bitwormhole/wpm/server/web/vo"
 )
 
+// ExecutableOptions ...
+type ExecutableOptions struct {
+	SkipFileChecking bool
+}
+
 // ExecutableService ...
 type ExecutableService interface {
-	Find(ctx context.Context, id dxo.ExecutableID) (*dto.Executable, error)
-	FindByPath(ctx context.Context, path string) (*dto.Executable, error)
-	FindByName(ctx context.Context, name string) (*dto.Executable, error)
 
-	ListAll(ctx context.Context) ([]*dto.Executable, error)
+	// getters
 
-	Insert(ctx context.Context, o *dto.Executable) (*dto.Executable, error)
-	Update(ctx context.Context, id dxo.ExecutableID, o *dto.Executable) (*dto.Executable, error)
-	Remove(ctx context.Context, id dxo.ExecutableID) error
+	Find(ctx context.Context, id dxo.ExecutableID, opt *ExecutableOptions) (*dto.Executable, error)
+
+	FindByPath(ctx context.Context, path string, opt *ExecutableOptions) (*dto.Executable, error)
+
+	FindByName(ctx context.Context, name string, opt *ExecutableOptions) (*dto.Executable, error)
+
+	ListAll(ctx context.Context, opt *ExecutableOptions) ([]*dto.Executable, error)
+
+	// setters
+
+	Insert(ctx context.Context, o *dto.Executable, opt *ExecutableOptions) (*dto.Executable, error)
+
+	Update(ctx context.Context, id dxo.ExecutableID, o *dto.Executable, opt *ExecutableOptions) (*dto.Executable, error)
+
+	Remove(ctx context.Context, id dxo.ExecutableID, opt *ExecutableOptions) error
 }
 
 // ExecutableImportService ...

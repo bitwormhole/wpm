@@ -39,6 +39,7 @@ import (
 	repositoryworktreeproject0x399028 "github.com/bitwormhole/wpm/server/support/repositoryworktreeproject"
 	settings0x19237d "github.com/bitwormhole/wpm/server/support/settings"
 	setup0xd9ff02 "github.com/bitwormhole/wpm/server/support/setup"
+	trash0xd00f34 "github.com/bitwormhole/wpm/server/support/trash"
 	worktrees0xa762f3 "github.com/bitwormhole/wpm/server/support/worktrees"
 	filequery0xca51d2 "github.com/bitwormhole/wpm/server/utils/filequery"
 	handlers0x162741 "github.com/bitwormhole/wpm/server/utils/filequery/handlers"
@@ -509,6 +510,7 @@ type pComPluginServiceImpl struct {
 	NamespaceService service0x3e063d.NamespaceService `inject:"#NamespaceService"`
 	HTTPClient service0x3e063d.HTTPClientService `inject:"#HTTPClientService"`
 	HTTPClientEx service0x3e063d.HTTPClientExService `inject:"#HTTPClientExService"`
+	TrashService service0x3e063d.TrashService `inject:"#TrashService"`
 	IntentTemplateSer service0x3e063d.IntentTemplateService `inject:"#IntentTemplateService"`
 	ExecutableSer service0x3e063d.ExecutableService `inject:"#ExecutableService"`
 	ContentTypeSer service0x3e063d.ContentTypeService `inject:"#ContentTypeService"`
@@ -739,6 +741,29 @@ type pComImpSetupService struct {
 	SettingService service0x3e063d.SettingService `inject:"#SettingService"`
 	SoftwarePackageService service0x3e063d.SoftwarePackageService `inject:"#SoftwarePackageService"`
 	DatabaseBackupService service0x3e063d.DatabaseBackupService `inject:"#DatabaseBackupService"`
+}
+
+
+type pComTheTrashController struct {
+	instance *trash0xd00f34.TheTrashController
+	 markup0x23084a.RestController `class:"rest-controller"`
+	TrashSer service0x3e063d.TrashService `inject:"#TrashService"`
+	TrashDao dao0x5af8d0.TrashDAO `inject:"#TrashDAO"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
+type pComImpTrashDao struct {
+	instance *trash0xd00f34.ImpTrashDao
+	 markup0x23084a.Component `id:"TrashDAO"`
+	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
+}
+
+
+type pComImpTrashService struct {
+	instance *trash0xd00f34.ImpTrashService
+	 markup0x23084a.Component `id:"TrashService"`
+	TrashDao dao0x5af8d0.TrashDAO `inject:"#TrashDAO"`
 }
 
 

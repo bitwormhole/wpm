@@ -2,10 +2,12 @@ package plugins
 
 import (
 	"context"
+	"fmt"
 	"runtime"
 
 	"github.com/bitwormhole/starter/vlog"
 	"github.com/bitwormhole/wpm/server/service"
+	"github.com/bitwormhole/wpm/server/utils"
 	"github.com/bitwormhole/wpm/server/web/dto"
 )
 
@@ -13,9 +15,11 @@ type myPakcageListUpdater struct {
 	namespaceSer  service.NamespaceService
 	packageSer    service.SoftwarePackageService
 	httpclientSer service.HTTPClientExService
+
+	current *myPakcageListUpdateTask
 }
 
-func (inst *myPakcageListUpdater) Update(c context.Context) error {
+func (inst *myPakcageListUpdater) Fetch(c context.Context) error {
 	t := &myPakcageListUpdateTask{
 		updater: inst,
 		context: c,
@@ -24,7 +28,7 @@ func (inst *myPakcageListUpdater) Update(c context.Context) error {
 
 	steps = append(steps, t.listSources)
 	steps = append(steps, t.fetchSources)
-	steps = append(steps, t.save)
+	// steps = append(steps, t.save)
 
 	for _, step := range steps {
 		err := step()
@@ -32,7 +36,17 @@ func (inst *myPakcageListUpdater) Update(c context.Context) error {
 			return err
 		}
 	}
+
+	inst.current = t
 	return nil
+}
+
+func (inst *myPakcageListUpdater) Save(c context.Context) error {
+	t := inst.current
+	if t == nil {
+		return fmt.Errorf("no packages update task")
+	}
+	return t.save()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -65,20 +79,21 @@ func (inst *myPakcageListUpdateTask) fetchSources() error {
 	ctx := inst.context
 	htc := inst.updater.httpclientSer
 	nslist := inst.namespaces
+	elist := utils.ErrorList{}
+
 	for _, item := range nslist {
 		url := item.URL
-		// o := &vo.Online{}
-		// _, err := htc.FetchJSON(ctx, url, o, nil)
+		vlog.Info("fetch packages from source ", url)
 		o, err := htc.FetchOnlineDoc(ctx, url, nil)
 		if err != nil {
-			// return err
-			vlog.Warn(err)
+			elist.Append(err)
 			continue
 		}
 		packs := o.Packages
 		inst.packages = append(inst.packages, packs...)
 	}
-	return nil
+
+	return elist.First()
 }
 
 func (inst *myPakcageListUpdateTask) save() error {

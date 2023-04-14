@@ -33,6 +33,13 @@ func (inst *ExecutableServiceImpl) _Impl() service.ExecutableService {
 	return inst
 }
 
+func (inst *ExecutableServiceImpl) normalizeOptions(opt *service.ExecutableOptions) *service.ExecutableOptions {
+	if opt == nil {
+		opt = &service.ExecutableOptions{}
+	}
+	return opt
+}
+
 func (inst *ExecutableServiceImpl) prepareLocation(c context.Context, o1 *entity.Executable) error {
 	path := o1.Path
 	location := &dto.Location{
@@ -51,7 +58,9 @@ func (inst *ExecutableServiceImpl) prepareLocation(c context.Context, o1 *entity
 	return nil
 }
 
-func (inst *ExecutableServiceImpl) dto2entity(c context.Context, o1 *dto.Executable) (*entity.Executable, error) {
+func (inst *ExecutableServiceImpl) dto2entity(c context.Context, o1 *dto.Executable, opt *service.ExecutableOptions) (*entity.Executable, error) {
+
+	opt = inst.normalizeOptions(opt)
 
 	o2 := &entity.Executable{}
 	o2.ID = o1.ID
@@ -73,7 +82,11 @@ func (inst *ExecutableServiceImpl) dto2entity(c context.Context, o1 *dto.Executa
 	o2.Class = o1.Class
 
 	// compute
-	err := inst.computeEntity(o2)
+	err := inst.computeEntity1(o2, opt)
+	if err != nil {
+		return nil, err
+	}
+	err = inst.computeEntity2(o2, opt)
 	if err != nil {
 		return nil, err
 	}
@@ -81,41 +94,62 @@ func (inst *ExecutableServiceImpl) dto2entity(c context.Context, o1 *dto.Executa
 	return o2, nil
 }
 
-func (inst *ExecutableServiceImpl) computeEntity(o2 *entity.Executable) error {
+// computeEntity1: 根据文件路径计算各个字段
+func (inst *ExecutableServiceImpl) computeEntity1(o2 *entity.Executable, opt *service.ExecutableOptions) error {
+
+	opt = inst.normalizeOptions(opt)
+	if opt.SkipFileChecking {
+		return nil
+	}
 
 	file := inst.FileSystemService.Path(o2.Path)
 	name := file.GetName()
-	ns := o2.Namespace
-	aliases := o2.Aliases.Array()
-
-	const suffixExe = ".exe"
-	name = strings.ToLower(name)
-	name = strings.TrimSpace(name)
-	aliases = append(aliases, name)
-	iDot := strings.LastIndex(name, ".")
-	if iDot > 0 {
-		name = name[0:iDot]
-		aliases = append(aliases, name)
-	}
-	aliases = inst.paiChong(aliases)
-
-	if ns == "" {
-		ns = "default" // the default NS
-	}
 
 	sum, err := utils.ComputeFileSHA256sumAFS(file)
 	if err != nil {
 		return err
 	}
 
+	o2.Name = name
 	o2.Size = file.GetInfo().Length()
 	o2.SHA256SUM = sum
+	return nil
+}
+
+// computeEntity2: 根据名称计算各个字段
+func (inst *ExecutableServiceImpl) computeEntity2(o2 *entity.Executable, opt *service.ExecutableOptions) error {
+
+	// opt = inst.normalizeOptions(opt)
+
+	ns := o2.Namespace
+	name := o2.Name
+	normalName := inst.normalizeExeName(name)
+
+	aliases := o2.Aliases.Array()
+	aliases = append(aliases, name)
+	aliases = append(aliases, normalName)
+	aliases = inst.paiChong(aliases)
+
+	if ns == "" {
+		ns = "default" // the default NS
+	}
+
 	o2.Namespace = ns
-	o2.Name = name
-	o2.URN = dxo.NewExecutableURN(ns + "#" + name)
+	o2.Name = normalName
+	o2.URN = dxo.NewExecutableURN(ns + "#" + normalName)
 	o2.Aliases = dxo.NewStringList(aliases)
 
 	return nil
+}
+
+func (inst *ExecutableServiceImpl) normalizeExeName(name string) string {
+	const suffixExe = ".exe"
+	name = strings.ToLower(name)
+	name = strings.TrimSpace(name)
+	if strings.HasSuffix(name, suffixExe) {
+		return name[0 : len(name)-len(suffixExe)]
+	}
+	return name
 }
 
 // 排重
@@ -177,7 +211,13 @@ func (inst *ExecutableServiceImpl) checkExeFileState(o1 *entity.Executable) dxo.
 	return dxo.FileStateOffline
 }
 
-func (inst *ExecutableServiceImpl) checkBeforeInsert(ctx context.Context, o *dto.Executable) error {
+func (inst *ExecutableServiceImpl) checkBeforeInsert(ctx context.Context, o *dto.Executable, opt *service.ExecutableOptions) error {
+
+	opt = inst.normalizeOptions(opt)
+	if opt.SkipFileChecking {
+		return nil
+	}
+
 	path := fs.Default().GetPath(o.Path)
 	if path == nil {
 		return fmt.Errorf("bad file path: [%v]", o.Path)
@@ -185,7 +225,7 @@ func (inst *ExecutableServiceImpl) checkBeforeInsert(ctx context.Context, o *dto
 	if !path.IsFile() {
 		return errors.New("the file is not a executable, path=" + o.Path)
 	}
-	old, _ := inst.FindByPath(ctx, o.Path)
+	old, _ := inst.FindByPath(ctx, o.Path, opt)
 	if old != nil {
 		return errors.New("the executable is exists, path=" + o.Path)
 	}
@@ -193,7 +233,7 @@ func (inst *ExecutableServiceImpl) checkBeforeInsert(ctx context.Context, o *dto
 }
 
 // ListAll ...
-func (inst *ExecutableServiceImpl) ListAll(ctx context.Context) ([]*dto.Executable, error) {
+func (inst *ExecutableServiceImpl) ListAll(ctx context.Context, opt *service.ExecutableOptions) ([]*dto.Executable, error) {
 	src, err := inst.ExecutableDAO.ListAll()
 	if err != nil {
 		return nil, err
@@ -210,7 +250,7 @@ func (inst *ExecutableServiceImpl) ListAll(ctx context.Context) ([]*dto.Executab
 }
 
 // Find ...
-func (inst *ExecutableServiceImpl) Find(ctx context.Context, id dxo.ExecutableID) (*dto.Executable, error) {
+func (inst *ExecutableServiceImpl) Find(ctx context.Context, id dxo.ExecutableID, opt *service.ExecutableOptions) (*dto.Executable, error) {
 	o1, err := inst.ExecutableDAO.Find(id)
 	if err != nil {
 		return nil, err
@@ -219,12 +259,12 @@ func (inst *ExecutableServiceImpl) Find(ctx context.Context, id dxo.ExecutableID
 }
 
 // Insert ...
-func (inst *ExecutableServiceImpl) Insert(ctx context.Context, o1 *dto.Executable) (*dto.Executable, error) {
-	err := inst.checkBeforeInsert(ctx, o1)
+func (inst *ExecutableServiceImpl) Insert(ctx context.Context, o1 *dto.Executable, opt *service.ExecutableOptions) (*dto.Executable, error) {
+	err := inst.checkBeforeInsert(ctx, o1, opt)
 	if err != nil {
 		return nil, err
 	}
-	e1, err := inst.dto2entity(ctx, o1)
+	e1, err := inst.dto2entity(ctx, o1, opt)
 	if err != nil {
 		return nil, err
 	}
@@ -240,8 +280,8 @@ func (inst *ExecutableServiceImpl) Insert(ctx context.Context, o1 *dto.Executabl
 }
 
 // Update ...
-func (inst *ExecutableServiceImpl) Update(ctx context.Context, id dxo.ExecutableID, o1 *dto.Executable) (*dto.Executable, error) {
-	o2, err := inst.dto2entity(ctx, o1)
+func (inst *ExecutableServiceImpl) Update(ctx context.Context, id dxo.ExecutableID, o1 *dto.Executable, opt *service.ExecutableOptions) (*dto.Executable, error) {
+	o2, err := inst.dto2entity(ctx, o1, opt)
 	if err != nil {
 		return nil, err
 	}
@@ -257,12 +297,12 @@ func (inst *ExecutableServiceImpl) Update(ctx context.Context, id dxo.Executable
 }
 
 // Remove ...
-func (inst *ExecutableServiceImpl) Remove(ctx context.Context, id dxo.ExecutableID) error {
+func (inst *ExecutableServiceImpl) Remove(ctx context.Context, id dxo.ExecutableID, opt *service.ExecutableOptions) error {
 	return inst.ExecutableDAO.Remove(id)
 }
 
 // FindByPath ...
-func (inst *ExecutableServiceImpl) FindByPath(ctx context.Context, path string) (*dto.Executable, error) {
+func (inst *ExecutableServiceImpl) FindByPath(ctx context.Context, path string, opt *service.ExecutableOptions) (*dto.Executable, error) {
 	e1, err := inst.ExecutableDAO.FindByPath(path)
 	if err != nil {
 		return nil, err
@@ -271,7 +311,7 @@ func (inst *ExecutableServiceImpl) FindByPath(ctx context.Context, path string) 
 }
 
 // FindByName ...
-func (inst *ExecutableServiceImpl) FindByName(ctx context.Context, name string) (*dto.Executable, error) {
+func (inst *ExecutableServiceImpl) FindByName(ctx context.Context, name string, opt *service.ExecutableOptions) (*dto.Executable, error) {
 	e1, err := inst.ExecutableDAO.FindByName(name)
 	if err != nil {
 		return nil, err

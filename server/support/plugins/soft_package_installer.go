@@ -135,7 +135,7 @@ func (inst *myPakcageInstaller) applyExecutables(list []*dto.Executable, elist *
 	iid := inst.installation
 	for _, item := range list {
 		item.Installation = iid
-		_, err := ser.Insert(ctx, item)
+		_, err := ser.Insert(ctx, item, nil)
 		elist.Append(err)
 	}
 }

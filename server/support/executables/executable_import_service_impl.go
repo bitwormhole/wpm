@@ -38,7 +38,7 @@ func (inst *ExecutableImportServiceImpl) Save(ctx context.Context, o1 *vo.Execut
 	var err2 error
 
 	for _, item := range items {
-		_, err := ser.Insert(ctx, item)
+		_, err := ser.Insert(ctx, item, nil)
 		if err != nil {
 			// errlist = append(errlist, item)
 			err2 = err

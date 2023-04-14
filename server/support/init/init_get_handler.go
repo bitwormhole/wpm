@@ -62,7 +62,7 @@ func (inst *myInitGetHandler) doProjectType(ctx context.Context, view *vo.Init) 
 }
 
 func (inst *myInitGetHandler) doExecutable(ctx context.Context, view *vo.Init) error {
-	list, err := inst.ExecutableSer.ListAll(ctx)
+	list, err := inst.ExecutableSer.ListAll(ctx, nil)
 	if err != nil {
 		return err
 	}

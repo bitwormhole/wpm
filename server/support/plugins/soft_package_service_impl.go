@@ -30,6 +30,7 @@ type PluginServiceImpl struct {
 	NamespaceService service.NamespaceService    `inject:"#NamespaceService"`
 	HTTPClient       service.HTTPClientService   `inject:"#HTTPClientService"`
 	HTTPClientEx     service.HTTPClientExService `inject:"#HTTPClientExService"`
+	TrashService     service.TrashService        `inject:"#TrashService"`
 
 	IntentTemplateSer service.IntentTemplateService `inject:"#IntentTemplateService"`
 	ExecutableSer     service.ExecutableService     `inject:"#ExecutableService"`
@@ -230,29 +231,35 @@ func (inst *PluginServiceImpl) UpdateItem(ctx context.Context, id dxo.SoftwarePa
 // UpdateList ...
 func (inst *PluginServiceImpl) UpdateList(ctx context.Context) error {
 
-	// 清除过时的包信息
-	cl := &myPakcageListCleaner{
-		packageSer:    inst,
-		namespaceSer:  inst.NamespaceService,
-		httpclientSer: inst.HTTPClientEx,
-	}
-	err := cl.Clean(ctx)
-	if err != nil {
-		return err
-	}
-
 	// 下载更新的包信息
 	up := &myPakcageListUpdater{
 		packageSer:    inst,
 		namespaceSer:  inst.NamespaceService,
 		httpclientSer: inst.HTTPClientEx,
 	}
-	err = up.Update(ctx)
+	err := up.Fetch(ctx)
 	if err != nil {
 		return err
 	}
 
-	return nil
+	// 清除过时的包信息
+	cl := &myPakcageListCleaner{
+		packageSer:    inst,
+		namespaceSer:  inst.NamespaceService,
+		httpclientSer: inst.HTTPClientEx,
+	}
+	err = cl.Clean(ctx)
+	if err != nil {
+		return err
+	}
+
+	// 清除数据库中已经软删除的对象
+	err = inst.TrashService.Clean()
+	if err != nil {
+		return err
+	}
+
+	return up.Save(ctx)
 }
 
 // Remove ...

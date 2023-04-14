@@ -8,6 +8,7 @@ import (
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/service"
+	"github.com/bitwormhole/wpm/server/utils"
 	"github.com/bitwormhole/wpm/server/web/dto"
 	"github.com/bitwormhole/wpm/server/web/vo"
 	"github.com/gin-gonic/gin"
@@ -70,10 +71,11 @@ func (inst *ExecutableController) handleGetOne(c *gin.Context) {
 
 func (inst *ExecutableController) handlePost(c *gin.Context) {
 	req := &myExecutableRequest{
-		gc:              c,
-		controller:      inst,
-		wantRequestID:   false,
-		wantRequestBody: true,
+		gc:                 c,
+		controller:         inst,
+		wantRequestID:      false,
+		wantRequestBody:    true,
+		wantRequestOptions: true,
 	}
 	err := req.open()
 	if err == nil {
@@ -84,10 +86,11 @@ func (inst *ExecutableController) handlePost(c *gin.Context) {
 
 func (inst *ExecutableController) handlePut(c *gin.Context) {
 	req := &myExecutableRequest{
-		gc:              c,
-		controller:      inst,
-		wantRequestID:   true,
-		wantRequestBody: true,
+		gc:                 c,
+		controller:         inst,
+		wantRequestID:      true,
+		wantRequestBody:    true,
+		wantRequestOptions: true,
 	}
 	err := req.open()
 	if err == nil {
@@ -116,10 +119,13 @@ type myExecutableRequest struct {
 	gc         *gin.Context
 	controller *ExecutableController
 
-	wantRequestID   bool
-	wantRequestBody bool
+	wantRequestID      bool
+	wantRequestBody    bool
+	wantRequestOptions bool
 
-	id    dxo.ExecutableID
+	options *service.ExecutableOptions
+	id      dxo.ExecutableID
+
 	body1 vo.Executable
 	body2 vo.Executable
 }
@@ -144,7 +150,34 @@ func (inst *myExecutableRequest) open() error {
 		}
 	}
 
+	if inst.wantRequestOptions {
+		opt, err := inst.readOptions()
+		if err != nil {
+			return err
+		}
+		inst.options = opt
+	}
+
 	return nil
+}
+
+func (inst *myExecutableRequest) readOptions() (*service.ExecutableOptions, error) {
+
+	opt := &service.ExecutableOptions{}
+	data := &inst.body1
+	c := inst.gc
+	gu := utils.GinUtils{}
+
+	// from url.query
+	skipFileChecking := gu.HasFlag(c, "skip-file-checking")
+	if skipFileChecking {
+		data.OptionSkipFileChecking = true
+	}
+
+	// from request body
+	opt.SkipFileChecking = data.OptionSkipFileChecking
+
+	return opt, nil
 }
 
 func (inst *myExecutableRequest) send(err error) {
@@ -164,7 +197,7 @@ func (inst *myExecutableRequest) doGetOne() error {
 	id := inst.id
 	ctx := inst.gc
 	ser := inst.controller.ExecutableService
-	o, err := ser.Find(ctx, id)
+	o, err := ser.Find(ctx, id, nil)
 	if err != nil {
 		return err
 	}
@@ -175,7 +208,7 @@ func (inst *myExecutableRequest) doGetOne() error {
 func (inst *myExecutableRequest) doGetList() error {
 	ctx := inst.gc
 	ser := inst.controller.ExecutableService
-	list, err := ser.ListAll(ctx)
+	list, err := ser.ListAll(ctx, nil)
 	if err != nil {
 		return err
 	}
@@ -186,10 +219,11 @@ func (inst *myExecutableRequest) doGetList() error {
 func (inst *myExecutableRequest) doPost() error {
 	ctx := inst.gc
 	ser := inst.controller.ExecutableService
+	opt := inst.options
 	o1 := inst.body1.Executables[0]
-	o2, err := ser.Insert(ctx, o1)
+	o2, err := ser.Insert(ctx, o1, opt)
 	if err != nil {
-		return nil
+		return err
 	}
 	inst.body2.Executables = append(inst.body2.Executables, o2)
 	return nil
@@ -198,11 +232,12 @@ func (inst *myExecutableRequest) doPost() error {
 func (inst *myExecutableRequest) doPut() error {
 	ctx := inst.gc
 	ser := inst.controller.ExecutableService
+	opt := inst.options
 	o1 := inst.body1.Executables[0]
 	id := inst.id
-	o2, err := ser.Update(ctx, id, o1)
+	o2, err := ser.Update(ctx, id, o1, opt)
 	if err != nil {
-		return nil
+		return err
 	}
 	inst.body2.Executables = append(inst.body2.Executables, o2)
 	return nil
@@ -211,5 +246,5 @@ func (inst *myExecutableRequest) doPut() error {
 func (inst *myExecutableRequest) doDelete() error {
 	ctx := inst.gc
 	ser := inst.controller.ExecutableService
-	return ser.Remove(ctx, inst.id)
+	return ser.Remove(ctx, inst.id, nil)
 }

@@ -82,7 +82,7 @@ func (inst *myImportPresetExecutablesHanlder) insertItem(item *dto.Executable) e
 		return err
 	}
 	ser := inst.parent.ExecutableService
-	_, err = ser.Insert(inst.context, item)
+	_, err = ser.Insert(inst.context, item, nil)
 	return err
 }
 

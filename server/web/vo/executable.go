@@ -6,5 +6,7 @@ import "github.com/bitwormhole/wpm/server/web/dto"
 type Executable struct {
 	Base
 
+	OptionSkipFileChecking bool `json:"option_skip_file_checking"`
+
 	Executables []*dto.Executable `json:"executables"`
 }
