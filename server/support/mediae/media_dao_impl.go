@@ -119,6 +119,6 @@ func (inst *MediaDaoImpl) Remove(id dxo.MediaID) error {
 	if res.Error != nil {
 		return res.Error
 	}
-	res = db.Unscoped().Delete(o2, id)
+	res = db.Delete(o2, id)
 	return res.Error
 }

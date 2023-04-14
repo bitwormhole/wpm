@@ -7,7 +7,6 @@ import (
 	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/data/entity"
 	"github.com/bitwormhole/wpm/server/service"
-	"gorm.io/gorm"
 )
 
 // PluginDaoImpl ...
@@ -71,30 +70,9 @@ func (inst *PluginDaoImpl) Insert(o *entity.SoftwarePackage) (*entity.SoftwarePa
 	db := inst.Agent.DB()
 	res := db.Create(o)
 	if res.Error != nil {
-		return inst.retryInsert(o, db)
-	}
-	return o, nil
-}
-
-func (inst *PluginDaoImpl) retryInsert(o *entity.SoftwarePackage, db *gorm.DB) (*entity.SoftwarePackage, error) {
-
-	urn := o.URN
-	old := inst.model()
-	res := db.Unscoped().Where("urn = ?", urn).First(&old)
-	if res.Error != nil {
 		return nil, res.Error
 	}
-
-	if entity.HasDeletedAt(old.DeletedAt) {
-		del := inst.model()
-		res = db.Unscoped().Delete(del, old.ID)
-		if res.Error != nil {
-			return nil, res.Error
-		}
-	}
-
-	res = db.Create(o)
-	return o, res.Error
+	return o, nil
 }
 
 // Update ...
@@ -110,7 +88,7 @@ func (inst *PluginDaoImpl) Update(id dxo.SoftwarePackageID, o1 *entity.SoftwareP
 	o2.Name = o1.Name
 	o2.Description = o1.Description
 	o2.Referer = o1.Referer
-	o2.Installed = o1.Installed
+	o2.Installation = o1.Installation
 
 	res = db.Save(o2)
 	if res.Error != nil {

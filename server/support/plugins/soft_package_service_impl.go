@@ -11,6 +11,7 @@ import (
 	"github.com/bitwormhole/starter/util"
 	"github.com/bitwormhole/starter/vlog"
 	"github.com/bitwormhole/wpm/server/data/dao"
+	"github.com/bitwormhole/wpm/server/data/dbagent"
 	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/data/entity"
 	"github.com/bitwormhole/wpm/server/service"
@@ -23,6 +24,8 @@ type PluginServiceImpl struct {
 	markup.Component `id:"SoftwarePackageService"`
 
 	SoftwarePackageDAO dao.SoftwarePackageDAO `inject:"#SoftwarePackageDAO"`
+
+	GormDBAgent dbagent.GormDBAgent `inject:"#GormDBAgent"`
 
 	NamespaceService service.NamespaceService    `inject:"#NamespaceService"`
 	HTTPClient       service.HTTPClientService   `inject:"#HTTPClientService"`
@@ -48,6 +51,7 @@ func (inst *PluginServiceImpl) dto2entity(o1 *dto.SoftwarePackage) (*entity.Soft
 	o2.URN = o1.URN
 	o2.UUID = o1.UUID
 	o2.Referer = o1.Referer
+	o2.Installation = o1.Installation
 
 	o2.Name = o1.Name
 	o2.ModuleName = o1.ModuleName
@@ -72,8 +76,6 @@ func (inst *PluginServiceImpl) dto2entity(o1 *dto.SoftwarePackage) (*entity.Soft
 	o2.DownloadURL = o1.DownloadURL
 	o2.ResourceURL = o1.ResourceURL
 
-	o2.Installed = o1.Installed
-
 	return o2, nil
 }
 
@@ -85,6 +87,7 @@ func (inst *PluginServiceImpl) entity2dto(o1 *entity.SoftwarePackage) (*dto.Soft
 	o2.URN = o1.URN
 	o2.UUID = o1.UUID
 	o2.Referer = o1.Referer
+	o2.Installation = o1.Installation
 
 	o2.Name = o1.Name
 	o2.ModuleName = o1.ModuleName
@@ -109,7 +112,7 @@ func (inst *PluginServiceImpl) entity2dto(o1 *entity.SoftwarePackage) (*dto.Soft
 	o2.DownloadURL = o1.DownloadURL
 	o2.ResourceURL = o1.ResourceURL
 
-	o2.Installed = o1.Installed
+	o2.Installed = o1.Installation > 0
 
 	return o2, nil
 }
@@ -272,13 +275,12 @@ func (inst *PluginServiceImpl) generateInstallationID() dxo.InstallationID {
 func (inst *PluginServiceImpl) Install(ctx context.Context, id dxo.SoftwarePackageID) error {
 
 	// dao := inst.SoftwarePackageDAO
-
 	// fetch
 	p, err := inst.Find(ctx, id)
 	if err != nil {
 		return err
 	}
-	vlog.Warn("todo: no impl : install package:", p.ID, " ", p.URN)
+	vlog.Warn("install package:", p.ID, " ", p.URN)
 
 	installer := myPakcageInstaller{
 		context:      ctx,
@@ -312,18 +314,25 @@ func (inst *PluginServiceImpl) Install(ctx context.Context, id dxo.SoftwarePacka
 // Uninstall ...
 func (inst *PluginServiceImpl) Uninstall(ctx context.Context, id dxo.SoftwarePackageID) error {
 
-	dao := inst.SoftwarePackageDAO
-	p, err := dao.Find(id)
+	p, err := inst.Find(ctx, id)
 	if err != nil {
 		return err
 	}
 
-	vlog.Warn("todo: no impl : uninstall package:", p.ID, " ", p.URN)
+	vlog.Warn("uninstall package:", p.ID, " ", p.URN)
+
+	uni := myPakcageUninstaller{
+		context:      ctx,
+		agent:        inst.GormDBAgent,
+		installation: p.Installation,
+	}
+	err = uni.Uninstall()
+	if err != nil {
+		return err
+	}
+
 	p.Installed = false
-	_, err = dao.Update(id, p)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	p.Installation = 0
+	_, err = inst.UpdateItem(ctx, id, p)
+	return err
 }

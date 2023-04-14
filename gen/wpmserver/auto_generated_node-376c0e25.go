@@ -505,6 +505,7 @@ type pComPluginServiceImpl struct {
 	instance *plugins0x82e34b.PluginServiceImpl
 	 markup0x23084a.Component `id:"SoftwarePackageService"`
 	SoftwarePackageDAO dao0x5af8d0.SoftwarePackageDAO `inject:"#SoftwarePackageDAO"`
+	GormDBAgent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
 	NamespaceService service0x3e063d.NamespaceService `inject:"#NamespaceService"`
 	HTTPClient service0x3e063d.HTTPClientService `inject:"#HTTPClientService"`
 	HTTPClientEx service0x3e063d.HTTPClientExService `inject:"#HTTPClientExService"`

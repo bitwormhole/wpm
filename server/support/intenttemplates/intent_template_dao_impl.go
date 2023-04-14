@@ -150,6 +150,6 @@ func (inst *IntentTemplateDaoImpl) Update(id dxo.IntentTemplateID, o *entity.Int
 func (inst *IntentTemplateDaoImpl) Remove(id dxo.IntentTemplateID) error {
 	m := inst.model()
 	db := inst.Agent.DB()
-	res := db.Unscoped().Delete(&m, id)
+	res := db.Delete(&m, id)
 	return res.Error
 }

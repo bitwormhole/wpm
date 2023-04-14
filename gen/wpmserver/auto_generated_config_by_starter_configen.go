@@ -6226,6 +6226,7 @@ type comFactory4pComPluginServiceImpl struct {
 
 	
 	mSoftwarePackageDAOSelector config.InjectionSelector
+	mGormDBAgentSelector config.InjectionSelector
 	mNamespaceServiceSelector config.InjectionSelector
 	mHTTPClientSelector config.InjectionSelector
 	mHTTPClientExSelector config.InjectionSelector
@@ -6240,6 +6241,7 @@ func (inst * comFactory4pComPluginServiceImpl) init() application.ComponentFacto
 
 	
 	inst.mSoftwarePackageDAOSelector = config.NewInjectionSelector("#SoftwarePackageDAO",nil)
+	inst.mGormDBAgentSelector = config.NewInjectionSelector("#GormDBAgent",nil)
 	inst.mNamespaceServiceSelector = config.NewInjectionSelector("#NamespaceService",nil)
 	inst.mHTTPClientSelector = config.NewInjectionSelector("#HTTPClientService",nil)
 	inst.mHTTPClientExSelector = config.NewInjectionSelector("#HTTPClientExService",nil)
@@ -6285,6 +6287,7 @@ func (inst * comFactory4pComPluginServiceImpl) Inject(instance application.Compo
 	
 	obj := inst.castObject(instance)
 	obj.SoftwarePackageDAO = inst.getterForFieldSoftwarePackageDAOSelector(context)
+	obj.GormDBAgent = inst.getterForFieldGormDBAgentSelector(context)
 	obj.NamespaceService = inst.getterForFieldNamespaceServiceSelector(context)
 	obj.HTTPClient = inst.getterForFieldHTTPClientSelector(context)
 	obj.HTTPClientEx = inst.getterForFieldHTTPClientExSelector(context)
@@ -6307,6 +6310,24 @@ func (inst * comFactory4pComPluginServiceImpl) getterForFieldSoftwarePackageDAOS
 		eb.Set("field", "SoftwarePackageDAO")
 		eb.Set("type1", "?")
 		eb.Set("type2", "dao0x5af8d0.SoftwarePackageDAO")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
+}
+
+//getterForFieldGormDBAgentSelector
+func (inst * comFactory4pComPluginServiceImpl) getterForFieldGormDBAgentSelector (context application.InstanceContext) dbagent0x9f90fb.GormDBAgent {
+
+	o1 := inst.mGormDBAgentSelector.GetOne(context)
+	o2, ok := o1.(dbagent0x9f90fb.GormDBAgent)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "SoftwarePackageService")
+		eb.Set("field", "GormDBAgent")
+		eb.Set("type1", "?")
+		eb.Set("type2", "dbagent0x9f90fb.GormDBAgent")
 		context.HandleError(eb.Create())
 		return nil
 	}

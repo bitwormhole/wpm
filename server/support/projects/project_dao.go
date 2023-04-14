@@ -159,6 +159,6 @@ func (inst *ProjectDaoImpl) Update(id dxo.ProjectID, o1 *entity.Project) (*entit
 func (inst *ProjectDaoImpl) Remove(id dxo.ProjectID) error {
 	db := inst.Agent.DB()
 	m := inst.model()
-	res := db.Unscoped().Delete(m, id)
+	res := db.Delete(m, id)
 	return res.Error
 }

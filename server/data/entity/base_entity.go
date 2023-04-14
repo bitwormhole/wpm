@@ -22,7 +22,7 @@ type Base struct {
 
 	Referer string // a URL, refer to owner document of this entity
 
-	Installation dxo.InstallationID // 用来跟踪软件包安装资源项
+	Installation dxo.InstallationID // 用来跟踪软件包安装资源项 ,  >0 表示已安装
 }
 
 // HasDeletedAt 判断是否被软删除

@@ -37,5 +37,5 @@ type SoftwarePackage struct {
 	Revision  int
 	ReleaseAt time.Time
 
-	Installed bool
+	// Installed bool // 【已废弃】用 Installation  代替, >0 表示已安装
 }

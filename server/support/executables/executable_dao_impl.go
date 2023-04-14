@@ -98,7 +98,7 @@ func (inst *ExecutableDaoImpl) Remove(id dxo.ExecutableID) error {
 		return err
 	}
 	db := inst.Agent.DB()
-	res := db.Unscoped().Delete(o1, id)
+	res := db.Delete(o1, id)
 	return res.Error
 }
 

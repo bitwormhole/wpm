@@ -127,6 +127,6 @@ func (inst *ImpLocationDao) Update(id dxo.LocationID, o1 *entity.Location) (*ent
 func (inst *ImpLocationDao) Remove(id dxo.LocationID) error {
 	db := inst.Agent.DB()
 	m := inst.model()
-	res := db.Unscoped().Delete(m, id)
+	res := db.Delete(m, id)
 	return res.Error
 }

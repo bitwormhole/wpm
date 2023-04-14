@@ -123,6 +123,6 @@ func (inst *ImpWorktreeDao) Update(id dxo.WorktreeID, o1 *entity.Worktree) (*ent
 func (inst *ImpWorktreeDao) Remove(id dxo.WorktreeID) error {
 	db := inst.Agent.DB()
 	m := inst.model()
-	res := db.Unscoped().Delete(m, id)
+	res := db.Delete(m, id)
 	return res.Error
 }
