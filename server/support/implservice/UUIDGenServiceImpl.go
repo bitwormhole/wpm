@@ -2,8 +2,10 @@ package implservice
 
 import (
 	"bytes"
-	"crypto/sha256"
+	"crypto/md5"
 	"strconv"
+	"strings"
+	"sync"
 
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/starter/util"
@@ -15,8 +17,9 @@ import (
 type UUIDGenServiceImpl struct {
 	markup.Component `id:"UUIDGenService" initMethod:"Init"`
 
-	t0    util.Time
-	index int64
+	t0     util.Time
+	index  int64
+	locker sync.Mutex
 }
 
 func (inst *UUIDGenServiceImpl) _Impl() service.UUIDGenService {
@@ -30,14 +33,22 @@ func (inst *UUIDGenServiceImpl) Init() error {
 	return nil
 }
 
+func (inst *UUIDGenServiceImpl) nextIndex() int64 {
+	inst.locker.Lock()
+	defer func() {
+		inst.locker.Unlock()
+	}()
+	inst.index++
+	return inst.index
+}
+
 // GenerateUUID ...
 func (inst *UUIDGenServiceImpl) GenerateUUID(seed string) dxo.UUID {
 
-	inst.index++
 	const sep = '\n'
 	t0 := inst.t0
 	now := util.Now()
-	index := inst.index
+	index := inst.nextIndex()
 
 	builder := bytes.Buffer{}
 	builder.WriteString(seed)
@@ -49,14 +60,35 @@ func (inst *UUIDGenServiceImpl) GenerateUUID(seed string) dxo.UUID {
 	builder.WriteString(inst.int2str(index))
 
 	sum := inst.sum(builder.Bytes())
-	return dxo.UUID(util.HexFromBytes(sum))
+	str := inst.stringifySum(sum)
+	return dxo.UUID(str)
+}
+
+func (inst *UUIDGenServiceImpl) stringifySum(b []byte) string {
+	const wantLength = 32
+	str := util.HexFromBytes(b).String()
+	if len(str) < wantLength {
+		return str
+	}
+	cclist := []int{8, 4, 4, 4}
+	builder := strings.Builder{}
+	i1 := 0
+	for _, cc := range cclist {
+		i2 := i1 + cc
+		part := str[i1:i2]
+		builder.WriteString(part)
+		builder.WriteString("-")
+		i1 = i2
+	}
+	builder.WriteString(str[i1:])
+	return builder.String()
 }
 
 func (inst *UUIDGenServiceImpl) sum(b []byte) []byte {
 	if b == nil {
 		b = make([]byte, 0)
 	}
-	sum := sha256.Sum256(b)
+	sum := md5.Sum(b)
 	return sum[:]
 }
 
