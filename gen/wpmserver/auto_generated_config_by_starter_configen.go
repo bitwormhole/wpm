@@ -31,6 +31,7 @@ import (
 	init0xc984bc "github.com/bitwormhole/wpm/server/support/init"
 	intents0x8ee0e0 "github.com/bitwormhole/wpm/server/support/intents"
 	intenttemplates0x2e3dcf "github.com/bitwormhole/wpm/server/support/intenttemplates"
+	jsonbuffer0x988f20 "github.com/bitwormhole/wpm/server/support/jsonbuffer"
 	locations0xb36349 "github.com/bitwormhole/wpm/server/support/locations"
 	mediae0xf005e2 "github.com/bitwormhole/wpm/server/support/mediae"
 	namespaces0xceefcf "github.com/bitwormhole/wpm/server/support/namespaces"
@@ -451,6 +452,24 @@ func autoGenConfig(cb application.ConfigBuilder) error {
 		return err
 	}
 
+	// component: com43-jsonbuffer0x988f20.JSONBufferController
+	cominfobuilder.Next()
+	cominfobuilder.ID("com43-jsonbuffer0x988f20.JSONBufferController").Class("rest-controller").Aliases("").Scope("")
+	cominfobuilder.Factory((&comFactory4pComJSONBufferController{}).init())
+	err = cominfobuilder.CreateTo(cb)
+	if err != nil {
+		return err
+	}
+
+	// component: JSONBufferService
+	cominfobuilder.Next()
+	cominfobuilder.ID("JSONBufferService").Class("").Aliases("").Scope("")
+	cominfobuilder.Factory((&comFactory4pComImpJSONBufferService{}).init())
+	err = cominfobuilder.CreateTo(cb)
+	if err != nil {
+		return err
+	}
+
 	// component: LocationDAO
 	cominfobuilder.Next()
 	cominfobuilder.ID("LocationDAO").Class("").Aliases("").Scope("")
@@ -469,9 +488,9 @@ func autoGenConfig(cb application.ConfigBuilder) error {
 		return err
 	}
 
-	// component: com45-mediae0xf005e2.MediaController
+	// component: com47-mediae0xf005e2.MediaController
 	cominfobuilder.Next()
-	cominfobuilder.ID("com45-mediae0xf005e2.MediaController").Class("rest-controller").Aliases("").Scope("")
+	cominfobuilder.ID("com47-mediae0xf005e2.MediaController").Class("rest-controller").Aliases("").Scope("")
 	cominfobuilder.Factory((&comFactory4pComMediaController{}).init())
 	err = cominfobuilder.CreateTo(cb)
 	if err != nil {
@@ -496,9 +515,9 @@ func autoGenConfig(cb application.ConfigBuilder) error {
 		return err
 	}
 
-	// component: com48-namespaces0xceefcf.NamespaceController
+	// component: com50-namespaces0xceefcf.NamespaceController
 	cominfobuilder.Next()
-	cominfobuilder.ID("com48-namespaces0xceefcf.NamespaceController").Class("rest-controller").Aliases("").Scope("")
+	cominfobuilder.ID("com50-namespaces0xceefcf.NamespaceController").Class("rest-controller").Aliases("").Scope("")
 	cominfobuilder.Factory((&comFactory4pComNamespaceController{}).init())
 	err = cominfobuilder.CreateTo(cb)
 	if err != nil {
@@ -523,9 +542,9 @@ func autoGenConfig(cb application.ConfigBuilder) error {
 		return err
 	}
 
-	// component: com51-platforms0xb539c0.LinuxPlatformServiceImpl
+	// component: com53-platforms0xb539c0.LinuxPlatformServiceImpl
 	cominfobuilder.Next()
-	cominfobuilder.ID("com51-platforms0xb539c0.LinuxPlatformServiceImpl").Class("PlatformProviderRegistry").Aliases("").Scope("")
+	cominfobuilder.ID("com53-platforms0xb539c0.LinuxPlatformServiceImpl").Class("PlatformProviderRegistry").Aliases("").Scope("")
 	cominfobuilder.Factory((&comFactory4pComLinuxPlatformServiceImpl{}).init())
 	err = cominfobuilder.CreateTo(cb)
 	if err != nil {
@@ -550,18 +569,18 @@ func autoGenConfig(cb application.ConfigBuilder) error {
 		return err
 	}
 
-	// component: com54-platforms0xb539c0.WindowsPlatformServiceImpl
+	// component: com56-platforms0xb539c0.WindowsPlatformServiceImpl
 	cominfobuilder.Next()
-	cominfobuilder.ID("com54-platforms0xb539c0.WindowsPlatformServiceImpl").Class("PlatformProviderRegistry").Aliases("").Scope("")
+	cominfobuilder.ID("com56-platforms0xb539c0.WindowsPlatformServiceImpl").Class("PlatformProviderRegistry").Aliases("").Scope("")
 	cominfobuilder.Factory((&comFactory4pComWindowsPlatformServiceImpl{}).init())
 	err = cominfobuilder.CreateTo(cb)
 	if err != nil {
 		return err
 	}
 
-	// component: com55-plugins0x82e34b.SoftwarePackageController
+	// component: com57-plugins0x82e34b.SoftwarePackageController
 	cominfobuilder.Next()
-	cominfobuilder.ID("com55-plugins0x82e34b.SoftwarePackageController").Class("rest-controller").Aliases("").Scope("")
+	cominfobuilder.ID("com57-plugins0x82e34b.SoftwarePackageController").Class("rest-controller").Aliases("").Scope("")
 	cominfobuilder.Factory((&comFactory4pComSoftwarePackageController{}).init())
 	err = cominfobuilder.CreateTo(cb)
 	if err != nil {
@@ -586,9 +605,9 @@ func autoGenConfig(cb application.ConfigBuilder) error {
 		return err
 	}
 
-	// component: com58-plugins0x82e34b.SoftwareSetController
+	// component: com60-plugins0x82e34b.SoftwareSetController
 	cominfobuilder.Next()
-	cominfobuilder.ID("com58-plugins0x82e34b.SoftwareSetController").Class("rest-controller").Aliases("").Scope("")
+	cominfobuilder.ID("com60-plugins0x82e34b.SoftwareSetController").Class("rest-controller").Aliases("").Scope("")
 	cominfobuilder.Factory((&comFactory4pComSoftwareSetController{}).init())
 	err = cominfobuilder.CreateTo(cb)
 	if err != nil {
@@ -622,9 +641,9 @@ func autoGenConfig(cb application.ConfigBuilder) error {
 		return err
 	}
 
-	// component: com62-projects0x4d85c7.ProjectController
+	// component: com64-projects0x4d85c7.ProjectController
 	cominfobuilder.Next()
-	cominfobuilder.ID("com62-projects0x4d85c7.ProjectController").Class("rest-controller").Aliases("").Scope("")
+	cominfobuilder.ID("com64-projects0x4d85c7.ProjectController").Class("rest-controller").Aliases("").Scope("")
 	cominfobuilder.Factory((&comFactory4pComProjectController{}).init())
 	err = cominfobuilder.CreateTo(cb)
 	if err != nil {
@@ -640,9 +659,9 @@ func autoGenConfig(cb application.ConfigBuilder) error {
 		return err
 	}
 
-	// component: com64-projects0x4d85c7.ProjectImportController
+	// component: com66-projects0x4d85c7.ProjectImportController
 	cominfobuilder.Next()
-	cominfobuilder.ID("com64-projects0x4d85c7.ProjectImportController").Class("rest-controller").Aliases("").Scope("")
+	cominfobuilder.ID("com66-projects0x4d85c7.ProjectImportController").Class("rest-controller").Aliases("").Scope("")
 	cominfobuilder.Factory((&comFactory4pComProjectImportController{}).init())
 	err = cominfobuilder.CreateTo(cb)
 	if err != nil {
@@ -667,9 +686,9 @@ func autoGenConfig(cb application.ConfigBuilder) error {
 		return err
 	}
 
-	// component: com67-repositories0x637d5e.LocalRepositoryController
+	// component: com69-repositories0x637d5e.LocalRepositoryController
 	cominfobuilder.Next()
-	cominfobuilder.ID("com67-repositories0x637d5e.LocalRepositoryController").Class("rest-controller").Aliases("").Scope("")
+	cominfobuilder.ID("com69-repositories0x637d5e.LocalRepositoryController").Class("rest-controller").Aliases("").Scope("")
 	cominfobuilder.Factory((&comFactory4pComLocalRepositoryController{}).init())
 	err = cominfobuilder.CreateTo(cb)
 	if err != nil {
@@ -721,9 +740,9 @@ func autoGenConfig(cb application.ConfigBuilder) error {
 		return err
 	}
 
-	// component: com73-repositories0x637d5e.RemoteRepositoryController
+	// component: com75-repositories0x637d5e.RemoteRepositoryController
 	cominfobuilder.Next()
-	cominfobuilder.ID("com73-repositories0x637d5e.RemoteRepositoryController").Class("rest-controller").Aliases("").Scope("")
+	cominfobuilder.ID("com75-repositories0x637d5e.RemoteRepositoryController").Class("rest-controller").Aliases("").Scope("")
 	cominfobuilder.Factory((&comFactory4pComRemoteRepositoryController{}).init())
 	err = cominfobuilder.CreateTo(cb)
 	if err != nil {
@@ -739,9 +758,9 @@ func autoGenConfig(cb application.ConfigBuilder) error {
 		return err
 	}
 
-	// component: com75-repositories0x637d5e.RepositoryImportController
+	// component: com77-repositories0x637d5e.RepositoryImportController
 	cominfobuilder.Next()
-	cominfobuilder.ID("com75-repositories0x637d5e.RepositoryImportController").Class("rest-controller").Aliases("").Scope("")
+	cominfobuilder.ID("com77-repositories0x637d5e.RepositoryImportController").Class("rest-controller").Aliases("").Scope("")
 	cominfobuilder.Factory((&comFactory4pComRepositoryImportController{}).init())
 	err = cominfobuilder.CreateTo(cb)
 	if err != nil {
@@ -757,9 +776,9 @@ func autoGenConfig(cb application.ConfigBuilder) error {
 		return err
 	}
 
-	// component: com77-repositoryworktreeproject0x399028.RepoWorktreeProjectController
+	// component: com79-repositoryworktreeproject0x399028.RepoWorktreeProjectController
 	cominfobuilder.Next()
-	cominfobuilder.ID("com77-repositoryworktreeproject0x399028.RepoWorktreeProjectController").Class("rest-controller").Aliases("").Scope("")
+	cominfobuilder.ID("com79-repositoryworktreeproject0x399028.RepoWorktreeProjectController").Class("rest-controller").Aliases("").Scope("")
 	cominfobuilder.Factory((&comFactory4pComRepoWorktreeProjectController{}).init())
 	err = cominfobuilder.CreateTo(cb)
 	if err != nil {
@@ -775,9 +794,9 @@ func autoGenConfig(cb application.ConfigBuilder) error {
 		return err
 	}
 
-	// component: com79-settings0x19237d.SettingController
+	// component: com81-settings0x19237d.SettingController
 	cominfobuilder.Next()
-	cominfobuilder.ID("com79-settings0x19237d.SettingController").Class("rest-controller").Aliases("").Scope("")
+	cominfobuilder.ID("com81-settings0x19237d.SettingController").Class("rest-controller").Aliases("").Scope("")
 	cominfobuilder.Factory((&comFactory4pComSettingController{}).init())
 	err = cominfobuilder.CreateTo(cb)
 	if err != nil {
@@ -802,9 +821,9 @@ func autoGenConfig(cb application.ConfigBuilder) error {
 		return err
 	}
 
-	// component: com82-setup0xd9ff02.WpmSetupController
+	// component: com84-setup0xd9ff02.WpmSetupController
 	cominfobuilder.Next()
-	cominfobuilder.ID("com82-setup0xd9ff02.WpmSetupController").Class("rest-controller").Aliases("").Scope("")
+	cominfobuilder.ID("com84-setup0xd9ff02.WpmSetupController").Class("rest-controller").Aliases("").Scope("")
 	cominfobuilder.Factory((&comFactory4pComWpmSetupController{}).init())
 	err = cominfobuilder.CreateTo(cb)
 	if err != nil {
@@ -820,9 +839,9 @@ func autoGenConfig(cb application.ConfigBuilder) error {
 		return err
 	}
 
-	// component: com84-trash0xd00f34.TheTrashController
+	// component: com86-trash0xd00f34.TheTrashController
 	cominfobuilder.Next()
-	cominfobuilder.ID("com84-trash0xd00f34.TheTrashController").Class("rest-controller").Aliases("").Scope("")
+	cominfobuilder.ID("com86-trash0xd00f34.TheTrashController").Class("rest-controller").Aliases("").Scope("")
 	cominfobuilder.Factory((&comFactory4pComTheTrashController{}).init())
 	err = cominfobuilder.CreateTo(cb)
 	if err != nil {
@@ -865,99 +884,99 @@ func autoGenConfig(cb application.ConfigBuilder) error {
 		return err
 	}
 
-	// component: com89-support0xf47d7f.WpmDataSource
+	// component: com91-support0xf47d7f.WpmDataSource
 	cominfobuilder.Next()
-	cominfobuilder.ID("com89-support0xf47d7f.WpmDataSource").Class("starter-gorm-source-registry").Aliases("").Scope("")
+	cominfobuilder.ID("com91-support0xf47d7f.WpmDataSource").Class("starter-gorm-source-registry").Aliases("").Scope("")
 	cominfobuilder.Factory((&comFactory4pComWpmDataSource{}).init())
 	err = cominfobuilder.CreateTo(cb)
 	if err != nil {
 		return err
 	}
 
-	// component: com90-handlers0x162741.FileSystemHandler
+	// component: com92-handlers0x162741.FileSystemHandler
 	cominfobuilder.Next()
-	cominfobuilder.ID("com90-handlers0x162741.FileSystemHandler").Class("filequery-handler-registry").Aliases("").Scope("")
+	cominfobuilder.ID("com92-handlers0x162741.FileSystemHandler").Class("filequery-handler-registry").Aliases("").Scope("")
 	cominfobuilder.Factory((&comFactory4pComFileSystemHandler{}).init())
 	err = cominfobuilder.CreateTo(cb)
 	if err != nil {
 		return err
 	}
 
-	// component: com91-controller0x9dc399.AboutController
+	// component: com93-controller0x9dc399.AboutController
 	cominfobuilder.Next()
-	cominfobuilder.ID("com91-controller0x9dc399.AboutController").Class("rest-controller").Aliases("").Scope("")
+	cominfobuilder.ID("com93-controller0x9dc399.AboutController").Class("rest-controller").Aliases("").Scope("")
 	cominfobuilder.Factory((&comFactory4pComAboutController{}).init())
 	err = cominfobuilder.CreateTo(cb)
 	if err != nil {
 		return err
 	}
 
-	// component: com92-controller0x9dc399.AuthController
+	// component: com94-controller0x9dc399.AuthController
 	cominfobuilder.Next()
-	cominfobuilder.ID("com92-controller0x9dc399.AuthController").Class("rest-controller").Aliases("").Scope("")
+	cominfobuilder.ID("com94-controller0x9dc399.AuthController").Class("rest-controller").Aliases("").Scope("")
 	cominfobuilder.Factory((&comFactory4pComAuthController{}).init())
 	err = cominfobuilder.CreateTo(cb)
 	if err != nil {
 		return err
 	}
 
-	// component: com93-controller0x9dc399.ExampleController
+	// component: com95-controller0x9dc399.ExampleController
 	cominfobuilder.Next()
-	cominfobuilder.ID("com93-controller0x9dc399.ExampleController").Class("rest-controller").Aliases("").Scope("")
+	cominfobuilder.ID("com95-controller0x9dc399.ExampleController").Class("rest-controller").Aliases("").Scope("")
 	cominfobuilder.Factory((&comFactory4pComExampleController{}).init())
 	err = cominfobuilder.CreateTo(cb)
 	if err != nil {
 		return err
 	}
 
-	// component: com94-controller0x9dc399.FileQueryController
+	// component: com96-controller0x9dc399.FileQueryController
 	cominfobuilder.Next()
-	cominfobuilder.ID("com94-controller0x9dc399.FileQueryController").Class("rest-controller").Aliases("").Scope("")
+	cominfobuilder.ID("com96-controller0x9dc399.FileQueryController").Class("rest-controller").Aliases("").Scope("")
 	cominfobuilder.Factory((&comFactory4pComFileQueryController{}).init())
 	err = cominfobuilder.CreateTo(cb)
 	if err != nil {
 		return err
 	}
 
-	// component: com95-controller0x9dc399.OnlineDocumentExampleController
+	// component: com97-controller0x9dc399.OnlineDocumentExampleController
 	cominfobuilder.Next()
-	cominfobuilder.ID("com95-controller0x9dc399.OnlineDocumentExampleController").Class("rest-controller").Aliases("").Scope("")
+	cominfobuilder.ID("com97-controller0x9dc399.OnlineDocumentExampleController").Class("rest-controller").Aliases("").Scope("")
 	cominfobuilder.Factory((&comFactory4pComOnlineDocumentExampleController{}).init())
 	err = cominfobuilder.CreateTo(cb)
 	if err != nil {
 		return err
 	}
 
-	// component: com96-controller0x9dc399.PlatformController
+	// component: com98-controller0x9dc399.PlatformController
 	cominfobuilder.Next()
-	cominfobuilder.ID("com96-controller0x9dc399.PlatformController").Class("rest-controller").Aliases("").Scope("")
+	cominfobuilder.ID("com98-controller0x9dc399.PlatformController").Class("rest-controller").Aliases("").Scope("")
 	cominfobuilder.Factory((&comFactory4pComPlatformController{}).init())
 	err = cominfobuilder.CreateTo(cb)
 	if err != nil {
 		return err
 	}
 
-	// component: com97-controller0x9dc399.UploadController
+	// component: com99-controller0x9dc399.UploadController
 	cominfobuilder.Next()
-	cominfobuilder.ID("com97-controller0x9dc399.UploadController").Class("rest-controller").Aliases("").Scope("")
+	cominfobuilder.ID("com99-controller0x9dc399.UploadController").Class("rest-controller").Aliases("").Scope("")
 	cominfobuilder.Factory((&comFactory4pComUploadController{}).init())
 	err = cominfobuilder.CreateTo(cb)
 	if err != nil {
 		return err
 	}
 
-	// component: com98-filter0x8aa8f6.HostFilter
+	// component: com100-filter0x8aa8f6.HostFilter
 	cominfobuilder.Next()
-	cominfobuilder.ID("com98-filter0x8aa8f6.HostFilter").Class("rest-controller").Aliases("").Scope("")
+	cominfobuilder.ID("com100-filter0x8aa8f6.HostFilter").Class("rest-controller").Aliases("").Scope("")
 	cominfobuilder.Factory((&comFactory4pComHostFilter{}).init())
 	err = cominfobuilder.CreateTo(cb)
 	if err != nil {
 		return err
 	}
 
-	// component: com99-filter0x8aa8f6.HTTP404Filter
+	// component: com101-filter0x8aa8f6.HTTP404Filter
 	cominfobuilder.Next()
-	cominfobuilder.ID("com99-filter0x8aa8f6.HTTP404Filter").Class("rest-controller").Aliases("").Scope("")
+	cominfobuilder.ID("com101-filter0x8aa8f6.HTTP404Filter").Class("rest-controller").Aliases("").Scope("")
 	cominfobuilder.Factory((&comFactory4pComHTTP404Filter{}).init())
 	err = cominfobuilder.CreateTo(cb)
 	if err != nil {
@@ -4978,6 +4997,158 @@ func (inst * comFactory4pComIntentTemplateServiceImpl) getterForFieldTemplateCac
 
 ////////////////////////////////////////////////////////////////////////////////
 
+// comFactory4pComJSONBufferController : the factory of component: com43-jsonbuffer0x988f20.JSONBufferController
+type comFactory4pComJSONBufferController struct {
+
+    mPrototype * jsonbuffer0x988f20.JSONBufferController
+
+	
+	mJSONBufferServiceSelector config.InjectionSelector
+	mResponderSelector config.InjectionSelector
+
+}
+
+func (inst * comFactory4pComJSONBufferController) init() application.ComponentFactory {
+
+	
+	inst.mJSONBufferServiceSelector = config.NewInjectionSelector("#JSONBufferService",nil)
+	inst.mResponderSelector = config.NewInjectionSelector("#glass-main-responder",nil)
+
+
+	inst.mPrototype = inst.newObject()
+    return inst
+}
+
+func (inst * comFactory4pComJSONBufferController) newObject() * jsonbuffer0x988f20.JSONBufferController {
+	return & jsonbuffer0x988f20.JSONBufferController {}
+}
+
+func (inst * comFactory4pComJSONBufferController) castObject(instance application.ComponentInstance) * jsonbuffer0x988f20.JSONBufferController {
+	return instance.Get().(*jsonbuffer0x988f20.JSONBufferController)
+}
+
+func (inst * comFactory4pComJSONBufferController) GetPrototype() lang.Object {
+	return inst.mPrototype
+}
+
+func (inst * comFactory4pComJSONBufferController) NewInstance() application.ComponentInstance {
+	return config.SimpleInstance(inst, inst.newObject())
+}
+
+func (inst * comFactory4pComJSONBufferController) AfterService() application.ComponentAfterService {
+	return inst
+}
+
+func (inst * comFactory4pComJSONBufferController) Init(instance application.ComponentInstance) error {
+	return nil
+}
+
+func (inst * comFactory4pComJSONBufferController) Destroy(instance application.ComponentInstance) error {
+	return nil
+}
+
+func (inst * comFactory4pComJSONBufferController) Inject(instance application.ComponentInstance, context application.InstanceContext) error {
+	
+	obj := inst.castObject(instance)
+	obj.JSONBufferService = inst.getterForFieldJSONBufferServiceSelector(context)
+	obj.Responder = inst.getterForFieldResponderSelector(context)
+	return context.LastError()
+}
+
+//getterForFieldJSONBufferServiceSelector
+func (inst * comFactory4pComJSONBufferController) getterForFieldJSONBufferServiceSelector (context application.InstanceContext) service0x3e063d.JSONBufferService {
+
+	o1 := inst.mJSONBufferServiceSelector.GetOne(context)
+	o2, ok := o1.(service0x3e063d.JSONBufferService)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "com43-jsonbuffer0x988f20.JSONBufferController")
+		eb.Set("field", "JSONBufferService")
+		eb.Set("type1", "?")
+		eb.Set("type2", "service0x3e063d.JSONBufferService")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
+}
+
+//getterForFieldResponderSelector
+func (inst * comFactory4pComJSONBufferController) getterForFieldResponderSelector (context application.InstanceContext) glass0x47343f.MainResponder {
+
+	o1 := inst.mResponderSelector.GetOne(context)
+	o2, ok := o1.(glass0x47343f.MainResponder)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "com43-jsonbuffer0x988f20.JSONBufferController")
+		eb.Set("field", "Responder")
+		eb.Set("type1", "?")
+		eb.Set("type2", "glass0x47343f.MainResponder")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+// comFactory4pComImpJSONBufferService : the factory of component: JSONBufferService
+type comFactory4pComImpJSONBufferService struct {
+
+    mPrototype * jsonbuffer0x988f20.ImpJSONBufferService
+
+	
+
+}
+
+func (inst * comFactory4pComImpJSONBufferService) init() application.ComponentFactory {
+
+	
+
+
+	inst.mPrototype = inst.newObject()
+    return inst
+}
+
+func (inst * comFactory4pComImpJSONBufferService) newObject() * jsonbuffer0x988f20.ImpJSONBufferService {
+	return & jsonbuffer0x988f20.ImpJSONBufferService {}
+}
+
+func (inst * comFactory4pComImpJSONBufferService) castObject(instance application.ComponentInstance) * jsonbuffer0x988f20.ImpJSONBufferService {
+	return instance.Get().(*jsonbuffer0x988f20.ImpJSONBufferService)
+}
+
+func (inst * comFactory4pComImpJSONBufferService) GetPrototype() lang.Object {
+	return inst.mPrototype
+}
+
+func (inst * comFactory4pComImpJSONBufferService) NewInstance() application.ComponentInstance {
+	return config.SimpleInstance(inst, inst.newObject())
+}
+
+func (inst * comFactory4pComImpJSONBufferService) AfterService() application.ComponentAfterService {
+	return inst
+}
+
+func (inst * comFactory4pComImpJSONBufferService) Init(instance application.ComponentInstance) error {
+	return nil
+}
+
+func (inst * comFactory4pComImpJSONBufferService) Destroy(instance application.ComponentInstance) error {
+	return nil
+}
+
+func (inst * comFactory4pComImpJSONBufferService) Inject(instance application.ComponentInstance, context application.InstanceContext) error {
+	return nil
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+
 // comFactory4pComImpLocationDao : the factory of component: LocationDAO
 type comFactory4pComImpLocationDao struct {
 
@@ -5153,7 +5324,7 @@ func (inst * comFactory4pComImpLocationService) getterForFieldDAOSelector (conte
 
 ////////////////////////////////////////////////////////////////////////////////
 
-// comFactory4pComMediaController : the factory of component: com45-mediae0xf005e2.MediaController
+// comFactory4pComMediaController : the factory of component: com47-mediae0xf005e2.MediaController
 type comFactory4pComMediaController struct {
 
     mPrototype * mediae0xf005e2.MediaController
@@ -5219,7 +5390,7 @@ func (inst * comFactory4pComMediaController) getterForFieldMediaServiceSelector 
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com45-mediae0xf005e2.MediaController")
+		eb.Set("com", "com47-mediae0xf005e2.MediaController")
 		eb.Set("field", "MediaService")
 		eb.Set("type1", "?")
 		eb.Set("type2", "service0x3e063d.MediaService")
@@ -5237,7 +5408,7 @@ func (inst * comFactory4pComMediaController) getterForFieldResponderSelector (co
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com45-mediae0xf005e2.MediaController")
+		eb.Set("com", "com47-mediae0xf005e2.MediaController")
 		eb.Set("field", "Responder")
 		eb.Set("type1", "?")
 		eb.Set("type2", "glass0x47343f.MainResponder")
@@ -5534,7 +5705,7 @@ func (inst * comFactory4pComMediaServiceImpl) getterForFieldWebPathPrefixSelecto
 
 ////////////////////////////////////////////////////////////////////////////////
 
-// comFactory4pComNamespaceController : the factory of component: com48-namespaces0xceefcf.NamespaceController
+// comFactory4pComNamespaceController : the factory of component: com50-namespaces0xceefcf.NamespaceController
 type comFactory4pComNamespaceController struct {
 
     mPrototype * namespaces0xceefcf.NamespaceController
@@ -5600,7 +5771,7 @@ func (inst * comFactory4pComNamespaceController) getterForFieldNamespaceServiceS
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com48-namespaces0xceefcf.NamespaceController")
+		eb.Set("com", "com50-namespaces0xceefcf.NamespaceController")
 		eb.Set("field", "NamespaceService")
 		eb.Set("type1", "?")
 		eb.Set("type2", "service0x3e063d.NamespaceService")
@@ -5618,7 +5789,7 @@ func (inst * comFactory4pComNamespaceController) getterForFieldResponderSelector
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com48-namespaces0xceefcf.NamespaceController")
+		eb.Set("com", "com50-namespaces0xceefcf.NamespaceController")
 		eb.Set("field", "Responder")
 		eb.Set("type1", "?")
 		eb.Set("type2", "glass0x47343f.MainResponder")
@@ -5794,7 +5965,7 @@ func (inst * comFactory4pComImpNamespaceService) getterForFieldMyDAOSelector (co
 
 ////////////////////////////////////////////////////////////////////////////////
 
-// comFactory4pComLinuxPlatformServiceImpl : the factory of component: com51-platforms0xb539c0.LinuxPlatformServiceImpl
+// comFactory4pComLinuxPlatformServiceImpl : the factory of component: com53-platforms0xb539c0.LinuxPlatformServiceImpl
 type comFactory4pComLinuxPlatformServiceImpl struct {
 
     mPrototype * platforms0xb539c0.LinuxPlatformServiceImpl
@@ -5997,7 +6168,7 @@ func (inst * comFactory4pComProfileServiceImpl) getterForFieldPlatformServiceSel
 
 ////////////////////////////////////////////////////////////////////////////////
 
-// comFactory4pComWindowsPlatformServiceImpl : the factory of component: com54-platforms0xb539c0.WindowsPlatformServiceImpl
+// comFactory4pComWindowsPlatformServiceImpl : the factory of component: com56-platforms0xb539c0.WindowsPlatformServiceImpl
 type comFactory4pComWindowsPlatformServiceImpl struct {
 
     mPrototype * platforms0xb539c0.WindowsPlatformServiceImpl
@@ -6051,7 +6222,7 @@ func (inst * comFactory4pComWindowsPlatformServiceImpl) Inject(instance applicat
 
 ////////////////////////////////////////////////////////////////////////////////
 
-// comFactory4pComSoftwarePackageController : the factory of component: com55-plugins0x82e34b.SoftwarePackageController
+// comFactory4pComSoftwarePackageController : the factory of component: com57-plugins0x82e34b.SoftwarePackageController
 type comFactory4pComSoftwarePackageController struct {
 
     mPrototype * plugins0x82e34b.SoftwarePackageController
@@ -6117,7 +6288,7 @@ func (inst * comFactory4pComSoftwarePackageController) getterForFieldSoftwarePac
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com55-plugins0x82e34b.SoftwarePackageController")
+		eb.Set("com", "com57-plugins0x82e34b.SoftwarePackageController")
 		eb.Set("field", "SoftwarePackageService")
 		eb.Set("type1", "?")
 		eb.Set("type2", "service0x3e063d.SoftwarePackageService")
@@ -6135,7 +6306,7 @@ func (inst * comFactory4pComSoftwarePackageController) getterForFieldResponderSe
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com55-plugins0x82e34b.SoftwarePackageController")
+		eb.Set("com", "com57-plugins0x82e34b.SoftwarePackageController")
 		eb.Set("field", "Responder")
 		eb.Set("type1", "?")
 		eb.Set("type2", "glass0x47343f.MainResponder")
@@ -6513,7 +6684,7 @@ func (inst * comFactory4pComPluginServiceImpl) getterForFieldMediaSerSelector (c
 
 ////////////////////////////////////////////////////////////////////////////////
 
-// comFactory4pComSoftwareSetController : the factory of component: com58-plugins0x82e34b.SoftwareSetController
+// comFactory4pComSoftwareSetController : the factory of component: com60-plugins0x82e34b.SoftwareSetController
 type comFactory4pComSoftwareSetController struct {
 
     mPrototype * plugins0x82e34b.SoftwareSetController
@@ -6579,7 +6750,7 @@ func (inst * comFactory4pComSoftwareSetController) getterForFieldSoftwareSetServ
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com58-plugins0x82e34b.SoftwareSetController")
+		eb.Set("com", "com60-plugins0x82e34b.SoftwareSetController")
 		eb.Set("field", "SoftwareSetService")
 		eb.Set("type1", "?")
 		eb.Set("type2", "service0x3e063d.SoftwareSetService")
@@ -6597,7 +6768,7 @@ func (inst * comFactory4pComSoftwareSetController) getterForFieldResponderSelect
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com58-plugins0x82e34b.SoftwareSetController")
+		eb.Set("com", "com60-plugins0x82e34b.SoftwareSetController")
 		eb.Set("field", "Responder")
 		eb.Set("type1", "?")
 		eb.Set("type2", "glass0x47343f.MainResponder")
@@ -6879,7 +7050,7 @@ func (inst * comFactory4pComImpPresetService) getterForFieldCacheSelector (conte
 
 ////////////////////////////////////////////////////////////////////////////////
 
-// comFactory4pComProjectController : the factory of component: com62-projects0x4d85c7.ProjectController
+// comFactory4pComProjectController : the factory of component: com64-projects0x4d85c7.ProjectController
 type comFactory4pComProjectController struct {
 
     mPrototype * projects0x4d85c7.ProjectController
@@ -6945,7 +7116,7 @@ func (inst * comFactory4pComProjectController) getterForFieldProjectServiceSelec
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com62-projects0x4d85c7.ProjectController")
+		eb.Set("com", "com64-projects0x4d85c7.ProjectController")
 		eb.Set("field", "ProjectService")
 		eb.Set("type1", "?")
 		eb.Set("type2", "service0x3e063d.ProjectService")
@@ -6963,7 +7134,7 @@ func (inst * comFactory4pComProjectController) getterForFieldResponderSelector (
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com62-projects0x4d85c7.ProjectController")
+		eb.Set("com", "com64-projects0x4d85c7.ProjectController")
 		eb.Set("field", "Responder")
 		eb.Set("type1", "?")
 		eb.Set("type2", "glass0x47343f.MainResponder")
@@ -7075,7 +7246,7 @@ func (inst * comFactory4pComProjectDaoImpl) getterForFieldUUIDGenServiceSelector
 
 ////////////////////////////////////////////////////////////////////////////////
 
-// comFactory4pComProjectImportController : the factory of component: com64-projects0x4d85c7.ProjectImportController
+// comFactory4pComProjectImportController : the factory of component: com66-projects0x4d85c7.ProjectImportController
 type comFactory4pComProjectImportController struct {
 
     mPrototype * projects0x4d85c7.ProjectImportController
@@ -7141,7 +7312,7 @@ func (inst * comFactory4pComProjectImportController) getterForFieldProjectImport
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com64-projects0x4d85c7.ProjectImportController")
+		eb.Set("com", "com66-projects0x4d85c7.ProjectImportController")
 		eb.Set("field", "ProjectImportService")
 		eb.Set("type1", "?")
 		eb.Set("type2", "service0x3e063d.ProjectImportService")
@@ -7159,7 +7330,7 @@ func (inst * comFactory4pComProjectImportController) getterForFieldResponderSele
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com64-projects0x4d85c7.ProjectImportController")
+		eb.Set("com", "com66-projects0x4d85c7.ProjectImportController")
 		eb.Set("field", "Responder")
 		eb.Set("type1", "?")
 		eb.Set("type2", "glass0x47343f.MainResponder")
@@ -7451,7 +7622,7 @@ func (inst * comFactory4pComProjectServiceImpl) getterForFieldGitLibAgentSelecto
 
 ////////////////////////////////////////////////////////////////////////////////
 
-// comFactory4pComLocalRepositoryController : the factory of component: com67-repositories0x637d5e.LocalRepositoryController
+// comFactory4pComLocalRepositoryController : the factory of component: com69-repositories0x637d5e.LocalRepositoryController
 type comFactory4pComLocalRepositoryController struct {
 
     mPrototype * repositories0x637d5e.LocalRepositoryController
@@ -7517,7 +7688,7 @@ func (inst * comFactory4pComLocalRepositoryController) getterForFieldRepoService
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com67-repositories0x637d5e.LocalRepositoryController")
+		eb.Set("com", "com69-repositories0x637d5e.LocalRepositoryController")
 		eb.Set("field", "RepoService")
 		eb.Set("type1", "?")
 		eb.Set("type2", "service0x3e063d.LocalRepositoryService")
@@ -7535,7 +7706,7 @@ func (inst * comFactory4pComLocalRepositoryController) getterForFieldResponderSe
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com67-repositories0x637d5e.LocalRepositoryController")
+		eb.Set("com", "com69-repositories0x637d5e.LocalRepositoryController")
 		eb.Set("field", "Responder")
 		eb.Set("type1", "?")
 		eb.Set("type2", "glass0x47343f.MainResponder")
@@ -8165,7 +8336,7 @@ func (inst * comFactory4pComMainRepositoryServiceImpl) getterForFieldGitLASelect
 
 ////////////////////////////////////////////////////////////////////////////////
 
-// comFactory4pComRemoteRepositoryController : the factory of component: com73-repositories0x637d5e.RemoteRepositoryController
+// comFactory4pComRemoteRepositoryController : the factory of component: com75-repositories0x637d5e.RemoteRepositoryController
 type comFactory4pComRemoteRepositoryController struct {
 
     mPrototype * repositories0x637d5e.RemoteRepositoryController
@@ -8231,7 +8402,7 @@ func (inst * comFactory4pComRemoteRepositoryController) getterForFieldRepoServic
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com73-repositories0x637d5e.RemoteRepositoryController")
+		eb.Set("com", "com75-repositories0x637d5e.RemoteRepositoryController")
 		eb.Set("field", "RepoService")
 		eb.Set("type1", "?")
 		eb.Set("type2", "service0x3e063d.RemoteRepositoryService")
@@ -8249,7 +8420,7 @@ func (inst * comFactory4pComRemoteRepositoryController) getterForFieldResponderS
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com73-repositories0x637d5e.RemoteRepositoryController")
+		eb.Set("com", "com75-repositories0x637d5e.RemoteRepositoryController")
 		eb.Set("field", "Responder")
 		eb.Set("type1", "?")
 		eb.Set("type2", "glass0x47343f.MainResponder")
@@ -8317,7 +8488,7 @@ func (inst * comFactory4pComRemoteRepositoryServiceImpl) Inject(instance applica
 
 ////////////////////////////////////////////////////////////////////////////////
 
-// comFactory4pComRepositoryImportController : the factory of component: com75-repositories0x637d5e.RepositoryImportController
+// comFactory4pComRepositoryImportController : the factory of component: com77-repositories0x637d5e.RepositoryImportController
 type comFactory4pComRepositoryImportController struct {
 
     mPrototype * repositories0x637d5e.RepositoryImportController
@@ -8386,7 +8557,7 @@ func (inst * comFactory4pComRepositoryImportController) getterForFieldRepoStateL
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com75-repositories0x637d5e.RepositoryImportController")
+		eb.Set("com", "com77-repositories0x637d5e.RepositoryImportController")
 		eb.Set("field", "RepoStateLoader")
 		eb.Set("type1", "?")
 		eb.Set("type2", "service0x3e063d.LocalRepositoryStateLoader")
@@ -8404,7 +8575,7 @@ func (inst * comFactory4pComRepositoryImportController) getterForFieldImportServ
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com75-repositories0x637d5e.RepositoryImportController")
+		eb.Set("com", "com77-repositories0x637d5e.RepositoryImportController")
 		eb.Set("field", "ImportService")
 		eb.Set("type1", "?")
 		eb.Set("type2", "service0x3e063d.RepositoryImportService")
@@ -8422,7 +8593,7 @@ func (inst * comFactory4pComRepositoryImportController) getterForFieldResponderS
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com75-repositories0x637d5e.RepositoryImportController")
+		eb.Set("com", "com77-repositories0x637d5e.RepositoryImportController")
 		eb.Set("field", "Responder")
 		eb.Set("type1", "?")
 		eb.Set("type2", "glass0x47343f.MainResponder")
@@ -8534,7 +8705,7 @@ func (inst * comFactory4pComRepositoryImportServiceImpl) getterForFieldRepoFinde
 
 ////////////////////////////////////////////////////////////////////////////////
 
-// comFactory4pComRepoWorktreeProjectController : the factory of component: com77-repositoryworktreeproject0x399028.RepoWorktreeProjectController
+// comFactory4pComRepoWorktreeProjectController : the factory of component: com79-repositoryworktreeproject0x399028.RepoWorktreeProjectController
 type comFactory4pComRepoWorktreeProjectController struct {
 
     mPrototype * repositoryworktreeproject0x399028.RepoWorktreeProjectController
@@ -8600,7 +8771,7 @@ func (inst * comFactory4pComRepoWorktreeProjectController) getterForFieldRWPServ
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com77-repositoryworktreeproject0x399028.RepoWorktreeProjectController")
+		eb.Set("com", "com79-repositoryworktreeproject0x399028.RepoWorktreeProjectController")
 		eb.Set("field", "RWPService")
 		eb.Set("type1", "?")
 		eb.Set("type2", "service0x3e063d.RepositoryWorktreeProjectService")
@@ -8618,7 +8789,7 @@ func (inst * comFactory4pComRepoWorktreeProjectController) getterForFieldRespond
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com77-repositoryworktreeproject0x399028.RepoWorktreeProjectController")
+		eb.Set("com", "com79-repositoryworktreeproject0x399028.RepoWorktreeProjectController")
 		eb.Set("field", "Responder")
 		eb.Set("type1", "?")
 		eb.Set("type2", "glass0x47343f.MainResponder")
@@ -8772,7 +8943,7 @@ func (inst * comFactory4pComRWPServiceImpl) getterForFieldGitLibSelector (contex
 
 ////////////////////////////////////////////////////////////////////////////////
 
-// comFactory4pComSettingController : the factory of component: com79-settings0x19237d.SettingController
+// comFactory4pComSettingController : the factory of component: com81-settings0x19237d.SettingController
 type comFactory4pComSettingController struct {
 
     mPrototype * settings0x19237d.SettingController
@@ -8838,7 +9009,7 @@ func (inst * comFactory4pComSettingController) getterForFieldSettingServiceSelec
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com79-settings0x19237d.SettingController")
+		eb.Set("com", "com81-settings0x19237d.SettingController")
 		eb.Set("field", "SettingService")
 		eb.Set("type1", "?")
 		eb.Set("type2", "service0x3e063d.SettingService")
@@ -8856,7 +9027,7 @@ func (inst * comFactory4pComSettingController) getterForFieldResponderSelector (
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com79-settings0x19237d.SettingController")
+		eb.Set("com", "com81-settings0x19237d.SettingController")
 		eb.Set("field", "Responder")
 		eb.Set("type1", "?")
 		eb.Set("type2", "glass0x47343f.MainResponder")
@@ -9045,7 +9216,7 @@ func (inst * comFactory4pComSettingServiceImpl) getterForFieldSettingDAOSelector
 
 ////////////////////////////////////////////////////////////////////////////////
 
-// comFactory4pComWpmSetupController : the factory of component: com82-setup0xd9ff02.WpmSetupController
+// comFactory4pComWpmSetupController : the factory of component: com84-setup0xd9ff02.WpmSetupController
 type comFactory4pComWpmSetupController struct {
 
     mPrototype * setup0xd9ff02.WpmSetupController
@@ -9111,7 +9282,7 @@ func (inst * comFactory4pComWpmSetupController) getterForFieldResponderSelector 
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com82-setup0xd9ff02.WpmSetupController")
+		eb.Set("com", "com84-setup0xd9ff02.WpmSetupController")
 		eb.Set("field", "Responder")
 		eb.Set("type1", "?")
 		eb.Set("type2", "glass0x47343f.MainResponder")
@@ -9129,7 +9300,7 @@ func (inst * comFactory4pComWpmSetupController) getterForFieldSetupServiceSelect
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com82-setup0xd9ff02.WpmSetupController")
+		eb.Set("com", "com84-setup0xd9ff02.WpmSetupController")
 		eb.Set("field", "SetupService")
 		eb.Set("type1", "?")
 		eb.Set("type2", "service0x3e063d.SetupService")
@@ -9409,7 +9580,7 @@ func (inst * comFactory4pComImpSetupService) getterForFieldDatabaseBackupService
 
 ////////////////////////////////////////////////////////////////////////////////
 
-// comFactory4pComTheTrashController : the factory of component: com84-trash0xd00f34.TheTrashController
+// comFactory4pComTheTrashController : the factory of component: com86-trash0xd00f34.TheTrashController
 type comFactory4pComTheTrashController struct {
 
     mPrototype * trash0xd00f34.TheTrashController
@@ -9478,7 +9649,7 @@ func (inst * comFactory4pComTheTrashController) getterForFieldTrashSerSelector (
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com84-trash0xd00f34.TheTrashController")
+		eb.Set("com", "com86-trash0xd00f34.TheTrashController")
 		eb.Set("field", "TrashSer")
 		eb.Set("type1", "?")
 		eb.Set("type2", "service0x3e063d.TrashService")
@@ -9496,7 +9667,7 @@ func (inst * comFactory4pComTheTrashController) getterForFieldTrashDaoSelector (
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com84-trash0xd00f34.TheTrashController")
+		eb.Set("com", "com86-trash0xd00f34.TheTrashController")
 		eb.Set("field", "TrashDao")
 		eb.Set("type1", "?")
 		eb.Set("type2", "dao0x5af8d0.TrashDAO")
@@ -9514,7 +9685,7 @@ func (inst * comFactory4pComTheTrashController) getterForFieldResponderSelector 
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com84-trash0xd00f34.TheTrashController")
+		eb.Set("com", "com86-trash0xd00f34.TheTrashController")
 		eb.Set("field", "Responder")
 		eb.Set("type1", "?")
 		eb.Set("type2", "glass0x47343f.MainResponder")
@@ -9920,7 +10091,7 @@ func (inst * comFactory4pComImpWorktreeService) getterForFieldDAOSelector (conte
 
 ////////////////////////////////////////////////////////////////////////////////
 
-// comFactory4pComWpmDataSource : the factory of component: com89-support0xf47d7f.WpmDataSource
+// comFactory4pComWpmDataSource : the factory of component: com91-support0xf47d7f.WpmDataSource
 type comFactory4pComWpmDataSource struct {
 
     mPrototype * support0xf47d7f.WpmDataSource
@@ -10007,7 +10178,7 @@ func (inst * comFactory4pComWpmDataSource) getterForFieldDMSelector (context app
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com89-support0xf47d7f.WpmDataSource")
+		eb.Set("com", "com91-support0xf47d7f.WpmDataSource")
 		eb.Set("field", "DM")
 		eb.Set("type1", "?")
 		eb.Set("type2", "datasource0x68a737.DriverManager")
@@ -10025,7 +10196,7 @@ func (inst * comFactory4pComWpmDataSource) getterForFieldAppDataServiceSelector 
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com89-support0xf47d7f.WpmDataSource")
+		eb.Set("com", "com91-support0xf47d7f.WpmDataSource")
 		eb.Set("field", "AppDataService")
 		eb.Set("type1", "?")
 		eb.Set("type2", "service0x3e063d.AppDataService")
@@ -10043,7 +10214,7 @@ func (inst * comFactory4pComWpmDataSource) getterForFieldAboutServiceSelector (c
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com89-support0xf47d7f.WpmDataSource")
+		eb.Set("com", "com91-support0xf47d7f.WpmDataSource")
 		eb.Set("field", "AboutService")
 		eb.Set("type1", "?")
 		eb.Set("type2", "service0x3e063d.AboutService")
@@ -10087,7 +10258,7 @@ func (inst * comFactory4pComWpmDataSource) getterForFieldPortSelector (context a
 
 ////////////////////////////////////////////////////////////////////////////////
 
-// comFactory4pComFileSystemHandler : the factory of component: com90-handlers0x162741.FileSystemHandler
+// comFactory4pComFileSystemHandler : the factory of component: com92-handlers0x162741.FileSystemHandler
 type comFactory4pComFileSystemHandler struct {
 
     mPrototype * handlers0x162741.FileSystemHandler
@@ -10141,7 +10312,7 @@ func (inst * comFactory4pComFileSystemHandler) Inject(instance application.Compo
 
 ////////////////////////////////////////////////////////////////////////////////
 
-// comFactory4pComAboutController : the factory of component: com91-controller0x9dc399.AboutController
+// comFactory4pComAboutController : the factory of component: com93-controller0x9dc399.AboutController
 type comFactory4pComAboutController struct {
 
     mPrototype * controller0x9dc399.AboutController
@@ -10213,7 +10384,7 @@ func (inst * comFactory4pComAboutController) getterForFieldAboutServiceSelector 
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com91-controller0x9dc399.AboutController")
+		eb.Set("com", "com93-controller0x9dc399.AboutController")
 		eb.Set("field", "AboutService")
 		eb.Set("type1", "?")
 		eb.Set("type2", "service0x3e063d.AboutService")
@@ -10231,7 +10402,7 @@ func (inst * comFactory4pComAboutController) getterForFieldUpdateServiceSelector
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com91-controller0x9dc399.AboutController")
+		eb.Set("com", "com93-controller0x9dc399.AboutController")
 		eb.Set("field", "UpdateService")
 		eb.Set("type1", "?")
 		eb.Set("type2", "service0x3e063d.CheckUpdateService")
@@ -10249,7 +10420,7 @@ func (inst * comFactory4pComAboutController) getterForFieldResponderSelector (co
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com91-controller0x9dc399.AboutController")
+		eb.Set("com", "com93-controller0x9dc399.AboutController")
 		eb.Set("field", "Responder")
 		eb.Set("type1", "?")
 		eb.Set("type2", "glass0x47343f.MainResponder")
@@ -10268,7 +10439,7 @@ func (inst * comFactory4pComAboutController) getterForFieldProfileSelector (cont
 
 ////////////////////////////////////////////////////////////////////////////////
 
-// comFactory4pComAuthController : the factory of component: com92-controller0x9dc399.AuthController
+// comFactory4pComAuthController : the factory of component: com94-controller0x9dc399.AuthController
 type comFactory4pComAuthController struct {
 
     mPrototype * controller0x9dc399.AuthController
@@ -10331,7 +10502,7 @@ func (inst * comFactory4pComAuthController) getterForFieldResponderSelector (con
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com92-controller0x9dc399.AuthController")
+		eb.Set("com", "com94-controller0x9dc399.AuthController")
 		eb.Set("field", "Responder")
 		eb.Set("type1", "?")
 		eb.Set("type2", "glass0x47343f.MainResponder")
@@ -10345,7 +10516,7 @@ func (inst * comFactory4pComAuthController) getterForFieldResponderSelector (con
 
 ////////////////////////////////////////////////////////////////////////////////
 
-// comFactory4pComExampleController : the factory of component: com93-controller0x9dc399.ExampleController
+// comFactory4pComExampleController : the factory of component: com95-controller0x9dc399.ExampleController
 type comFactory4pComExampleController struct {
 
     mPrototype * controller0x9dc399.ExampleController
@@ -10408,7 +10579,7 @@ func (inst * comFactory4pComExampleController) getterForFieldResponderSelector (
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com93-controller0x9dc399.ExampleController")
+		eb.Set("com", "com95-controller0x9dc399.ExampleController")
 		eb.Set("field", "Responder")
 		eb.Set("type1", "?")
 		eb.Set("type2", "glass0x47343f.MainResponder")
@@ -10422,7 +10593,7 @@ func (inst * comFactory4pComExampleController) getterForFieldResponderSelector (
 
 ////////////////////////////////////////////////////////////////////////////////
 
-// comFactory4pComFileQueryController : the factory of component: com94-controller0x9dc399.FileQueryController
+// comFactory4pComFileQueryController : the factory of component: com96-controller0x9dc399.FileQueryController
 type comFactory4pComFileQueryController struct {
 
     mPrototype * controller0x9dc399.FileQueryController
@@ -10488,7 +10659,7 @@ func (inst * comFactory4pComFileQueryController) getterForFieldFileQueryServiceS
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com94-controller0x9dc399.FileQueryController")
+		eb.Set("com", "com96-controller0x9dc399.FileQueryController")
 		eb.Set("field", "FileQueryService")
 		eb.Set("type1", "?")
 		eb.Set("type2", "service0x3e063d.FileQueryService")
@@ -10506,7 +10677,7 @@ func (inst * comFactory4pComFileQueryController) getterForFieldResponderSelector
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com94-controller0x9dc399.FileQueryController")
+		eb.Set("com", "com96-controller0x9dc399.FileQueryController")
 		eb.Set("field", "Responder")
 		eb.Set("type1", "?")
 		eb.Set("type2", "glass0x47343f.MainResponder")
@@ -10520,7 +10691,7 @@ func (inst * comFactory4pComFileQueryController) getterForFieldResponderSelector
 
 ////////////////////////////////////////////////////////////////////////////////
 
-// comFactory4pComOnlineDocumentExampleController : the factory of component: com95-controller0x9dc399.OnlineDocumentExampleController
+// comFactory4pComOnlineDocumentExampleController : the factory of component: com97-controller0x9dc399.OnlineDocumentExampleController
 type comFactory4pComOnlineDocumentExampleController struct {
 
     mPrototype * controller0x9dc399.OnlineDocumentExampleController
@@ -10583,7 +10754,7 @@ func (inst * comFactory4pComOnlineDocumentExampleController) getterForFieldRespo
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com95-controller0x9dc399.OnlineDocumentExampleController")
+		eb.Set("com", "com97-controller0x9dc399.OnlineDocumentExampleController")
 		eb.Set("field", "Responder")
 		eb.Set("type1", "?")
 		eb.Set("type2", "glass0x47343f.MainResponder")
@@ -10597,7 +10768,7 @@ func (inst * comFactory4pComOnlineDocumentExampleController) getterForFieldRespo
 
 ////////////////////////////////////////////////////////////////////////////////
 
-// comFactory4pComPlatformController : the factory of component: com96-controller0x9dc399.PlatformController
+// comFactory4pComPlatformController : the factory of component: com98-controller0x9dc399.PlatformController
 type comFactory4pComPlatformController struct {
 
     mPrototype * controller0x9dc399.PlatformController
@@ -10666,7 +10837,7 @@ func (inst * comFactory4pComPlatformController) getterForFieldPlatformServiceSel
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com96-controller0x9dc399.PlatformController")
+		eb.Set("com", "com98-controller0x9dc399.PlatformController")
 		eb.Set("field", "PlatformService")
 		eb.Set("type1", "?")
 		eb.Set("type2", "service0x3e063d.PlatformService")
@@ -10684,7 +10855,7 @@ func (inst * comFactory4pComPlatformController) getterForFieldProfileServiceSele
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com96-controller0x9dc399.PlatformController")
+		eb.Set("com", "com98-controller0x9dc399.PlatformController")
 		eb.Set("field", "ProfileService")
 		eb.Set("type1", "?")
 		eb.Set("type2", "service0x3e063d.ProfileService")
@@ -10702,7 +10873,7 @@ func (inst * comFactory4pComPlatformController) getterForFieldResponderSelector 
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com96-controller0x9dc399.PlatformController")
+		eb.Set("com", "com98-controller0x9dc399.PlatformController")
 		eb.Set("field", "Responder")
 		eb.Set("type1", "?")
 		eb.Set("type2", "glass0x47343f.MainResponder")
@@ -10716,7 +10887,7 @@ func (inst * comFactory4pComPlatformController) getterForFieldResponderSelector 
 
 ////////////////////////////////////////////////////////////////////////////////
 
-// comFactory4pComUploadController : the factory of component: com97-controller0x9dc399.UploadController
+// comFactory4pComUploadController : the factory of component: com99-controller0x9dc399.UploadController
 type comFactory4pComUploadController struct {
 
     mPrototype * controller0x9dc399.UploadController
@@ -10782,7 +10953,7 @@ func (inst * comFactory4pComUploadController) getterForFieldFileSystemServiceSel
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com97-controller0x9dc399.UploadController")
+		eb.Set("com", "com99-controller0x9dc399.UploadController")
 		eb.Set("field", "FileSystemService")
 		eb.Set("type1", "?")
 		eb.Set("type2", "service0x3e063d.FileSystemService")
@@ -10800,7 +10971,7 @@ func (inst * comFactory4pComUploadController) getterForFieldResponderSelector (c
 	if !ok {
 		eb := &util.ErrorBuilder{}
 		eb.Message("bad cast")
-		eb.Set("com", "com97-controller0x9dc399.UploadController")
+		eb.Set("com", "com99-controller0x9dc399.UploadController")
 		eb.Set("field", "Responder")
 		eb.Set("type1", "?")
 		eb.Set("type2", "glass0x47343f.MainResponder")
@@ -10814,7 +10985,7 @@ func (inst * comFactory4pComUploadController) getterForFieldResponderSelector (c
 
 ////////////////////////////////////////////////////////////////////////////////
 
-// comFactory4pComHostFilter : the factory of component: com98-filter0x8aa8f6.HostFilter
+// comFactory4pComHostFilter : the factory of component: com100-filter0x8aa8f6.HostFilter
 type comFactory4pComHostFilter struct {
 
     mPrototype * filter0x8aa8f6.HostFilter
@@ -10868,7 +11039,7 @@ func (inst * comFactory4pComHostFilter) Inject(instance application.ComponentIns
 
 ////////////////////////////////////////////////////////////////////////////////
 
-// comFactory4pComHTTP404Filter : the factory of component: com99-filter0x8aa8f6.HTTP404Filter
+// comFactory4pComHTTP404Filter : the factory of component: com101-filter0x8aa8f6.HTTP404Filter
 type comFactory4pComHTTP404Filter struct {
 
     mPrototype * filter0x8aa8f6.HTTP404Filter

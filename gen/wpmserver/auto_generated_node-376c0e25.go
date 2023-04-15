@@ -28,6 +28,7 @@ import (
 	init0xc984bc "github.com/bitwormhole/wpm/server/support/init"
 	intents0x8ee0e0 "github.com/bitwormhole/wpm/server/support/intents"
 	intenttemplates0x2e3dcf "github.com/bitwormhole/wpm/server/support/intenttemplates"
+	jsonbuffer0x988f20 "github.com/bitwormhole/wpm/server/support/jsonbuffer"
 	locations0xb36349 "github.com/bitwormhole/wpm/server/support/locations"
 	mediae0xf005e2 "github.com/bitwormhole/wpm/server/support/mediae"
 	namespaces0xceefcf "github.com/bitwormhole/wpm/server/support/namespaces"
@@ -389,6 +390,20 @@ type pComIntentTemplateServiceImpl struct {
 	IntentFilterManager intents0x8557f3.FilterManager `inject:"#wpm-intent-filter-manager"`
 	PresetService service0x3e063d.PresetService `inject:"#PresetService"`
 	TemplateCache service0x3e063d.IntentTemplateEntityCache `inject:"#IntentTemplateEntityCache"`
+}
+
+
+type pComJSONBufferController struct {
+	instance *jsonbuffer0x988f20.JSONBufferController
+	 markup0x23084a.RestController `class:"rest-controller"`
+	JSONBufferService service0x3e063d.JSONBufferService `inject:"#JSONBufferService"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
+type pComImpJSONBufferService struct {
+	instance *jsonbuffer0x988f20.ImpJSONBufferService
+	 markup0x23084a.Component `id:"JSONBufferService"`
 }
 
 
