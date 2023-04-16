@@ -139,8 +139,7 @@ func (inst *IntentTemplateController) handleDeleteOne(c *gin.Context) {
 	}
 	err := req.open()
 	if err == nil {
-		id := req.id
-		err = req.doDelete(id)
+		err = req.doDelete(req.id)
 	}
 	req.send(err)
 }
@@ -154,8 +153,7 @@ func (inst *IntentTemplateController) handleDeleteByIDs(c *gin.Context) {
 	}
 	err := req.open()
 	if err == nil {
-		ids := req.ids
-		err = req.doDelete(ids...)
+		err = req.doDelete(req.ids...)
 	}
 	req.send(err)
 }

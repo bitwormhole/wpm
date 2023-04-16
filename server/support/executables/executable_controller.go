@@ -32,11 +32,14 @@ func (inst *ExecutableController) Init(ec glass.EngineConnection) error {
 	ec = ec.RequestMapping("executables")
 
 	ec.Handle(http.MethodGet, "", inst.handleGetList)
+	ec.Handle(http.MethodGet, ":id", inst.handleGetOne)
+
 	ec.Handle(http.MethodPost, "", inst.handlePost)
 
-	ec.Handle(http.MethodGet, ":id", inst.handleGetOne)
 	ec.Handle(http.MethodPut, ":id", inst.handlePut)
-	ec.Handle(http.MethodDelete, ":id", inst.handleDelete)
+
+	ec.Handle(http.MethodDelete, ":id", inst.handleDeleteOne)
+	ec.Handle(http.MethodDelete, "", inst.handleDeleteMulti)
 
 	return nil
 }
@@ -99,7 +102,7 @@ func (inst *ExecutableController) handlePut(c *gin.Context) {
 	req.send(err)
 }
 
-func (inst *ExecutableController) handleDelete(c *gin.Context) {
+func (inst *ExecutableController) handleDeleteOne(c *gin.Context) {
 	req := &myExecutableRequest{
 		gc:              c,
 		controller:      inst,
@@ -108,7 +111,21 @@ func (inst *ExecutableController) handleDelete(c *gin.Context) {
 	}
 	err := req.open()
 	if err == nil {
-		err = req.doDelete()
+		err = req.doDelete(req.id)
+	}
+	req.send(err)
+}
+
+func (inst *ExecutableController) handleDeleteMulti(c *gin.Context) {
+	req := &myExecutableRequest{
+		gc:              c,
+		controller:      inst,
+		wantRequestIDs:  true,
+		wantRequestBody: false,
+	}
+	err := req.open()
+	if err == nil {
+		err = req.doDelete(req.ids...)
 	}
 	req.send(err)
 }
@@ -120,11 +137,13 @@ type myExecutableRequest struct {
 	controller *ExecutableController
 
 	wantRequestID      bool
+	wantRequestIDs     bool
 	wantRequestBody    bool
 	wantRequestOptions bool
 
 	options *service.ExecutableOptions
 	id      dxo.ExecutableID
+	ids     []dxo.ExecutableID
 
 	body1 vo.Executable
 	body2 vo.Executable
@@ -143,6 +162,15 @@ func (inst *myExecutableRequest) open() error {
 		inst.id = dxo.ExecutableID(n)
 	}
 
+	if inst.wantRequestIDs {
+		idsstr := c.Query("ids")
+		ids, err := inst.parseIds(idsstr)
+		if err != nil {
+			return err
+		}
+		inst.ids = ids
+	}
+
 	if inst.wantRequestBody {
 		err := c.BindJSON(&inst.body1)
 		if err != nil {
@@ -159,6 +187,14 @@ func (inst *myExecutableRequest) open() error {
 	}
 
 	return nil
+}
+
+func (inst *myExecutableRequest) parseIds(str string) ([]dxo.ExecutableID, error) {
+	list := make([]dxo.ExecutableID, 0)
+	err := (&utils.GinUtils{}).ParseIDs(str, ".", func(n int) {
+		list = append(list, dxo.ExecutableID(n))
+	})
+	return list, err
 }
 
 func (inst *myExecutableRequest) readOptions() (*service.ExecutableOptions, error) {
@@ -243,8 +279,13 @@ func (inst *myExecutableRequest) doPut() error {
 	return nil
 }
 
-func (inst *myExecutableRequest) doDelete() error {
+func (inst *myExecutableRequest) doDelete(ids ...dxo.ExecutableID) error {
 	ctx := inst.gc
 	ser := inst.controller.ExecutableService
-	return ser.Remove(ctx, inst.id, nil)
+	elist := utils.ErrorList{}
+	for _, id := range ids {
+		err := ser.Remove(ctx, id, nil)
+		elist.Append(err)
+	}
+	return elist.First()
 }

@@ -8,6 +8,7 @@ import (
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/service"
+	"github.com/bitwormhole/wpm/server/utils"
 	"github.com/bitwormhole/wpm/server/web/dto"
 	"github.com/bitwormhole/wpm/server/web/vo"
 	"github.com/gin-gonic/gin"
@@ -34,7 +35,8 @@ func (inst *ContentTypeController) Init(ec glass.EngineConnection) error {
 	ec.Handle(http.MethodPost, "", inst.handlePost)
 	ec.Handle(http.MethodGet, ":id", inst.handleGetOne)
 	ec.Handle(http.MethodPut, ":id", inst.handlePut)
-	ec.Handle(http.MethodDelete, ":id", inst.handleDelete)
+	ec.Handle(http.MethodDelete, ":id", inst.handleDeleteOne)
+	ec.Handle(http.MethodDelete, "", inst.handleDeleteMulti)
 
 	return nil
 }
@@ -95,7 +97,7 @@ func (inst *ContentTypeController) handlePut(c *gin.Context) {
 	req.send(err)
 }
 
-func (inst *ContentTypeController) handleDelete(c *gin.Context) {
+func (inst *ContentTypeController) handleDeleteOne(c *gin.Context) {
 	req := &myContentTypeRequest{
 		gc:              c,
 		controller:      inst,
@@ -104,7 +106,21 @@ func (inst *ContentTypeController) handleDelete(c *gin.Context) {
 	}
 	err := req.open()
 	if err == nil {
-		err = req.doDelete()
+		err = req.doDelete(req.id)
+	}
+	req.send(err)
+}
+
+func (inst *ContentTypeController) handleDeleteMulti(c *gin.Context) {
+	req := &myContentTypeRequest{
+		gc:              c,
+		controller:      inst,
+		wantRequestIDs:  true,
+		wantRequestBody: false,
+	}
+	err := req.open()
+	if err == nil {
+		err = req.doDelete(req.ids...)
 	}
 	req.send(err)
 }
@@ -116,9 +132,12 @@ type myContentTypeRequest struct {
 	controller *ContentTypeController
 
 	wantRequestID   bool
+	wantRequestIDs  bool
 	wantRequestBody bool
 
-	id    dxo.ContentTypeID
+	id  dxo.ContentTypeID
+	ids []dxo.ContentTypeID
+
 	body1 vo.ContentType
 	body2 vo.ContentType
 }
@@ -136,6 +155,15 @@ func (inst *myContentTypeRequest) open() error {
 		inst.id = dxo.ContentTypeID(n)
 	}
 
+	if inst.wantRequestIDs {
+		idstr := c.Query("ids")
+		ids, err := inst.parseIds(idstr)
+		if err != nil {
+			return err
+		}
+		inst.ids = ids
+	}
+
 	if inst.wantRequestBody {
 		err := c.BindJSON(&inst.body1)
 		if err != nil {
@@ -144,6 +172,14 @@ func (inst *myContentTypeRequest) open() error {
 	}
 
 	return nil
+}
+
+func (inst *myContentTypeRequest) parseIds(str string) ([]dxo.ContentTypeID, error) {
+	list := make([]dxo.ContentTypeID, 0)
+	err := (&utils.GinUtils{}).ParseIDs(str, ".", func(n int) {
+		list = append(list, dxo.ContentTypeID(n))
+	})
+	return list, err
 }
 
 func (inst *myContentTypeRequest) send(err error) {
@@ -207,9 +243,13 @@ func (inst *myContentTypeRequest) doPut() error {
 	return nil
 }
 
-func (inst *myContentTypeRequest) doDelete() error {
+func (inst *myContentTypeRequest) doDelete(ids ...dxo.ContentTypeID) error {
 	ctx := inst.gc
 	ser := inst.controller.ContentTypeService
-	id := inst.id
-	return ser.Remove(ctx, id)
+	elist := utils.ErrorList{}
+	for _, id := range ids {
+		err := ser.Remove(ctx, id)
+		elist.Append(err)
+	}
+	return elist.First()
 }

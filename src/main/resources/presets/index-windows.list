@@ -14,10 +14,10 @@ res:///presets/content-types/text.json
 res:///presets/content-types/video.json
 
 # 预置常用程序
-res:///presets/executables/preset-executables-windows.json
+res:///presets/windows/preset-windows-executables.json
 
 # 预置命令模板
-res:///presets/intent-templates/preset-intent-templates.json
+res:///presets/windows/preset-windows-intent-templates.json
 
 # 软件源
-res:///presets/sources/sources.json
+res:///presets/common/sources.json

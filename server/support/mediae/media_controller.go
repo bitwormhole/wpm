@@ -40,7 +40,9 @@ func (inst *MediaController) Init(ec glass.EngineConnection) error {
 	ec.Handle(http.MethodPost, "import-presets", inst.handlePostImportPresets)
 
 	ec.Handle(http.MethodPut, ":id", inst.handlePut)
-	ec.Handle(http.MethodDelete, ":id", inst.handleDelete)
+
+	ec.Handle(http.MethodDelete, ":id", inst.handleDeleteOne)
+	ec.Handle(http.MethodDelete, "", inst.handleDeleteMulti)
 
 	ec.Handle(http.MethodGet, "/media/:type1/:type2/:hex/:name", inst.handleGetFile)
 
@@ -121,7 +123,21 @@ func (inst *MediaController) handlePut(c *gin.Context) {
 	req.send(err)
 }
 
-func (inst *MediaController) handleDelete(c *gin.Context) {
+func (inst *MediaController) handleDeleteMulti(c *gin.Context) {
+	req := &myMediaRequest{
+		gc:              c,
+		controller:      inst,
+		wantRequestIDs:  true,
+		wantRequestBody: false,
+	}
+	err := req.open()
+	if err == nil {
+		err = req.doDelete(req.ids...)
+	}
+	req.send(err)
+}
+
+func (inst *MediaController) handleDeleteOne(c *gin.Context) {
 	req := &myMediaRequest{
 		gc:              c,
 		controller:      inst,
@@ -130,7 +146,7 @@ func (inst *MediaController) handleDelete(c *gin.Context) {
 	}
 	err := req.open()
 	if err == nil {
-		err = req.doDelete()
+		err = req.doDelete(req.id)
 	}
 	req.send(err)
 }
@@ -293,11 +309,15 @@ func (inst *myMediaRequest) doPut() error {
 	return nil
 }
 
-func (inst *myMediaRequest) doDelete() error {
+func (inst *myMediaRequest) doDelete(ids ...dxo.MediaID) error {
 	ctx := inst.gc
 	ser := inst.controller.MediaService
-	id := inst.id
-	return ser.Remove(ctx, id)
+	elist := utils.ErrorList{}
+	for _, id := range ids {
+		err := ser.Remove(ctx, id)
+		elist.Append(err)
+	}
+	return elist.First()
 }
 
 func (inst *myMediaRequest) doGetFile(c *gin.Context) error {
