@@ -2,9 +2,7 @@ package namespaces
 
 import (
 	"net/http"
-	"sort"
 	"strconv"
-	"strings"
 
 	"github.com/bitwormhole/starter-gin/glass"
 	"github.com/bitwormhole/starter/markup"
@@ -175,27 +173,11 @@ func (inst *myNamespaceRequest) open() error {
 }
 
 func (inst *myNamespaceRequest) parseIds(str string) ([]dxo.NamespaceID, error) {
-	if str == "" {
-		return nil, nil
-	}
-	nlist := make([]int, 0)
-	src := strings.Split(str, ".")
-	for _, item := range src {
-		if item == "" {
-			continue
-		}
-		n, err := strconv.ParseInt(item, 10, 32)
-		if err != nil {
-			return nil, err
-		}
-		nlist = append(nlist, int(n))
-	}
-	sort.Ints(nlist)
-	dst := make([]dxo.NamespaceID, 0)
-	for _, n := range nlist {
-		dst = append(dst, dxo.NamespaceID(n))
-	}
-	return dst, nil
+	list := make([]dxo.NamespaceID, 0)
+	err := (&utils.GinUtils{}).ParseIDs(str, ".", func(n int) {
+		list = append(list, dxo.NamespaceID(n))
+	})
+	return list, err
 }
 
 func (inst *myNamespaceRequest) hasFlag(c *gin.Context, name string) bool {

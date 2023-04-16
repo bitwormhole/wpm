@@ -22,6 +22,10 @@ type Executable struct {
 	SHA256SUM        util.Hex
 	OpenWithPriority int // 如果 value<=0, 表示 disable
 
+	OS      string
+	Arch    string
+	Version string
+
 	Path     string         // this.Path == Location.Path
 	Location dxo.LocationID `gorm:"index:,unique"`
 	Class    dxo.LocationClass

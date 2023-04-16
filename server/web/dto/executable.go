@@ -27,8 +27,9 @@ type Executable struct {
 	Tags             dxo.StringList          `json:"tags"`
 	OpenWithPriority int                     `json:"open_with_priority"` // 如果 value<=0, 表示 disable
 
-	OS   string `json:"os"`   // 操作系统
-	Arch string `json:"arch"` // 处理器架构
+	OS      string `json:"os"`      // 操作系统
+	Arch    string `json:"arch"`    // 处理器架构
+	Version string `json:"version"` // exe 的版本
 
 	Path     string            `json:"path"`
 	Class    dxo.LocationClass `json:"location_class"`

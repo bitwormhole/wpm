@@ -8,6 +8,7 @@ import (
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/service"
+	"github.com/bitwormhole/wpm/server/utils"
 	"github.com/bitwormhole/wpm/server/web/dto"
 	"github.com/bitwormhole/wpm/server/web/vo"
 	"github.com/gin-gonic/gin"
@@ -38,7 +39,9 @@ func (inst *IntentTemplateController) Init(ec glass.EngineConnection) error {
 	ec.Handle(http.MethodPost, "import-preset", inst.handlePostImportPreset)
 
 	ec.Handle(http.MethodPut, ":id", inst.handlePut)
-	ec.Handle(http.MethodDelete, ":id", inst.handleDelete)
+
+	ec.Handle(http.MethodDelete, "", inst.handleDeleteByIDs)
+	ec.Handle(http.MethodDelete, ":id", inst.handleDeleteOne)
 
 	return nil
 }
@@ -127,7 +130,7 @@ func (inst *IntentTemplateController) handlePut(c *gin.Context) {
 	req.send(err)
 }
 
-func (inst *IntentTemplateController) handleDelete(c *gin.Context) {
+func (inst *IntentTemplateController) handleDeleteOne(c *gin.Context) {
 	req := &myIntentTemplateRequest{
 		gc:              c,
 		controller:      inst,
@@ -136,7 +139,23 @@ func (inst *IntentTemplateController) handleDelete(c *gin.Context) {
 	}
 	err := req.open()
 	if err == nil {
-		err = req.doDelete()
+		id := req.id
+		err = req.doDelete(id)
+	}
+	req.send(err)
+}
+
+func (inst *IntentTemplateController) handleDeleteByIDs(c *gin.Context) {
+	req := &myIntentTemplateRequest{
+		gc:              c,
+		controller:      inst,
+		wantRequestIDs:  true,
+		wantRequestBody: false,
+	}
+	err := req.open()
+	if err == nil {
+		ids := req.ids
+		err = req.doDelete(ids...)
 	}
 	req.send(err)
 }
@@ -148,9 +167,11 @@ type myIntentTemplateRequest struct {
 	controller *IntentTemplateController
 
 	wantRequestID   bool
+	wantRequestIDs  bool
 	wantRequestBody bool
 
 	id    dxo.IntentTemplateID
+	ids   []dxo.IntentTemplateID
 	body1 vo.IntentTemplate
 	body2 vo.IntentTemplate
 }
@@ -168,6 +189,15 @@ func (inst *myIntentTemplateRequest) open() error {
 		inst.id = dxo.IntentTemplateID(n)
 	}
 
+	if inst.wantRequestIDs {
+		idsstr := c.Query("ids")
+		ids, err := inst.parseIds(idsstr)
+		if err != nil {
+			return err
+		}
+		inst.ids = ids
+	}
+
 	if inst.wantRequestBody {
 		err := c.BindJSON(&inst.body1)
 		if err != nil {
@@ -176,6 +206,14 @@ func (inst *myIntentTemplateRequest) open() error {
 	}
 
 	return nil
+}
+
+func (inst *myIntentTemplateRequest) parseIds(str string) ([]dxo.IntentTemplateID, error) {
+	list := make([]dxo.IntentTemplateID, 0)
+	err := (&utils.GinUtils{}).ParseIDs(str, ".", func(n int) {
+		list = append(list, dxo.IntentTemplateID(n))
+	})
+	return list, err
 }
 
 func (inst *myIntentTemplateRequest) send(err error) {
@@ -256,9 +294,13 @@ func (inst *myIntentTemplateRequest) doPut() error {
 	return nil
 }
 
-func (inst *myIntentTemplateRequest) doDelete() error {
+func (inst *myIntentTemplateRequest) doDelete(ids ...dxo.IntentTemplateID) error {
 	ctx := inst.gc
 	ser := inst.controller.IntentTemplateService
-	id := inst.id
-	return ser.Remove(ctx, id)
+	elist := utils.ErrorList{}
+	for _, id := range ids {
+		err := ser.Remove(ctx, id)
+		elist.Append(err)
+	}
+	return elist.First()
 }

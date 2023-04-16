@@ -2,9 +2,7 @@ package projects
 
 import (
 	"net/http"
-	"sort"
 	"strconv"
-	"strings"
 
 	"github.com/bitwormhole/starter-gin/glass"
 	"github.com/bitwormhole/starter/markup"
@@ -180,27 +178,11 @@ func (inst *myProjectRequest) open() error {
 }
 
 func (inst *myProjectRequest) parseIds(str string) ([]dxo.ProjectID, error) {
-	if str == "" {
-		return nil, nil
-	}
-	nlist := make([]int, 0)
-	src := strings.Split(str, ".")
-	for _, item := range src {
-		if item == "" {
-			continue
-		}
-		n, err := strconv.ParseInt(item, 10, 32)
-		if err != nil {
-			return nil, err
-		}
-		nlist = append(nlist, int(n))
-	}
-	sort.Ints(nlist)
-	dst := make([]dxo.ProjectID, 0)
-	for _, n := range nlist {
-		dst = append(dst, dxo.ProjectID(n))
-	}
-	return dst, nil
+	list := make([]dxo.ProjectID, 0)
+	err := (&utils.GinUtils{}).ParseIDs(str, ".", func(n int) {
+		list = append(list, dxo.ProjectID(n))
+	})
+	return list, err
 }
 
 func (inst *myProjectRequest) hasFlag(c *gin.Context, name string) bool {

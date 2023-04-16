@@ -3,6 +3,7 @@ package jsonbuffer
 import (
 	"context"
 	"fmt"
+	"runtime"
 
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/wpm/server/service"
@@ -22,6 +23,7 @@ func (inst *ImpJSONBufferService) _Impl() service.JSONBufferService {
 }
 
 func (inst *ImpJSONBufferService) makeNewVO() *vo.Online {
+
 	o := &vo.Online{}
 
 	o.ContentTypes = make([]*dto.ContentType, 0)
@@ -30,6 +32,19 @@ func (inst *ImpJSONBufferService) makeNewVO() *vo.Online {
 	o.Mediae = make([]*dto.Media, 0)
 	o.Packages = make([]*dto.SoftwarePackage, 0)
 	o.Sources = make([]*dto.Namespace, 0)
+
+	pack := &dto.SoftwarePackage{
+		Namespace:   "default",
+		Name:        "todo",
+		OS:          runtime.GOOS,
+		Arch:        runtime.GOARCH,
+		Title:       "todo",
+		Description: "todo",
+		Icon:        "https://todo",
+		Revision:    1,
+		Version:     "0.0.0",
+	}
+	o.Packages = append(o.Packages, pack)
 
 	return o
 }

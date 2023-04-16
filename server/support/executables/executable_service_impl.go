@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"runtime"
 	"sort"
 	"strings"
 
@@ -77,6 +78,10 @@ func (inst *ExecutableServiceImpl) dto2entity(c context.Context, o1 *dto.Executa
 	o2.IconURL = o1.IconURL
 	o2.OpenWithPriority = o1.OpenWithPriority
 
+	o2.Arch = o1.Arch
+	o2.OS = o1.OS
+	o2.Version = o1.Version
+
 	o2.Path = o1.Path
 	o2.Location = o1.Location
 	o2.Class = o1.Class
@@ -86,6 +91,7 @@ func (inst *ExecutableServiceImpl) dto2entity(c context.Context, o1 *dto.Executa
 	if err != nil {
 		return nil, err
 	}
+
 	err = inst.computeEntity2(o2, opt)
 	if err != nil {
 		return nil, err
@@ -132,6 +138,14 @@ func (inst *ExecutableServiceImpl) computeEntity2(o2 *entity.Executable, opt *se
 
 	if ns == "" {
 		ns = "default" // the default NS
+	}
+
+	if o2.Arch == "" {
+		o2.Arch = runtime.GOARCH
+	}
+
+	if o2.OS == "" {
+		o2.OS = runtime.GOOS
 	}
 
 	o2.Namespace = ns
@@ -192,6 +206,10 @@ func (inst *ExecutableServiceImpl) entity2dto(o1 *entity.Executable) (*dto.Execu
 	o2.Path = o1.Path
 	o2.Location = o1.Location
 	o2.Class = o1.Class
+
+	o2.Arch = o1.Arch
+	o2.OS = o1.OS
+	o2.Version = o1.Version
 
 	// todo ...
 	o2.State = inst.checkExeFileState(o1)
