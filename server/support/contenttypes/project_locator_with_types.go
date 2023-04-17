@@ -65,7 +65,13 @@ func (inst *myProjectLocatorWithTypes) loadTypes() error {
 		if err != nil {
 			return err
 		}
-		inst.types = all
+		dst := make([]*entity.ContentType, 0)
+		for _, item := range all {
+			if item.AsProject {
+				dst = append(dst, item)
+			}
+		}
+		inst.types = dst
 	} else {
 		// get one
 		ent, err := ptdao.FindByName(pType)

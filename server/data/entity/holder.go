@@ -116,3 +116,23 @@ func (inst *Holder) SetRemoteRepository(o *RemoteRepository) {
 		Remote: o,
 	}
 }
+
+// SetExecutable ...
+func (inst *Holder) SetExecutable(o *Executable) {
+	inst.ID = int64(o.ID)
+	inst.Meta = o.Base
+	inst.TableName = o.TableName()
+	inst.Target = &Adapter{
+		Executable: o,
+	}
+}
+
+// SetIntentTemplate ...
+func (inst *Holder) SetIntentTemplate(o *IntentTemplate) {
+	inst.ID = int64(o.ID)
+	inst.Meta = o.Base
+	inst.TableName = o.TableName()
+	inst.Target = &Adapter{
+		IntentTemplate: o,
+	}
+}

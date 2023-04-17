@@ -7,6 +7,7 @@ import (
 
 	"github.com/bitwormhole/starter/collection"
 	"github.com/bitwormhole/starter/vlog"
+	"github.com/bitwormhole/wpm/server/service"
 	"github.com/bitwormhole/wpm/server/utils"
 	"github.com/bitwormhole/wpm/server/web/dto"
 )
@@ -79,12 +80,12 @@ func (inst *myImportPresetsLoader) findPresets() ([]*dto.Media, error) {
 func (inst *myImportPresetsLoader) makeMedia(name string, r collection.Res) (*dto.Media, error) {
 
 	prefixRes := inst.pathPrefixForRes
-	prefixWeb := inst.pathPrefixForWeb
+	// prefixWeb := inst.pathPrefixForWeb
 	if !strings.HasPrefix(name, prefixRes) {
 		return nil, nil // skip
 	}
-	part2 := name[len(prefixRes):]
-	url := prefixWeb + part2
+	// part2 := name[len(prefixRes):]
+	// url := prefixWeb + part2
 
 	bin, err := r.ReadBinary()
 	if err != nil {
@@ -95,11 +96,13 @@ func (inst *myImportPresetsLoader) makeMedia(name string, r collection.Res) (*dt
 	sum := utils.ComputeSHA256sum(bin)
 	simpleName := inst.getSimpleFileName(name)
 	ctype := inst.getContentType(name)
+	source := "res:///" + name
 
 	me := &dto.Media{
 		Name:        simpleName,
 		Label:       simpleName,
-		URL:         url,
+		URL:         "",
+		Source:      source,
 		FileSize:    int64(size),
 		SHA256SUM:   sum,
 		Bucket:      "preset",
@@ -112,7 +115,10 @@ func (inst *myImportPresetsLoader) makeMedia(name string, r collection.Res) (*dt
 func (inst *myImportPresetsLoader) getContentType(name string) string {
 	c := context.Background()
 	ser := inst.parent.ContentTypeService
-	t, _ := ser.GetContentType(c, name)
+	t, err := ser.GetContentType(c, name)
+	if err != nil {
+		t = "application/octet-stream"
+	}
 	return t
 }
 
@@ -140,12 +146,11 @@ func (inst *myImportPresetsLoader) insertPresets(list []*dto.Media) error {
 }
 
 func (inst *myImportPresetsLoader) insertPreset(o1 *dto.Media) error {
-	// ctx := inst.context
+	ctx := inst.context
 	ser := inst.parent
-	o2, err := ser.dto2entity(o1)
-	if err != nil {
-		return err
+	opt := &service.MediaOptions{
+		FetchFromSource: true,
 	}
-	_, err = ser.MediaDAO.Insert(o2)
+	_, err := ser.Insert(ctx, o1, opt)
 	return err
 }

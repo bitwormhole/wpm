@@ -33,6 +33,10 @@ func (inst *ImpTrashDao) ListAll() ([]*entity.Holder, error) {
 	elist := &utils.ErrorList{}
 	trash.TrashItems = make([]*entity.Holder, 0)
 
+	steps = append(steps, inst.listTrashedContentTypes)
+	steps = append(steps, inst.listTrashedExecutables)
+	steps = append(steps, inst.listTrashedIntentTemplates)
+	steps = append(steps, inst.listTrashedMediae)
 	steps = append(steps, inst.listTrashedPackages)
 	steps = append(steps, inst.listTrashedProjects)
 	steps = append(steps, inst.listTrashedRepositories)
@@ -79,6 +83,60 @@ func (inst *ImpTrashDao) listTrashedRepositories(t *vo.Trash) error {
 	for _, item := range list {
 		h := &entity.Holder{}
 		h.SetLocalRepository(item)
+		t.TrashItems = append(t.TrashItems, h)
+	}
+	return res.Error
+}
+
+func (inst *ImpTrashDao) listTrashedIntentTemplates(t *vo.Trash) error {
+	db := inst.Agent.DB()
+	list := make([]*entity.IntentTemplate, 0)
+	limit := inst.getTrashAtLimit()
+	res := db.Unscoped().Where("deleted_at > ?", limit).Find(&list)
+	for _, item := range list {
+		h := &entity.Holder{}
+		h.SetIntentTemplate(item)
+		t.TrashItems = append(t.TrashItems, h)
+	}
+	return res.Error
+}
+
+func (inst *ImpTrashDao) listTrashedMediae(t *vo.Trash) error {
+	db := inst.Agent.DB()
+	list := make([]*entity.Media, 0)
+	limit := inst.getTrashAtLimit()
+	res := db.Unscoped().Where("deleted_at > ?", limit).Find(&list)
+	for _, item := range list {
+		h := &entity.Holder{}
+		h.SetMedia(item)
+		t.TrashItems = append(t.TrashItems, h)
+	}
+	return res.Error
+
+}
+
+func (inst *ImpTrashDao) listTrashedContentTypes(t *vo.Trash) error {
+	db := inst.Agent.DB()
+	list := make([]*entity.ContentType, 0)
+	limit := inst.getTrashAtLimit()
+	res := db.Unscoped().Where("deleted_at > ?", limit).Find(&list)
+	for _, item := range list {
+		h := &entity.Holder{}
+		h.SetContentType(item)
+		t.TrashItems = append(t.TrashItems, h)
+	}
+	return res.Error
+
+}
+
+func (inst *ImpTrashDao) listTrashedExecutables(t *vo.Trash) error {
+	db := inst.Agent.DB()
+	list := make([]*entity.Executable, 0)
+	limit := inst.getTrashAtLimit()
+	res := db.Unscoped().Where("deleted_at > ?", limit).Find(&list)
+	for _, item := range list {
+		h := &entity.Holder{}
+		h.SetExecutable(item)
 		t.TrashItems = append(t.TrashItems, h)
 	}
 	return res.Error

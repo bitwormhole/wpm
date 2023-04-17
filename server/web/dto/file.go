@@ -13,4 +13,5 @@ type File struct {
 
 	Size int64  `json:"size"`
 	Type string `json:"content_type"`
+	Icon string `json:"icon"` // the url of icon
 }

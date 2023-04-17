@@ -43,7 +43,7 @@ func (inst *sortNOP) len() int {
 // SortAdapter ...排序适配器
 type SortAdapter struct {
 	SortFn
-	Quietly bool
+	Quietly bool // 出现异常时，不要抛出 panic
 	cached  *SortFn
 }
 

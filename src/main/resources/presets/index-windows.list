@@ -1,23 +1,21 @@
 
 # 这些是各种类型的预置
-res:///presets/content-types/application.json
-res:///presets/content-types/audio.json
-res:///presets/content-types/example.json
-res:///presets/content-types/exe.json
-res:///presets/content-types/font.json
-res:///presets/content-types/image.json
-res:///presets/content-types/message.json
-res:///presets/content-types/model.json
-res:///presets/content-types/multipart.json
-res:///presets/content-types/project.json
-res:///presets/content-types/text.json
-res:///presets/content-types/video.json
-
-# 预置常用程序
-res:///presets/windows/preset-windows-executables.json
-
-# 预置命令模板
-res:///presets/windows/preset-windows-intent-templates.json
+res:///presets/common/content-types/application.json
+res:///presets/common/content-types/audio.json
+res:///presets/common/content-types/example.json
+res:///presets/common/content-types/exe.json
+res:///presets/common/content-types/font.json
+res:///presets/common/content-types/image.json
+res:///presets/common/content-types/message.json
+res:///presets/common/content-types/model.json
+res:///presets/common/content-types/multipart.json
+res:///presets/common/content-types/project.json
+res:///presets/common/content-types/text.json
+res:///presets/common/content-types/video.json
 
 # 软件源
 res:///presets/common/sources.json
+
+# 预置包
+res:///presets/windows/packs/pack-cmd.json
+res:///presets/windows/packs/pack-explorer.json
