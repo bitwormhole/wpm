@@ -2224,6 +2224,7 @@ type comFactory4pComProjectTypeDaoImpl struct {
 
 	
 	mAgentSelector config.InjectionSelector
+	mTrashServiceSelector config.InjectionSelector
 	mUUIDGenServiceSelector config.InjectionSelector
 
 }
@@ -2232,6 +2233,7 @@ func (inst * comFactory4pComProjectTypeDaoImpl) init() application.ComponentFact
 
 	
 	inst.mAgentSelector = config.NewInjectionSelector("#GormDBAgent",nil)
+	inst.mTrashServiceSelector = config.NewInjectionSelector("#TrashService",nil)
 	inst.mUUIDGenServiceSelector = config.NewInjectionSelector("#UUIDGenService",nil)
 
 
@@ -2271,6 +2273,7 @@ func (inst * comFactory4pComProjectTypeDaoImpl) Inject(instance application.Comp
 	
 	obj := inst.castObject(instance)
 	obj.Agent = inst.getterForFieldAgentSelector(context)
+	obj.TrashService = inst.getterForFieldTrashServiceSelector(context)
 	obj.UUIDGenService = inst.getterForFieldUUIDGenServiceSelector(context)
 	return context.LastError()
 }
@@ -2287,6 +2290,24 @@ func (inst * comFactory4pComProjectTypeDaoImpl) getterForFieldAgentSelector (con
 		eb.Set("field", "Agent")
 		eb.Set("type1", "?")
 		eb.Set("type2", "dbagent0x9f90fb.GormDBAgent")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
+}
+
+//getterForFieldTrashServiceSelector
+func (inst * comFactory4pComProjectTypeDaoImpl) getterForFieldTrashServiceSelector (context application.InstanceContext) service0x3e063d.TrashService {
+
+	o1 := inst.mTrashServiceSelector.GetOne(context)
+	o2, ok := o1.(service0x3e063d.TrashService)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "ContentTypeDAO")
+		eb.Set("field", "TrashService")
+		eb.Set("type1", "?")
+		eb.Set("type2", "service0x3e063d.TrashService")
 		context.HandleError(eb.Create())
 		return nil
 	}
@@ -2722,6 +2743,7 @@ type comFactory4pComExecutableDaoImpl struct {
 
 	
 	mAgentSelector config.InjectionSelector
+	mTrashServiceSelector config.InjectionSelector
 	mUUIDGenServiceSelector config.InjectionSelector
 
 }
@@ -2730,6 +2752,7 @@ func (inst * comFactory4pComExecutableDaoImpl) init() application.ComponentFacto
 
 	
 	inst.mAgentSelector = config.NewInjectionSelector("#GormDBAgent",nil)
+	inst.mTrashServiceSelector = config.NewInjectionSelector("#TrashService",nil)
 	inst.mUUIDGenServiceSelector = config.NewInjectionSelector("#UUIDGenService",nil)
 
 
@@ -2769,6 +2792,7 @@ func (inst * comFactory4pComExecutableDaoImpl) Inject(instance application.Compo
 	
 	obj := inst.castObject(instance)
 	obj.Agent = inst.getterForFieldAgentSelector(context)
+	obj.TrashService = inst.getterForFieldTrashServiceSelector(context)
 	obj.UUIDGenService = inst.getterForFieldUUIDGenServiceSelector(context)
 	return context.LastError()
 }
@@ -2785,6 +2809,24 @@ func (inst * comFactory4pComExecutableDaoImpl) getterForFieldAgentSelector (cont
 		eb.Set("field", "Agent")
 		eb.Set("type1", "?")
 		eb.Set("type2", "dbagent0x9f90fb.GormDBAgent")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
+}
+
+//getterForFieldTrashServiceSelector
+func (inst * comFactory4pComExecutableDaoImpl) getterForFieldTrashServiceSelector (context application.InstanceContext) service0x3e063d.TrashService {
+
+	o1 := inst.mTrashServiceSelector.GetOne(context)
+	o2, ok := o1.(service0x3e063d.TrashService)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "ExecutableDAO")
+		eb.Set("field", "TrashService")
+		eb.Set("type1", "?")
+		eb.Set("type2", "service0x3e063d.TrashService")
 		context.HandleError(eb.Create())
 		return nil
 	}
@@ -3334,6 +3376,7 @@ type comFactory4pComExampleDaoImpl struct {
 
 	
 	mAgentSelector config.InjectionSelector
+	mTrashServiceSelector config.InjectionSelector
 	mUUIDGenServiceSelector config.InjectionSelector
 
 }
@@ -3342,6 +3385,7 @@ func (inst * comFactory4pComExampleDaoImpl) init() application.ComponentFactory 
 
 	
 	inst.mAgentSelector = config.NewInjectionSelector("#GormDBAgent",nil)
+	inst.mTrashServiceSelector = config.NewInjectionSelector("#TrashService",nil)
 	inst.mUUIDGenServiceSelector = config.NewInjectionSelector("#UUIDGenService",nil)
 
 
@@ -3381,6 +3425,7 @@ func (inst * comFactory4pComExampleDaoImpl) Inject(instance application.Componen
 	
 	obj := inst.castObject(instance)
 	obj.Agent = inst.getterForFieldAgentSelector(context)
+	obj.TrashService = inst.getterForFieldTrashServiceSelector(context)
 	obj.UUIDGenService = inst.getterForFieldUUIDGenServiceSelector(context)
 	return context.LastError()
 }
@@ -3397,6 +3442,24 @@ func (inst * comFactory4pComExampleDaoImpl) getterForFieldAgentSelector (context
 		eb.Set("field", "Agent")
 		eb.Set("type1", "?")
 		eb.Set("type2", "dbagent0x9f90fb.GormDBAgent")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
+}
+
+//getterForFieldTrashServiceSelector
+func (inst * comFactory4pComExampleDaoImpl) getterForFieldTrashServiceSelector (context application.InstanceContext) service0x3e063d.TrashService {
+
+	o1 := inst.mTrashServiceSelector.GetOne(context)
+	o2, ok := o1.(service0x3e063d.TrashService)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "ExampleDAO")
+		eb.Set("field", "TrashService")
+		eb.Set("type1", "?")
+		eb.Set("type2", "service0x3e063d.TrashService")
 		context.HandleError(eb.Create())
 		return nil
 	}
@@ -4681,6 +4744,7 @@ type comFactory4pComIntentTemplateDaoImpl struct {
 
 	
 	mAgentSelector config.InjectionSelector
+	mTrashServiceSelector config.InjectionSelector
 	mUUIDGenServiceSelector config.InjectionSelector
 
 }
@@ -4689,6 +4753,7 @@ func (inst * comFactory4pComIntentTemplateDaoImpl) init() application.ComponentF
 
 	
 	inst.mAgentSelector = config.NewInjectionSelector("#GormDBAgent",nil)
+	inst.mTrashServiceSelector = config.NewInjectionSelector("#TrashService",nil)
 	inst.mUUIDGenServiceSelector = config.NewInjectionSelector("#UUIDGenService",nil)
 
 
@@ -4728,6 +4793,7 @@ func (inst * comFactory4pComIntentTemplateDaoImpl) Inject(instance application.C
 	
 	obj := inst.castObject(instance)
 	obj.Agent = inst.getterForFieldAgentSelector(context)
+	obj.TrashService = inst.getterForFieldTrashServiceSelector(context)
 	obj.UUIDGenService = inst.getterForFieldUUIDGenServiceSelector(context)
 	return context.LastError()
 }
@@ -4744,6 +4810,24 @@ func (inst * comFactory4pComIntentTemplateDaoImpl) getterForFieldAgentSelector (
 		eb.Set("field", "Agent")
 		eb.Set("type1", "?")
 		eb.Set("type2", "dbagent0x9f90fb.GormDBAgent")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
+}
+
+//getterForFieldTrashServiceSelector
+func (inst * comFactory4pComIntentTemplateDaoImpl) getterForFieldTrashServiceSelector (context application.InstanceContext) service0x3e063d.TrashService {
+
+	o1 := inst.mTrashServiceSelector.GetOne(context)
+	o2, ok := o1.(service0x3e063d.TrashService)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "IntentTemplateDAO")
+		eb.Set("field", "TrashService")
+		eb.Set("type1", "?")
+		eb.Set("type2", "service0x3e063d.TrashService")
 		context.HandleError(eb.Create())
 		return nil
 	}
@@ -5156,6 +5240,7 @@ type comFactory4pComImpLocationDao struct {
 
 	
 	mAgentSelector config.InjectionSelector
+	mTrashServiceSelector config.InjectionSelector
 	mUUIDGenServiceSelector config.InjectionSelector
 
 }
@@ -5164,6 +5249,7 @@ func (inst * comFactory4pComImpLocationDao) init() application.ComponentFactory 
 
 	
 	inst.mAgentSelector = config.NewInjectionSelector("#GormDBAgent",nil)
+	inst.mTrashServiceSelector = config.NewInjectionSelector("#TrashService",nil)
 	inst.mUUIDGenServiceSelector = config.NewInjectionSelector("#UUIDGenService",nil)
 
 
@@ -5203,6 +5289,7 @@ func (inst * comFactory4pComImpLocationDao) Inject(instance application.Componen
 	
 	obj := inst.castObject(instance)
 	obj.Agent = inst.getterForFieldAgentSelector(context)
+	obj.TrashService = inst.getterForFieldTrashServiceSelector(context)
 	obj.UUIDGenService = inst.getterForFieldUUIDGenServiceSelector(context)
 	return context.LastError()
 }
@@ -5219,6 +5306,24 @@ func (inst * comFactory4pComImpLocationDao) getterForFieldAgentSelector (context
 		eb.Set("field", "Agent")
 		eb.Set("type1", "?")
 		eb.Set("type2", "dbagent0x9f90fb.GormDBAgent")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
+}
+
+//getterForFieldTrashServiceSelector
+func (inst * comFactory4pComImpLocationDao) getterForFieldTrashServiceSelector (context application.InstanceContext) service0x3e063d.TrashService {
+
+	o1 := inst.mTrashServiceSelector.GetOne(context)
+	o2, ok := o1.(service0x3e063d.TrashService)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "LocationDAO")
+		eb.Set("field", "TrashService")
+		eb.Set("type1", "?")
+		eb.Set("type2", "service0x3e063d.TrashService")
 		context.HandleError(eb.Create())
 		return nil
 	}
@@ -5330,6 +5435,7 @@ type comFactory4pComMediaController struct {
     mPrototype * mediae0xf005e2.MediaController
 
 	
+	mFileSystemServiceSelector config.InjectionSelector
 	mMediaServiceSelector config.InjectionSelector
 	mResponderSelector config.InjectionSelector
 
@@ -5338,6 +5444,7 @@ type comFactory4pComMediaController struct {
 func (inst * comFactory4pComMediaController) init() application.ComponentFactory {
 
 	
+	inst.mFileSystemServiceSelector = config.NewInjectionSelector("#FileSystemService",nil)
 	inst.mMediaServiceSelector = config.NewInjectionSelector("#MediaService",nil)
 	inst.mResponderSelector = config.NewInjectionSelector("#glass-main-responder",nil)
 
@@ -5377,9 +5484,28 @@ func (inst * comFactory4pComMediaController) Destroy(instance application.Compon
 func (inst * comFactory4pComMediaController) Inject(instance application.ComponentInstance, context application.InstanceContext) error {
 	
 	obj := inst.castObject(instance)
+	obj.FileSystemService = inst.getterForFieldFileSystemServiceSelector(context)
 	obj.MediaService = inst.getterForFieldMediaServiceSelector(context)
 	obj.Responder = inst.getterForFieldResponderSelector(context)
 	return context.LastError()
+}
+
+//getterForFieldFileSystemServiceSelector
+func (inst * comFactory4pComMediaController) getterForFieldFileSystemServiceSelector (context application.InstanceContext) service0x3e063d.FileSystemService {
+
+	o1 := inst.mFileSystemServiceSelector.GetOne(context)
+	o2, ok := o1.(service0x3e063d.FileSystemService)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "com47-mediae0xf005e2.MediaController")
+		eb.Set("field", "FileSystemService")
+		eb.Set("type1", "?")
+		eb.Set("type2", "service0x3e063d.FileSystemService")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
 }
 
 //getterForFieldMediaServiceSelector
@@ -5429,6 +5555,7 @@ type comFactory4pComMediaDaoImpl struct {
 
 	
 	mAgentSelector config.InjectionSelector
+	mTrashServiceSelector config.InjectionSelector
 	mUUIDGenServiceSelector config.InjectionSelector
 
 }
@@ -5437,6 +5564,7 @@ func (inst * comFactory4pComMediaDaoImpl) init() application.ComponentFactory {
 
 	
 	inst.mAgentSelector = config.NewInjectionSelector("#GormDBAgent",nil)
+	inst.mTrashServiceSelector = config.NewInjectionSelector("#TrashService",nil)
 	inst.mUUIDGenServiceSelector = config.NewInjectionSelector("#UUIDGenService",nil)
 
 
@@ -5476,6 +5604,7 @@ func (inst * comFactory4pComMediaDaoImpl) Inject(instance application.ComponentI
 	
 	obj := inst.castObject(instance)
 	obj.Agent = inst.getterForFieldAgentSelector(context)
+	obj.TrashService = inst.getterForFieldTrashServiceSelector(context)
 	obj.UUIDGenService = inst.getterForFieldUUIDGenServiceSelector(context)
 	return context.LastError()
 }
@@ -5492,6 +5621,24 @@ func (inst * comFactory4pComMediaDaoImpl) getterForFieldAgentSelector (context a
 		eb.Set("field", "Agent")
 		eb.Set("type1", "?")
 		eb.Set("type2", "dbagent0x9f90fb.GormDBAgent")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
+}
+
+//getterForFieldTrashServiceSelector
+func (inst * comFactory4pComMediaDaoImpl) getterForFieldTrashServiceSelector (context application.InstanceContext) service0x3e063d.TrashService {
+
+	o1 := inst.mTrashServiceSelector.GetOne(context)
+	o2, ok := o1.(service0x3e063d.TrashService)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "MediaDAO")
+		eb.Set("field", "TrashService")
+		eb.Set("type1", "?")
+		eb.Set("type2", "service0x3e063d.TrashService")
 		context.HandleError(eb.Create())
 		return nil
 	}
@@ -6327,6 +6474,7 @@ type comFactory4pComPluginDaoImpl struct {
 
 	
 	mAgentSelector config.InjectionSelector
+	mTrashServiceSelector config.InjectionSelector
 	mUUIDGenServiceSelector config.InjectionSelector
 
 }
@@ -6335,6 +6483,7 @@ func (inst * comFactory4pComPluginDaoImpl) init() application.ComponentFactory {
 
 	
 	inst.mAgentSelector = config.NewInjectionSelector("#GormDBAgent",nil)
+	inst.mTrashServiceSelector = config.NewInjectionSelector("#TrashService",nil)
 	inst.mUUIDGenServiceSelector = config.NewInjectionSelector("#UUIDGenService",nil)
 
 
@@ -6374,6 +6523,7 @@ func (inst * comFactory4pComPluginDaoImpl) Inject(instance application.Component
 	
 	obj := inst.castObject(instance)
 	obj.Agent = inst.getterForFieldAgentSelector(context)
+	obj.TrashService = inst.getterForFieldTrashServiceSelector(context)
 	obj.UUIDGenService = inst.getterForFieldUUIDGenServiceSelector(context)
 	return context.LastError()
 }
@@ -6390,6 +6540,24 @@ func (inst * comFactory4pComPluginDaoImpl) getterForFieldAgentSelector (context 
 		eb.Set("field", "Agent")
 		eb.Set("type1", "?")
 		eb.Set("type2", "dbagent0x9f90fb.GormDBAgent")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
+}
+
+//getterForFieldTrashServiceSelector
+func (inst * comFactory4pComPluginDaoImpl) getterForFieldTrashServiceSelector (context application.InstanceContext) service0x3e063d.TrashService {
+
+	o1 := inst.mTrashServiceSelector.GetOne(context)
+	o2, ok := o1.(service0x3e063d.TrashService)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "SoftwarePackageDAO")
+		eb.Set("field", "TrashService")
+		eb.Set("type1", "?")
+		eb.Set("type2", "service0x3e063d.TrashService")
 		context.HandleError(eb.Create())
 		return nil
 	}
@@ -7155,6 +7323,7 @@ type comFactory4pComProjectDaoImpl struct {
 
 	
 	mAgentSelector config.InjectionSelector
+	mTrashServiceSelector config.InjectionSelector
 	mUUIDGenServiceSelector config.InjectionSelector
 
 }
@@ -7163,6 +7332,7 @@ func (inst * comFactory4pComProjectDaoImpl) init() application.ComponentFactory 
 
 	
 	inst.mAgentSelector = config.NewInjectionSelector("#GormDBAgent",nil)
+	inst.mTrashServiceSelector = config.NewInjectionSelector("#TrashService",nil)
 	inst.mUUIDGenServiceSelector = config.NewInjectionSelector("#UUIDGenService",nil)
 
 
@@ -7202,6 +7372,7 @@ func (inst * comFactory4pComProjectDaoImpl) Inject(instance application.Componen
 	
 	obj := inst.castObject(instance)
 	obj.Agent = inst.getterForFieldAgentSelector(context)
+	obj.TrashService = inst.getterForFieldTrashServiceSelector(context)
 	obj.UUIDGenService = inst.getterForFieldUUIDGenServiceSelector(context)
 	return context.LastError()
 }
@@ -7218,6 +7389,24 @@ func (inst * comFactory4pComProjectDaoImpl) getterForFieldAgentSelector (context
 		eb.Set("field", "Agent")
 		eb.Set("type1", "?")
 		eb.Set("type2", "dbagent0x9f90fb.GormDBAgent")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
+}
+
+//getterForFieldTrashServiceSelector
+func (inst * comFactory4pComProjectDaoImpl) getterForFieldTrashServiceSelector (context application.InstanceContext) service0x3e063d.TrashService {
+
+	o1 := inst.mTrashServiceSelector.GetOne(context)
+	o2, ok := o1.(service0x3e063d.TrashService)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "ProjectDAO")
+		eb.Set("field", "TrashService")
+		eb.Set("type1", "?")
+		eb.Set("type2", "service0x3e063d.TrashService")
 		context.HandleError(eb.Create())
 		return nil
 	}
@@ -7727,6 +7916,7 @@ type comFactory4pComRepositoryDaoImpl struct {
 
 	
 	mAgentSelector config.InjectionSelector
+	mTrashServiceSelector config.InjectionSelector
 	mUUIDGenServiceSelector config.InjectionSelector
 
 }
@@ -7735,6 +7925,7 @@ func (inst * comFactory4pComRepositoryDaoImpl) init() application.ComponentFacto
 
 	
 	inst.mAgentSelector = config.NewInjectionSelector("#GormDBAgent",nil)
+	inst.mTrashServiceSelector = config.NewInjectionSelector("#TrashService",nil)
 	inst.mUUIDGenServiceSelector = config.NewInjectionSelector("#UUIDGenService",nil)
 
 
@@ -7774,6 +7965,7 @@ func (inst * comFactory4pComRepositoryDaoImpl) Inject(instance application.Compo
 	
 	obj := inst.castObject(instance)
 	obj.Agent = inst.getterForFieldAgentSelector(context)
+	obj.TrashService = inst.getterForFieldTrashServiceSelector(context)
 	obj.UUIDGenService = inst.getterForFieldUUIDGenServiceSelector(context)
 	return context.LastError()
 }
@@ -7790,6 +7982,24 @@ func (inst * comFactory4pComRepositoryDaoImpl) getterForFieldAgentSelector (cont
 		eb.Set("field", "Agent")
 		eb.Set("type1", "?")
 		eb.Set("type2", "dbagent0x9f90fb.GormDBAgent")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
+}
+
+//getterForFieldTrashServiceSelector
+func (inst * comFactory4pComRepositoryDaoImpl) getterForFieldTrashServiceSelector (context application.InstanceContext) service0x3e063d.TrashService {
+
+	o1 := inst.mTrashServiceSelector.GetOne(context)
+	o2, ok := o1.(service0x3e063d.TrashService)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "LocalRepositoryDAO")
+		eb.Set("field", "TrashService")
+		eb.Set("type1", "?")
+		eb.Set("type2", "service0x3e063d.TrashService")
 		context.HandleError(eb.Create())
 		return nil
 	}
@@ -9048,6 +9258,7 @@ type comFactory4pComSettingDaoImpl struct {
 
 	
 	mAgentSelector config.InjectionSelector
+	mTrashServiceSelector config.InjectionSelector
 	mUUIDGenServiceSelector config.InjectionSelector
 
 }
@@ -9056,6 +9267,7 @@ func (inst * comFactory4pComSettingDaoImpl) init() application.ComponentFactory 
 
 	
 	inst.mAgentSelector = config.NewInjectionSelector("#GormDBAgent",nil)
+	inst.mTrashServiceSelector = config.NewInjectionSelector("#TrashService",nil)
 	inst.mUUIDGenServiceSelector = config.NewInjectionSelector("#UUIDGenService",nil)
 
 
@@ -9095,6 +9307,7 @@ func (inst * comFactory4pComSettingDaoImpl) Inject(instance application.Componen
 	
 	obj := inst.castObject(instance)
 	obj.Agent = inst.getterForFieldAgentSelector(context)
+	obj.TrashService = inst.getterForFieldTrashServiceSelector(context)
 	obj.UUIDGenService = inst.getterForFieldUUIDGenServiceSelector(context)
 	return context.LastError()
 }
@@ -9111,6 +9324,24 @@ func (inst * comFactory4pComSettingDaoImpl) getterForFieldAgentSelector (context
 		eb.Set("field", "Agent")
 		eb.Set("type1", "?")
 		eb.Set("type2", "dbagent0x9f90fb.GormDBAgent")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
+}
+
+//getterForFieldTrashServiceSelector
+func (inst * comFactory4pComSettingDaoImpl) getterForFieldTrashServiceSelector (context application.InstanceContext) service0x3e063d.TrashService {
+
+	o1 := inst.mTrashServiceSelector.GetOne(context)
+	o2, ok := o1.(service0x3e063d.TrashService)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "SettingDAO")
+		eb.Set("field", "TrashService")
+		eb.Set("type1", "?")
+		eb.Set("type2", "service0x3e063d.TrashService")
 		context.HandleError(eb.Create())
 		return nil
 	}
@@ -9783,6 +10014,7 @@ type comFactory4pComImpTrashService struct {
 
 	
 	mTrashDaoSelector config.InjectionSelector
+	mAutoCleanSelector config.InjectionSelector
 
 }
 
@@ -9790,6 +10022,7 @@ func (inst * comFactory4pComImpTrashService) init() application.ComponentFactory
 
 	
 	inst.mTrashDaoSelector = config.NewInjectionSelector("#TrashDAO",nil)
+	inst.mAutoCleanSelector = config.NewInjectionSelector("${wpm.auto-clean-trash.enabled}",nil)
 
 
 	inst.mPrototype = inst.newObject()
@@ -9817,7 +10050,7 @@ func (inst * comFactory4pComImpTrashService) AfterService() application.Componen
 }
 
 func (inst * comFactory4pComImpTrashService) Init(instance application.ComponentInstance) error {
-	return nil
+	return inst.castObject(instance).Init()
 }
 
 func (inst * comFactory4pComImpTrashService) Destroy(instance application.ComponentInstance) error {
@@ -9828,6 +10061,7 @@ func (inst * comFactory4pComImpTrashService) Inject(instance application.Compone
 	
 	obj := inst.castObject(instance)
 	obj.TrashDao = inst.getterForFieldTrashDaoSelector(context)
+	obj.AutoClean = inst.getterForFieldAutoCleanSelector(context)
 	return context.LastError()
 }
 
@@ -9849,6 +10083,11 @@ func (inst * comFactory4pComImpTrashService) getterForFieldTrashDaoSelector (con
 	return o2
 }
 
+//getterForFieldAutoCleanSelector
+func (inst * comFactory4pComImpTrashService) getterForFieldAutoCleanSelector (context application.InstanceContext) bool {
+    return inst.mAutoCleanSelector.GetBool(context)
+}
+
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -9860,6 +10099,7 @@ type comFactory4pComImpWorktreeDao struct {
 
 	
 	mAgentSelector config.InjectionSelector
+	mTrashServiceSelector config.InjectionSelector
 	mUUIDGenServiceSelector config.InjectionSelector
 
 }
@@ -9868,6 +10108,7 @@ func (inst * comFactory4pComImpWorktreeDao) init() application.ComponentFactory 
 
 	
 	inst.mAgentSelector = config.NewInjectionSelector("#GormDBAgent",nil)
+	inst.mTrashServiceSelector = config.NewInjectionSelector("#TrashService",nil)
 	inst.mUUIDGenServiceSelector = config.NewInjectionSelector("#UUIDGenService",nil)
 
 
@@ -9907,6 +10148,7 @@ func (inst * comFactory4pComImpWorktreeDao) Inject(instance application.Componen
 	
 	obj := inst.castObject(instance)
 	obj.Agent = inst.getterForFieldAgentSelector(context)
+	obj.TrashService = inst.getterForFieldTrashServiceSelector(context)
 	obj.UUIDGenService = inst.getterForFieldUUIDGenServiceSelector(context)
 	return context.LastError()
 }
@@ -9923,6 +10165,24 @@ func (inst * comFactory4pComImpWorktreeDao) getterForFieldAgentSelector (context
 		eb.Set("field", "Agent")
 		eb.Set("type1", "?")
 		eb.Set("type2", "dbagent0x9f90fb.GormDBAgent")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
+}
+
+//getterForFieldTrashServiceSelector
+func (inst * comFactory4pComImpWorktreeDao) getterForFieldTrashServiceSelector (context application.InstanceContext) service0x3e063d.TrashService {
+
+	o1 := inst.mTrashServiceSelector.GetOne(context)
+	o2, ok := o1.(service0x3e063d.TrashService)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "WorktreeDAO")
+		eb.Set("field", "TrashService")
+		eb.Set("type1", "?")
+		eb.Set("type2", "service0x3e063d.TrashService")
 		context.HandleError(eb.Create())
 		return nil
 	}
@@ -10097,6 +10357,7 @@ type comFactory4pComWpmDataSource struct {
     mPrototype * support0xf47d7f.WpmDataSource
 
 	
+	mACSelector config.InjectionSelector
 	mDMSelector config.InjectionSelector
 	mAppDataServiceSelector config.InjectionSelector
 	mAboutServiceSelector config.InjectionSelector
@@ -10112,6 +10373,7 @@ type comFactory4pComWpmDataSource struct {
 func (inst * comFactory4pComWpmDataSource) init() application.ComponentFactory {
 
 	
+	inst.mACSelector = config.NewInjectionSelector("context",nil)
 	inst.mDMSelector = config.NewInjectionSelector("#starter-gorm-driver-manager",nil)
 	inst.mAppDataServiceSelector = config.NewInjectionSelector("#AppDataService",nil)
 	inst.mAboutServiceSelector = config.NewInjectionSelector("#AboutService",nil)
@@ -10148,7 +10410,7 @@ func (inst * comFactory4pComWpmDataSource) AfterService() application.ComponentA
 }
 
 func (inst * comFactory4pComWpmDataSource) Init(instance application.ComponentInstance) error {
-	return nil
+	return inst.castObject(instance).Init()
 }
 
 func (inst * comFactory4pComWpmDataSource) Destroy(instance application.ComponentInstance) error {
@@ -10158,6 +10420,7 @@ func (inst * comFactory4pComWpmDataSource) Destroy(instance application.Componen
 func (inst * comFactory4pComWpmDataSource) Inject(instance application.ComponentInstance, context application.InstanceContext) error {
 	
 	obj := inst.castObject(instance)
+	obj.AC = inst.getterForFieldACSelector(context)
 	obj.DM = inst.getterForFieldDMSelector(context)
 	obj.AppDataService = inst.getterForFieldAppDataServiceSelector(context)
 	obj.AboutService = inst.getterForFieldAboutServiceSelector(context)
@@ -10168,6 +10431,11 @@ func (inst * comFactory4pComWpmDataSource) Inject(instance application.Component
 	obj.Database = inst.getterForFieldDatabaseSelector(context)
 	obj.Port = inst.getterForFieldPortSelector(context)
 	return context.LastError()
+}
+
+//getterForFieldACSelector
+func (inst * comFactory4pComWpmDataSource) getterForFieldACSelector (context application.InstanceContext) application.Context {
+    return context.Context()
 }
 
 //getterForFieldDMSelector

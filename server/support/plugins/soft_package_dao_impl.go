@@ -14,6 +14,7 @@ type PluginDaoImpl struct {
 	markup.Component `id:"SoftwarePackageDAO"`
 
 	Agent          dbagent.GormDBAgent    `inject:"#GormDBAgent"`
+	TrashService   service.TrashService   `inject:"#TrashService"`
 	UUIDGenService service.UUIDGenService `inject:"#UUIDGenService"`
 }
 
@@ -64,6 +65,9 @@ func (inst *PluginDaoImpl) ListByModuleName(mod string) ([]*entity.SoftwarePacka
 
 // Insert ...
 func (inst *PluginDaoImpl) Insert(o *entity.SoftwarePackage) (*entity.SoftwarePackage, error) {
+
+	inst.TrashService.OnInsert()
+
 	uuid := inst.UUIDGenService.GenerateUUID("entity.SoftwarePackage,path=" + o.Name)
 	o.UUID = uuid
 	o.ID = 0
@@ -100,6 +104,9 @@ func (inst *PluginDaoImpl) Update(id dxo.SoftwarePackageID, o1 *entity.SoftwareP
 
 // Remove ...
 func (inst *PluginDaoImpl) Remove(id dxo.SoftwarePackageID) error {
+
+	inst.TrashService.OnDelete()
+
 	o := inst.model()
 	db := inst.Agent.DB()
 	res := db.Delete(o, id)

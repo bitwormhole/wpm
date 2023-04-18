@@ -16,6 +16,7 @@ type ProjectTypeDaoImpl struct {
 	markup.Component `id:"ContentTypeDAO"`
 
 	Agent          dbagent.GormDBAgent    `inject:"#GormDBAgent"`
+	TrashService   service.TrashService   `inject:"#TrashService"`
 	UUIDGenService service.UUIDGenService `inject:"#UUIDGenService"`
 }
 
@@ -108,6 +109,8 @@ func (inst *ProjectTypeDaoImpl) filterByPattern(want string, src []*entity.Conte
 // Insert ...
 func (inst *ProjectTypeDaoImpl) Insert(o *entity.ContentType) (*entity.ContentType, error) {
 
+	inst.TrashService.OnInsert()
+
 	// compute fields
 	strKey := o.Patterns
 	strName := o.Name.String()
@@ -151,6 +154,9 @@ func (inst *ProjectTypeDaoImpl) Update(id dxo.ContentTypeID, o1 *entity.ContentT
 
 // Remove ...
 func (inst *ProjectTypeDaoImpl) Remove(id dxo.ContentTypeID) error {
+
+	inst.TrashService.OnDelete()
+
 	m := inst.model()
 	db := inst.Agent.DB()
 	res := db.Delete(m, id)

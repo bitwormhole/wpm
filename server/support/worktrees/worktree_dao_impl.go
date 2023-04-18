@@ -18,6 +18,7 @@ type ImpWorktreeDao struct {
 	markup.Component `id:"WorktreeDAO"`
 
 	Agent          dbagent.GormDBAgent    `inject:"#GormDBAgent"`
+	TrashService   service.TrashService   `inject:"#TrashService"`
 	UUIDGenService service.UUIDGenService `inject:"#UUIDGenService"`
 }
 
@@ -82,6 +83,8 @@ func (inst *ImpWorktreeDao) ListAll() ([]*entity.Worktree, error) {
 // Insert ...
 func (inst *ImpWorktreeDao) Insert(o *entity.Worktree) (*entity.Worktree, error) {
 
+	inst.TrashService.OnInsert()
+
 	// compute fields
 	o.ID = 0
 	o.UUID = inst.UUIDGenService.GenerateUUID(o.DotGitPath + "|entity.Project|" + o.WorkingDirectory)
@@ -121,6 +124,9 @@ func (inst *ImpWorktreeDao) Update(id dxo.WorktreeID, o1 *entity.Worktree) (*ent
 
 // Remove ...
 func (inst *ImpWorktreeDao) Remove(id dxo.WorktreeID) error {
+
+	inst.TrashService.OnDelete()
+
 	db := inst.Agent.DB()
 	m := inst.model()
 	res := db.Delete(m, id)

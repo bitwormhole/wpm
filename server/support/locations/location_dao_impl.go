@@ -18,6 +18,7 @@ type ImpLocationDao struct {
 	markup.Component `id:"LocationDAO"`
 
 	Agent          dbagent.GormDBAgent    `inject:"#GormDBAgent"`
+	TrashService   service.TrashService   `inject:"#TrashService"`
 	UUIDGenService service.UUIDGenService `inject:"#UUIDGenService"`
 }
 
@@ -82,6 +83,8 @@ func (inst *ImpLocationDao) ListAll() ([]*entity.Location, error) {
 // Insert ...
 func (inst *ImpLocationDao) Insert(o *entity.Location) (*entity.Location, error) {
 
+	inst.TrashService.OnInsert()
+
 	// compute fields
 	o.ID = 0
 	o.UUID = inst.UUIDGenService.GenerateUUID(o.Path + "|entity.Location|")
@@ -125,6 +128,9 @@ func (inst *ImpLocationDao) Update(id dxo.LocationID, o1 *entity.Location) (*ent
 
 // Remove ...
 func (inst *ImpLocationDao) Remove(id dxo.LocationID) error {
+
+	inst.TrashService.OnDelete()
+
 	db := inst.Agent.DB()
 	m := inst.model()
 	res := db.Delete(m, id)

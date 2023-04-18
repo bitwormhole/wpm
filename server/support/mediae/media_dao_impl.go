@@ -14,6 +14,7 @@ type MediaDaoImpl struct {
 	markup.Component `id:"MediaDAO"`
 
 	Agent          dbagent.GormDBAgent    `inject:"#GormDBAgent"`
+	TrashService   service.TrashService   `inject:"#TrashService"`
 	UUIDGenService service.UUIDGenService `inject:"#UUIDGenService"`
 }
 
@@ -76,6 +77,8 @@ func (inst *MediaDaoImpl) ListByIDs(ids []dxo.MediaID) ([]*entity.Media, error) 
 // Insert ...
 func (inst *MediaDaoImpl) Insert(o *entity.Media) (*entity.Media, error) {
 
+	inst.TrashService.OnInsert()
+
 	o.ID = 0
 	o.UUID = inst.UUIDGenService.GenerateUUID(o.SHA256SUM.String() + "|entity.Media|")
 
@@ -113,12 +116,11 @@ func (inst *MediaDaoImpl) Update(id dxo.MediaID, o1 *entity.Media) (*entity.Medi
 
 // Remove ...
 func (inst *MediaDaoImpl) Remove(id dxo.MediaID) error {
+
+	inst.TrashService.OnDelete()
+
 	db := inst.Agent.DB()
 	o2 := inst.model()
-	res := db.Find(&o2, id)
-	if res.Error != nil {
-		return res.Error
-	}
-	res = db.Delete(o2, id)
+	res := db.Delete(&o2, id)
 	return res.Error
 }

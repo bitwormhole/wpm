@@ -16,6 +16,7 @@ type ExampleDaoImpl struct {
 	markup.Component `id:"ExampleDAO"`
 
 	Agent          dbagent.GormDBAgent    `inject:"#GormDBAgent"`
+	TrashService   service.TrashService   `inject:"#TrashService"`
 	UUIDGenService service.UUIDGenService `inject:"#UUIDGenService"`
 }
 
@@ -49,6 +50,9 @@ func (inst *ExampleDaoImpl) ListAll() ([]*entity.Example, error) {
 
 // Insert ...
 func (inst *ExampleDaoImpl) Insert(o *entity.Example) (*entity.Example, error) {
+
+	inst.TrashService.OnInsert()
+
 	return nil, errors.New("no impl")
 }
 
@@ -59,5 +63,8 @@ func (inst *ExampleDaoImpl) Update(id dxo.ExampleID, o *entity.Example) (*entity
 
 // Remove ...
 func (inst *ExampleDaoImpl) Remove(id dxo.ExampleID) error {
+
+	inst.TrashService.OnDelete()
+
 	return errors.New("no impl")
 }

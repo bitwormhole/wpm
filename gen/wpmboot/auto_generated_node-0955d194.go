@@ -17,6 +17,7 @@ type pComInfoLoader struct {
 	DoDebug bool `inject:"${wpm.options.debug}"`
 	DoDump bool `inject:"${wpm.options.dump}"`
 	DoLogOptions bool `inject:"${wpm.options.log-options}"`
+	DoLogProps bool `inject:"${wpm.options.log-properties}"`
 	DoRunWithGUI bool `inject:"${wpm.options.run-with-gui}"`
 	DoRunWithServer bool `inject:"${wpm.options.run-with-server}"`
 }

@@ -18,6 +18,7 @@ type IntentTemplateDaoImpl struct {
 	markup.Component `id:"IntentTemplateDAO"`
 
 	Agent          dbagent.GormDBAgent    `inject:"#GormDBAgent"`
+	TrashService   service.TrashService   `inject:"#TrashService"`
 	UUIDGenService service.UUIDGenService `inject:"#UUIDGenService"`
 }
 
@@ -106,6 +107,8 @@ func (inst *IntentTemplateDaoImpl) ListBySelector(sel *entity.IntentTemplate) ([
 // Insert ...
 func (inst *IntentTemplateDaoImpl) Insert(o *entity.IntentTemplate) (*entity.IntentTemplate, error) {
 
+	inst.TrashService.OnInsert()
+
 	o.ID = 0
 	o.UUID = inst.UUIDGenService.GenerateUUID(o.Name + "|entity.IntentTemplate|")
 
@@ -149,8 +152,11 @@ func (inst *IntentTemplateDaoImpl) Update(id dxo.IntentTemplateID, o *entity.Int
 
 // Remove ...
 func (inst *IntentTemplateDaoImpl) Remove(id dxo.IntentTemplateID) error {
+
+	inst.TrashService.OnDelete()
+
 	m := inst.model()
 	db := inst.Agent.DB()
-	res := db.Delete(&m, id)
+	res := db.Delete(m, id)
 	return res.Error
 }

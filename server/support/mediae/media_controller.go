@@ -20,8 +20,9 @@ import (
 type MediaController struct {
 	markup.RestController `class:"rest-controller"`
 
-	MediaService service.MediaService `inject:"#MediaService"`
-	Responder    glass.MainResponder  `inject:"#glass-main-responder"`
+	FileSystemService service.FileSystemService `inject:"#FileSystemService"`
+	MediaService      service.MediaService      `inject:"#MediaService"`
+	Responder         glass.MainResponder       `inject:"#glass-main-responder"`
 }
 
 func (inst *MediaController) _Impl() glass.Controller {
@@ -339,6 +340,21 @@ func (inst *myMediaRequest) doGetFile(c *gin.Context) error {
 		return err
 	}
 
-	c.File(me.Source)
+	// c.File(me.Source)
+	file := inst.controller.FileSystemService.Path(me.Source)
+	size := file.GetInfo().Length()
+	ctype := me.ContentType
+	headers := make(map[string]string)
+
+	reader, err := file.GetIO().OpenReader(nil)
+	if err != nil {
+		return err
+	}
+
+	defer func() {
+		reader.Close()
+	}()
+
+	c.DataFromReader(http.StatusOK, size, ctype, reader, headers)
 	return nil
 }

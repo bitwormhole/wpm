@@ -6,7 +6,9 @@ import (
 	"time"
 
 	"github.com/bitwormhole/starter-gorm/datasource"
+	"github.com/bitwormhole/starter/application"
 	"github.com/bitwormhole/starter/markup"
+	"github.com/bitwormhole/starter/vlog"
 	"github.com/bitwormhole/wpm/server/service"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -14,8 +16,9 @@ import (
 
 // WpmDataSource ...
 type WpmDataSource struct {
-	markup.Component `class:"starter-gorm-source-registry"`
+	markup.Component `class:"starter-gorm-source-registry" initMethod:"Init" `
 
+	AC             application.Context      `inject:"context"`
 	DM             datasource.DriverManager `inject:"#starter-gorm-driver-manager"`
 	AppDataService service.AppDataService   `inject:"#AppDataService"`
 	AboutService   service.AboutService     `inject:"#AboutService"`
@@ -32,6 +35,23 @@ type WpmDataSource struct {
 
 func (inst *WpmDataSource) _Impl() (datasource.SourceRegistry, datasource.Source) {
 	return inst, inst
+}
+
+// Init ...
+func (inst *WpmDataSource) Init() error {
+	inst.logProps()
+	return nil
+}
+
+func (inst *WpmDataSource) logProps() {
+	const keyPrefix = "datasource.wpm"
+	table := make(map[string]string)
+	table[keyPrefix+".driver"] = inst.Driver
+	table[keyPrefix+".database"] = inst.Database
+	// vlog.Info("[datasource 'wpm']")
+	for k, v := range table {
+		vlog.Info(k, "=", v)
+	}
 }
 
 // ListSources ...

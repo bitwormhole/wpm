@@ -18,6 +18,7 @@ type ProjectDaoImpl struct {
 	markup.Component `id:"ProjectDAO"`
 
 	Agent          dbagent.GormDBAgent    `inject:"#GormDBAgent"`
+	TrashService   service.TrashService   `inject:"#TrashService"`
 	UUIDGenService service.UUIDGenService `inject:"#UUIDGenService"`
 }
 
@@ -113,6 +114,8 @@ func (inst *ProjectDaoImpl) ListByIds(ids []dxo.ProjectID) ([]*entity.Project, e
 // Insert ...
 func (inst *ProjectDaoImpl) Insert(o *entity.Project) (*entity.Project, error) {
 
+	inst.TrashService.OnInsert()
+
 	// compute fields
 	o.ID = 0
 	o.UUID = inst.UUIDGenService.GenerateUUID(o.Path + "|entity.Project|")
@@ -157,6 +160,9 @@ func (inst *ProjectDaoImpl) Update(id dxo.ProjectID, o1 *entity.Project) (*entit
 
 // Remove ...
 func (inst *ProjectDaoImpl) Remove(id dxo.ProjectID) error {
+
+	inst.TrashService.OnDelete()
+
 	db := inst.Agent.DB()
 	m := inst.model()
 	res := db.Delete(m, id)

@@ -163,6 +163,7 @@ type pComProjectTypeDaoImpl struct {
 	instance *contenttypes0x61ca37.ProjectTypeDaoImpl
 	 markup0x23084a.Component `id:"ContentTypeDAO"`
 	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
+	TrashService service0x3e063d.TrashService `inject:"#TrashService"`
 	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
 }
 
@@ -204,6 +205,7 @@ type pComExecutableDaoImpl struct {
 	instance *executables0xd3773a.ExecutableDaoImpl
 	 markup0x23084a.Component `id:"ExecutableDAO"`
 	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
+	TrashService service0x3e063d.TrashService `inject:"#TrashService"`
 	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
 }
 
@@ -255,6 +257,7 @@ type pComExampleDaoImpl struct {
 	instance *impldao0x73998b.ExampleDaoImpl
 	 markup0x23084a.Component `id:"ExampleDAO"`
 	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
+	TrashService service0x3e063d.TrashService `inject:"#TrashService"`
 	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
 }
 
@@ -371,6 +374,7 @@ type pComIntentTemplateDaoImpl struct {
 	instance *intenttemplates0x2e3dcf.IntentTemplateDaoImpl
 	 markup0x23084a.Component `id:"IntentTemplateDAO"`
 	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
+	TrashService service0x3e063d.TrashService `inject:"#TrashService"`
 	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
 }
 
@@ -411,6 +415,7 @@ type pComImpLocationDao struct {
 	instance *locations0xb36349.ImpLocationDao
 	 markup0x23084a.Component `id:"LocationDAO"`
 	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
+	TrashService service0x3e063d.TrashService `inject:"#TrashService"`
 	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
 }
 
@@ -425,6 +430,7 @@ type pComImpLocationService struct {
 type pComMediaController struct {
 	instance *mediae0xf005e2.MediaController
 	 markup0x23084a.RestController `class:"rest-controller"`
+	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
 	MediaService service0x3e063d.MediaService `inject:"#MediaService"`
 	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
 }
@@ -434,6 +440,7 @@ type pComMediaDaoImpl struct {
 	instance *mediae0xf005e2.MediaDaoImpl
 	 markup0x23084a.Component `id:"MediaDAO"`
 	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
+	TrashService service0x3e063d.TrashService `inject:"#TrashService"`
 	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
 }
 
@@ -513,6 +520,7 @@ type pComPluginDaoImpl struct {
 	instance *plugins0x82e34b.PluginDaoImpl
 	 markup0x23084a.Component `id:"SoftwarePackageDAO"`
 	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
+	TrashService service0x3e063d.TrashService `inject:"#TrashService"`
 	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
 }
 
@@ -577,6 +585,7 @@ type pComProjectDaoImpl struct {
 	instance *projects0x4d85c7.ProjectDaoImpl
 	 markup0x23084a.Component `id:"ProjectDAO"`
 	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
+	TrashService service0x3e063d.TrashService `inject:"#TrashService"`
 	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
 }
 
@@ -621,6 +630,7 @@ type pComRepositoryDaoImpl struct {
 	instance *repositories0x637d5e.RepositoryDaoImpl
 	 markup0x23084a.Component `id:"LocalRepositoryDAO"`
 	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
+	TrashService service0x3e063d.TrashService `inject:"#TrashService"`
 	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
 }
 
@@ -724,6 +734,7 @@ type pComSettingDaoImpl struct {
 	instance *settings0x19237d.SettingDaoImpl
 	 markup0x23084a.Component `id:"SettingDAO"`
 	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
+	TrashService service0x3e063d.TrashService `inject:"#TrashService"`
 	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
 }
 
@@ -777,8 +788,9 @@ type pComImpTrashDao struct {
 
 type pComImpTrashService struct {
 	instance *trash0xd00f34.ImpTrashService
-	 markup0x23084a.Component `id:"TrashService"`
+	 markup0x23084a.Component `id:"TrashService" initMethod:"Init"`
 	TrashDao dao0x5af8d0.TrashDAO `inject:"#TrashDAO"`
+	AutoClean bool `inject:"${wpm.auto-clean-trash.enabled}"`
 }
 
 
@@ -786,6 +798,7 @@ type pComImpWorktreeDao struct {
 	instance *worktrees0xa762f3.ImpWorktreeDao
 	 markup0x23084a.Component `id:"WorktreeDAO"`
 	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
+	TrashService service0x3e063d.TrashService `inject:"#TrashService"`
 	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
 }
 
@@ -802,7 +815,8 @@ type pComImpWorktreeService struct {
 
 type pComWpmDataSource struct {
 	instance *support0xf47d7f.WpmDataSource
-	 markup0x23084a.Component `class:"starter-gorm-source-registry"`
+	 markup0x23084a.Component `class:"starter-gorm-source-registry" initMethod:"Init" `
+	AC application0x67f6c5.Context `inject:"context"`
 	DM datasource0x68a737.DriverManager `inject:"#starter-gorm-driver-manager"`
 	AppDataService service0x3e063d.AppDataService `inject:"#AppDataService"`
 	AboutService service0x3e063d.AboutService `inject:"#AboutService"`

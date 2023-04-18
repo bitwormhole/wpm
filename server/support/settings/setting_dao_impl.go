@@ -14,6 +14,7 @@ type SettingDaoImpl struct {
 	markup.Component `id:"SettingDAO"`
 
 	Agent          dbagent.GormDBAgent    `inject:"#GormDBAgent"`
+	TrashService   service.TrashService   `inject:"#TrashService"`
 	UUIDGenService service.UUIDGenService `inject:"#UUIDGenService"`
 }
 
@@ -65,6 +66,8 @@ func (inst *SettingDaoImpl) ListAll() ([]*entity.Setting, error) {
 // Insert ...
 func (inst *SettingDaoImpl) Insert(o *entity.Setting) (*entity.Setting, error) {
 
+	inst.TrashService.OnInsert()
+
 	o.ID = 0
 	o.UUID = inst.UUIDGenService.GenerateUUID(o.Name + "|entity.Setting|")
 
@@ -95,6 +98,9 @@ func (inst *SettingDaoImpl) Update(id dxo.SettingID, o1 *entity.Setting) (*entit
 
 // Remove ...
 func (inst *SettingDaoImpl) Remove(id dxo.SettingID) error {
+
+	inst.TrashService.OnDelete()
+
 	o := inst.model()
 	db := inst.Agent.DB()
 	res := db.Delete(&o, id)

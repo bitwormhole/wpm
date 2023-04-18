@@ -14,6 +14,7 @@ type ExecutableDaoImpl struct {
 	markup.Component `id:"ExecutableDAO"`
 
 	Agent          dbagent.GormDBAgent    `inject:"#GormDBAgent"`
+	TrashService   service.TrashService   `inject:"#TrashService"`
 	UUIDGenService service.UUIDGenService `inject:"#UUIDGenService"`
 }
 
@@ -53,6 +54,9 @@ func (inst *ExecutableDaoImpl) ListAll() ([]*entity.Executable, error) {
 
 // Insert ...
 func (inst *ExecutableDaoImpl) Insert(o *entity.Executable) (*entity.Executable, error) {
+
+	inst.TrashService.OnInsert()
+
 	uuid := inst.UUIDGenService.GenerateUUID("entity.Executable,path=" + o.Path)
 	o.UUID = uuid
 	db := inst.Agent.DB()
@@ -96,12 +100,12 @@ func (inst *ExecutableDaoImpl) Update(id dxo.ExecutableID, o1 *entity.Executable
 
 // Remove ...
 func (inst *ExecutableDaoImpl) Remove(id dxo.ExecutableID) error {
-	o1, err := inst.Find(id)
-	if err != nil {
-		return err
-	}
+
+	inst.TrashService.OnDelete()
+
+	o := inst.model()
 	db := inst.Agent.DB()
-	res := db.Delete(o1, id)
+	res := db.Delete(o, id)
 	return res.Error
 }
 

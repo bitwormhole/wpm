@@ -53,6 +53,7 @@ type comFactory4pComInfoLoader struct {
 	mDoDebugSelector config.InjectionSelector
 	mDoDumpSelector config.InjectionSelector
 	mDoLogOptionsSelector config.InjectionSelector
+	mDoLogPropsSelector config.InjectionSelector
 	mDoRunWithGUISelector config.InjectionSelector
 	mDoRunWithServerSelector config.InjectionSelector
 
@@ -66,6 +67,7 @@ func (inst * comFactory4pComInfoLoader) init() application.ComponentFactory {
 	inst.mDoDebugSelector = config.NewInjectionSelector("${wpm.options.debug}",nil)
 	inst.mDoDumpSelector = config.NewInjectionSelector("${wpm.options.dump}",nil)
 	inst.mDoLogOptionsSelector = config.NewInjectionSelector("${wpm.options.log-options}",nil)
+	inst.mDoLogPropsSelector = config.NewInjectionSelector("${wpm.options.log-properties}",nil)
 	inst.mDoRunWithGUISelector = config.NewInjectionSelector("${wpm.options.run-with-gui}",nil)
 	inst.mDoRunWithServerSelector = config.NewInjectionSelector("${wpm.options.run-with-server}",nil)
 
@@ -110,6 +112,7 @@ func (inst * comFactory4pComInfoLoader) Inject(instance application.ComponentIns
 	obj.DoDebug = inst.getterForFieldDoDebugSelector(context)
 	obj.DoDump = inst.getterForFieldDoDumpSelector(context)
 	obj.DoLogOptions = inst.getterForFieldDoLogOptionsSelector(context)
+	obj.DoLogProps = inst.getterForFieldDoLogPropsSelector(context)
 	obj.DoRunWithGUI = inst.getterForFieldDoRunWithGUISelector(context)
 	obj.DoRunWithServer = inst.getterForFieldDoRunWithServerSelector(context)
 	return context.LastError()
@@ -138,6 +141,11 @@ func (inst * comFactory4pComInfoLoader) getterForFieldDoDumpSelector (context ap
 //getterForFieldDoLogOptionsSelector
 func (inst * comFactory4pComInfoLoader) getterForFieldDoLogOptionsSelector (context application.InstanceContext) bool {
     return inst.mDoLogOptionsSelector.GetBool(context)
+}
+
+//getterForFieldDoLogPropsSelector
+func (inst * comFactory4pComInfoLoader) getterForFieldDoLogPropsSelector (context application.InstanceContext) bool {
+    return inst.mDoLogPropsSelector.GetBool(context)
 }
 
 //getterForFieldDoRunWithGUISelector

@@ -20,6 +20,7 @@ type RepositoryDaoImpl struct {
 	markup.Component `id:"LocalRepositoryDAO"`
 
 	Agent          dbagent.GormDBAgent    `inject:"#GormDBAgent"`
+	TrashService   service.TrashService   `inject:"#TrashService"`
 	UUIDGenService service.UUIDGenService `inject:"#UUIDGenService"`
 }
 
@@ -168,6 +169,9 @@ func (inst *RepositoryDaoImpl) ListByIds(ids []dxo.LocalRepositoryID) ([]*entity
 
 // Insert ...
 func (inst *RepositoryDaoImpl) Insert(o *entity.LocalRepository) (*entity.LocalRepository, error) {
+
+	inst.TrashService.OnInsert()
+
 	db := inst.Agent.DB()
 
 	// compute fields
@@ -226,6 +230,9 @@ func (inst *RepositoryDaoImpl) Update(id dxo.LocalRepositoryID, o1 *entity.Local
 
 // Remove ...
 func (inst *RepositoryDaoImpl) Remove(id dxo.LocalRepositoryID) error {
+
+	inst.TrashService.OnDelete()
+
 	db := inst.Agent.DB()
 	o := inst.model()
 	o.ID = id
