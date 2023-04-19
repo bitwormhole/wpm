@@ -15,4 +15,7 @@ type Init struct {
 
 	// fetch executables
 	Executable Executable
+
+	// fetch options
+	Option Option
 }

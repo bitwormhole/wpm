@@ -18,4 +18,4 @@ res:///presets/windows/packs/pack-cmd.json
 res:///presets/windows/packs/pack-explorer.json
 
 # 软件源
-res:///presets/common/sources.json
+res:///presets/common/sources-dev.json

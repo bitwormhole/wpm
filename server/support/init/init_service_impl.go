@@ -20,6 +20,7 @@ type ImpInitService struct {
 	ExecutableService  service.ExecutableService  `inject:"#ExecutableService"`
 	CheckUpdateService service.CheckUpdateService `inject:"#CheckUpdateService"`
 	SetupService       service.SetupService       `inject:"#SetupService"`
+	OptionService      service.OptionService      `inject:"#OptionService"`
 }
 
 func (inst *ImpInitService) _Impl() (service.InitService, application.LifeRegistry) {
@@ -50,6 +51,7 @@ func (inst *ImpInitService) InitGet(ctx context.Context) (*vo.Init, error) {
 		ProjectTypeSer: inst.ProjectTypeService,
 		ExecutableSer:  inst.ExecutableService,
 		CheckUpdateSer: inst.CheckUpdateService,
+		OptionSer:      inst.OptionService,
 		SetupSer:       inst.SetupService,
 	}
 	return h.handle(ctx)

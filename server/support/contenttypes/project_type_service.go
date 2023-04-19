@@ -20,6 +20,8 @@ type ProjectTypeServiceImpl struct {
 
 	ProjectTypeDAO    dao.ContentTypeDAO        `inject:"#ContentTypeDAO"`
 	FileSystemService service.FileSystemService `inject:"#FileSystemService"`
+
+	internalContentTypes map[string]string // map[pattern] ctype
 }
 
 func (inst *ProjectTypeServiceImpl) _Impl() service.ContentTypeService {
@@ -163,23 +165,68 @@ func (inst *ProjectTypeServiceImpl) LocateProject(ctx context.Context, o *dto.Pr
 // GetContentType 根据文件名（或路径）查询对应的mime类型
 func (inst *ProjectTypeServiceImpl) GetContentType(ctx context.Context, name string) (string, error) {
 
+	pattern := inst.getPatternByName(name)
+	ct, err := inst.findContentType(ctx, pattern)
+	if err == nil && ct != "" {
+		return ct, nil
+	}
+
+	// 再查一下内部类型，看看有没有
+	table := inst.getInternalTypes()
+	ct = table[pattern]
+	if ct == "" {
+		return "", fmt.Errorf("no content-type info for file name:" + name)
+	}
+
+	return ct, nil
+}
+
+func (inst *ProjectTypeServiceImpl) getPatternByName(name string) string {
 	// pre-process suffix name
 	i := strings.LastIndex(name, ".")
 	if i < 0 {
-		return "", fmt.Errorf("the filename is without a suffix like '.xxx'")
+		// return "", fmt.Errorf("the filename is without a suffix like '.xxx'")
+		return ""
 	}
 	suffix := name[i:]
 	suffix = strings.ToLower(suffix)
 	suffix = strings.TrimSpace(suffix)
 	pattern := "*" + suffix
+	return pattern
+}
 
+func (inst *ProjectTypeServiceImpl) findContentType(ctx context.Context, pattern string) (string, error) {
 	list, err := inst.ListByPattern(ctx, pattern)
 	if err != nil {
 		return "", err
 	}
 	if len(list) < 1 {
-		return "", fmt.Errorf("no content-type info for name:" + name)
+		return "", fmt.Errorf("no content-type info for name:" + pattern)
 	}
 	item := list[0]
 	return item.TypeName.String(), nil
+}
+
+func (inst *ProjectTypeServiceImpl) getInternalTypes() map[string]string {
+	table := inst.internalContentTypes
+	if table == nil {
+		table = inst.loadInternalTypes()
+		inst.internalContentTypes = table
+	}
+	return table
+}
+
+func (inst *ProjectTypeServiceImpl) loadInternalTypes() map[string]string {
+	table := inst.internalContentTypes
+	table = make(map[string]string)
+
+	table["*.txt"] = "text/plain"
+	table["*.html"] = "text/html"
+
+	table["*.gif"] = "image/gif"
+	table["*.png"] = "image/png"
+	table["*.jpg"] = "image/jpeg"
+	table["*.svg"] = "image/svg+xml"
+
+	return table
 }

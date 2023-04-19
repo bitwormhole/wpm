@@ -16,8 +16,8 @@ func (inst *mySetupReg) listAll() []*service.SetupRegistration {
 
 	all = append(all, inst.forInitMainRepository())
 	all = append(all, inst.forDumpOlderSettings())
-	all = append(all, inst.forImportPresetMediaFiles())
 	all = append(all, inst.forImportPresetProjectTypes())
+	all = append(all, inst.forImportPresetMediaFiles())
 	all = append(all, inst.forImportPresetIntentTemplates())
 	all = append(all, inst.forImportCommonExecutables())
 	all = append(all, inst.forImportPresetSettings())

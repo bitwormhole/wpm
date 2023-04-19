@@ -1,22 +1,13 @@
 {
     "sources": [
         {
-            "ID": 1,
-            "UUID": "2333333333333333333333333333333001",
-            "Name": "ns-1",
-            "URN": "urn:namespace:localhost/debug",
-            "URL": "http://localhost:8080/packages/wpm/wpm-plug-ins-source-windows-amd64.json",
-            "OS": "windows",
-            "Arch": "amd64"
-        },
-        {
             "ID": 2,
             "UUID": "2333333333333333333333333333333002",
             "Name": "ns-2",
             "URN": "urn:namespace:bitwormhole.com/wpm",
             "URL": "https://cdn.bitwormhole.com/packages/wpm/wpm-plug-ins-source-windows-amd64.json",
-            "OS": "x-windows",
-            "Arch": "x-amd64"
+            "OS": "windows",
+            "Arch": "amd64"
         }
     ]
 }

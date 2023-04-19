@@ -13,6 +13,7 @@ type myInitGetHandler struct {
 	ProjectTypeSer service.ContentTypeService
 	CheckUpdateSer service.CheckUpdateService
 	SetupSer       service.SetupService
+	OptionSer      service.OptionService
 }
 
 func (inst *myInitGetHandler) handle(ctx context.Context) (*vo.Init, error) {
@@ -23,6 +24,7 @@ func (inst *myInitGetHandler) handle(ctx context.Context) (*vo.Init, error) {
 	steps = append(steps, inst.doChcekUpdate)
 	steps = append(steps, inst.doExecutable)
 	steps = append(steps, inst.doProjectType)
+	steps = append(steps, inst.doGetOptions)
 
 	for _, step := range steps {
 		err := step(ctx, view)
@@ -68,4 +70,10 @@ func (inst *myInitGetHandler) doExecutable(ctx context.Context, view *vo.Init) e
 	}
 	view.Executable.Executables = list
 	return nil
+}
+
+func (inst *myInitGetHandler) doGetOptions(ctx context.Context, view *vo.Init) error {
+	ser := inst.OptionSer
+	o := &view.Option
+	return ser.GetOptions(o)
 }

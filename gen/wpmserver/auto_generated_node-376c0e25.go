@@ -32,6 +32,7 @@ import (
 	locations0xb36349 "github.com/bitwormhole/wpm/server/support/locations"
 	mediae0xf005e2 "github.com/bitwormhole/wpm/server/support/mediae"
 	namespaces0xceefcf "github.com/bitwormhole/wpm/server/support/namespaces"
+	options0x10c3ff "github.com/bitwormhole/wpm/server/support/options"
 	platforms0xb539c0 "github.com/bitwormhole/wpm/server/support/platforms"
 	plugins0x82e34b "github.com/bitwormhole/wpm/server/support/plugins"
 	presets0x875f8b "github.com/bitwormhole/wpm/server/support/presets"
@@ -40,6 +41,7 @@ import (
 	repositoryworktreeproject0x399028 "github.com/bitwormhole/wpm/server/support/repositoryworktreeproject"
 	settings0x19237d "github.com/bitwormhole/wpm/server/support/settings"
 	setup0xd9ff02 "github.com/bitwormhole/wpm/server/support/setup"
+	statistics0x0575cd "github.com/bitwormhole/wpm/server/support/statistics"
 	trash0xd00f34 "github.com/bitwormhole/wpm/server/support/trash"
 	worktrees0xa762f3 "github.com/bitwormhole/wpm/server/support/worktrees"
 	filequery0xca51d2 "github.com/bitwormhole/wpm/server/utils/filequery"
@@ -327,6 +329,7 @@ type pComImpInitService struct {
 	ExecutableService service0x3e063d.ExecutableService `inject:"#ExecutableService"`
 	CheckUpdateService service0x3e063d.CheckUpdateService `inject:"#CheckUpdateService"`
 	SetupService service0x3e063d.SetupService `inject:"#SetupService"`
+	OptionService service0x3e063d.OptionService `inject:"#OptionService"`
 }
 
 
@@ -479,6 +482,21 @@ type pComImpNamespaceService struct {
 	instance *namespaces0xceefcf.ImpNamespaceService
 	 markup0x23084a.Component `id:"NamespaceService"`
 	MyDAO dao0x5af8d0.NamespaceDAO `inject:"#NamespaceDAO"`
+}
+
+
+type pComTheOptionController struct {
+	instance *options0x10c3ff.TheOptionController
+	 markup0x23084a.RestController `class:"rest-controller"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+	OptionService service0x3e063d.OptionService `inject:"#OptionService"`
+}
+
+
+type pComImpOptionService struct {
+	instance *options0x10c3ff.ImpOptionService
+	 markup0x23084a.Component `id:"OptionService"`
+	AC application0x67f6c5.Context `inject:"context"`
 }
 
 
@@ -767,6 +785,21 @@ type pComImpSetupService struct {
 	SettingService service0x3e063d.SettingService `inject:"#SettingService"`
 	SoftwarePackageService service0x3e063d.SoftwarePackageService `inject:"#SoftwarePackageService"`
 	DatabaseBackupService service0x3e063d.DatabaseBackupService `inject:"#DatabaseBackupService"`
+}
+
+
+type pComTheStatisticController struct {
+	instance *statistics0x0575cd.TheStatisticController
+	 markup0x23084a.RestController `class:"rest-controller"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+	StatisticDAO dao0x5af8d0.StatisticDAO `inject:"#StatisticDAO"`
+}
+
+
+type pComImpStatisticDao struct {
+	instance *statistics0x0575cd.ImpStatisticDao
+	 markup0x23084a.Component `id:"StatisticDAO"`
+	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
 }
 
 

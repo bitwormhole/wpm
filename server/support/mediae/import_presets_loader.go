@@ -63,7 +63,7 @@ func (inst *myImportPresetsLoader) findPresets() ([]*dto.Media, error) {
 	res := inst.parent.AC.GetResources()
 	all := res.Export(nil)
 	for name, item := range all {
-		if !item.IsFile() {
+		if !inst.accept(name, item) {
 			continue
 		}
 		m, err := inst.makeMedia(name, item)
@@ -75,6 +75,22 @@ func (inst *myImportPresetsLoader) findPresets() ([]*dto.Media, error) {
 		}
 	}
 	return dst, nil
+}
+
+func (inst *myImportPresetsLoader) accept(name string, item collection.Res) bool {
+
+	if !item.IsFile() {
+		return false
+	}
+
+	ignore := []string{".html"}
+	for _, suffix := range ignore {
+		if strings.HasSuffix(name, suffix) {
+			return false
+		}
+	}
+
+	return true
 }
 
 func (inst *myImportPresetsLoader) makeMedia(name string, r collection.Res) (*dto.Media, error) {
