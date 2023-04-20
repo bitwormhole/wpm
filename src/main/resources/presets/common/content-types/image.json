@@ -1,47 +1,5 @@
 {
     "WPM": {},
     "contenttypes": [
-        {
-            "id": 1,
-            "as_dir": false,
-            "as_file": true,
-            "as_project": false,
-            "description": "PNG 图片",
-            "icon": "/image/icons/image/png.svg",
-            "label": "PNG 图片",
-            "patterns": "*.png",
-            "priority": 1,
-            "type": "image/png",
-            "urn": "urn:contenttype:image/png",
-            "uuid": "ffffff"
-        },
-        {
-            "id": 1,
-            "as_dir": false,
-            "as_file": true,
-            "as_project": false,
-            "description": "JPEG 图片",
-            "icon": "/image/icons/image/jpeg.svg",
-            "label": "JPEG 图片",
-            "patterns": "*.jpeg,*.jpg",
-            "priority": 1,
-            "type": "image/jpeg",
-            "urn": "urn:contenttype:image/jpeg",
-            "uuid": "ffffff"
-        },
-        {
-            "id": 1,
-            "as_dir": false,
-            "as_file": true,
-            "as_project": false,
-            "description": "SVG 图像",
-            "icon": "/image/icons/image/svg-xml.svg",
-            "label": "SVG 图像",
-            "patterns": "*.svg",
-            "priority": 1,
-            "type": "image/svg+xml",
-            "urn": "urn:contenttype:image/svg+xml",
-            "uuid": "ffffff"
-        }
     ]
 }
