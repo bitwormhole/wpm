@@ -1,10 +1,12 @@
 package support
 
 import (
+	"io/fs"
 	"log"
 	"os"
 	"time"
 
+	"bitwormhole.com/starter/afs"
 	"github.com/bitwormhole/starter-gorm/datasource"
 	"github.com/bitwormhole/starter/application"
 	"github.com/bitwormhole/starter/markup"
@@ -18,16 +20,17 @@ import (
 type WpmDataSource struct {
 	markup.Component `class:"starter-gorm-source-registry" initMethod:"Init" `
 
-	AC             application.Context      `inject:"context"`
-	DM             datasource.DriverManager `inject:"#starter-gorm-driver-manager"`
-	AppDataService service.AppDataService   `inject:"#AppDataService"`
-	AboutService   service.AboutService     `inject:"#AboutService"`
+	AC                application.Context       `inject:"context"`
+	DM                datasource.DriverManager  `inject:"#starter-gorm-driver-manager"`
+	AppDataService    service.AppDataService    `inject:"#AppDataService"`
+	AboutService      service.AboutService      `inject:"#AboutService"`
+	FileSystemService service.FileSystemService `inject:"#FileSystemService"`
 
 	Driver   string `inject:"${datasource.wpm.driver}"`
 	Host     string `inject:"${datasource.wpm.host}"`
 	UserName string `inject:"${datasource.wpm.username}"`
 	Password string `inject:"${datasource.wpm.password}"`
-	Database string `inject:"${datasource.wpm.database}"` // 可以取值为'@'，表示由程序生成数据库文件名
+	Database string `inject:"${datasource.wpm.database}"` // 可以在取值中插入'{{version}}'，'{{hex}}'
 	Port     int    `inject:"${datasource.wpm.port}"`
 
 	cachedDB *gorm.DB
@@ -142,11 +145,9 @@ func (inst *WpmDataSource) config() *datasource.Configuration {
 	cfg.Username = inst.UserName
 	cfg.Password = inst.Password
 
-	databaseName := cfg.Database
-	if databaseName == "" || databaseName == "@" || databaseName == "@@" {
-		// 如果配置的数据库名称为[''|'@'|'@@'], 就采用程序生成的文件名
-		path := inst.AppDataService.GetSQLiteDBFile()
-		cfg.Database = path
+	if cfg.Driver == "sqlite" {
+		cfg.Database = inst.AppDataService.GetSQLiteDBFile()
+		inst.makeDirForDatabaseFile(cfg)
 	}
 
 	return cfg
@@ -155,4 +156,16 @@ func (inst *WpmDataSource) config() *datasource.Configuration {
 // Close ...
 func (inst *WpmDataSource) Close() error {
 	return nil
+}
+
+func (inst *WpmDataSource) makeDirForDatabaseFile(cfg *datasource.Configuration) error {
+	file := inst.FileSystemService.Path(cfg.Database)
+	dir := file.GetParent()
+	if dir.Exists() {
+		return nil
+	}
+	opt := &afs.Options{
+		Mkdirs: true, Create: true, Permission: fs.ModePerm,
+	}
+	return dir.Mkdirs(opt)
 }

@@ -9,6 +9,7 @@ res:///presets/common/content-types/image.json
 res:///presets/common/content-types/message.json
 res:///presets/common/content-types/model.json
 res:///presets/common/content-types/multipart.json
+res:///presets/common/content-types/others.json
 res:///presets/common/content-types/project.json
 res:///presets/common/content-types/text.json
 res:///presets/common/content-types/video.json

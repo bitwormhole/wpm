@@ -1,33 +1,18 @@
 {
-    "WPM": {},
-    "contenttypes": [
-        {
-            "id": 1,
-            "as_dir": false,
-            "as_file": true,
-            "as_project": false,
-            "description": "纯文本文档",
-            "icon": "/image/doc-icons/text/plain.svg",
-            "label": "文本文档",
-            "patterns": "*.txt",
-            "priority": 1,
-            "type": "text/plain",
-            "urn": "urn:contenttype:text/plain",
-            "uuid": "ffffff"
-        },
-        {
-            "id": 1,
-            "as_dir": false,
-            "as_file": true,
-            "as_project": false,
-            "description": "HTML（超文本标记语言）文档",
-            "icon": "/image/doc-icons/text/html.svg",
-            "label": "HTML 文档",
-            "patterns": "*.html,*.htm",
-            "priority": 1,
-            "type": "text/html",
-            "urn": "urn:contenttype:text/html",
-            "uuid": "ffffff"
-        }
-    ]
+    "message": "",
+    "error": "",
+    "status": 200,
+    "time": 1681959646119,
+    "timef": "2023-04-20T11:00:46.1199783+08:00",
+    "head": {
+        "url": "",
+        "namespace": "",
+        "doctype": ""
+    },
+    "sources": [],
+    "packages": [],
+    "mediae": [],
+    "executables": [],
+    "contenttypes": [],
+    "intenttemplates": []
 }

@@ -27,7 +27,7 @@ type AppDataServiceImpl struct {
 	ProfileService    service.ProfileService    `inject:"#ProfileService"`
 	AppRuntimeService service.AppRuntimeService `inject:"#AppRuntimeService"`
 
-	SQLiteDatabaseNameWithAppVersion bool `inject:"${datasource.wpm.database-name-with-version}"`
+	DatabaseName string `inject:"${datasource.wpm.database}"`
 
 	baseAppDataDir afs.Path
 }
@@ -76,17 +76,19 @@ func (inst *AppDataServiceImpl) GetBackupDumpDirectory() string {
 
 // GetSQLiteDBFile ...
 func (inst *AppDataServiceImpl) GetSQLiteDBFile() string {
-	name := AppDataFileDB
-	if inst.SQLiteDatabaseNameWithAppVersion {
-		am := service.GetAppModule()
-		if am != nil {
-			version := am.GetVersion()
-			sum := inst.getThisExeSha256sum()
-			hexName := sum.String()[0:7]
-			name = "databases/wpm-" + version + "-" + hexName + ".db"
-		}
+	name := inst.DatabaseName
+	am := service.GetAppModule()
+	if am != nil {
+		version := am.GetVersion()
+		sum := inst.getThisExeSha256sum()
+		hex := sum.String()[0:7]
+		name = strings.ReplaceAll(name, "{{version}}", version)
+		name = strings.ReplaceAll(name, "{{hex}}", hex)
 	}
-	return inst.forPathString(name)
+	if name == "" {
+		name = AppDataFileDB
+	}
+	return inst.forPathString("databases/" + name)
 }
 
 func (inst *AppDataServiceImpl) getThisExeSha256sum() util.Hex {

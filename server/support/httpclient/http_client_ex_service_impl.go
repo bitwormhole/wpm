@@ -43,7 +43,7 @@ func (inst *ImpHTTPClientEx) fillExecutables(head *vo.BaseHead, list []*dto.Exec
 	for _, item := range list {
 		item.Referer = head.URL
 		item.Namespace = inst.normalizeNamespace(head, item.Namespace)
-		item.IconURL = inst.resolveURL(head, item.IconURL)
+		// item.IconURL = inst.resolveURL(head, item.IconURL)
 	}
 }
 

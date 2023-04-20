@@ -3701,7 +3701,7 @@ type comFactory4pComAppDataServiceImpl struct {
 	
 	mProfileServiceSelector config.InjectionSelector
 	mAppRuntimeServiceSelector config.InjectionSelector
-	mSQLiteDatabaseNameWithAppVersionSelector config.InjectionSelector
+	mDatabaseNameSelector config.InjectionSelector
 
 }
 
@@ -3710,7 +3710,7 @@ func (inst * comFactory4pComAppDataServiceImpl) init() application.ComponentFact
 	
 	inst.mProfileServiceSelector = config.NewInjectionSelector("#ProfileService",nil)
 	inst.mAppRuntimeServiceSelector = config.NewInjectionSelector("#AppRuntimeService",nil)
-	inst.mSQLiteDatabaseNameWithAppVersionSelector = config.NewInjectionSelector("${datasource.wpm.database-name-with-version}",nil)
+	inst.mDatabaseNameSelector = config.NewInjectionSelector("${datasource.wpm.database}",nil)
 
 
 	inst.mPrototype = inst.newObject()
@@ -3750,7 +3750,7 @@ func (inst * comFactory4pComAppDataServiceImpl) Inject(instance application.Comp
 	obj := inst.castObject(instance)
 	obj.ProfileService = inst.getterForFieldProfileServiceSelector(context)
 	obj.AppRuntimeService = inst.getterForFieldAppRuntimeServiceSelector(context)
-	obj.SQLiteDatabaseNameWithAppVersion = inst.getterForFieldSQLiteDatabaseNameWithAppVersionSelector(context)
+	obj.DatabaseName = inst.getterForFieldDatabaseNameSelector(context)
 	return context.LastError()
 }
 
@@ -3790,9 +3790,9 @@ func (inst * comFactory4pComAppDataServiceImpl) getterForFieldAppRuntimeServiceS
 	return o2
 }
 
-//getterForFieldSQLiteDatabaseNameWithAppVersionSelector
-func (inst * comFactory4pComAppDataServiceImpl) getterForFieldSQLiteDatabaseNameWithAppVersionSelector (context application.InstanceContext) bool {
-    return inst.mSQLiteDatabaseNameWithAppVersionSelector.GetBool(context)
+//getterForFieldDatabaseNameSelector
+func (inst * comFactory4pComAppDataServiceImpl) getterForFieldDatabaseNameSelector (context application.InstanceContext) string {
+    return inst.mDatabaseNameSelector.GetString(context)
 }
 
 
@@ -10757,6 +10757,7 @@ type comFactory4pComWpmDataSource struct {
 	mDMSelector config.InjectionSelector
 	mAppDataServiceSelector config.InjectionSelector
 	mAboutServiceSelector config.InjectionSelector
+	mFileSystemServiceSelector config.InjectionSelector
 	mDriverSelector config.InjectionSelector
 	mHostSelector config.InjectionSelector
 	mUserNameSelector config.InjectionSelector
@@ -10773,6 +10774,7 @@ func (inst * comFactory4pComWpmDataSource) init() application.ComponentFactory {
 	inst.mDMSelector = config.NewInjectionSelector("#starter-gorm-driver-manager",nil)
 	inst.mAppDataServiceSelector = config.NewInjectionSelector("#AppDataService",nil)
 	inst.mAboutServiceSelector = config.NewInjectionSelector("#AboutService",nil)
+	inst.mFileSystemServiceSelector = config.NewInjectionSelector("#FileSystemService",nil)
 	inst.mDriverSelector = config.NewInjectionSelector("${datasource.wpm.driver}",nil)
 	inst.mHostSelector = config.NewInjectionSelector("${datasource.wpm.host}",nil)
 	inst.mUserNameSelector = config.NewInjectionSelector("${datasource.wpm.username}",nil)
@@ -10820,6 +10822,7 @@ func (inst * comFactory4pComWpmDataSource) Inject(instance application.Component
 	obj.DM = inst.getterForFieldDMSelector(context)
 	obj.AppDataService = inst.getterForFieldAppDataServiceSelector(context)
 	obj.AboutService = inst.getterForFieldAboutServiceSelector(context)
+	obj.FileSystemService = inst.getterForFieldFileSystemServiceSelector(context)
 	obj.Driver = inst.getterForFieldDriverSelector(context)
 	obj.Host = inst.getterForFieldHostSelector(context)
 	obj.UserName = inst.getterForFieldUserNameSelector(context)
@@ -10882,6 +10885,24 @@ func (inst * comFactory4pComWpmDataSource) getterForFieldAboutServiceSelector (c
 		eb.Set("field", "AboutService")
 		eb.Set("type1", "?")
 		eb.Set("type2", "service0x3e063d.AboutService")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
+}
+
+//getterForFieldFileSystemServiceSelector
+func (inst * comFactory4pComWpmDataSource) getterForFieldFileSystemServiceSelector (context application.InstanceContext) service0x3e063d.FileSystemService {
+
+	o1 := inst.mFileSystemServiceSelector.GetOne(context)
+	o2, ok := o1.(service0x3e063d.FileSystemService)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "com95-support0xf47d7f.WpmDataSource")
+		eb.Set("field", "FileSystemService")
+		eb.Set("type1", "?")
+		eb.Set("type2", "service0x3e063d.FileSystemService")
 		context.HandleError(eb.Create())
 		return nil
 	}

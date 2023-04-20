@@ -284,7 +284,7 @@ type pComAppDataServiceImpl struct {
 	 markup0x23084a.Component `id:"AppDataService"`
 	ProfileService service0x3e063d.ProfileService `inject:"#ProfileService"`
 	AppRuntimeService service0x3e063d.AppRuntimeService `inject:"#AppRuntimeService"`
-	SQLiteDatabaseNameWithAppVersion bool `inject:"${datasource.wpm.database-name-with-version}"`
+	DatabaseName string `inject:"${datasource.wpm.database}"`
 }
 
 
@@ -853,6 +853,7 @@ type pComWpmDataSource struct {
 	DM datasource0x68a737.DriverManager `inject:"#starter-gorm-driver-manager"`
 	AppDataService service0x3e063d.AppDataService `inject:"#AppDataService"`
 	AboutService service0x3e063d.AboutService `inject:"#AboutService"`
+	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
 	Driver string `inject:"${datasource.wpm.driver}"`
 	Host string `inject:"${datasource.wpm.host}"`
 	UserName string `inject:"${datasource.wpm.username}"`
