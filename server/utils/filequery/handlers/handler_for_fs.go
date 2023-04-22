@@ -7,10 +7,10 @@ import (
 	"strings"
 
 	"bitwormhole.com/starter/afs"
-	"bitwormhole.com/starter/afs/files"
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/starter/util"
 	"github.com/bitwormhole/starter/vlog"
+	"github.com/bitwormhole/wpm/server/service"
 	"github.com/bitwormhole/wpm/server/utils/filequery"
 	"github.com/bitwormhole/wpm/server/web/dto"
 	"github.com/bitwormhole/wpm/server/web/vo"
@@ -19,7 +19,7 @@ import (
 type FileSystemHandler struct {
 	markup.Component `class:"filequery-handler-registry"`
 
-	fs afs.FS
+	FS service.FileSystemService `inject:"#FileSystemService"`
 }
 
 func (inst *FileSystemHandler) _Impl() (filequery.HandlerRegistry, filequery.Handler) {
@@ -35,12 +35,7 @@ func (inst *FileSystemHandler) ListRegistrations() []*filequery.HandlerRegistrat
 }
 
 func (inst *FileSystemHandler) getfs() afs.FS {
-	fs := inst.fs
-	if fs == nil {
-		fs = files.FS()
-		inst.fs = fs
-	}
-	return fs
+	return inst.FS.FS()
 }
 
 func (inst *FileSystemHandler) Accept(q *vo.FileQuery) bool {

@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"bitwormhole.com/starter/afs"
-	"bitwormhole.com/starter/afs/files"
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/starter/util"
 	"github.com/bitwormhole/starter/vlog"
@@ -26,6 +25,7 @@ type AppDataServiceImpl struct {
 
 	ProfileService    service.ProfileService    `inject:"#ProfileService"`
 	AppRuntimeService service.AppRuntimeService `inject:"#AppRuntimeService"`
+	FS                service.FileSystemService `inject:"#FileSystemService"`
 
 	DatabaseName string `inject:"${datasource.wpm.database}"`
 
@@ -41,7 +41,7 @@ func (inst *AppDataServiceImpl) loadAppDataDir() afs.Path {
 	if err != nil {
 		panic(err)
 	}
-	home := files.FS().NewPath(profile.Home)
+	home := inst.FS.Path(profile.Home)
 	return home.GetChild(".wpm")
 }
 

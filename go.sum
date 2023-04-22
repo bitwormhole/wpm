@@ -4,6 +4,8 @@ bitwormhole.com/starter/afs v0.0.6 h1:G35dMHoRNDqkDBnv48k6ceDB0EoSTtsq86VzUXwIXR
 bitwormhole.com/starter/afs v0.0.6/go.mod h1:ZhznfGjTwltwXxm8Rpx7fTAWJzWvtT7YqKdS9P8tYTU=
 bitwormhole.com/starter/afs v0.0.7 h1:tR5BItT2f+L5LG6Xz1QM0/g9qxQZMSCLjuuhL484Kzg=
 bitwormhole.com/starter/afs v0.0.7/go.mod h1:ZhznfGjTwltwXxm8Rpx7fTAWJzWvtT7YqKdS9P8tYTU=
+bitwormhole.com/starter/afs v0.0.8 h1:KIV6p+JBjaaeY2N+HT80QO7eKwON2MveRGXFPZ10chg=
+bitwormhole.com/starter/afs v0.0.8/go.mod h1:ZhznfGjTwltwXxm8Rpx7fTAWJzWvtT7YqKdS9P8tYTU=
 bitwormhole.com/starter/base v0.0.1 h1:/dXgICIoYcMATbA2N+DD1tMYEsyimwQKal2xPaR8cfA=
 bitwormhole.com/starter/base v0.0.1/go.mod h1:a8v7ioNoU380zyISNEXTaVInVFu00FvXo3UHJAckPG0=
 bitwormhole.com/starter/cli v0.0.9 h1:Ayo2VQ9cXhzKsaIxtHkLtCp0PCywuIY2K+95qOzStDo=
@@ -23,6 +25,8 @@ github.com/bitwormhole/gitlib v0.0.14 h1:MpRfMSqqJznK3jyrHRplj3zFxzwEZS8C7TyKktA
 github.com/bitwormhole/gitlib v0.0.14/go.mod h1:rHAjxI4mrs5D6ckaU6T1G2oEogA/2d5VR1z/rJQvz4Y=
 github.com/bitwormhole/gitlib v0.0.15 h1:76frkVqwCScpUYGN8oyBCwCuHUOCUNI2tccS7phtCpk=
 github.com/bitwormhole/gitlib v0.0.15/go.mod h1:rHAjxI4mrs5D6ckaU6T1G2oEogA/2d5VR1z/rJQvz4Y=
+github.com/bitwormhole/gitlib v0.0.16 h1:tXDTU6CnfMkJlsbKzG7LDbpT8SQVqwZexO+9bwCvSys=
+github.com/bitwormhole/gitlib v0.0.16/go.mod h1:PlQ1r71feXtCdQflvoiCmoWuJmOp9BldYwJGyDS0VmQ=
 github.com/bitwormhole/starter v0.0.13/go.mod h1:Mv2MC4cWHU2eUs4793mL7pXL79pmjp1HJyA9bV8ZVMc=
 github.com/bitwormhole/starter v0.0.16 h1:ryQbUpmzAuJVPlKl60vGcpKQ63BdkuraTJHud1mzA1s=
 github.com/bitwormhole/starter v0.0.16/go.mod h1:Mv2MC4cWHU2eUs4793mL7pXL79pmjp1HJyA9bV8ZVMc=

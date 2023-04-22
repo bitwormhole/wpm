@@ -19,6 +19,10 @@ func (inst *FileSystemServiceImpl) _Impl() service.FileSystemService {
 }
 
 func (inst *FileSystemServiceImpl) loadFS() afs.FS {
+
+	// xfs :=  files.FS()
+	// xfs.NewPath( "" ) .GetIO().
+
 	return files.FS()
 }
 

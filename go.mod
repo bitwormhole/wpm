@@ -3,14 +3,14 @@ module github.com/bitwormhole/wpm
 go 1.18
 
 require (
-	github.com/bitwormhole/gitlib v0.0.15
+	github.com/bitwormhole/gitlib v0.0.16
 	github.com/bitwormhole/starter v0.1.8
 	github.com/bitwormhole/starter-gin v0.1.4
 	github.com/gin-gonic/gin v1.8.2
 )
 
 require (
-	bitwormhole.com/starter/afs v0.0.7 // indirect
+	bitwormhole.com/starter/afs v0.0.8 // indirect
 	bitwormhole.com/starter/base v0.0.1 // indirect
 	bitwormhole.com/starter/cli v0.0.9 // indirect
 	bitwormhole.com/starter/vlog v0.0.1 // indirect

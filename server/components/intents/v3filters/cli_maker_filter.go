@@ -2,15 +2,19 @@ package v3filters
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/wpm/server/components/intents"
+	"github.com/bitwormhole/wpm/server/service"
 	"github.com/bitwormhole/wpm/server/web/dto"
 )
 
 // CLIMakerFilter ...
 type CLIMakerFilter struct {
 	markup.Component `class:"wpm-intent-filter"`
+
+	FileSystemService service.FileSystemService `inject:"#FileSystemService"`
 }
 
 func (inst *CLIMakerFilter) _Impl() (intents.FilterRegistry, intents.Filter) {
@@ -53,8 +57,22 @@ func (inst *CLIMakerFilter) Handle(c context.Context, i *dto.Intent, next intent
 		return err
 	}
 
+	wd, err := inst.normalizeWorkingDir(cli.WD)
+	if err != nil {
+		return err
+	}
+	cli.WD = wd
+
 	i.CLI = cli
 	return next.Handle(c, i)
+}
+
+func (inst *CLIMakerFilter) normalizeWorkingDir(path string) (string, error) {
+	dir := inst.FileSystemService.Path(path)
+	if !dir.IsDirectory() {
+		return "", fmt.Errorf("no directory at path [%v]", path)
+	}
+	return dir.GetPath(), nil
 }
 
 ////////////////////////////////////////////////////////////////////////////////
