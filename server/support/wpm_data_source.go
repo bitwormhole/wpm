@@ -148,6 +148,7 @@ func (inst *WpmDataSource) config() *datasource.Configuration {
 	if cfg.Driver == "sqlite" {
 		cfg.Database = inst.AppDataService.GetSQLiteDBFile()
 		inst.makeDirForDatabaseFile(cfg)
+		vlog.Info("sqlite.db.file=" + cfg.Database)
 	}
 
 	return cfg

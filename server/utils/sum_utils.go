@@ -2,6 +2,7 @@ package utils
 
 import (
 	"crypto/sha256"
+	"os"
 
 	"bitwormhole.com/starter/afs"
 	"github.com/bitwormhole/starter/io/fs"
@@ -24,7 +25,7 @@ func ComputeFileSHA256sum(file fs.Path) (util.Hex, error) {
 // ComputeFileSHA256sumAFS ...
 func ComputeFileSHA256sumAFS(file afs.Path) (util.Hex, error) {
 	md := sha256.New()
-	src, err := file.GetIO().OpenReader(nil)
+	src, err := file.GetIO().OpenReader(&afs.Options{Read: true, File: true, Flag: os.O_RDONLY})
 	if err != nil {
 		return "", err
 	}

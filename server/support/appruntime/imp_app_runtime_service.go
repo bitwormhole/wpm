@@ -196,15 +196,15 @@ func (inst *ImpAppRuntimeService) backupSelf() error {
 
 func (inst *ImpAppRuntimeService) copyFile(src, dst afs.Path) (int64, error) {
 
-	r, err := src.GetIO().OpenReader(nil)
+	opt1 := &afs.Options{Read: true, File: true, Flag: os.O_RDONLY}
+	r, err := src.GetIO().OpenReader(opt1)
 	if err != nil {
 		return 0, err
 	}
 	defer r.Close()
 
-	opt := &afs.Options{Mkdirs: true, Create: true}
-
-	w, err := dst.GetIO().OpenWriter(opt)
+	opt2 := &afs.Options{Mkdirs: true, Create: true, Write: true, File: true}
+	w, err := dst.GetIO().OpenWriter(opt2)
 	if err != nil {
 		return 0, err
 	}
