@@ -6,12 +6,15 @@ import (
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/wpm/server/components/intents"
 	"github.com/bitwormhole/wpm/server/data/dxo"
+	"github.com/bitwormhole/wpm/server/service"
 	"github.com/bitwormhole/wpm/server/web/dto"
 )
 
 // PrepareActionFilter ...
 type PrepareActionFilter struct {
 	markup.Component `class:"wpm-intent-filter"`
+
+	ProfileService service.ProfileService `inject:"#ProfileService"`
 }
 
 func (inst *PrepareActionFilter) _Impl() (intents.FilterRegistry, intents.Filter) {
@@ -36,6 +39,10 @@ func (inst *PrepareActionFilter) Handle(c context.Context, i *dto.Intent, next i
 	action.Target = inst.prepareTarget(i)
 	action.Type = inst.prepareContentType(i)
 	action.With = inst.prepareExe(i)
+
+	if action.Target == "none" {
+		inst.prepareTargetWithWD(i)
+	}
 
 	itsb := dxo.IntentTemplateSelectorBuilder{
 		Method: action.Method,
@@ -86,4 +93,21 @@ func (inst *PrepareActionFilter) prepareTarget(i *dto.Intent) string {
 		}
 	}
 	return "none"
+}
+
+func (inst *PrepareActionFilter) prepareTargetWithWD(i *dto.Intent) error {
+
+	p, err := inst.ProfileService.GetProfile()
+	if err != nil {
+		return err
+	}
+	home := p.Home
+
+	i.Action.Target = "folder"
+	i.Action.Type = "*"
+	i.Folder = &dto.File{
+		Path: home,
+	}
+
+	return nil
 }

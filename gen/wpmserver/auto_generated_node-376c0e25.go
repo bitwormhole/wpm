@@ -843,6 +843,7 @@ type pComCheckTemplateFilter struct {
 type pComPrepareActionFilter struct {
 	instance *v3filters0xa6552a.PrepareActionFilter
 	 markup0x23084a.Component `class:"wpm-intent-filter"`
+	ProfileService service0x3e063d.ProfileService `inject:"#ProfileService"`
 }
 
 

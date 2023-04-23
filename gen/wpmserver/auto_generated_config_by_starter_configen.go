@@ -10754,12 +10754,14 @@ type comFactory4pComPrepareActionFilter struct {
     mPrototype * v3filters0xa6552a.PrepareActionFilter
 
 	
+	mProfileServiceSelector config.InjectionSelector
 
 }
 
 func (inst * comFactory4pComPrepareActionFilter) init() application.ComponentFactory {
 
 	
+	inst.mProfileServiceSelector = config.NewInjectionSelector("#ProfileService",nil)
 
 
 	inst.mPrototype = inst.newObject()
@@ -10795,7 +10797,28 @@ func (inst * comFactory4pComPrepareActionFilter) Destroy(instance application.Co
 }
 
 func (inst * comFactory4pComPrepareActionFilter) Inject(instance application.ComponentInstance, context application.InstanceContext) error {
-	return nil
+	
+	obj := inst.castObject(instance)
+	obj.ProfileService = inst.getterForFieldProfileServiceSelector(context)
+	return context.LastError()
+}
+
+//getterForFieldProfileServiceSelector
+func (inst * comFactory4pComPrepareActionFilter) getterForFieldProfileServiceSelector (context application.InstanceContext) service0x3e063d.ProfileService {
+
+	o1 := inst.mProfileServiceSelector.GetOne(context)
+	o2, ok := o1.(service0x3e063d.ProfileService)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "com92-v3filters0xa6552a.PrepareActionFilter")
+		eb.Set("field", "ProfileService")
+		eb.Set("type1", "?")
+		eb.Set("type2", "service0x3e063d.ProfileService")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
 }
 
 
