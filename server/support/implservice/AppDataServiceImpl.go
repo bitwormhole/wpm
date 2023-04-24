@@ -137,3 +137,45 @@ func (inst *AppDataServiceImpl) GetBackupExecutableFile(sum util.Hex) string {
 	path := b.String()
 	return inst.forPathString(path)
 }
+
+// GetRoot ...
+func (inst *AppDataServiceImpl) GetRoot() afs.Path {
+	return inst.forPath("share")
+}
+
+// GetPath 根据选项生成对应的路径
+func (inst *AppDataServiceImpl) GetPath(opt *service.GetPathOptions) afs.Path {
+
+	tp := opt.Type
+	id := opt.ID
+	name := opt.Name
+
+	if tp == "" {
+		tp = "none"
+	}
+
+	if id == "" {
+		id = "none/none"
+	} else {
+		if len(id) < 5 {
+			id = "shortids/" + id
+		} else {
+			const p1size = 2
+			p1 := id[0:p1size]
+			p2 := id[p1size:]
+			id = p1 + "/" + p2
+		}
+	}
+
+	if name == "" {
+		name = "."
+	}
+
+	b := strings.Builder{}
+	b.WriteString(tp)
+	b.WriteString("/")
+	b.WriteString(id)
+	b.WriteString("/")
+	b.WriteString(name)
+	return inst.forPath(b.String())
+}

@@ -26,13 +26,13 @@ type SoftwarePackage struct {
 	OS       string `json:"os"`       // 操作系统
 	Arch     string `json:"arch"`     // 处理器架构
 
-	SHA256SUM   util.Hex  `json:"sha256sum"`    // 包文件 sha-256
-	Size        int64     `json:"size"`         // 包文件大小
-	ContentType string    `json:"content_type"` // 包格式
-	WebPageURL  string    `json:"web_page_url"` // 下载页面 URL
-	DownloadURL string    `json:"download_url"` // 下载地址 URL
-	ResourceURL string    `json:"resource_url"` // 包的资源下载 URL
-	ReleaseAt   util.Time `json:"release_at"`   // 发布时间
+	SHA256SUM   util.Hex `json:"sha256sum"`    // 包文件 sha-256
+	Size        int64    `json:"size"`         // 包文件大小
+	ContentType string   `json:"content_type"` // 包格式
+	WebPageURL  string   `json:"web_page_url"` // 下载页面 URL
+	DownloadURL string   `json:"download_url"` // 下载地址 URL
+	// ResourceURL string    `json:"resource_url"` // 包的资源下载 URL
+	ReleaseAt util.Time `json:"release_at"` // 发布时间
 
 	Installed bool                     `json:"installed"`
 	State     dxo.SoftwarePackageState `json:"state"`

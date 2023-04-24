@@ -58,7 +58,7 @@ func (inst *ImpHTTPClientEx) fillPackages(head *vo.BaseHead, list []*dto.Softwar
 		item.Referer = head.URL
 		item.Namespace = inst.normalizeNamespace(head, item.Namespace)
 		item.DownloadURL = inst.resolveURL(head, item.DownloadURL)
-		item.ResourceURL = inst.resolveURL(head, item.ResourceURL)
+		// item.ResourceURL = inst.resolveURL(head, item.ResourceURL)
 		item.WebPageURL = inst.resolveURL(head, item.WebPageURL)
 		item.Icon = inst.resolveURL(head, item.Icon)
 	}

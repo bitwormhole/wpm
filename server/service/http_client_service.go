@@ -2,7 +2,9 @@ package service
 
 import (
 	"context"
+	"io"
 
+	"bitwormhole.com/starter/afs"
 	"github.com/bitwormhole/wpm/server/web/vo"
 )
 
@@ -19,13 +21,20 @@ type HTTPClientService interface {
 
 	// 通过 HTTP 协议获取 JSON 对象
 	FetchJSON(ctx context.Context, url string, obj any, opt *HTTPClientOptions) (*HTTPClientResult, error)
+
+	// 通过 HTTP 协议获取文件
+	FetchToFile(ctx context.Context, url string, dst afs.Path, opt *HTTPClientOptions) (*HTTPClientResult, error)
+
+	// 通过 HTTP 协议获取流
+	FetchToStream(ctx context.Context, url string, dst io.Writer, opt *HTTPClientOptions) (*HTTPClientResult, error)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 // HTTPClientOptions ...
 type HTTPClientOptions struct {
-	MaxContentLength int64
+	MaxContentLength   int64
+	OverrideTargetFile bool
 }
 
 // HTTPClientResult ...

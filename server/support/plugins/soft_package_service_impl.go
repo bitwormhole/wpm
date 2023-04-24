@@ -2,6 +2,7 @@ package plugins
 
 import (
 	"context"
+	"fmt"
 	"strconv"
 	"strings"
 	"sync"
@@ -10,6 +11,7 @@ import (
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/starter/util"
 	"github.com/bitwormhole/starter/vlog"
+	"github.com/bitwormhole/wpm/server/components/packs"
 	"github.com/bitwormhole/wpm/server/data/dao"
 	"github.com/bitwormhole/wpm/server/data/dbagent"
 	"github.com/bitwormhole/wpm/server/data/dxo"
@@ -27,20 +29,29 @@ type PluginServiceImpl struct {
 
 	GormDBAgent dbagent.GormDBAgent `inject:"#GormDBAgent"`
 
-	NamespaceService service.NamespaceService    `inject:"#NamespaceService"`
-	HTTPClient       service.HTTPClientService   `inject:"#HTTPClientService"`
-	HTTPClientEx     service.HTTPClientExService `inject:"#HTTPClientExService"`
-	TrashService     service.TrashService        `inject:"#TrashService"`
-
+	NamespaceService  service.NamespaceService      `inject:"#NamespaceService"`
+	HTTPClient        service.HTTPClientService     `inject:"#HTTPClientService"`
+	HTTPClientEx      service.HTTPClientExService   `inject:"#HTTPClientExService"`
+	TrashService      service.TrashService          `inject:"#TrashService"`
 	IntentTemplateSer service.IntentTemplateService `inject:"#IntentTemplateService"`
 	ExecutableSer     service.ExecutableService     `inject:"#ExecutableService"`
 	ContentTypeSer    service.ContentTypeService    `inject:"#ContentTypeService"`
 	MediaSer          service.MediaService          `inject:"#MediaService"`
+	AppDataService    service.AppDataService        `inject:"#AppDataService"`
+	// MediaSer1          service.SoftwarePackageService          `inject:"#MediaService"` // self
+
+	InstallerRegistryList []packs.InstallerRegistry `inject:".packs.InstallerRegistry"`
 
 	lockerForGenInstaID sync.Mutex
+	lockerForInstall    sync.Mutex
 }
 
 func (inst *PluginServiceImpl) _Impl() service.SoftwarePackageService {
+	return inst
+}
+
+// GetPacksManger ...
+func (inst *PluginServiceImpl) GetPacksManger() packs.Manager {
 	return inst
 }
 
@@ -75,7 +86,7 @@ func (inst *PluginServiceImpl) dto2entity(o1 *dto.SoftwarePackage) (*entity.Soft
 
 	o2.WebPageURL = o1.WebPageURL
 	o2.DownloadURL = o1.DownloadURL
-	o2.ResourceURL = o1.ResourceURL
+	// o2.ResourceURL = o1.ResourceURL
 
 	return o2, nil
 }
@@ -111,7 +122,7 @@ func (inst *PluginServiceImpl) entity2dto(o1 *entity.SoftwarePackage) (*dto.Soft
 
 	o2.WebPageURL = o1.WebPageURL
 	o2.DownloadURL = o1.DownloadURL
-	o2.ResourceURL = o1.ResourceURL
+	// o2.ResourceURL = o1.ResourceURL
 
 	o2.Installed = o1.Installation > 0
 
@@ -290,14 +301,16 @@ func (inst *PluginServiceImpl) Install(ctx context.Context, id dxo.SoftwarePacka
 	vlog.Warn("install package:", p.ID, " ", p.URN)
 
 	installer := myPakcageInstaller{
-		context:      ctx,
-		HTTPClient:   inst.HTTPClient,
-		HTTPClientEx: inst.HTTPClientEx,
+		context: ctx,
 
-		IntentTemplateSer: inst.IntentTemplateSer,
-		ExecutableSer:     inst.ExecutableSer,
-		ContentTypeSer:    inst.ContentTypeSer,
-		MediaSer:          inst.MediaSer,
+		SoftwarePackageSer: inst,
+		HTTPClient:         inst.HTTPClient,
+		HTTPClientEx:       inst.HTTPClientEx,
+		IntentTemplateSer:  inst.IntentTemplateSer,
+		ExecutableSer:      inst.ExecutableSer,
+		ContentTypeSer:     inst.ContentTypeSer,
+		MediaSer:           inst.MediaSer,
+		AppDataSer:         inst.AppDataService,
 	}
 	installer.installation = inst.generateInstallationID()
 	p, err = installer.Install(p)
@@ -342,4 +355,22 @@ func (inst *PluginServiceImpl) Uninstall(ctx context.Context, id dxo.SoftwarePac
 	p.Installation = 0
 	_, err = inst.UpdateItem(ctx, id, p)
 	return err
+}
+
+// GetInstaller ...
+func (inst *PluginServiceImpl) GetInstaller(ic *packs.InstallingContext) (packs.Installer, error) {
+	if ic == nil {
+		return nil, fmt.Errorf("param:ic(InstallingContext) is nil")
+	}
+	src := inst.InstallerRegistryList
+	for _, r1 := range src {
+		r2 := r1.GetInstallerRegistration()
+		installer := r2.Installer
+		if installer != nil {
+			if installer.Accept(ic) {
+				return installer, nil
+			}
+		}
+	}
+	return nil, fmt.Errorf("no installer for " + ic.String())
 }

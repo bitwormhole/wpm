@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 
+	"github.com/bitwormhole/wpm/server/components/packs"
 	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/web/dto"
 )
@@ -26,6 +27,8 @@ type SoftwarePackageService interface {
 	Install(ctx context.Context, id dxo.SoftwarePackageID) error
 
 	Uninstall(ctx context.Context, id dxo.SoftwarePackageID) error
+
+	GetPacksManger() packs.Manager
 }
 
 // SoftwareSetService ...

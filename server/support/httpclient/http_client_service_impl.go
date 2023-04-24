@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"strings"
 
+	"bitwormhole.com/starter/afs"
 	"github.com/bitwormhole/starter/application"
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/wpm/server/service"
@@ -182,4 +183,26 @@ func (inst *ImpHTTPClientService) fetch(ctx context.Context, url string, opt *se
 	}
 
 	return nil, nil, fmt.Errorf("bad URL [%v]", url)
+}
+
+// FetchToStream ...
+func (inst *ImpHTTPClientService) FetchToStream(ctx context.Context, url string, dst io.Writer, opt *service.HTTPClientOptions) (*service.HTTPClientResult, error) {
+	// fetch binary
+	data, res, err := inst.fetch(ctx, url, opt)
+	if err != nil {
+		return res, err
+	}
+	_, err = dst.Write(data)
+	return res, err
+}
+
+// FetchToFile ...
+func (inst *ImpHTTPClientService) FetchToFile(ctx context.Context, url string, dst afs.Path, opt *service.HTTPClientOptions) (*service.HTTPClientResult, error) {
+	// fetch binary
+	data, res, err := inst.fetch(ctx, url, opt)
+	if err != nil {
+		return res, err
+	}
+	err = dst.GetIO().WriteBinary(data, nil)
+	return res, err
 }
