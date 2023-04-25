@@ -9,6 +9,11 @@ import (
 type StoreVO struct {
 	WPM dto.Module `json:"WPM"`
 
+	Tables StoreTables `json:"Tables"`
+}
+
+// StoreTables 承载所有的数据表
+type StoreTables struct {
 	ExecutableTable       []*entity.Executable       `json:"Executables"`
 	IntentTemplateTable   []*entity.IntentTemplate   `json:"IntentTemplates"`
 	LocalRepositoryTable  []*entity.LocalRepository  `json:"Repositories"`

@@ -41,6 +41,9 @@ type ProjectID int
 // ContentTypeID ... like '8'
 type ContentTypeID int
 
+// InstalledFileID ...
+type InstalledFileID int
+
 // ProjectGroupID ...
 type ProjectGroupID int
 

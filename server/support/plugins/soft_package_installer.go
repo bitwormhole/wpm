@@ -5,6 +5,8 @@ import (
 	"context"
 	"fmt"
 
+	"bitwormhole.com/starter/afs"
+	"github.com/bitwormhole/starter/vlog"
 	"github.com/bitwormhole/wpm/server/components/packs"
 	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/service"
@@ -52,15 +54,20 @@ func (inst *myPakcageInstaller) Install(p *dto.SoftwarePackage) (*dto.SoftwarePa
 
 func (inst *myPakcageInstaller) prepare() error {
 
+	iid := inst.installation
 	pack := inst.pack
 	sum := pack.SHA256SUM
 	ads := inst.AppDataSer
 	id := sum.String()
 
+	pack.Installation = iid
+
 	pic := &packs.InstallingContext{}
 	pic.Context = inst.context
 	pic.Action = "install"
 	pic.Pack = pack
+	pic.PackType = pack.ContentType
+	pic.Installation = iid
 
 	pic.PackDir = ads.GetPath(&service.GetPathOptions{Type: "plug-ins", ID: id})
 	pic.PackFile = ads.GetPath(&service.GetPathOptions{Type: "packages-cache", ID: id})
@@ -101,11 +108,21 @@ func (inst *myPakcageInstaller) fetch() error {
 	file2 := inst.pic.PackFile
 
 	if !file2.Exists() {
-		resp, err := inst.HTTPClient.FetchToFile(ctx, url, file2, nil)
+		vlog.Info("fetch package from ", url)
+		opt := &service.HTTPClientOptions{}
+		opt.FileOptions = &afs.Options{
+			Mkdirs: true,
+			Create: true,
+			Write:  true,
+			File:   true,
+		}
+		resp, err := inst.HTTPClient.FetchToFile(ctx, url, file2, opt)
 		if err != nil {
 			return err
 		}
 		haveSize1 = resp.ContentLength
+	} else if file2.IsFile() {
+		haveSize1 = file2.GetInfo().Length()
 	}
 
 	// check size

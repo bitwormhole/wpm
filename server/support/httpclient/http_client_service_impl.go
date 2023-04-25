@@ -198,11 +198,15 @@ func (inst *ImpHTTPClientService) FetchToStream(ctx context.Context, url string,
 
 // FetchToFile ...
 func (inst *ImpHTTPClientService) FetchToFile(ctx context.Context, url string, dst afs.Path, opt *service.HTTPClientOptions) (*service.HTTPClientResult, error) {
+
+	opt = inst.prepareOptions(opt)
+	op2 := opt.FileOptions
+
 	// fetch binary
 	data, res, err := inst.fetch(ctx, url, opt)
 	if err != nil {
 		return res, err
 	}
-	err = dst.GetIO().WriteBinary(data, nil)
+	err = dst.GetIO().WriteBinary(data, op2)
 	return res, err
 }

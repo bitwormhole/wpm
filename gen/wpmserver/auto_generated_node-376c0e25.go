@@ -530,6 +530,23 @@ type pComWindowsPlatformServiceImpl struct {
 }
 
 
+type pComWPMPluginInstaller struct {
+	instance *plugins0x82e34b.WPMPluginInstaller
+	 markup0x23084a.Component `class:"life packs.InstallerRegistry"`
+	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
+	InstalledFileDAO dao0x5af8d0.InstalledFileDAO `inject:"#InstalledFileDAO"`
+}
+
+
+type pComSoftInstalledFileDAO struct {
+	instance *plugins0x82e34b.SoftInstalledFileDAO
+	 markup0x23084a.Component `id:"InstalledFileDAO"`
+	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
+	TrashService service0x3e063d.TrashService `inject:"#TrashService"`
+	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
+}
+
+
 type pComSoftwarePackageController struct {
 	instance *plugins0x82e34b.SoftwarePackageController
 	 markup0x23084a.RestController `class:"rest-controller"`
@@ -561,6 +578,7 @@ type pComPluginServiceImpl struct {
 	ContentTypeSer service0x3e063d.ContentTypeService `inject:"#ContentTypeService"`
 	MediaSer service0x3e063d.MediaService `inject:"#MediaService"`
 	AppDataService service0x3e063d.AppDataService `inject:"#AppDataService"`
+	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
 	InstallerRegistryList []packs0xfbb07e.InstallerRegistry `inject:".packs.InstallerRegistry"`
 }
 

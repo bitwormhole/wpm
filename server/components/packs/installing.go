@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"bitwormhole.com/starter/afs"
+	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/web/dto"
 )
 
@@ -12,7 +13,9 @@ import (
 type InstallingContext struct {
 	Context context.Context
 
-	Action string // [install|uninstall|upgrade|re-install]
+	Action       string // [install|uninstall|upgrade|re-install]
+	PackType     string
+	Installation dxo.InstallationID
 
 	Root     afs.Path // 系统根文件夹，不同的系统上具体位置可能不同
 	PackDir  afs.Path // 解压后的包文件夹路径

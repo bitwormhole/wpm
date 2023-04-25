@@ -44,13 +44,13 @@ func (inst *tablesExportTask) exportExecutables() error {
 
 	db := inst.db
 	view := inst.view
-	table := view.ExecutableTable
+	table := view.Tables.ExecutableTable
 	table = make([]*entity.Executable, 0)
 
 	res := db.Find(&table)
 	err := res.Error
 	if err == nil {
-		view.ExecutableTable = table
+		view.Tables.ExecutableTable = table
 	}
 	return err
 }
@@ -58,13 +58,13 @@ func (inst *tablesExportTask) exportExecutables() error {
 func (inst *tablesExportTask) exportIntentTemplates() error {
 	db := inst.db
 	view := inst.view
-	table := view.IntentTemplateTable
+	table := view.Tables.IntentTemplateTable
 	table = make([]*entity.IntentTemplate, 0)
 
 	res := db.Find(&table)
 	err := res.Error
 	if err == nil {
-		view.IntentTemplateTable = table
+		view.Tables.IntentTemplateTable = table
 	}
 	return err
 }
@@ -73,13 +73,13 @@ func (inst *tablesExportTask) exportRemoteRepositories() error {
 
 	db := inst.db
 	view := inst.view
-	table := view.RemoteRepositoryTable
+	table := view.Tables.RemoteRepositoryTable
 	table = make([]*entity.RemoteRepository, 0)
 
 	res := db.Find(&table)
 	err := res.Error
 	if err == nil {
-		view.RemoteRepositoryTable = table
+		view.Tables.RemoteRepositoryTable = table
 	}
 	return err
 }
@@ -88,13 +88,13 @@ func (inst *tablesExportTask) exportLocalRepositories() error {
 
 	db := inst.db
 	view := inst.view
-	table := view.LocalRepositoryTable
+	table := view.Tables.LocalRepositoryTable
 	table = make([]*entity.LocalRepository, 0)
 
 	res := db.Find(&table)
 	err := res.Error
 	if err == nil {
-		view.LocalRepositoryTable = table
+		view.Tables.LocalRepositoryTable = table
 	}
 	return err
 }
@@ -103,13 +103,13 @@ func (inst *tablesExportTask) exportLocations() error {
 
 	db := inst.db
 	view := inst.view
-	table := view.LocationTable
+	table := view.Tables.LocationTable
 	table = make([]*entity.Location, 0)
 
 	res := db.Find(&table)
 	err := res.Error
 	if err == nil {
-		view.LocationTable = table
+		view.Tables.LocationTable = table
 	}
 	return err
 }
@@ -118,13 +118,13 @@ func (inst *tablesExportTask) exportProjects() error {
 
 	db := inst.db
 	view := inst.view
-	table := view.ProjectTable
+	table := view.Tables.ProjectTable
 	table = make([]*entity.Project, 0)
 
 	res := db.Find(&table)
 	err := res.Error
 	if err == nil {
-		view.ProjectTable = table
+		view.Tables.ProjectTable = table
 	}
 	return err
 }
@@ -133,13 +133,13 @@ func (inst *tablesExportTask) exportMediae() error {
 
 	db := inst.db
 	view := inst.view
-	table := view.MediaTable
+	table := view.Tables.MediaTable
 	table = make([]*entity.Media, 0)
 
 	res := db.Find(&table)
 	err := res.Error
 	if err == nil {
-		view.MediaTable = table
+		view.Tables.MediaTable = table
 	}
 	return err
 }
@@ -148,13 +148,13 @@ func (inst *tablesExportTask) exportSettings() error {
 
 	db := inst.db
 	view := inst.view
-	table := view.SettingTable
+	table := view.Tables.SettingTable
 	table = make([]*entity.Setting, 0)
 
 	res := db.Find(&table)
 	err := res.Error
 	if err == nil {
-		view.SettingTable = table
+		view.Tables.SettingTable = table
 	}
 	return err
 }
@@ -163,13 +163,13 @@ func (inst *tablesExportTask) exportContentTypes() error {
 
 	db := inst.db
 	view := inst.view
-	table := view.ContentTypeTable
+	table := view.Tables.ContentTypeTable
 	table = make([]*entity.ContentType, 0)
 
 	res := db.Find(&table)
 	err := res.Error
 	if err == nil {
-		view.ContentTypeTable = table
+		view.Tables.ContentTypeTable = table
 	}
 	return err
 }
@@ -178,13 +178,13 @@ func (inst *tablesExportTask) exportNamespaces() error {
 
 	db := inst.db
 	view := inst.view
-	table := view.SourceTable
+	table := view.Tables.SourceTable
 	table = make([]*entity.Namespace, 0)
 
 	res := db.Find(&table)
 	err := res.Error
 	if err == nil {
-		view.SourceTable = table
+		view.Tables.SourceTable = table
 	}
 	return err
 }
@@ -193,13 +193,13 @@ func (inst *tablesExportTask) exportPackages() error {
 
 	db := inst.db
 	view := inst.view
-	table := view.PackageTable
+	table := view.Tables.PackageTable
 	table = make([]*entity.SoftwarePackage, 0)
 
 	res := db.Find(&table)
 	err := res.Error
 	if err == nil {
-		view.PackageTable = table
+		view.Tables.PackageTable = table
 	}
 	return err
 }
@@ -208,13 +208,13 @@ func (inst *tablesExportTask) exportUsers() error {
 
 	db := inst.db
 	view := inst.view
-	table := view.UserTable
+	table := view.Tables.UserTable
 	table = make([]*entity.User, 0)
 
 	res := db.Find(&table)
 	err := res.Error
 	if err == nil {
-		view.UserTable = table
+		view.Tables.UserTable = table
 	}
 	return err
 }
@@ -223,13 +223,13 @@ func (inst *tablesExportTask) exportWorktrees() error {
 
 	db := inst.db
 	view := inst.view
-	table := view.WorktreeTable
+	table := view.Tables.WorktreeTable
 	table = make([]*entity.Worktree, 0)
 
 	res := db.Find(&table)
 	err := res.Error
 	if err == nil {
-		view.WorktreeTable = table
+		view.Tables.WorktreeTable = table
 	}
 	return err
 }

@@ -35,6 +35,7 @@ type HTTPClientService interface {
 type HTTPClientOptions struct {
 	MaxContentLength   int64
 	OverrideTargetFile bool
+	FileOptions        *afs.Options
 }
 
 // HTTPClientResult ...

@@ -38,7 +38,7 @@ type PluginServiceImpl struct {
 	ContentTypeSer    service.ContentTypeService    `inject:"#ContentTypeService"`
 	MediaSer          service.MediaService          `inject:"#MediaService"`
 	AppDataService    service.AppDataService        `inject:"#AppDataService"`
-	// MediaSer1          service.SoftwarePackageService          `inject:"#MediaService"` // self
+	FileSystemService service.FileSystemService     `inject:"#FileSystemService"`
 
 	InstallerRegistryList []packs.InstallerRegistry `inject:".packs.InstallerRegistry"`
 
@@ -342,9 +342,10 @@ func (inst *PluginServiceImpl) Uninstall(ctx context.Context, id dxo.SoftwarePac
 	vlog.Warn("uninstall package:", p.ID, " ", p.URN)
 
 	uni := myPakcageUninstaller{
-		context:      ctx,
-		agent:        inst.GormDBAgent,
-		installation: p.Installation,
+		context:       ctx,
+		agent:         inst.GormDBAgent,
+		installation:  p.Installation,
+		FileSystemSer: inst.FileSystemService,
 	}
 	err = uni.Uninstall()
 	if err != nil {

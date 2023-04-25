@@ -70,6 +70,11 @@ func (Worktree) TableName() string {
 	return TableNamePrefix + "worktree"
 }
 
+// TableName ...
+func (InstalledFile) TableName() string {
+	return TableNamePrefix + "installed_file"
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 // ListPrototypes 罗列出所有的 entity 原型
@@ -78,6 +83,7 @@ func ListPrototypes() []any {
 
 	list = append(list, &ContentType{})
 	list = append(list, &Executable{})
+	list = append(list, &InstalledFile{})
 	list = append(list, &IntentTemplate{})
 	list = append(list, &LocalRepository{})
 	list = append(list, &Location{})

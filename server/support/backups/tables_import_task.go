@@ -42,7 +42,7 @@ func (inst *tablesImportTask) handleError(err error) {
 
 func (inst *tablesImportTask) importProjects() error {
 	db := inst.db
-	list := inst.view.ProjectTable
+	list := inst.view.Tables.ProjectTable
 	for _, item := range list {
 		res := db.FirstOrCreate(item, item.ID)
 		inst.handleError(res.Error)
@@ -52,7 +52,7 @@ func (inst *tablesImportTask) importProjects() error {
 
 func (inst *tablesImportTask) importIntentTemplate() error {
 	db := inst.db
-	list := inst.view.IntentTemplateTable
+	list := inst.view.Tables.IntentTemplateTable
 	for _, item := range list {
 		res := db.FirstOrCreate(item, item.ID)
 		inst.handleError(res.Error)
@@ -62,7 +62,7 @@ func (inst *tablesImportTask) importIntentTemplate() error {
 
 func (inst *tablesImportTask) importContentTypes() error {
 	db := inst.db
-	list := inst.view.ContentTypeTable
+	list := inst.view.Tables.ContentTypeTable
 	for _, item := range list {
 		res := db.FirstOrCreate(item, item.ID)
 		inst.handleError(res.Error)
@@ -72,7 +72,7 @@ func (inst *tablesImportTask) importContentTypes() error {
 
 func (inst *tablesImportTask) importLocalRepositories() error {
 	db := inst.db
-	list := inst.view.LocalRepositoryTable
+	list := inst.view.Tables.LocalRepositoryTable
 	for _, item := range list {
 		res := db.FirstOrCreate(item, item.ID)
 		inst.handleError(res.Error)
@@ -82,7 +82,7 @@ func (inst *tablesImportTask) importLocalRepositories() error {
 
 func (inst *tablesImportTask) importLocations() error {
 	db := inst.db
-	list := inst.view.LocationTable
+	list := inst.view.Tables.LocationTable
 	for _, item := range list {
 		res := db.FirstOrCreate(item, item.ID)
 		inst.handleError(res.Error)
@@ -92,7 +92,7 @@ func (inst *tablesImportTask) importLocations() error {
 
 func (inst *tablesImportTask) importMediae() error {
 	db := inst.db
-	list := inst.view.MediaTable
+	list := inst.view.Tables.MediaTable
 	for _, item := range list {
 		res := db.FirstOrCreate(item, item.ID)
 		inst.handleError(res.Error)
@@ -102,7 +102,7 @@ func (inst *tablesImportTask) importMediae() error {
 
 func (inst *tablesImportTask) importExecutables() error {
 	db := inst.db
-	list := inst.view.ExecutableTable
+	list := inst.view.Tables.ExecutableTable
 	for _, item := range list {
 		res := db.FirstOrCreate(item, item.ID)
 		inst.handleError(res.Error)
