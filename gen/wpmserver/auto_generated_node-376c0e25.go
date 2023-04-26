@@ -533,7 +533,11 @@ type pComWindowsPlatformServiceImpl struct {
 type pComWPMPluginInstaller struct {
 	instance *plugins0x82e34b.WPMPluginInstaller
 	 markup0x23084a.Component `class:"life packs.InstallerRegistry"`
+	HTTPClientExService service0x3e063d.HTTPClientExService `inject:"#HTTPClientExService"`
 	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
+	MediaService service0x3e063d.MediaService `inject:"#MediaService"`
+	ExecutableService service0x3e063d.ExecutableService `inject:"#ExecutableService"`
+	IntentTemplateService service0x3e063d.IntentTemplateService `inject:"#IntentTemplateService"`
 	InstalledFileDAO dao0x5af8d0.InstalledFileDAO `inject:"#InstalledFileDAO"`
 }
 

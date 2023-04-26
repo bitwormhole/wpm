@@ -52,6 +52,8 @@ func (inst *ImpHTTPClientEx) fillMediae(head *vo.BaseHead, list []*dto.Media) {
 	for _, item := range list {
 		item.Referer = head.URL
 		item.SHA256SUM = utils.NormalizeHex(item.SHA256SUM)
+		item.Source = inst.resolveURL(head, item.Source)
+		item.URL = inst.resolveURL(head, item.URL)
 	}
 }
 

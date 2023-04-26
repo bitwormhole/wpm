@@ -2,6 +2,7 @@ package utils
 
 import (
 	"io"
+	"strings"
 
 	"bitwormhole.com/starter/afs"
 )
@@ -22,4 +23,14 @@ func CopyFile(src, dst afs.Path, writeOption *afs.Options) (int64, error) {
 	defer out.Close()
 
 	return io.Copy(out, in)
+}
+
+// GetFileURI ...
+func GetFileURI(p afs.Path) string {
+	path := p.GetPath()
+	path = strings.ReplaceAll(path, "\\", "/")
+	if !strings.HasPrefix(path, "/") {
+		path = "/" + path
+	}
+	return "file://" + path
 }

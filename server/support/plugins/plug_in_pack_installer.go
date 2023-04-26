@@ -12,14 +12,20 @@ import (
 	"github.com/bitwormhole/wpm/server/data/entity"
 	"github.com/bitwormhole/wpm/server/service"
 	"github.com/bitwormhole/wpm/server/utils"
+	"github.com/bitwormhole/wpm/server/web/dto"
 )
 
 // WPMPluginInstaller ...
 type WPMPluginInstaller struct {
 	markup.Component `class:"life packs.InstallerRegistry"`
 
-	FileSystemService service.FileSystemService `inject:"#FileSystemService"`
-	InstalledFileDAO  dao.InstalledFileDAO      `inject:"#InstalledFileDAO"`
+	HTTPClientExService   service.HTTPClientExService   `inject:"#HTTPClientExService"`
+	FileSystemService     service.FileSystemService     `inject:"#FileSystemService"`
+	MediaService          service.MediaService          `inject:"#MediaService"`
+	ExecutableService     service.ExecutableService     `inject:"#ExecutableService"`
+	IntentTemplateService service.IntentTemplateService `inject:"#IntentTemplateService"`
+
+	InstalledFileDAO dao.InstalledFileDAO `inject:"#InstalledFileDAO"`
 }
 
 func (inst *WPMPluginInstaller) _Impl() (packs.Installer, packs.InstallerRegistry, application.LifeRegistry) {
@@ -65,6 +71,44 @@ func (inst *WPMPluginInstaller) Uninstall(ic *packs.InstallingContext) error {
 	return fmt.Errorf("no impl")
 }
 
+func (inst *WPMPluginInstaller) insertMediae(ic *packs.InstallingContext, list []*dto.Media) error {
+	ctx := ic.Context
+	ser := inst.MediaService
+	opt := &service.MediaOptions{FetchFromSource: true}
+	for _, item := range list {
+		_, err := ser.Insert(ctx, item, opt)
+		if err != nil {
+			vlog.Warn(err)
+		}
+	}
+	return nil
+}
+
+func (inst *WPMPluginInstaller) insertExecutables(ic *packs.InstallingContext, list []*dto.Executable) error {
+	ctx := ic.Context
+	ser := inst.ExecutableService
+	opt := &service.ExecutableOptions{SkipFileChecking: true}
+	for _, item := range list {
+		_, err := ser.Insert(ctx, item, opt)
+		if err != nil {
+			vlog.Warn(err)
+		}
+	}
+	return nil
+}
+
+func (inst *WPMPluginInstaller) insertIntentTemplates(ic *packs.InstallingContext, list []*dto.IntentTemplate) error {
+	ctx := ic.Context
+	ser := inst.IntentTemplateService
+	for _, item := range list {
+		_, err := ser.Insert(ctx, item)
+		if err != nil {
+			vlog.Warn(err)
+		}
+	}
+	return nil
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 type myPluginInstallingTask struct {
@@ -107,7 +151,25 @@ func (inst *myPluginInstallingTask) deployFilesToRoot() error {
 }
 
 func (inst *myPluginInstallingTask) importObjects() error {
-	vlog.Warn("todo:", "importObjects")
+
+	const path = "wpm.plug-in/manifest.json"
+
+	ic := inst.ic
+	ctx := ic.Context
+	httpSer := inst.parent.HTTPClientExService
+	manifest := inst.ic.PackDir.GetChild(path)
+	url := utils.GetFileURI(manifest)
+	opt := &service.HTTPClientOptions{}
+
+	doc, err := httpSer.FetchOnlineDoc(ctx, url, opt)
+	if err != nil {
+		return err
+	}
+
+	inst.parent.insertMediae(ic, doc.Mediae)
+	inst.parent.insertExecutables(ic, doc.Executables)
+	inst.parent.insertIntentTemplates(ic, doc.IntentTemplates)
+
 	return nil
 }
 

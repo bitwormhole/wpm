@@ -6682,7 +6682,11 @@ type comFactory4pComWPMPluginInstaller struct {
     mPrototype * plugins0x82e34b.WPMPluginInstaller
 
 	
+	mHTTPClientExServiceSelector config.InjectionSelector
 	mFileSystemServiceSelector config.InjectionSelector
+	mMediaServiceSelector config.InjectionSelector
+	mExecutableServiceSelector config.InjectionSelector
+	mIntentTemplateServiceSelector config.InjectionSelector
 	mInstalledFileDAOSelector config.InjectionSelector
 
 }
@@ -6690,7 +6694,11 @@ type comFactory4pComWPMPluginInstaller struct {
 func (inst * comFactory4pComWPMPluginInstaller) init() application.ComponentFactory {
 
 	
+	inst.mHTTPClientExServiceSelector = config.NewInjectionSelector("#HTTPClientExService",nil)
 	inst.mFileSystemServiceSelector = config.NewInjectionSelector("#FileSystemService",nil)
+	inst.mMediaServiceSelector = config.NewInjectionSelector("#MediaService",nil)
+	inst.mExecutableServiceSelector = config.NewInjectionSelector("#ExecutableService",nil)
+	inst.mIntentTemplateServiceSelector = config.NewInjectionSelector("#IntentTemplateService",nil)
 	inst.mInstalledFileDAOSelector = config.NewInjectionSelector("#InstalledFileDAO",nil)
 
 
@@ -6729,9 +6737,31 @@ func (inst * comFactory4pComWPMPluginInstaller) Destroy(instance application.Com
 func (inst * comFactory4pComWPMPluginInstaller) Inject(instance application.ComponentInstance, context application.InstanceContext) error {
 	
 	obj := inst.castObject(instance)
+	obj.HTTPClientExService = inst.getterForFieldHTTPClientExServiceSelector(context)
 	obj.FileSystemService = inst.getterForFieldFileSystemServiceSelector(context)
+	obj.MediaService = inst.getterForFieldMediaServiceSelector(context)
+	obj.ExecutableService = inst.getterForFieldExecutableServiceSelector(context)
+	obj.IntentTemplateService = inst.getterForFieldIntentTemplateServiceSelector(context)
 	obj.InstalledFileDAO = inst.getterForFieldInstalledFileDAOSelector(context)
 	return context.LastError()
+}
+
+//getterForFieldHTTPClientExServiceSelector
+func (inst * comFactory4pComWPMPluginInstaller) getterForFieldHTTPClientExServiceSelector (context application.InstanceContext) service0x3e063d.HTTPClientExService {
+
+	o1 := inst.mHTTPClientExServiceSelector.GetOne(context)
+	o2, ok := o1.(service0x3e063d.HTTPClientExService)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "com59-plugins0x82e34b.WPMPluginInstaller")
+		eb.Set("field", "HTTPClientExService")
+		eb.Set("type1", "?")
+		eb.Set("type2", "service0x3e063d.HTTPClientExService")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
 }
 
 //getterForFieldFileSystemServiceSelector
@@ -6746,6 +6776,60 @@ func (inst * comFactory4pComWPMPluginInstaller) getterForFieldFileSystemServiceS
 		eb.Set("field", "FileSystemService")
 		eb.Set("type1", "?")
 		eb.Set("type2", "service0x3e063d.FileSystemService")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
+}
+
+//getterForFieldMediaServiceSelector
+func (inst * comFactory4pComWPMPluginInstaller) getterForFieldMediaServiceSelector (context application.InstanceContext) service0x3e063d.MediaService {
+
+	o1 := inst.mMediaServiceSelector.GetOne(context)
+	o2, ok := o1.(service0x3e063d.MediaService)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "com59-plugins0x82e34b.WPMPluginInstaller")
+		eb.Set("field", "MediaService")
+		eb.Set("type1", "?")
+		eb.Set("type2", "service0x3e063d.MediaService")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
+}
+
+//getterForFieldExecutableServiceSelector
+func (inst * comFactory4pComWPMPluginInstaller) getterForFieldExecutableServiceSelector (context application.InstanceContext) service0x3e063d.ExecutableService {
+
+	o1 := inst.mExecutableServiceSelector.GetOne(context)
+	o2, ok := o1.(service0x3e063d.ExecutableService)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "com59-plugins0x82e34b.WPMPluginInstaller")
+		eb.Set("field", "ExecutableService")
+		eb.Set("type1", "?")
+		eb.Set("type2", "service0x3e063d.ExecutableService")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
+}
+
+//getterForFieldIntentTemplateServiceSelector
+func (inst * comFactory4pComWPMPluginInstaller) getterForFieldIntentTemplateServiceSelector (context application.InstanceContext) service0x3e063d.IntentTemplateService {
+
+	o1 := inst.mIntentTemplateServiceSelector.GetOne(context)
+	o2, ok := o1.(service0x3e063d.IntentTemplateService)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "com59-plugins0x82e34b.WPMPluginInstaller")
+		eb.Set("field", "IntentTemplateService")
+		eb.Set("type1", "?")
+		eb.Set("type2", "service0x3e063d.IntentTemplateService")
 		context.HandleError(eb.Create())
 		return nil
 	}
