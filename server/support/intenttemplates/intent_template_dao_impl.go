@@ -64,8 +64,7 @@ func (inst *IntentTemplateDaoImpl) makeCondsForListBySelector(sel *entity.Intent
 
 	table := make(map[string]string)
 	table["executable"] = sel.Executable.String()
-	table["target"] = sel.Target
-	table["content_type"] = sel.ContentType
+	table["type"] = sel.ContentType
 	table["method"] = sel.Method
 
 	args := make([]any, 0)
@@ -139,7 +138,7 @@ func (inst *IntentTemplateDaoImpl) Update(id dxo.IntentTemplateID, o *entity.Int
 	m.Executable = o.Executable
 	m.Method = o.Method
 	m.Selector = o.Selector
-	m.Target = o.Target
+	// m.Target = o.Target
 
 	m.Command = o.Command
 	m.Arguments = o.Arguments

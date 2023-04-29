@@ -32,15 +32,38 @@ func (inst *CheckTemplateFilter) GetFilterRegistrationList() []*intents.FilterRe
 // Handle ...
 func (inst *CheckTemplateFilter) Handle(c context.Context, i *dto.Intent, next intents.FilterChain) error {
 
-	templist := i.Templates
-	count := len(templist)
-	if count < 1 {
-		return fmt.Errorf("no template for intent, selector = %v", i.Action.Selector)
-	} else if count > 1 {
+	temp := i.Template
+	want := i.Want
+	have := i.Have
+	count := 0
+
+	if temp == nil {
+		templist := make([]*dto.IntentTemplate, 0)
+		if want != nil {
+			templist = append(templist, want.Templates...)
+		}
+		if have != nil {
+			templist = append(templist, have.Templates...)
+		}
+		for _, item := range templist {
+			if item == nil {
+				continue
+			}
+			count++
+			temp = item
+		}
+	}
+
+	if count > 1 {
 		i.Status = http.StatusContinue
 		i.Message = "multi-intent-templates"
 		return nil
 	}
 
+	if temp == nil {
+		return fmt.Errorf("no template for intent, selector = %v", i.Selector)
+	}
+
+	i.Template = temp
 	return next.Handle(c, i)
 }

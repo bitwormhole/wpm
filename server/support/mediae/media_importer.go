@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"io/fs"
+	"os"
 	"strconv"
 
 	"bitwormhole.com/starter/afs"
@@ -172,7 +173,12 @@ func (inst *myMediaImporter) moveTempToDest() error {
 		return nil
 	}
 
-	opt := &afs.Options{Create: true}
+	opt := &afs.Options{
+		Create:     true,
+		Mkdirs:     true,
+		Permission: fs.ModePerm,
+		Flag:       os.O_WRONLY | os.O_CREATE,
+	}
 	dst := inst.fileDest
 	src := inst.fileTemp
 	return src.CopyTo(dst, opt)
@@ -208,7 +214,10 @@ func (inst *myMediaImporter) fetchFromSource() error {
 	}
 	tmp := inst.fileTemp
 	opt := &afs.Options{
-		Mkdirs: true, Create: true, Permission: fs.ModePerm,
+		Mkdirs:     true,
+		Create:     true,
+		Permission: fs.ModePerm,
+		Flag:       os.O_WRONLY | os.O_CREATE,
 	}
 	return tmp.GetIO().WriteBinary(data, opt)
 }

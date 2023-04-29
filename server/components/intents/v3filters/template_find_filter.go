@@ -33,18 +33,24 @@ func (inst *FindTemplateFilter) GetFilterRegistrationList() []*intents.FilterReg
 // Handle ...
 func (inst *FindTemplateFilter) Handle(c context.Context, i *dto.Intent, next intents.FilterChain) error {
 
-	templist := i.Templates
-	if len(templist) > 0 {
+	temp := i.Template
+	if temp != nil {
 		return next.Handle(c, i)
 	}
 
-	sel := &dto.IntentTemplate{}
-	sel.ActionRequest = i.Action
-	list, err := inst.IntentTemplateService.ListBySelector(c, sel)
+	all, err := inst.find(c, i)
 	if err != nil {
 		return err
 	}
 
-	i.Templates = list
+	i.Have = &dto.IntentMessage{Templates: all}
+	i.Template = nil
+
 	return next.Handle(c, i)
+}
+
+func (inst *FindTemplateFilter) find(c context.Context, i *dto.Intent) ([]*dto.IntentTemplate, error) {
+	sel := &dto.IntentTemplate{}
+	sel.ActionRequest = i.ActionRequest
+	return inst.IntentTemplateService.ListBySelector(c, sel)
 }

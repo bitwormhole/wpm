@@ -1,6 +1,9 @@
 package dxo
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -21,8 +24,7 @@ func NewIntentTemplateSelector(sel string) IntentTemplateSelector {
 // IntentTemplateSelectorBuilder 用来创建 IntentTemplateSelector
 type IntentTemplateSelectorBuilder struct {
 	Method string // [open|insert|update|edit|...]
-	Target string // [repository|worktree|project||]
-	Type   string // [project-type|content-type]
+	Type   string // [project-type|content-type|target-type]
 	With   string // [exe-name]
 }
 
@@ -36,40 +38,14 @@ func (inst *IntentTemplateSelectorBuilder) normalizeName(name string) string {
 func (inst *IntentTemplateSelectorBuilder) Create() IntentTemplateSelector {
 
 	method := inst.normalizeName(inst.Method)
-	target := inst.normalizeName(inst.Target)
-	as := inst.normalizeName(inst.Type)
+	atype := inst.normalizeName(inst.Type)
 	with := inst.normalizeName(inst.With)
-	builder := strings.Builder{}
 
 	if method == "" {
 		method = "open"
 	}
 
-	const (
-		keyAS   = "as"
-		keyWith = "with"
-	)
-	keyTarget := method
-	keys := []string{keyTarget, keyAS, keyWith}
-
-	table := make(map[string]string)
-	table[keyTarget] = target
-	table[keyAS] = as
-	table[keyWith] = with
-
-	for _, key := range keys {
-		value := table[key]
-		if value == "" {
-			value = "*"
-		}
-		builder.WriteString(".")
-		builder.WriteString(key)
-		builder.WriteString("(")
-		builder.WriteString(value)
-		builder.WriteString(")")
-	}
-
-	sel := builder.String()
+	sel := fmt.Sprintf(".%v(%v).with(%v)", method, atype, with)
 	sel = strings.ToLower(sel)
 	return IntentTemplateSelector(sel)
 }

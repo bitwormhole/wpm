@@ -34,29 +34,28 @@ func (inst *PrepareActionFilter) GetFilterRegistrationList() []*intents.FilterRe
 // Handle ...
 func (inst *PrepareActionFilter) Handle(c context.Context, i *dto.Intent, next intents.FilterChain) error {
 
-	action := &i.Action
-	action.Method = inst.prepareMethod(i)
-	action.Target = inst.prepareTarget(i)
-	action.Type = inst.prepareContentType(i)
-	action.With = inst.prepareExe(i)
+	a := &i.ActionRequest
+	a.Method = inst.prepareMethod(i)
+	a.Location = inst.prepareLocation(i)
+	a.ContentType = inst.prepareContentType(i)
+	a.With = inst.prepareExe(i)
 
-	if action.Target == "none" {
+	if a.ContentType == "none" {
 		inst.prepareTargetWithWD(i)
 	}
 
 	itsb := dxo.IntentTemplateSelectorBuilder{
-		Method: action.Method,
-		With:   action.With.String(),
-		Type:   action.Type,
-		Target: action.Target,
+		Method: a.Method,
+		With:   a.With.String(),
+		Type:   a.ContentType,
 	}
-	action.Selector = itsb.Create()
+	a.Selector = itsb.Create()
 
 	return next.Handle(c, i)
 }
 
 func (inst *PrepareActionFilter) prepareMethod(i *dto.Intent) string {
-	m := i.Action.Method
+	m := i.Method
 	if m == "" {
 		m = "open"
 	}
@@ -64,11 +63,24 @@ func (inst *PrepareActionFilter) prepareMethod(i *dto.Intent) string {
 }
 
 func (inst *PrepareActionFilter) prepareContentType(i *dto.Intent) string {
-	ct := i.Action.Type
-	if ct == "" {
-		ct = "*"
+	ct := i.ContentType
+	if ct != "" {
+		return ct
 	}
-	return ct
+	table := make(map[string]bool)
+	table["file"] = i.File == nil
+	table["folder"] = i.Folder == nil
+	table["repository"] = i.Repository == nil
+	table["worktree"] = i.Worktree == nil
+	table["submodule"] = i.Submodule == nil
+	table["project"] = i.Project == nil
+	table["web"] = i.Web == nil
+	for name, isnil := range table {
+		if !isnil {
+			return name
+		}
+	}
+	return "none"
 }
 
 func (inst *PrepareActionFilter) prepareExe(i *dto.Intent) dxo.ExecutableURN {
@@ -79,35 +91,19 @@ func (inst *PrepareActionFilter) prepareExe(i *dto.Intent) dxo.ExecutableURN {
 	return exe.URN
 }
 
-func (inst *PrepareActionFilter) prepareTarget(i *dto.Intent) string {
-	table := make(map[string]bool)
-	table["file"] = i.File == nil
-	table["folder"] = i.Folder == nil
-	table["repository"] = i.Repository == nil
-	table["worktree"] = i.Worktree == nil
-	table["submodule"] = i.Submodule == nil
-	table["project"] = i.Project == nil
-	for name, isnil := range table {
-		if !isnil {
-			return name
-		}
-	}
-	return "none"
+func (inst *PrepareActionFilter) prepareLocation(i *dto.Intent) string {
+	return i.Location
 }
 
 func (inst *PrepareActionFilter) prepareTargetWithWD(i *dto.Intent) error {
-
 	p, err := inst.ProfileService.GetProfile()
 	if err != nil {
 		return err
 	}
 	home := p.Home
-
-	i.Action.Target = "folder"
-	i.Action.Type = "*"
+	i.ContentType = "folder"
 	i.Folder = &dto.File{
 		Path: home,
 	}
-
 	return nil
 }

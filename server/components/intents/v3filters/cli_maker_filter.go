@@ -40,7 +40,7 @@ func (inst *CLIMakerFilter) Handle(c context.Context, i *dto.Intent, next intent
 	}
 	cli = &dto.CommandRequest{}
 
-	temp := i.Templates[0]
+	temp := i.Template
 	cli.Command = temp.Command
 	cli.Arguments = temp.Arguments.Array()
 	cli.Env = temp.Env.Map()

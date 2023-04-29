@@ -5,10 +5,14 @@ import "github.com/bitwormhole/wpm/server/data/dxo"
 // Intent 表示一个命令实例
 type Intent struct {
 	ID dxo.IntentID `json:"id"`
-	Base
 
-	Options    []string          `json:"options"` // used for filters
+	Base
+	ActionRequest
+
 	Properties map[string]string `json:"properties"`
+	Template   *IntentTemplate   `json:"template"`
+	Want       *IntentMessage    `json:"want"`
+	Have       *IntentMessage    `json:"have"`
 
 	// targets
 	Executable *Executable      `json:"executable"`
@@ -18,24 +22,20 @@ type Intent struct {
 	Project    *Project         `json:"project"`
 	File       *File            `json:"file"`
 	Folder     *File            `json:"folder"`
-
-	// templates
-	Templates []*IntentTemplate `json:"templates"`
-
-	// as action
-	Action ActionRequest `json:"action"`
-
-	// as web
-	Web *WebRequest `json:"web"`
+	Web        *WebRequest      `json:"web"`
 
 	// as cli
 	CLI *CommandRequest `json:"cli"`
 
 	// result
-	WantProperties []*IntentPropertyDescriptor `json:"want_properties"`
-	Message        string                      `json:"message"`
-	Error          string                      `json:"error"`
-	Status         int                         `json:"status"` // use http.Status
+	Message string `json:"message"`
+	Error   string `json:"error"`
+	Status  int    `json:"status"` // use http.Status
+}
+
+type IntentMessage struct {
+	Properties []*IntentPropertyDescriptor `json:"properties"`
+	Templates  []*IntentTemplate           `json:"templates"`
 }
 
 // IntentTemplate 表示一个命令模板
@@ -72,11 +72,13 @@ type WebRequest struct {
 
 // ActionRequest ...
 type ActionRequest struct {
-	Method   string                     `json:"method"`
-	Target   string                     `json:"target"` // file|folder|repository|worktree|submodule|project
-	Type     string                     `json:"type"`   // project-type | content-type
-	With     dxo.ExecutableURN          `json:"with"`
-	Selector dxo.IntentTemplateSelector `json:"selector"`
+	Method      string                     `json:"method"`
+	Name        string                     `json:"name"` // example: file.name|repository.name|...
+	Label       string                     `json:"label"`
+	Location    string                     `json:"location"` // a url or local-path
+	ContentType string                     `json:"type"`     // project-type | content-type | target-type (file|folder|repository|worktree|submodule|project|web)
+	With        dxo.ExecutableURN          `json:"with"`
+	Selector    dxo.IntentTemplateSelector `json:"selector"`
 }
 
 // CommandRequest ...
@@ -89,10 +91,10 @@ type CommandRequest struct {
 
 // IntentPropertyDescriptor ...
 type IntentPropertyDescriptor struct {
-	Name         string
-	Description  string
-	ValueDefault string
-	Type         string   // [string|int|bool|float|enum|...]
-	Options      []string // for enum
-	Required     bool
+	Name        string   `json:"name"`
+	Description string   `json:"description"`
+	Value       string   `json:"value"`
+	Type        string   `json:"type"`    // [string|int|bool|float|enum|...]
+	Options     []string `json:"options"` // for enum
+	Required    bool     `json:"required"`
 }

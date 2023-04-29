@@ -8,6 +8,8 @@ import (
 
 func main() {
 
+	wpm.InitAFSModeHandler()
+
 	runModule1()
 	runModule2()
 }

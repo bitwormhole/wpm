@@ -43,8 +43,7 @@ func (inst *IntentTemplateServiceImpl) dto2entity(o1 *dto.IntentTemplate) (*enti
 	action := o1.ActionRequest
 	selbuilder := dxo.IntentTemplateSelectorBuilder{
 		Method: action.Method,
-		Target: action.Target,
-		Type:   action.Type,
+		Type:   action.ContentType,
 		With:   action.With.String(),
 	}
 
@@ -61,13 +60,12 @@ func (inst *IntentTemplateServiceImpl) dto2entity(o1 *dto.IntentTemplate) (*enti
 
 	o2.Executable = action.With
 	o2.Method = inst.normalizeText(action.Method)
-	o2.Target = inst.normalizeText(action.Target)
-	o2.ContentType = inst.normalizeText(action.Type)
+	o2.ContentType = inst.normalizeText(action.ContentType)
 	o2.Selector = selbuilder.Create()
 
-	if o2.Target != "file" && o2.Target != "project" {
-		o2.ContentType = "*"
-	}
+	// if o2.Target != "file" && o2.Target != "project" {
+	// 	o2.ContentType = "*"
+	// }
 
 	o2.Arguments = o1.Arguments
 	o2.Command = o1.Command
@@ -95,9 +93,9 @@ func (inst *IntentTemplateServiceImpl) entity2dto(o1 *entity.IntentTemplate) (*d
 
 	o2.With = o1.Executable
 	o2.Method = inst.normalizeText(o1.Method)
-	o2.Target = inst.normalizeText(o1.Target)
-	o2.Type = inst.normalizeText(o1.ContentType)
+	o2.ContentType = inst.normalizeText(o1.ContentType)
 	o2.Selector = o1.Selector
+	// o2.TargetClass = inst.normalizeText(o1.Target)
 
 	o2.Arguments = o1.Arguments
 	o2.Command = o1.Command
@@ -153,11 +151,11 @@ func (inst *IntentTemplateServiceImpl) ListBySelector(ctx context.Context, sel *
 }
 
 func (inst *IntentTemplateServiceImpl) isTemplateMatch(have, want *entity.IntentTemplate) bool {
+	// b2 := inst.isTextMatch(have.Target, want.Target)
 	b1 := inst.isTextMatch(have.Method, want.Method)
-	b2 := inst.isTextMatch(have.Target, want.Target)
-	b3 := inst.isTextMatch(have.ContentType, want.ContentType)
-	b4 := inst.isTextMatch(have.Executable.String(), want.Executable.String())
-	return (b1 && b2 && b3 && b4)
+	b2 := inst.isTextMatch(have.ContentType, want.ContentType)
+	b3 := inst.isTextMatch(have.Executable.String(), want.Executable.String())
+	return (b1 && b2 && b3)
 }
 
 func (inst *IntentTemplateServiceImpl) isTextMatch(have, want string) bool {
