@@ -18,6 +18,9 @@ func ComputeFileSHA256sum(file fs.Path) (util.Hex, error) {
 		return "", err
 	}
 	err = util.PumpStream(src, md, nil)
+	if err != nil {
+		return "", err
+	}
 	sum := md.Sum(nil)
 	hex := util.HexFromBytes(sum)
 	return hex, nil
@@ -31,6 +34,9 @@ func ComputeFileSHA256sumAFS(file afs.Path) (util.Hex, error) {
 		return "", err
 	}
 	err = util.PumpStream(src, md, nil)
+	if err != nil {
+		return "", err
+	}
 	sum := md.Sum(nil)
 	hex := util.HexFromBytes(sum)
 	return hex, nil

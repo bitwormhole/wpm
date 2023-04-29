@@ -106,9 +106,5 @@ func IsAbsolutePath(path string) bool {
 
 	// for windows
 	i := strings.Index(path, ":\\")
-	if i == 1 {
-		return true
-	}
-
-	return false
+	return i == 1
 }

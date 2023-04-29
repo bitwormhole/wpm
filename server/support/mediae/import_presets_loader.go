@@ -16,7 +16,7 @@ type myImportPresetsLoader struct {
 	context context.Context
 	parent  *MediaServiceImpl
 
-	pathPrefixForRes string
+	pathPrefixForRes []string
 	pathPrefixForWeb string
 }
 
@@ -47,15 +47,28 @@ func (inst *myImportPresetsLoader) loadPrefixPaths() error {
 	w := ser.WebPathPrefix
 
 	if r == "" {
-		return fmt.Errorf("property [wpm.presets.res-path-prefix] is empty")
+		return fmt.Errorf("property [wpm.presets.res-path-prefix-list] is empty")
 	}
 	if w == "" {
 		return fmt.Errorf("property [wpm.presets.web-path-prefix] is empty")
 	}
 
-	inst.pathPrefixForRes = r
+	inst.pathPrefixForRes = inst.parsePathPrefixForRes(r)
 	inst.pathPrefixForWeb = w
 	return nil
+}
+
+func (inst *myImportPresetsLoader) parsePathPrefixForRes(s string) []string {
+	dst := make([]string, 0)
+	src := strings.Split(s, ",")
+	for _, item := range src {
+		item = strings.TrimSpace(item)
+		if item == "" {
+			continue
+		}
+		dst = append(dst, item)
+	}
+	return dst
 }
 
 func (inst *myImportPresetsLoader) findPresets() ([]*dto.Media, error) {
@@ -79,11 +92,23 @@ func (inst *myImportPresetsLoader) findPresets() ([]*dto.Media, error) {
 
 func (inst *myImportPresetsLoader) accept(name string, item collection.Res) bool {
 
+	prefixResList := inst.pathPrefixForRes
+	prefixOK := false
+	for _, prefix := range prefixResList {
+		if strings.HasPrefix(name, prefix) {
+			prefixOK = true
+			break
+		}
+	}
+	if !prefixOK {
+		return false
+	}
+
 	if !item.IsFile() {
 		return false
 	}
 
-	ignore := []string{".html"}
+	ignore := []string{".html", ".json", ".properties"}
 	for _, suffix := range ignore {
 		if strings.HasSuffix(name, suffix) {
 			return false
@@ -94,14 +119,6 @@ func (inst *myImportPresetsLoader) accept(name string, item collection.Res) bool
 }
 
 func (inst *myImportPresetsLoader) makeMedia(name string, r collection.Res) (*dto.Media, error) {
-
-	prefixRes := inst.pathPrefixForRes
-	// prefixWeb := inst.pathPrefixForWeb
-	if !strings.HasPrefix(name, prefixRes) {
-		return nil, nil // skip
-	}
-	// part2 := name[len(prefixRes):]
-	// url := prefixWeb + part2
 
 	bin, err := r.ReadBinary()
 	if err != nil {

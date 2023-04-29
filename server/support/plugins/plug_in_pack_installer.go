@@ -15,6 +15,12 @@ import (
 	"github.com/bitwormhole/wpm/server/web/dto"
 )
 
+const (
+	PackTypeZip   = "application/x-wpm-plug-in-zip"
+	PackTypeTarGz = "application/x-wpm-plug-in-tar-gz"
+	PackTypeOlder = "application/x-wpm-plug-in-package"
+)
+
 // WPMPluginInstaller ...
 type WPMPluginInstaller struct {
 	markup.Component `class:"life packs.InstallerRegistry"`
@@ -55,7 +61,8 @@ func (inst *WPMPluginInstaller) Accept(ic *packs.InstallingContext) bool {
 	if ic == nil {
 		return false
 	}
-	return (ic.PackType == "application/x-wpm-plug-in-package")
+	ptype := ic.PackType
+	return (ptype == PackTypeTarGz || ptype == PackTypeZip || ptype == PackTypeOlder)
 }
 
 // Install 安装插件包
@@ -112,9 +119,10 @@ func (inst *WPMPluginInstaller) insertIntentTemplates(ic *packs.InstallingContex
 ////////////////////////////////////////////////////////////////////////////////
 
 type myPluginInstallingTask struct {
-	parent *WPMPluginInstaller
-	ic     *packs.InstallingContext
-	files  []afs.Path
+	parent     *WPMPluginInstaller
+	ic         *packs.InstallingContext
+	files      []afs.Path
+	unpackFunc func(src, dst afs.Path) error
 }
 
 func (inst *myPluginInstallingTask) Install(ic *packs.InstallingContext) error {
@@ -122,6 +130,7 @@ func (inst *myPluginInstallingTask) Install(ic *packs.InstallingContext) error {
 	inst.ic = ic
 
 	steps := make([]func() error, 0)
+	steps = append(steps, inst.prepare)
 	steps = append(steps, inst.unzip)
 	steps = append(steps, inst.deployFilesToRoot)
 	steps = append(steps, inst.importObjects)
@@ -138,11 +147,31 @@ func (inst *myPluginInstallingTask) Install(ic *packs.InstallingContext) error {
 	return nil
 }
 
+func (inst *myPluginInstallingTask) prepare() error {
+	ptype := inst.ic.PackType
+	switch ptype {
+	case PackTypeTarGz:
+		inst.unpackFunc = utils.UnpackTar
+	case PackTypeZip:
+		inst.unpackFunc = utils.Unzip
+	default:
+		return fmt.Errorf("unsupported plug-in package type:%v", ptype)
+	}
+	return nil
+}
+
 func (inst *myPluginInstallingTask) unzip() error {
+
 	// fs := inst.parent .FileSystemService
+	// return utils.Unzip(src, dst)
+
 	src := inst.ic.PackFile
 	dst := inst.ic.PackDir
-	return utils.Unzip(src, dst)
+	up := inst.unpackFunc
+	if up == nil {
+		return fmt.Errorf("the un-pack func is nil")
+	}
+	return up(src, dst)
 }
 
 func (inst *myPluginInstallingTask) deployFilesToRoot() error {

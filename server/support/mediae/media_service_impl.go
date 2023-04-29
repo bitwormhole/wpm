@@ -26,7 +26,7 @@ type MediaServiceImpl struct {
 	ContentTypeService service.ContentTypeService    `inject:"#ContentTypeService"`
 	HTTPClientService  service.HTTPClientService     `inject:"#HTTPClientService"`
 
-	ResPathPrefix string `inject:"${wpm.presets.res-path-prefix}"`
+	ResPathPrefix string `inject:"${wpm.presets.res-path-prefix-list}"`
 	WebPathPrefix string `inject:"${wpm.presets.web-path-prefix}"`
 }
 
