@@ -9199,6 +9199,7 @@ type comFactory4pComFileQueryServiceImpl struct {
     mPrototype * implservice0x22327c.FileQueryServiceImpl
 
 	
+	mProfileServiceSelector config.InjectionSelector
 	mHandlerRegistryListSelector config.InjectionSelector
 
 }
@@ -9206,6 +9207,7 @@ type comFactory4pComFileQueryServiceImpl struct {
 func (inst * comFactory4pComFileQueryServiceImpl) init() application.ComponentFactory {
 
 	
+	inst.mProfileServiceSelector = config.NewInjectionSelector("#ProfileService",nil)
 	inst.mHandlerRegistryListSelector = config.NewInjectionSelector(".filequery-handler-registry",nil)
 
 
@@ -9244,8 +9246,27 @@ func (inst * comFactory4pComFileQueryServiceImpl) Destroy(instance application.C
 func (inst * comFactory4pComFileQueryServiceImpl) Inject(instance application.ComponentInstance, context application.InstanceContext) error {
 	
 	obj := inst.castObject(instance)
+	obj.ProfileService = inst.getterForFieldProfileServiceSelector(context)
 	obj.HandlerRegistryList = inst.getterForFieldHandlerRegistryListSelector(context)
 	return context.LastError()
+}
+
+//getterForFieldProfileServiceSelector
+func (inst * comFactory4pComFileQueryServiceImpl) getterForFieldProfileServiceSelector (context application.InstanceContext) service0x3e063d.ProfileService {
+
+	o1 := inst.mProfileServiceSelector.GetOne(context)
+	o2, ok := o1.(service0x3e063d.ProfileService)
+	if !ok {
+		eb := &util.ErrorBuilder{}
+		eb.Message("bad cast")
+		eb.Set("com", "FileQueryService")
+		eb.Set("field", "ProfileService")
+		eb.Set("type1", "?")
+		eb.Set("type2", "service0x3e063d.ProfileService")
+		context.HandleError(eb.Create())
+		return nil
+	}
+	return o2
 }
 
 //getterForFieldHandlerRegistryListSelector

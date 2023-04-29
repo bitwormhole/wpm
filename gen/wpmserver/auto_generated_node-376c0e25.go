@@ -695,6 +695,7 @@ type pComImpLocationService struct {
 type pComFileQueryServiceImpl struct {
 	instance *implservice0x22327c.FileQueryServiceImpl
 	 markup0x23084a.Component `id:"FileQueryService"`
+	ProfileService service0x3e063d.ProfileService `inject:"#ProfileService"`
 	HandlerRegistryList []filequery0xca51d2.HandlerRegistry `inject:".filequery-handler-registry"`
 }
 

@@ -3,6 +3,7 @@ package implservice
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/wpm/server/service"
@@ -14,6 +15,7 @@ import (
 type FileQueryServiceImpl struct {
 	markup.Component `id:"FileQueryService"`
 
+	ProfileService      service.ProfileService      `inject:"#ProfileService"`
 	HandlerRegistryList []filequery.HandlerRegistry `inject:".filequery-handler-registry"`
 
 	cachedHandlers []filequery.Handler
@@ -59,9 +61,34 @@ func (inst *FileQueryServiceImpl) findHandler(q *vo.FileQuery) (filequery.Handle
 
 // Query ...
 func (inst *FileQueryServiceImpl) Query(ctx context.Context, q *vo.FileQuery) (*vo.FileQuery, error) {
+
+	err := inst.preprocessQuery(ctx, q)
+	if err != nil {
+		return nil, err
+	}
+
 	h, err := inst.findHandler(q)
 	if err != nil {
 		return nil, err
 	}
+
 	return h.Query(q)
+}
+
+func (inst *FileQueryServiceImpl) preprocessQuery(ctx context.Context, q *vo.FileQuery) error {
+	path := q.Path
+	if strings.HasPrefix(path, "~") {
+		p1 := inst.getUserHomeDir()
+		p2 := path[1:]
+		q.Path = p1 + "/" + p2
+	}
+	return nil
+}
+
+func (inst *FileQueryServiceImpl) getUserHomeDir() string {
+	p, err := inst.ProfileService.GetProfile()
+	if err == nil && p != nil {
+		return p.Home
+	}
+	return "/"
 }
