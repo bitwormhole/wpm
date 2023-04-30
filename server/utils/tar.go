@@ -116,7 +116,11 @@ func (inst *unpacktar) setFileModeAndTime(f afs.Path, h *tar.Header) {
 
 func (inst *unpacktar) openDst(f *tar.Header) (io.WriteCloser, afs.Path, error) {
 	mod := f.FileInfo().Mode()
-	opt := &afs.Options{Permission: mod, Flag: os.O_CREATE | os.O_WRONLY}
+	opt := &afs.Options{
+		Mkdirs:     true,
+		Permission: mod,
+		Flag:       os.O_CREATE | os.O_WRONLY,
+	}
 	path := inst.dst.GetChild(f.Name)
 	dir := path.GetParent()
 	if !dir.Exists() {

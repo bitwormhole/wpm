@@ -30,6 +30,7 @@ type WPMPluginInstaller struct {
 	MediaService          service.MediaService          `inject:"#MediaService"`
 	ExecutableService     service.ExecutableService     `inject:"#ExecutableService"`
 	IntentTemplateService service.IntentTemplateService `inject:"#IntentTemplateService"`
+	ContentTypeService    service.ContentTypeService    `inject:"#ContentTypeService"`
 
 	InstalledFileDAO dao.InstalledFileDAO `inject:"#InstalledFileDAO"`
 }
@@ -83,6 +84,7 @@ func (inst *WPMPluginInstaller) insertMediae(ic *packs.InstallingContext, list [
 	ser := inst.MediaService
 	opt := &service.MediaOptions{FetchFromSource: true}
 	for _, item := range list {
+		item.Installation = ic.Installation
 		_, err := ser.Insert(ctx, item, opt)
 		if err != nil {
 			vlog.Warn(err)
@@ -96,6 +98,7 @@ func (inst *WPMPluginInstaller) insertExecutables(ic *packs.InstallingContext, l
 	ser := inst.ExecutableService
 	opt := &service.ExecutableOptions{SkipFileChecking: false, IgnoreException: true}
 	for _, item := range list {
+		item.Installation = ic.Installation
 		_, err := ser.Insert(ctx, item, opt)
 		if err != nil {
 			vlog.Warn(err)
@@ -108,6 +111,20 @@ func (inst *WPMPluginInstaller) insertIntentTemplates(ic *packs.InstallingContex
 	ctx := ic.Context
 	ser := inst.IntentTemplateService
 	for _, item := range list {
+		item.Installation = ic.Installation
+		_, err := ser.Insert(ctx, item)
+		if err != nil {
+			vlog.Warn(err)
+		}
+	}
+	return nil
+}
+
+func (inst *WPMPluginInstaller) insertContentTypes(ic *packs.InstallingContext, list []*dto.ContentType) error {
+	ctx := ic.Context
+	ser := inst.ContentTypeService
+	for _, item := range list {
+		item.Installation = ic.Installation
 		_, err := ser.Insert(ctx, item)
 		if err != nil {
 			vlog.Warn(err)
@@ -195,9 +212,10 @@ func (inst *myPluginInstallingTask) importObjects() error {
 		return err
 	}
 
-	inst.parent.insertMediae(ic, doc.Mediae)
+	inst.parent.insertContentTypes(ic, doc.ContentTypes)
 	inst.parent.insertExecutables(ic, doc.Executables)
 	inst.parent.insertIntentTemplates(ic, doc.IntentTemplates)
+	inst.parent.insertMediae(ic, doc.Mediae)
 
 	return nil
 }

@@ -147,6 +147,7 @@ func (inst *MediaServiceImpl) prepareSave(ctx context.Context, o1 *dto.Media, op
 	if err != nil {
 		return nil, err
 	}
+	o2.Installation = o1.Installation
 	return inst.dto2entity(o2)
 }
 

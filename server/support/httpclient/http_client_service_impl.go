@@ -197,13 +197,13 @@ func (inst *ImpHTTPClientService) FetchToStream(ctx context.Context, url string,
 }
 
 // FetchToFile ...
-func (inst *ImpHTTPClientService) FetchToFile(ctx context.Context, url string, dst afs.Path, opt *service.HTTPClientOptions) (*service.HTTPClientResult, error) {
+func (inst *ImpHTTPClientService) FetchToFile(ctx context.Context, url string, dst afs.Path, op1 *service.HTTPClientOptions) (*service.HTTPClientResult, error) {
 
-	opt = inst.prepareOptions(opt)
-	op2 := opt.FileOptions
+	op1 = inst.prepareOptions(op1)
+	op2 := op1.FileOptions
 
 	// fetch binary
-	data, res, err := inst.fetch(ctx, url, opt)
+	data, res, err := inst.fetch(ctx, url, op1)
 	if err != nil {
 		return res, err
 	}

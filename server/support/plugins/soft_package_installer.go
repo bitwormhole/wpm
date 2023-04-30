@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"io/fs"
+	"os"
 
 	"bitwormhole.com/starter/afs"
 	"github.com/bitwormhole/starter/vlog"
@@ -111,10 +113,12 @@ func (inst *myPakcageInstaller) fetch() error {
 		vlog.Info("fetch package from ", url)
 		opt := &service.HTTPClientOptions{}
 		opt.FileOptions = &afs.Options{
-			Mkdirs: true,
-			Create: true,
-			Write:  true,
-			File:   true,
+			Mkdirs:     true,
+			Create:     true,
+			Write:      true,
+			File:       true,
+			Flag:       os.O_WRONLY | os.O_CREATE,
+			Permission: fs.ModePerm,
 		}
 		resp, err := inst.HTTPClient.FetchToFile(ctx, url, file2, opt)
 		if err != nil {

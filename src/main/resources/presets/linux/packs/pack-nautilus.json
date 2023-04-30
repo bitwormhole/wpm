@@ -36,7 +36,7 @@
             "tags": "",
             "open_with_priority": 5,
             "os": "linux",
-            "arch": "amd64",
+            "arch": "any",
             "version": "",
             "path": "/usr/bin/nautilus",
             "location_class": "executable",

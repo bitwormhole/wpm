@@ -68,6 +68,7 @@ func (inst *ExecutableServiceImpl) dto2entity(c context.Context, o1 *dto.Executa
 	o2.ID = o1.ID
 	o2.URN = o1.URN
 	o2.Referer = o1.Referer
+	o2.Installation = o1.Installation
 
 	o2.Name = o1.Name
 	o2.Aliases = o1.Aliases
@@ -104,6 +105,7 @@ func (inst *ExecutableServiceImpl) checkEntity(e *entity.Executable, opt *servic
 	}
 
 	ns := e.Namespace
+	urn := e.URN
 	name := e.Name
 	arch := e.Arch
 	goos := e.OS
@@ -126,15 +128,19 @@ func (inst *ExecutableServiceImpl) checkEntity(e *entity.Executable, opt *servic
 		arch = runtime.GOARCH
 	}
 
+	if urn == "" {
+		urn = dxo.NewExecutableURN(ns + "#" + normalName)
+	}
+
 	aliases = append(aliases, name)
 	aliases = append(aliases, normalName)
 
 	e.Namespace = ns
-	e.Name = name
+	e.Name = normalName
 	e.Arch = arch
 	e.OS = goos
+	e.URN = urn
 	e.Aliases = aliases.Normalize().StringList()
-	e.URN = dxo.NewExecutableURN(ns + "#" + name)
 
 	return inst.computeEntityPath(e, opt)
 }
@@ -169,6 +175,7 @@ func (inst *ExecutableServiceImpl) computeEntityPath(o2 *entity.Executable, opt 
 
 	o2.Size = file.GetInfo().Length()
 	o2.SHA256SUM = sum
+	o2.Path = file.GetPath()
 	return nil
 }
 
@@ -196,11 +203,13 @@ func (inst *ExecutableServiceImpl) findExePathByNames(names []string) (afs.Path,
 }
 
 func (inst *ExecutableServiceImpl) normalizeExeName(name string) string {
-	const suffixExe = ".exe"
+	suffixList := []string{".exe", ".cmd", ".sh"}
 	name = strings.ToLower(name)
 	name = strings.TrimSpace(name)
-	if strings.HasSuffix(name, suffixExe) {
-		return name[0 : len(name)-len(suffixExe)]
+	for _, suffix := range suffixList {
+		if strings.HasSuffix(name, suffix) {
+			return name[0 : len(name)-len(suffix)]
+		}
 	}
 	return name
 }
@@ -214,6 +223,7 @@ func (inst *ExecutableServiceImpl) entity2dto(o1 *entity.Executable) (*dto.Execu
 	o2.UpdatedAt = util.NewTime(o1.UpdatedAt)
 	o2.URN = o1.URN
 	o2.Referer = o1.Referer
+	o2.Installation = o1.Installation
 
 	o2.Name = o1.Name
 	o2.Aliases = o1.Aliases
@@ -249,10 +259,10 @@ func (inst *ExecutableServiceImpl) checkExeFileState(o1 *entity.Executable) dxo.
 	return dxo.FileStateOffline
 }
 
-func (inst *ExecutableServiceImpl) checkBeforeInsert(ctx context.Context, o *dto.Executable, opt *service.ExecutableOptions) error {
+func (inst *ExecutableServiceImpl) checkBeforeInsert(ctx context.Context, o *entity.Executable, opt *service.ExecutableOptions) error {
 
 	opt = inst.normalizeOptions(opt)
-	if opt.SkipFileChecking {
+	if opt.SkipFileChecking || opt.IgnoreException {
 		return nil
 	}
 
@@ -298,14 +308,17 @@ func (inst *ExecutableServiceImpl) Find(ctx context.Context, id dxo.ExecutableID
 
 // Insert ...
 func (inst *ExecutableServiceImpl) Insert(ctx context.Context, o1 *dto.Executable, opt *service.ExecutableOptions) (*dto.Executable, error) {
-	err := inst.checkBeforeInsert(ctx, o1, opt)
-	if err != nil {
-		return nil, err
-	}
+
 	e1, err := inst.dto2entity(ctx, o1, opt)
 	if err != nil {
 		return nil, err
 	}
+
+	err = inst.checkBeforeInsert(ctx, e1, opt)
+	if err != nil {
+		return nil, err
+	}
+
 	err = inst.prepareLocation(ctx, e1)
 	if err != nil {
 		return nil, err

@@ -4,6 +4,8 @@ import (
 	"archive/zip"
 	"fmt"
 	"io"
+	"io/fs"
+	"os"
 
 	"bitwormhole.com/starter/afs"
 )
@@ -79,7 +81,11 @@ func (inst *unzip) handleItem(f *zip.File) error {
 }
 
 func (inst *unzip) openDst(f *zip.File) (io.WriteCloser, error) {
-	opt := &afs.Options{Create: true, Write: true, File: true, Mkdirs: true}
+	opt := &afs.Options{
+		Create: true, Write: true, File: true, Mkdirs: true,
+		Flag:       os.O_CREATE | os.O_WRONLY,
+		Permission: fs.ModePerm,
+	}
 	path := inst.dst.GetChild(f.Name)
 	return path.GetIO().OpenWriter(opt)
 }
