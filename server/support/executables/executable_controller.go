@@ -206,12 +206,19 @@ func (inst *myExecutableRequest) readOptions() (*service.ExecutableOptions, erro
 
 	// from url.query
 	skipFileChecking := gu.HasFlag(c, "skip-file-checking")
+	ignoreException := gu.HasFlag(c, "ignore-exception")
+
 	if skipFileChecking {
 		data.OptionSkipFileChecking = true
 	}
 
+	if ignoreException {
+		data.OptionIgnoreException = true
+	}
+
 	// from request body
 	opt.SkipFileChecking = data.OptionSkipFileChecking
+	opt.IgnoreException = data.OptionIgnoreException
 
 	return opt, nil
 }

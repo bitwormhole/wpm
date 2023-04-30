@@ -36,9 +36,10 @@ func (inst *ExecutableImportServiceImpl) Save(ctx context.Context, o1 *vo.Execut
 	items := o1.Executables
 	// errlist := make([]*dto.Executable, 0)
 	var err2 error
+	opt := &service.ExecutableOptions{IgnoreException: true}
 
 	for _, item := range items {
-		_, err := ser.Insert(ctx, item, nil)
+		_, err := ser.Insert(ctx, item, opt)
 		if err != nil {
 			// errlist = append(errlist, item)
 			err2 = err

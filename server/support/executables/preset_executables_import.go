@@ -8,6 +8,7 @@ import (
 	"github.com/bitwormhole/starter/collection"
 	"github.com/bitwormhole/starter/vlog"
 	"github.com/bitwormhole/wpm/server/data/dxo"
+	"github.com/bitwormhole/wpm/server/service"
 	"github.com/bitwormhole/wpm/server/web/dto"
 )
 
@@ -81,8 +82,9 @@ func (inst *myImportPresetExecutablesHanlder) insertItem(item *dto.Executable) e
 	if err != nil {
 		return err
 	}
+	opt := &service.ExecutableOptions{IgnoreException: true}
 	ser := inst.parent.ExecutableService
-	_, err = ser.Insert(inst.context, item, nil)
+	_, err = ser.Insert(inst.context, item, opt)
 	return err
 }
 

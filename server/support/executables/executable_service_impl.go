@@ -4,10 +4,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"os/exec"
 	"runtime"
-	"sort"
 	"strings"
 
+	"bitwormhole.com/starter/afs"
 	"github.com/bitwormhole/starter/io/fs"
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/starter/util"
@@ -49,13 +50,13 @@ func (inst *ExecutableServiceImpl) prepareLocation(c context.Context, o1 *entity
 		AsFile: true,
 		AsDir:  true,
 	}
-	location, err := inst.LocationService.InsertOrFetch(c, location, nil)
+	_, err := inst.LocationService.InsertOrFetch(c, location, nil)
 	if err != nil {
 		return err
 	}
 	// o1.Path = location.Path
-	o1.Location = location.ID
-	o1.Class = location.Class
+	// o1.Location = location.ID
+	// o1.Class = location.Class
 	return nil
 }
 
@@ -83,25 +84,63 @@ func (inst *ExecutableServiceImpl) dto2entity(c context.Context, o1 *dto.Executa
 	o2.Version = o1.Version
 
 	o2.Path = o1.Path
-	o2.Location = o1.Location
-	o2.Class = o1.Class
 
-	// compute
-	err := inst.computeEntity1(o2, opt)
+	// check
+	err := inst.checkEntity(o2, opt)
 	if err != nil {
-		return nil, err
-	}
-
-	err = inst.computeEntity2(o2, opt)
-	if err != nil {
-		return nil, err
+		if !opt.IgnoreException {
+			return nil, err
+		}
 	}
 
 	return o2, nil
 }
 
+func (inst *ExecutableServiceImpl) checkEntity(e *entity.Executable, opt *service.ExecutableOptions) error {
+
+	opt = inst.normalizeOptions(opt)
+	if opt.SkipFileChecking {
+		return nil
+	}
+
+	ns := e.Namespace
+	name := e.Name
+	arch := e.Arch
+	goos := e.OS
+	aliases := e.Aliases.StringArray()
+	normalName := inst.normalizeExeName(name)
+
+	if name == "" {
+		return fmt.Errorf("no name")
+	}
+
+	if ns == "" {
+		ns = "default"
+	}
+
+	if goos == "" {
+		goos = runtime.GOOS
+	}
+
+	if arch == "" {
+		arch = runtime.GOARCH
+	}
+
+	aliases = append(aliases, name)
+	aliases = append(aliases, normalName)
+
+	e.Namespace = ns
+	e.Name = name
+	e.Arch = arch
+	e.OS = goos
+	e.Aliases = aliases.Normalize().StringList()
+	e.URN = dxo.NewExecutableURN(ns + "#" + name)
+
+	return inst.computeEntityPath(e, opt)
+}
+
 // computeEntity1: 根据文件路径计算各个字段
-func (inst *ExecutableServiceImpl) computeEntity1(o2 *entity.Executable, opt *service.ExecutableOptions) error {
+func (inst *ExecutableServiceImpl) computeEntityPath(o2 *entity.Executable, opt *service.ExecutableOptions) error {
 
 	opt = inst.normalizeOptions(opt)
 	if opt.SkipFileChecking {
@@ -109,51 +148,51 @@ func (inst *ExecutableServiceImpl) computeEntity1(o2 *entity.Executable, opt *se
 	}
 
 	file := inst.FileSystemService.Path(o2.Path)
-	name := file.GetName()
+	if file != nil {
+		if !file.IsFile() {
+			file = nil
+		}
+	}
+	if file == nil {
+		// 根据名称查找
+		file2, err := inst.findExePathByNames(o2.Aliases.Array())
+		if err != nil {
+			return err
+		}
+		file = file2
+	}
 
 	sum, err := utils.ComputeFileSHA256sumAFS(file)
 	if err != nil {
 		return err
 	}
 
-	o2.Name = name
 	o2.Size = file.GetInfo().Length()
 	o2.SHA256SUM = sum
 	return nil
 }
 
-// computeEntity2: 根据名称计算各个字段
-func (inst *ExecutableServiceImpl) computeEntity2(o2 *entity.Executable, opt *service.ExecutableOptions) error {
-
-	// opt = inst.normalizeOptions(opt)
-
-	ns := o2.Namespace
-	name := o2.Name
-	normalName := inst.normalizeExeName(name)
-
-	aliases := o2.Aliases.Array()
-	aliases = append(aliases, name)
-	aliases = append(aliases, normalName)
-	aliases = inst.paiChong(aliases)
-
-	if ns == "" {
-		ns = "default" // the default NS
+func (inst *ExecutableServiceImpl) findExePathByNames(names []string) (afs.Path, error) {
+	for _, name := range names {
+		name = strings.TrimSpace(name)
+		if name == "" {
+			continue
+		}
+		c := exec.Command(name)
+		path := c.Path
+		if path == "" {
+			continue
+		}
+		file := inst.FileSystemService.Path(path)
+		if file == nil {
+			continue
+		}
+		if file.IsFile() {
+			return file, nil
+		}
 	}
-
-	if o2.Arch == "" {
-		o2.Arch = runtime.GOARCH
-	}
-
-	if o2.OS == "" {
-		o2.OS = runtime.GOOS
-	}
-
-	o2.Namespace = ns
-	o2.Name = normalName
-	o2.URN = dxo.NewExecutableURN(ns + "#" + normalName)
-	o2.Aliases = dxo.NewStringList(aliases)
-
-	return nil
+	nlist := dxo.NewStringList(names).String()
+	return nil, fmt.Errorf("executable is not found, name-list = %v", nlist)
 }
 
 func (inst *ExecutableServiceImpl) normalizeExeName(name string) string {
@@ -164,23 +203,6 @@ func (inst *ExecutableServiceImpl) normalizeExeName(name string) string {
 		return name[0 : len(name)-len(suffixExe)]
 	}
 	return name
-}
-
-// 排重
-func (inst *ExecutableServiceImpl) paiChong(src []string) []string {
-	dst := make([]string, 0)
-	table := make(map[string]string)
-	for _, str := range src {
-		str = strings.TrimSpace(str)
-		if str != "" {
-			table[str] = str
-		}
-	}
-	for _, str := range table {
-		dst = append(dst, str)
-	}
-	sort.Strings(dst)
-	return dst
 }
 
 func (inst *ExecutableServiceImpl) entity2dto(o1 *entity.Executable) (*dto.Executable, error) {
@@ -204,8 +226,6 @@ func (inst *ExecutableServiceImpl) entity2dto(o1 *entity.Executable) (*dto.Execu
 	o2.OpenWithPriority = o1.OpenWithPriority
 
 	o2.Path = o1.Path
-	o2.Location = o1.Location
-	o2.Class = o1.Class
 
 	o2.Arch = o1.Arch
 	o2.OS = o1.OS

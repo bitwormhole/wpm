@@ -11,6 +11,7 @@ import (
 // ExecutableOptions ...
 type ExecutableOptions struct {
 	SkipFileChecking bool
+	IgnoreException  bool
 }
 
 // ExecutableService ...

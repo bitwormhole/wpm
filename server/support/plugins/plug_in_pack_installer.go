@@ -94,7 +94,7 @@ func (inst *WPMPluginInstaller) insertMediae(ic *packs.InstallingContext, list [
 func (inst *WPMPluginInstaller) insertExecutables(ic *packs.InstallingContext, list []*dto.Executable) error {
 	ctx := ic.Context
 	ser := inst.ExecutableService
-	opt := &service.ExecutableOptions{SkipFileChecking: true}
+	opt := &service.ExecutableOptions{SkipFileChecking: false, IgnoreException: true}
 	for _, item := range list {
 		_, err := ser.Insert(ctx, item, opt)
 		if err != nil {
