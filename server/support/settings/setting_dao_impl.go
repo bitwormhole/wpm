@@ -70,6 +70,7 @@ func (inst *SettingDaoImpl) Insert(o *entity.Setting) (*entity.Setting, error) {
 
 	o.ID = 0
 	o.UUID = inst.UUIDGenService.GenerateUUID(o.Name + "|entity.Setting|")
+	o.Base.PrepareInsert()
 
 	db := inst.Agent.DB()
 	res := db.Create(o)

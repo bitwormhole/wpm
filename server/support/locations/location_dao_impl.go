@@ -88,6 +88,7 @@ func (inst *ImpLocationDao) Insert(o *entity.Location) (*entity.Location, error)
 	// compute fields
 	o.ID = 0
 	o.UUID = inst.UUIDGenService.GenerateUUID(o.Path + "|entity.Location|")
+	o.Base.PrepareInsert()
 
 	// save
 	db := inst.Agent.DB()

@@ -60,6 +60,7 @@ func (inst *SoftInstalledFileDAO) Insert(o *entity.InstalledFile) (*entity.Insta
 	// compute fields
 	o.ID = 0
 	o.UUID = inst.UUIDGenService.GenerateUUID(o.Path + "|entity.InstalledFile|")
+	o.Base.PrepareInsert()
 
 	// save
 	db := inst.Agent.DB()

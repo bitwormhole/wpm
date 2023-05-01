@@ -59,6 +59,8 @@ func (inst *ExecutableDaoImpl) Insert(o *entity.Executable) (*entity.Executable,
 
 	uuid := inst.UUIDGenService.GenerateUUID("entity.Executable,path=" + o.Path)
 	o.UUID = uuid
+	o.Base.PrepareInsert()
+
 	db := inst.Agent.DB()
 	res := db.Create(o)
 	if res.Error != nil {

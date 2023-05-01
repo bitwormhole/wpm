@@ -71,6 +71,8 @@ func (inst *PluginDaoImpl) Insert(o *entity.SoftwarePackage) (*entity.SoftwarePa
 	uuid := inst.UUIDGenService.GenerateUUID("entity.SoftwarePackage,path=" + o.Name)
 	o.UUID = uuid
 	o.ID = 0
+	o.Base.PrepareInsert()
+
 	db := inst.Agent.DB()
 	res := db.Create(o)
 	if res.Error != nil {

@@ -81,6 +81,7 @@ func (inst *MediaDaoImpl) Insert(o *entity.Media) (*entity.Media, error) {
 
 	o.ID = 0
 	o.UUID = inst.UUIDGenService.GenerateUUID(o.SHA256SUM.String() + "|entity.Media|")
+	o.Base.PrepareInsert()
 
 	db := inst.Agent.DB()
 	res := db.Create(o)

@@ -88,6 +88,7 @@ func (inst *ImpWorktreeDao) Insert(o *entity.Worktree) (*entity.Worktree, error)
 	// compute fields
 	o.ID = 0
 	o.UUID = inst.UUIDGenService.GenerateUUID(o.DotGitPath + "|entity.Project|" + o.WorkingDirectory)
+	o.Base.PrepareInsert()
 
 	// save
 	db := inst.Agent.DB()

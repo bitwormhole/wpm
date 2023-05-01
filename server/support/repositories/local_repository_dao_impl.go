@@ -177,6 +177,8 @@ func (inst *RepositoryDaoImpl) Insert(o *entity.LocalRepository) (*entity.LocalR
 	// compute fields
 	o.ID = 0
 	o.UUID = inst.UUIDGenService.GenerateUUID(o.Path + "|entity.LocalRepository|" + o.DotGitPath)
+	o.Base.PrepareInsert()
+
 	o.Path = inst.normalizePath(o.Path)
 	o.DotGitPath = inst.normalizePath(o.DotGitPath)
 

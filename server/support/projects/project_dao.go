@@ -119,6 +119,7 @@ func (inst *ProjectDaoImpl) Insert(o *entity.Project) (*entity.Project, error) {
 	// compute fields
 	o.ID = 0
 	o.UUID = inst.UUIDGenService.GenerateUUID(o.Path + "|entity.Project|")
+	o.Base.PrepareInsert()
 
 	// save
 	db := inst.Agent.DB()

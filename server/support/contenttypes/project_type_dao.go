@@ -114,8 +114,10 @@ func (inst *ProjectTypeDaoImpl) Insert(o *entity.ContentType) (*entity.ContentTy
 	// compute fields
 	strKey := o.Patterns
 	strName := o.Name.String()
+
 	o.ID = 0
 	o.UUID = inst.UUIDGenService.GenerateUUID(strName + "|entity.ProjectType|" + strKey.String())
+	o.Base.PrepareInsert()
 
 	db := inst.Agent.DB()
 	res := db.Create(o)

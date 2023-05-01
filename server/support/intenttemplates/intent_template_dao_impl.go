@@ -110,6 +110,7 @@ func (inst *IntentTemplateDaoImpl) Insert(o *entity.IntentTemplate) (*entity.Int
 
 	o.ID = 0
 	o.UUID = inst.UUIDGenService.GenerateUUID(o.Name + "|entity.IntentTemplate|")
+	o.Base.PrepareInsert()
 
 	db := inst.Agent.DB()
 	res := db.Create(o)
