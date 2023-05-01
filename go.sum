@@ -6,6 +6,8 @@ bitwormhole.com/starter/afs v0.0.7 h1:tR5BItT2f+L5LG6Xz1QM0/g9qxQZMSCLjuuhL484Kz
 bitwormhole.com/starter/afs v0.0.7/go.mod h1:ZhznfGjTwltwXxm8Rpx7fTAWJzWvtT7YqKdS9P8tYTU=
 bitwormhole.com/starter/afs v0.0.8 h1:KIV6p+JBjaaeY2N+HT80QO7eKwON2MveRGXFPZ10chg=
 bitwormhole.com/starter/afs v0.0.8/go.mod h1:ZhznfGjTwltwXxm8Rpx7fTAWJzWvtT7YqKdS9P8tYTU=
+bitwormhole.com/starter/afs v0.0.9 h1:rjE41cNOa0vOmi6MJQS8BcRKIQXiob4a44MfN9Ft0sI=
+bitwormhole.com/starter/afs v0.0.9/go.mod h1:ZhznfGjTwltwXxm8Rpx7fTAWJzWvtT7YqKdS9P8tYTU=
 bitwormhole.com/starter/base v0.0.1 h1:/dXgICIoYcMATbA2N+DD1tMYEsyimwQKal2xPaR8cfA=
 bitwormhole.com/starter/base v0.0.1/go.mod h1:a8v7ioNoU380zyISNEXTaVInVFu00FvXo3UHJAckPG0=
 bitwormhole.com/starter/cli v0.0.9 h1:Ayo2VQ9cXhzKsaIxtHkLtCp0PCywuIY2K+95qOzStDo=
@@ -27,6 +29,8 @@ github.com/bitwormhole/gitlib v0.0.15 h1:76frkVqwCScpUYGN8oyBCwCuHUOCUNI2tccS7ph
 github.com/bitwormhole/gitlib v0.0.15/go.mod h1:rHAjxI4mrs5D6ckaU6T1G2oEogA/2d5VR1z/rJQvz4Y=
 github.com/bitwormhole/gitlib v0.0.16 h1:tXDTU6CnfMkJlsbKzG7LDbpT8SQVqwZexO+9bwCvSys=
 github.com/bitwormhole/gitlib v0.0.16/go.mod h1:PlQ1r71feXtCdQflvoiCmoWuJmOp9BldYwJGyDS0VmQ=
+github.com/bitwormhole/gitlib v0.0.17 h1:ri5FVsWB6SUx7hZ9hG4n8EX6LU8aY5CFCk7P5yluY1Y=
+github.com/bitwormhole/gitlib v0.0.17/go.mod h1:wcXeTUh6hzvusAU1y4ygBJPV+1hIA416jrr5F3vlM7E=
 github.com/bitwormhole/starter v0.0.13/go.mod h1:Mv2MC4cWHU2eUs4793mL7pXL79pmjp1HJyA9bV8ZVMc=
 github.com/bitwormhole/starter v0.0.16 h1:ryQbUpmzAuJVPlKl60vGcpKQ63BdkuraTJHud1mzA1s=
 github.com/bitwormhole/starter v0.0.16/go.mod h1:Mv2MC4cWHU2eUs4793mL7pXL79pmjp1HJyA9bV8ZVMc=
@@ -85,6 +89,8 @@ github.com/bitwormhole/starter-gin v0.1.3 h1:kfRQ2J0o81FkCbNAxaq7g6i45k7bWIV15Io
 github.com/bitwormhole/starter-gin v0.1.3/go.mod h1:YKJCKjpLEcA2ixRwY0FitdK4lgtjJT5WqzIOF8uFZDc=
 github.com/bitwormhole/starter-gin v0.1.4 h1:ADHR7KLTRkIbilAxC9GXtBKDGjhirXUBsE79wgOekUs=
 github.com/bitwormhole/starter-gin v0.1.4/go.mod h1:YKJCKjpLEcA2ixRwY0FitdK4lgtjJT5WqzIOF8uFZDc=
+github.com/bitwormhole/starter-gin v0.1.5 h1:ZXCRWxBXUYVoR9NZBFcDyYAsgyg+dlvrKX097qfdQPU=
+github.com/bitwormhole/starter-gin v0.1.5/go.mod h1:YKJCKjpLEcA2ixRwY0FitdK4lgtjJT5WqzIOF8uFZDc=
 github.com/bitwormhole/starter-gorm v0.0.4 h1:v+xQ5rqk0T7i1xQPjXAC3cLgPOMXcoFWJub/wcFZABI=
 github.com/bitwormhole/starter-gorm v0.0.4/go.mod h1:FOUraFxbLkTTYIX9RW1fOQ8Dx2j5vHg4lnnKbtRSuJY=
 github.com/bitwormhole/starter-gorm v0.0.7 h1:9S1lywtZ2RnOowIlTW4XH/wy9ixNj1o8gJNPLotLNJM=

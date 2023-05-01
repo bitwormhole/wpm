@@ -91,9 +91,7 @@ func (inst *unzip) openDst(f *zip.File) (io.WriteCloser, error) {
 }
 
 func (inst *unzip) mkdirs(f *zip.File) error {
-	opt := &afs.Options{
-		Write: true, Directory: true,
-	}
+	opt := &afs.Options{}
 	path := inst.dst.GetChild(f.Name)
-	return path.Mkdirs(opt)
+	return path.Mkdirs(opt.ToMakeDir())
 }
