@@ -65,6 +65,13 @@ const (
 	SubmoduleDotGit  = SubmodulePrefix + "dotgit"
 )
 
+// web
+const (
+	WebPrefix = "web."
+	WebMethod = WebPrefix + "method"
+	WebURL    = WebPrefix + "url"
+)
+
 // ListMacroNames ...
 func ListMacroNames() []string {
 
@@ -99,6 +106,9 @@ func ListMacroNames() []string {
 	list = append(list, WorktreeName)
 	list = append(list, WorktreeDotGitPath)
 	list = append(list, WorktreeWorkDir)
+
+	list = append(list, WebMethod)
+	list = append(list, WebURL)
 
 	return list
 }

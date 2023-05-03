@@ -40,6 +40,7 @@ func (inst *PreparePropertiesFilter) Handle(c context.Context, i *dto.Intent, ne
 	inst.forRepository(i.Repository, dst)
 	inst.forSubmodule(i.Submodule, dst)
 	inst.forWorktree(i.Worktree, dst)
+	inst.forWeb(i.Web, dst)
 
 	for k, v := range src {
 		dst[k] = v
@@ -110,4 +111,12 @@ func (inst *PreparePropertiesFilter) forFolder(o *dto.File, dst map[string]strin
 	}
 	dst[intents.FolderName] = o.Name
 	dst[intents.FolderPath] = o.Path
+}
+
+func (inst *PreparePropertiesFilter) forWeb(o *dto.WebRequest, dst map[string]string) {
+	if o == nil {
+		return
+	}
+	dst[intents.WebMethod] = o.Method
+	dst[intents.WebURL] = o.URL
 }
