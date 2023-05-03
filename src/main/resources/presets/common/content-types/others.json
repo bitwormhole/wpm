@@ -1,18 +1,7 @@
 {
-    "message": "",
-    "error": "",
     "status": 200,
     "time": 1682860844640,
     "timef": "2023-04-30T21:20:44.6406735+08:00",
-    "head": {
-        "url": "",
-        "namespace": "",
-        "doctype": ""
-    },
-    "sources": [],
-    "packages": [],
-    "mediae": [],
-    "executables": [],
     "contenttypes": [
         {
             "id": 29,

@@ -7,6 +7,7 @@ import (
 
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/starter/util"
+	"github.com/bitwormhole/starter/vlog"
 	"github.com/bitwormhole/wpm/server/data/dao"
 	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/data/entity"
@@ -103,6 +104,24 @@ func (inst *ProjectTypeServiceImpl) ListByPattern(ctx context.Context, pattern s
 			return nil, err
 		}
 		dst = append(dst, item2)
+	}
+	return dst, nil
+}
+
+// ListByPatterns ...
+func (inst *ProjectTypeServiceImpl) ListByPatterns(ctx context.Context, patterns []string) ([]*dto.ContentType, error) {
+	// 简单实现：临时用于测试
+	dst := make([]*dto.ContentType, 0)
+	for _, p := range patterns {
+		src, err := inst.ListByPattern(ctx, p)
+		if err != nil {
+			vlog.Warn(err)
+			continue
+		}
+		if src == nil {
+			continue
+		}
+		dst = append(dst, src...)
 	}
 	return dst, nil
 }

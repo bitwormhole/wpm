@@ -19,5 +19,8 @@ type FileQuery struct {
 
 	Self dto.File `json:"self"`
 
-	Items []*dto.File `json:"items"`
+	OptionWithContentType bool `json:"option-with-content-type"`
+
+	Items []*dto.File        `json:"items"`
+	Types []*dto.ContentType `json:"contenttypes"`
 }

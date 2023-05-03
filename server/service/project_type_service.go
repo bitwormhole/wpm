@@ -14,6 +14,7 @@ type ContentTypeService interface {
 	ListAll(ctx context.Context) ([]*dto.ContentType, error)
 
 	ListByPattern(ctx context.Context, pattern string) ([]*dto.ContentType, error)
+	ListByPatterns(ctx context.Context, patterns []string) ([]*dto.ContentType, error)
 
 	Insert(ctx context.Context, o *dto.ContentType) (*dto.ContentType, error)
 	Update(ctx context.Context, id dxo.ContentTypeID, o *dto.ContentType) (*dto.ContentType, error)

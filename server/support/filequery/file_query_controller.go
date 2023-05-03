@@ -1,4 +1,4 @@
-package controller
+package filequery
 
 import (
 	"net/http"
@@ -32,10 +32,11 @@ func (inst *FileQueryController) Init(ec glass.EngineConnection) error {
 
 func (inst *FileQueryController) handlePost(c *gin.Context) {
 	req := &myFileQueryRequest{
-		gc:              c,
-		controller:      inst,
-		wantRequestID:   false,
-		wantRequestBody: true,
+		gc:                 c,
+		controller:         inst,
+		wantRequestID:      false,
+		wantRequestBody:    true,
+		wantRequestOptions: true,
 	}
 	err := req.open()
 	if err == nil {
@@ -50,12 +51,14 @@ type myFileQueryRequest struct {
 	gc         *gin.Context
 	controller *FileQueryController
 
-	wantRequestID   bool
-	wantRequestBody bool
+	wantRequestID      bool
+	wantRequestBody    bool
+	wantRequestOptions bool
 
 	// id    dxo.FileQueryID
-	body1 vo.FileQuery
-	body2 vo.FileQuery
+	options service.FileQueryOptions
+	body1   vo.FileQuery
+	body2   vo.FileQuery
 }
 
 func (inst *myFileQueryRequest) open() error {
@@ -67,6 +70,12 @@ func (inst *myFileQueryRequest) open() error {
 		if err != nil {
 			return err
 		}
+	}
+
+	if inst.wantRequestOptions {
+		body := &inst.body1
+		ops := &inst.options
+		ops.WithContentType = body.OptionWithContentType
 	}
 
 	return nil
@@ -88,8 +97,9 @@ func (inst *myFileQueryRequest) send(err error) {
 func (inst *myFileQueryRequest) doPost() error {
 	ctx := inst.gc
 	ser := inst.controller.FileQueryService
+	ops := &inst.options
 	q := &inst.body1
-	res, err := ser.Query(ctx, q)
+	res, err := ser.Query(ctx, q, ops)
 	if err != nil {
 		return err
 	}
