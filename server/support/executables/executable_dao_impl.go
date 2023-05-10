@@ -58,6 +58,8 @@ func (inst *ExecutableDaoImpl) Insert(o *entity.Executable) (*entity.Executable,
 	inst.TrashService.OnInsert()
 
 	uuid := inst.UUIDGenService.GenerateUUID("entity.Executable,path=" + o.Path)
+
+	o.ID = 0
 	o.UUID = uuid
 	o.Base.PrepareInsert()
 

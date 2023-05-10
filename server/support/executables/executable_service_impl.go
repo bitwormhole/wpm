@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os/exec"
 	"runtime"
+	"strconv"
 	"strings"
 
 	"bitwormhole.com/starter/afs"
@@ -44,19 +45,16 @@ func (inst *ExecutableServiceImpl) normalizeOptions(opt *service.ExecutableOptio
 
 func (inst *ExecutableServiceImpl) prepareLocation(c context.Context, o1 *entity.Executable) error {
 	path := o1.Path
-	location := &dto.Location{
-		Path:   path,
-		Class:  dxo.LocationExecutable,
-		AsFile: true,
-		AsDir:  true,
+
+	if path == "" {
+		now := util.Now().Int64()
+		path = "/path/undefined/" + strconv.FormatInt(now, 10)
+		o1.Path = path
+		return nil
 	}
-	_, err := inst.LocationService.InsertOrFetch(c, location, nil)
-	if err != nil {
-		return err
-	}
-	// o1.Path = location.Path
-	// o1.Location = location.ID
-	// o1.Class = location.Class
+
+	inst.LocationService.PutExecutable(c, o1)
+
 	return nil
 }
 

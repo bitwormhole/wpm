@@ -37,24 +37,6 @@ func (inst *ProjectServiceImpl) _Impl() service.ProjectService {
 	return inst
 }
 
-func (inst *ProjectServiceImpl) prepareLocation(c context.Context, o1 *entity.Project) error {
-	path := o1.Path
-	location := &dto.Location{
-		Path:   path,
-		Class:  dxo.LocationProject,
-		AsFile: true,
-		AsDir:  true,
-	}
-	location, err := inst.LocationService.InsertOrFetch(c, location, nil)
-	if err != nil {
-		return err
-	}
-	// o1.Path = location.Path
-	o1.Location = location.ID
-	o1.Class = location.Class
-	return nil
-}
-
 func (inst *ProjectServiceImpl) dto2entity(c context.Context, o1 *dto.Project) (*entity.Project, error) {
 
 	err := inst.ProjectTypeService.LocateProject(c, o1, "")
@@ -77,8 +59,7 @@ func (inst *ProjectServiceImpl) dto2entity(c context.Context, o1 *dto.Project) (
 	o2.ConfigFileName = o1.ConfigFileName
 
 	o2.Path = o1.Path
-	o2.Location = o1.Location
-	o2.Class = o1.Class
+	o2.RegularPath = o1.RegularPath
 	o2.Type = o1.Type
 
 	return o2, nil
@@ -107,8 +88,7 @@ func (inst *ProjectServiceImpl) entity2dto(o1 *entity.Project, opt *service.Proj
 	o2.ConfigFileName = o1.ConfigFileName
 
 	o2.Path = o1.Path
-	o2.Location = o1.Location
-	o2.Class = o1.Class
+	o2.RegularPath = o1.RegularPath
 	o2.Type = o1.Type
 
 	if opt.WithFileState {
@@ -200,10 +180,7 @@ func (inst *ProjectServiceImpl) Insert(ctx context.Context, o1 *dto.Project) (*d
 		return nil, err
 	}
 
-	err = inst.prepareLocation(ctx, o2)
-	if err != nil {
-		return nil, err
-	}
+	inst.LocationService.PutProject(ctx, o2)
 
 	o3, err := inst.ProjectDAO.Insert(o2)
 	if err != nil {
@@ -256,10 +233,7 @@ func (inst *ProjectServiceImpl) Update(ctx context.Context, id dxo.ProjectID, o1
 		return nil, err
 	}
 
-	err = inst.prepareLocation(ctx, o2)
-	if err != nil {
-		return nil, err
-	}
+	inst.LocationService.PutProject(ctx, o2)
 
 	o3, err := inst.ProjectDAO.Update(id, o2)
 	if err != nil {
@@ -317,6 +291,7 @@ func (inst *myProjectRepoPathFinder) locate(p *entity.Project) error {
 
 	p.IsFile = wd.IsFile()
 	p.IsDir = wd.IsDirectory()
+	p.RegularPath = fullpath
 
 	layout, err := gl.RepositoryLocator().Locate(wd)
 	if err == nil {

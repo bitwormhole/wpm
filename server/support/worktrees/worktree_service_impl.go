@@ -29,24 +29,6 @@ func (inst *ImpWorktreeService) _Impl() service.WorktreeService {
 	return inst
 }
 
-func (inst *ImpWorktreeService) prepareLocation(c context.Context, o1 *entity.Worktree) error {
-	path := o1.Path
-	location := &dto.Location{
-		Path:   path,
-		Class:  dxo.LocationGitWorktree,
-		AsFile: true,
-		AsDir:  true,
-	}
-	location, err := inst.LocationService.InsertOrFetch(c, location, nil)
-	if err != nil {
-		return err
-	}
-	// o1.Path = location.Path
-	o1.Location = location.ID
-	o1.Class = location.Class
-	return nil
-}
-
 func (inst *ImpWorktreeService) prepareLocateWorktree(c context.Context, o1 *entity.Worktree) error {
 
 	layout, err := inst.RepoFinder.LocateLayout(c, o1.Path)
@@ -67,6 +49,7 @@ func (inst *ImpWorktreeService) prepareLocateWorktree(c context.Context, o1 *ent
 	o1.Path = wkdir.GetPath()
 	o1.WorkingDirectory = wkdir.GetPath()
 	o1.DotGitPath = dotgit.GetPath()
+	o1.RegularPath = dotgit.GetPath()
 
 	return nil
 }
@@ -78,10 +61,7 @@ func (inst *ImpWorktreeService) prepareBeforeWrite(c context.Context, o1 *entity
 		return err
 	}
 
-	err = inst.prepareLocation(c, o1)
-	if err != nil {
-		return err
-	}
+	inst.LocationService.PutWorktree(c, o1)
 
 	return nil
 }
@@ -95,6 +75,7 @@ func (inst *ImpWorktreeService) entity2dto(c context.Context, o1 *entity.Worktre
 	o2 := &dto.Worktree{}
 	o2.ID = o1.ID
 	o2.UUID = o1.UUID
+	o2.URN = o1.URN
 	o2.CreatedAt = util.NewTime(o1.CreatedAt)
 	o2.UpdatedAt = util.NewTime(o1.UpdatedAt)
 
@@ -104,8 +85,7 @@ func (inst *ImpWorktreeService) entity2dto(c context.Context, o1 *entity.Worktre
 	o2.WorkingDir = o1.WorkingDirectory
 	o2.DotGitPath = o1.DotGitPath
 	o2.Path = o1.Path
-	o2.Class = o1.Class
-	o2.Location = o1.Location
+	o2.RegularPath = o1.RegularPath
 
 	if opt.WithFileState {
 		o2.State = inst.checkFileState(o1)
@@ -121,13 +101,13 @@ func (inst *ImpWorktreeService) dto2entity(c context.Context, o1 *dto.Worktree) 
 	o2.ID = o1.ID
 	o2.Name = o1.Name
 	o2.UUID = o1.UUID
+	o2.URN = o1.URN
 	o2.OwnerRepository = o1.OwnerRepository
 
 	o2.WorkingDirectory = o1.WorkingDir
 	o2.DotGitPath = o1.DotGitPath
 	o2.Path = o1.Path
-	o2.Class = o1.Class
-	o2.Location = o1.Location
+	o2.RegularPath = o1.RegularPath
 
 	return o2, nil
 }

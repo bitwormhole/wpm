@@ -9,6 +9,7 @@ type Location struct {
 
 	Path string `gorm:"index:,unique"` // the normalized full-path
 
+	Target dxo.URN
 	Class  dxo.LocationClass
 	AsFile bool // 表示该路径可以是一个普通文件
 	AsDir  bool // 表示该路径可以是一个目录

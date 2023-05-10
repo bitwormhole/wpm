@@ -2,6 +2,7 @@ package locations
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/bitwormhole/starter/markup"
 	"github.com/bitwormhole/starter/util"
@@ -16,7 +17,8 @@ import (
 type ImpLocationService struct {
 	markup.Component `id:"LocationService"`
 
-	DAO dao.LocationDAO `inject:"#LocationDAO"`
+	DAO               dao.LocationDAO           `inject:"#LocationDAO"`
+	FileSystemService service.FileSystemService `inject:"#FileSystemService"`
 }
 
 func (inst *ImpLocationService) _Impl() service.LocationService {
@@ -33,6 +35,7 @@ func (inst *ImpLocationService) dto2entity(o1 *dto.Location) (*entity.Location, 
 	o2.AsFile = o1.AsFile
 	o2.Path = o1.Path
 	o2.Class = o1.Class
+	o2.Target = o1.Target
 
 	// o2.TypeID = o1.TypeID
 	// o2.TypeKey = o1.TypeKey
@@ -59,6 +62,7 @@ func (inst *ImpLocationService) entity2dto(o1 *entity.Location, opt *service.Loc
 	o2.UpdatedAt = util.NewTime(o1.UpdatedAt)
 	o2.Path = o1.Path
 	o2.Class = o1.Class
+	o2.Target = o1.Target
 
 	// o2.TypeID = o1.TypeID
 	// o2.TypeKey = o1.TypeKey
@@ -111,16 +115,44 @@ func (inst *ImpLocationService) ListAll(ctx context.Context, opt *service.Locati
 	return inst.entity2dtoList(list, opt)
 }
 
+func (inst *ImpLocationService) checkBeforeInsert(ctx context.Context, l *entity.Location) error {
+
+	path := l.Path
+	node := inst.FileSystemService.Path(path)
+
+	if l.AsDir {
+		if node.IsDirectory() {
+			return nil
+		}
+	}
+
+	if l.AsFile {
+		if node.IsFile() {
+			return nil
+		}
+	}
+
+	return fmt.Errorf("no file (or dir): %v", path)
+}
+
 // Insert ...
 func (inst *ImpLocationService) Insert(ctx context.Context, o1 *dto.Location) (*dto.Location, error) {
+
 	o2, err := inst.dto2entity(o1)
 	if err != nil {
 		return nil, err
 	}
+
+	err = inst.checkBeforeInsert(ctx, o2)
+	if err != nil {
+		return nil, err
+	}
+
 	o3, err := inst.DAO.Insert(o2)
 	if err != nil {
 		return nil, err
 	}
+
 	return inst.entity2dto(o3, nil)
 }
 
@@ -152,4 +184,56 @@ func (inst *ImpLocationService) InsertOrFetch(ctx context.Context, o1 *dto.Locat
 	}
 	// do insert
 	return inst.Insert(ctx, o1)
+}
+
+// PutExecutable ...
+func (inst *ImpLocationService) PutExecutable(ctx context.Context, o *entity.Executable) error {
+	o1 := &dto.Location{
+		Path:   o.Path,
+		Target: dxo.URN(o.URN),
+		Class:  dxo.LocationExecutable,
+		AsFile: true,
+		AsDir:  false,
+	}
+	_, err := inst.Insert(ctx, o1)
+	return err
+}
+
+// PutProject ...
+func (inst *ImpLocationService) PutProject(ctx context.Context, o *entity.Project) error {
+	o1 := &dto.Location{
+		Path:   o.RegularPath,
+		Target: o.URN,
+		Class:  dxo.LocationProject,
+		AsFile: true,
+		AsDir:  true,
+	}
+	_, err := inst.Insert(ctx, o1)
+	return err
+}
+
+// PutRepository ...
+func (inst *ImpLocationService) PutRepository(ctx context.Context, o *entity.LocalRepository) error {
+	o1 := &dto.Location{
+		Path:   o.RegularPath,
+		Target: o.URN,
+		Class:  dxo.LocationGitRepository,
+		AsFile: true,
+		AsDir:  false,
+	}
+	_, err := inst.Insert(ctx, o1)
+	return err
+}
+
+// PutWorktree ...
+func (inst *ImpLocationService) PutWorktree(ctx context.Context, o *entity.Worktree) error {
+	o1 := &dto.Location{
+		Path:   o.RegularPath,
+		Target: o.URN,
+		Class:  dxo.LocationGitWorktree,
+		AsFile: true,
+		AsDir:  true,
+	}
+	_, err := inst.Insert(ctx, o1)
+	return err
 }

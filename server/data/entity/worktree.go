@@ -6,20 +6,22 @@ import "github.com/bitwormhole/wpm/server/data/dxo"
 type Worktree struct {
 	ID dxo.WorktreeID `gorm:"primaryKey"`
 	Base
+	URN dxo.URN
 
 	Name string
 
 	DotGitPath       string
 	WorkingDirectory string
+	RegularPath      string `gorm:"index:,unique"` // = DotGitPath
+	Path             string // this.Path == Location.Path == DotGitPath
 
-	Path     string         // this.Path == Location.Path == DotGitPath
-	Location dxo.LocationID `gorm:"index:,unique"`
-	Class    dxo.LocationClass
+	// Location dxo.LocationID `gorm:"index:,unique"`
+	// Class    dxo.LocationClass
 
 	OwnerRepository dxo.LocalRepositoryID
 }
 
 // ListPathFields ...
 func (Worktree) ListPathFields() []string {
-	return []string{"path", "dot_git_path", "working_directory"}
+	return []string{"path", "dot_git_path", "working_directory", "regular_path"}
 }

@@ -6,6 +6,7 @@ import "github.com/bitwormhole/wpm/server/data/dxo"
 type Project struct {
 	ID dxo.ProjectID `gorm:"primaryKey"`
 	Base
+	URN dxo.URN
 
 	Name           string
 	PathInWorktree string
@@ -13,15 +14,18 @@ type Project struct {
 	IsFile         bool
 	IsDir          bool
 	// ProjectTypeName string
+
 	ConfigFileName  string
 	OwnerRepository dxo.LocalRepositoryID
 
 	// FullPath        string `gorm:"index:,unique"`  [已废弃] 用 Path 代替
-	ProjectDir string
+	ProjectDir  string
+	RegularPath string `gorm:"index:,unique"`
 
-	Path     string         // this.Path == Location.Path
-	Location dxo.LocationID `gorm:"index:,unique"`
-	Class    dxo.LocationClass
+	Path string // = RegularPath
+
+	// Location dxo.LocationID `gorm:"index:,unique"`
+	// Class    dxo.LocationClass
 
 	Type dxo.ContentTypeName
 }

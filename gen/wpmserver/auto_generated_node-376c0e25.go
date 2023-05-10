@@ -52,84 +52,66 @@ import (
 	filter0x8aa8f6 "github.com/bitwormhole/wpm/server/web/filter"
 )
 
-type pComImpWorktreeDao struct {
-	instance *worktrees0xa762f3.ImpWorktreeDao
-	 markup0x23084a.Component `id:"WorktreeDAO"`
-	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
-	TrashService service0x3e063d.TrashService `inject:"#TrashService"`
-	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
-}
-
-
-type pComImpWorktreeService struct {
-	instance *worktrees0xa762f3.ImpWorktreeService
-	 markup0x23084a.Component `id:"WorktreeService"`
+type pComCLIMakerFilter struct {
+	instance *v3filters0xa6552a.CLIMakerFilter
+	 markup0x23084a.Component `class:"wpm-intent-filter"`
 	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
-	LocationService service0x3e063d.LocationService `inject:"#LocationService"`
-	RepoFinder service0x3e063d.LocalRepositoryFinder `inject:"#LocalRepositoryFinder"`
-	DAO dao0x5af8d0.WorktreeDAO `inject:"#WorktreeDAO"`
 }
 
 
-type pComImpInitService struct {
-	instance *init0xc984bc.ImpInitService
-	 markup0x23084a.Component `id:"InitService" class:"life"`
-	AboutService service0x3e063d.AboutService `inject:"#AboutService"`
-	ProjectTypeService service0x3e063d.ContentTypeService `inject:"#ContentTypeService"`
-	ExecutableService service0x3e063d.ExecutableService `inject:"#ExecutableService"`
-	CheckUpdateService service0x3e063d.CheckUpdateService `inject:"#CheckUpdateService"`
-	SetupService service0x3e063d.SetupService `inject:"#SetupService"`
-	OptionService service0x3e063d.OptionService `inject:"#OptionService"`
+type pComCLIRunnerFilter struct {
+	instance *v3filters0xa6552a.CLIRunnerFilter
+	 markup0x23084a.Component `class:"wpm-intent-filter"`
+	IntentHandlerService service0x3e063d.IntentHandlerService `inject:"#IntentHandlerService"`
 }
 
 
-type pComWpmInitController struct {
-	instance *init0xc984bc.WpmInitController
-	 markup0x23084a.RestController `class:"rest-controller"`
-	InitService service0x3e063d.InitService `inject:"#InitService"`
-	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+type pComExampleFilter struct {
+	instance *v3filters0xa6552a.ExampleFilter
+	 markup0x23084a.Component `class:"wpm-intent-filter"`
 }
 
 
-type pComSettingController struct {
-	instance *settings0x19237d.SettingController
-	 markup0x23084a.RestController `class:"rest-controller"`
-	SettingService service0x3e063d.SettingService `inject:"#SettingService"`
-	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+type pComPrepareActionFilter struct {
+	instance *v3filters0xa6552a.PrepareActionFilter
+	 markup0x23084a.Component `class:"wpm-intent-filter"`
+	ProfileService service0x3e063d.ProfileService `inject:"#ProfileService"`
 }
 
 
-type pComSettingDaoImpl struct {
-	instance *settings0x19237d.SettingDaoImpl
-	 markup0x23084a.Component `id:"SettingDAO"`
-	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
-	TrashService service0x3e063d.TrashService `inject:"#TrashService"`
-	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
+type pComPreparePropertiesFilter struct {
+	instance *v3filters0xa6552a.PreparePropertiesFilter
+	 markup0x23084a.Component `class:"wpm-intent-filter"`
 }
 
 
-type pComSettingServiceImpl struct {
-	instance *settings0x19237d.SettingServiceImpl
-	 markup0x23084a.Component `id:"SettingService" class:"life" `
-	SettingDAO dao0x5af8d0.SettingDAO `inject:"#SettingDAO"`
+type pComCheckTemplateFilter struct {
+	instance *v3filters0xa6552a.CheckTemplateFilter
+	 markup0x23084a.Component `class:"wpm-intent-filter"`
 }
 
 
-type pComRWPServiceImpl struct {
-	instance *repositoryworktreeproject0x399028.RWPServiceImpl
-	 markup0x23084a.Component `id:"RepositoryWorktreeProjectService"`
-	Repositories service0x3e063d.LocalRepositoryService `inject:"#LocalRepositoryService"`
-	Worktrees service0x3e063d.WorktreeService `inject:"#WorktreeService"`
-	Projects service0x3e063d.ProjectService `inject:"#ProjectService"`
-	GitLib store0x8467b3.LibAgent `inject:"#git-lib-agent"`
+type pComFindTemplateFilter struct {
+	instance *v3filters0xa6552a.FindTemplateFilter
+	 markup0x23084a.Component `class:"wpm-intent-filter"`
+	IntentTemplateService service0x3e063d.IntentTemplateService `inject:"#IntentTemplateService"`
 }
 
 
-type pComRepoWorktreeProjectController struct {
-	instance *repositoryworktreeproject0x399028.RepoWorktreeProjectController
-	 markup0x23084a.RestController `class:"rest-controller"`
-	RWPService service0x3e063d.RepositoryWorktreeProjectService `inject:"#RepositoryWorktreeProjectService"`
-	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+type pComGormDBAgentImpl struct {
+	instance *dbagent0x9f90fb.GormDBAgentImpl
+	 markup0x23084a.Component `id:"GormDBAgent" class:"life"`
+	Sources datasource0x68a737.SourceManager `inject:"#starter-gorm-source-manager"`
+}
+
+
+type pComImpAppRuntimeService struct {
+	instance *appruntime0x8dfe0a.ImpAppRuntimeService
+	 markup0x23084a.Component `id:"AppRuntimeService" class:"life"`
+	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
+	AppDataService service0x3e063d.AppDataService `inject:"#AppDataService"`
+	MediaService service0x3e063d.MediaService `inject:"#MediaService"`
+	EnableBackupSelf bool `inject:"${wpm.options.backup-this-exe}"`
 }
 
 
@@ -138,6 +120,13 @@ type pComWpmBackupController struct {
 	 markup0x23084a.Component `id:"" class:"rest-controller"`
 	BackupService service0x3e063d.DatabaseBackupService `inject:"#DatabaseBackupService"`
 	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
+type pComImpBackupServiceDAO struct {
+	instance *backups0xe44d54.ImpBackupServiceDAO
+	 markup0x23084a.Component `id:"wpm-database-backup-dao" class:""`
+	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
 }
 
 
@@ -152,190 +141,26 @@ type pComImpBackupService struct {
 }
 
 
-type pComImpBackupServiceDAO struct {
-	instance *backups0xe44d54.ImpBackupServiceDAO
-	 markup0x23084a.Component `id:"wpm-database-backup-dao" class:""`
-	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
+type pComImpCacheManager struct {
+	instance *caches0xd7996d.ImpCacheManager
+	 markup0x23084a.Component `id:"CacheService" class:"life"`
+	ProviderRegistryList []caches0x9d186b.ProviderRegistry `inject:".wpm-cache-provider"`
 }
 
 
-type pComIntentHandlerImpl struct {
-	instance *intents0x8ee0e0.IntentHandlerImpl
-	 markup0x23084a.Component `id:"IntentHandlerService"`
+type pComTheCheckUpdateServiceImpl struct {
+	instance *checkupdate0xea1855.TheCheckUpdateServiceImpl
+	 markup0x23084a.Component `id:"CheckUpdateService"`
+	PackagesURL string `inject:"${wpm.check-update.url}"`
+	AboutService service0x3e063d.AboutService `inject:"#AboutService"`
+	SettingService service0x3e063d.SettingService `inject:"#SettingService"`
 }
 
 
-type pComRunIntentController struct {
-	instance *intents0x8ee0e0.RunIntentController
+type pComContentTypeController struct {
+	instance *contenttypes0x61ca37.ContentTypeController
 	 markup0x23084a.RestController `class:"rest-controller"`
-	IntentService service0x3e063d.IntentService `inject:"#IntentService"`
-	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
-}
-
-
-type pComRunIntentServiceImpl struct {
-	instance *intents0x8ee0e0.RunIntentServiceImpl
-	 markup0x23084a.Component `id:"IntentService"`
-	GitLibAgent store0x8467b3.LibAgent `inject:"#git-lib-agent"`
-	IntentFilterManager intents0x8557f3.FilterManager `inject:"#wpm-intent-filter-manager"`
-	LocalRepositoryService service0x3e063d.LocalRepositoryService `inject:"#LocalRepositoryService"`
-	ExecutableService service0x3e063d.ExecutableService `inject:"#ExecutableService"`
-	IntentHandlerService service0x3e063d.IntentHandlerService `inject:"#IntentHandlerService"`
-}
-
-
-type pComFilterManagerImpl struct {
-	instance *intents0x8ee0e0.FilterManagerImpl
-	 markup0x23084a.Component `id:"wpm-intent-filter-manager"`
-	FilterRegistryList []intents0x8557f3.FilterRegistry `inject:".wpm-intent-filter"`
-}
-
-
-type pComFileQueryController struct {
-	instance *filequery0x34ec39.FileQueryController
-	 markup0x23084a.RestController `class:"rest-controller"`
-	FileQueryService service0x3e063d.FileQueryService `inject:"#FileQueryService"`
-	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
-}
-
-
-type pComFileQueryServiceImpl struct {
-	instance *filequery0x34ec39.FileQueryServiceImpl
-	 markup0x23084a.Component `id:"FileQueryService"`
 	ContentTypeService service0x3e063d.ContentTypeService `inject:"#ContentTypeService"`
-	ProfileService service0x3e063d.ProfileService `inject:"#ProfileService"`
-	HandlerRegistryList []filequery0xca51d2.HandlerRegistry `inject:".filequery-handler-registry"`
-}
-
-
-type pComPluginDaoImpl struct {
-	instance *plugins0x82e34b.PluginDaoImpl
-	 markup0x23084a.Component `id:"SoftwarePackageDAO"`
-	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
-	TrashService service0x3e063d.TrashService `inject:"#TrashService"`
-	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
-}
-
-
-type pComWPMPluginInstaller struct {
-	instance *plugins0x82e34b.WPMPluginInstaller
-	 markup0x23084a.Component `class:"life packs.InstallerRegistry"`
-	HTTPClientExService service0x3e063d.HTTPClientExService `inject:"#HTTPClientExService"`
-	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
-	MediaService service0x3e063d.MediaService `inject:"#MediaService"`
-	ExecutableService service0x3e063d.ExecutableService `inject:"#ExecutableService"`
-	IntentTemplateService service0x3e063d.IntentTemplateService `inject:"#IntentTemplateService"`
-	ContentTypeService service0x3e063d.ContentTypeService `inject:"#ContentTypeService"`
-	InstalledFileDAO dao0x5af8d0.InstalledFileDAO `inject:"#InstalledFileDAO"`
-}
-
-
-type pComImpSoftwareSetService struct {
-	instance *plugins0x82e34b.ImpSoftwareSetService
-	 markup0x23084a.Component `id:"SoftwareSetService"`
-	SoftwarePackageService service0x3e063d.SoftwarePackageService `inject:"#SoftwarePackageService"`
-}
-
-
-type pComSoftwarePackageController struct {
-	instance *plugins0x82e34b.SoftwarePackageController
-	 markup0x23084a.RestController `class:"rest-controller"`
-	SoftwarePackageService service0x3e063d.SoftwarePackageService `inject:"#SoftwarePackageService"`
-	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
-}
-
-
-type pComPluginServiceImpl struct {
-	instance *plugins0x82e34b.PluginServiceImpl
-	 markup0x23084a.Component `id:"SoftwarePackageService"`
-	SoftwarePackageDAO dao0x5af8d0.SoftwarePackageDAO `inject:"#SoftwarePackageDAO"`
-	GormDBAgent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
-	NamespaceService service0x3e063d.NamespaceService `inject:"#NamespaceService"`
-	HTTPClient service0x3e063d.HTTPClientService `inject:"#HTTPClientService"`
-	HTTPClientEx service0x3e063d.HTTPClientExService `inject:"#HTTPClientExService"`
-	TrashService service0x3e063d.TrashService `inject:"#TrashService"`
-	IntentTemplateSer service0x3e063d.IntentTemplateService `inject:"#IntentTemplateService"`
-	ExecutableSer service0x3e063d.ExecutableService `inject:"#ExecutableService"`
-	ContentTypeSer service0x3e063d.ContentTypeService `inject:"#ContentTypeService"`
-	MediaSer service0x3e063d.MediaService `inject:"#MediaService"`
-	AppDataService service0x3e063d.AppDataService `inject:"#AppDataService"`
-	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
-	InstallerRegistryList []packs0xfbb07e.InstallerRegistry `inject:".packs.InstallerRegistry"`
-}
-
-
-type pComSoftInstalledFileDAO struct {
-	instance *plugins0x82e34b.SoftInstalledFileDAO
-	 markup0x23084a.Component `id:"InstalledFileDAO"`
-	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
-	TrashService service0x3e063d.TrashService `inject:"#TrashService"`
-	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
-}
-
-
-type pComSoftwareSetController struct {
-	instance *plugins0x82e34b.SoftwareSetController
-	 markup0x23084a.RestController `class:"rest-controller"`
-	SoftwareSetService service0x3e063d.SoftwareSetService `inject:"#SoftwareSetService"`
-	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
-}
-
-
-type pComImpIntentTemplateEntityCache struct {
-	instance *intenttemplates0x2e3dcf.ImpIntentTemplateEntityCache
-	 markup0x23084a.Component `id:"IntentTemplateEntityCache"`
-	DAO dao0x5af8d0.IntentTemplateDAO `inject:"#IntentTemplateDAO"`
-}
-
-
-type pComIntentTemplateServiceImpl struct {
-	instance *intenttemplates0x2e3dcf.IntentTemplateServiceImpl
-	 markup0x23084a.Component `id:"IntentTemplateService"`
-	AC application0x67f6c5.Context `inject:"context"`
-	IntentTempDAO dao0x5af8d0.IntentTemplateDAO `inject:"#IntentTemplateDAO"`
-	IntentFilterManager intents0x8557f3.FilterManager `inject:"#wpm-intent-filter-manager"`
-	PresetService service0x3e063d.PresetService `inject:"#PresetService"`
-	TemplateCache service0x3e063d.IntentTemplateEntityCache `inject:"#IntentTemplateEntityCache"`
-}
-
-
-type pComIntentTemplateDaoImpl struct {
-	instance *intenttemplates0x2e3dcf.IntentTemplateDaoImpl
-	 markup0x23084a.Component `id:"IntentTemplateDAO"`
-	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
-	TrashService service0x3e063d.TrashService `inject:"#TrashService"`
-	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
-}
-
-
-type pComIntentTemplateController struct {
-	instance *intenttemplates0x2e3dcf.IntentTemplateController
-	 markup0x23084a.RestController `class:"rest-controller"`
-	IntentTemplateService service0x3e063d.IntentTemplateService `inject:"#IntentTemplateService"`
-	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
-}
-
-
-type pComImpHTTPClientEx struct {
-	instance *httpclient0xf20fe2.ImpHTTPClientEx
-	 markup0x23084a.Component `id:"HTTPClientExService"`
-	HTTPClientService service0x3e063d.HTTPClientService `inject:"#HTTPClientService"`
-}
-
-
-type pComImpHTTPClientService struct {
-	instance *httpclient0xf20fe2.ImpHTTPClientService
-	 markup0x23084a.Component `id:"HTTPClientService"`
-	AC application0x67f6c5.Context `inject:"context"`
-	FS service0x3e063d.FileSystemService `inject:"#FileSystemService"`
-	MaxContentLength int `inject:"${wpm.httpclient.max-content-length}"`
-}
-
-
-type pComProjectTypeImportController struct {
-	instance *contenttypes0x61ca37.ProjectTypeImportController
-	 markup0x23084a.RestController `class:"rest-controller"`
-	ProjectTypeImportService service0x3e063d.ProjectTypeImportService `inject:"#ProjectTypeImportService"`
 	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
 }
 
@@ -349,10 +174,10 @@ type pComProjectTypeDaoImpl struct {
 }
 
 
-type pComContentTypeController struct {
-	instance *contenttypes0x61ca37.ContentTypeController
+type pComProjectTypeImportController struct {
+	instance *contenttypes0x61ca37.ProjectTypeImportController
 	 markup0x23084a.RestController `class:"rest-controller"`
-	ContentTypeService service0x3e063d.ContentTypeService `inject:"#ContentTypeService"`
+	ProjectTypeImportService service0x3e063d.ProjectTypeImportService `inject:"#ProjectTypeImportService"`
 	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
 }
 
@@ -374,6 +199,83 @@ type pComProjectTypeServiceImpl struct {
 }
 
 
+type pComExecutableController struct {
+	instance *executables0xd3773a.ExecutableController
+	 markup0x23084a.RestController `class:"rest-controller"`
+	ExecutableService service0x3e063d.ExecutableService `inject:"#ExecutableService"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
+type pComExecutableDaoImpl struct {
+	instance *executables0xd3773a.ExecutableDaoImpl
+	 markup0x23084a.Component `id:"ExecutableDAO"`
+	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
+	TrashService service0x3e063d.TrashService `inject:"#TrashService"`
+	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
+}
+
+
+type pComExecutableImportController struct {
+	instance *executables0xd3773a.ExecutableImportController
+	 markup0x23084a.RestController `class:"rest-controller"`
+	ExecutableImportService service0x3e063d.ExecutableImportService `inject:"#ExecutableImportService"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
+type pComExecutableImportServiceImpl struct {
+	instance *executables0xd3773a.ExecutableImportServiceImpl
+	 markup0x23084a.Component `id:"ExecutableImportService"`
+	AC application0x67f6c5.Context `inject:"context"`
+	ExecutableService service0x3e063d.ExecutableService `inject:"#ExecutableService"`
+	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
+	PresetService service0x3e063d.PresetService `inject:"#PresetService"`
+}
+
+
+type pComExecutableServiceImpl struct {
+	instance *executables0xd3773a.ExecutableServiceImpl
+	 markup0x23084a.Component `id:"ExecutableService"`
+	ExecutableDAO dao0x5af8d0.ExecutableDAO `inject:"#ExecutableDAO"`
+	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
+	LocationService service0x3e063d.LocationService `inject:"#LocationService"`
+}
+
+
+type pComFileQueryController struct {
+	instance *filequery0x34ec39.FileQueryController
+	 markup0x23084a.RestController `class:"rest-controller"`
+	FileQueryService service0x3e063d.FileQueryService `inject:"#FileQueryService"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
+type pComFileQueryServiceImpl struct {
+	instance *filequery0x34ec39.FileQueryServiceImpl
+	 markup0x23084a.Component `id:"FileQueryService"`
+	ContentTypeService service0x3e063d.ContentTypeService `inject:"#ContentTypeService"`
+	ProfileService service0x3e063d.ProfileService `inject:"#ProfileService"`
+	HandlerRegistryList []filequery0xca51d2.HandlerRegistry `inject:".filequery-handler-registry"`
+}
+
+
+type pComImpHTTPClientEx struct {
+	instance *httpclient0xf20fe2.ImpHTTPClientEx
+	 markup0x23084a.Component `id:"HTTPClientExService"`
+	HTTPClientService service0x3e063d.HTTPClientService `inject:"#HTTPClientService"`
+}
+
+
+type pComImpHTTPClientService struct {
+	instance *httpclient0xf20fe2.ImpHTTPClientService
+	 markup0x23084a.Component `id:"HTTPClientService"`
+	AC application0x67f6c5.Context `inject:"context"`
+	FS service0x3e063d.FileSystemService `inject:"#FileSystemService"`
+	MaxContentLength int `inject:"${wpm.httpclient.max-content-length}"`
+}
+
+
 type pComExampleDaoImpl struct {
 	instance *impldao0x73998b.ExampleDaoImpl
 	 markup0x23084a.Component `id:"ExampleDAO"`
@@ -383,20 +285,171 @@ type pComExampleDaoImpl struct {
 }
 
 
-type pComCacheProvider struct {
-	instance *presets0x875f8b.CacheProvider
-	 markup0x23084a.Component ` id:"PresetCache"  class:"wpm-cache-provider"`
-	AC application0x67f6c5.Context `inject:"context"`
-	CS service0x3e063d.CacheService `inject:"#CacheService"`
-	HTC service0x3e063d.HTTPClientExService `inject:"#HTTPClientExService"`
-	ListFileName string `inject:"${wpm.presets.list-file-name}"`
+type pComAboutServiceImpl struct {
+	instance *implservice0x22327c.AboutServiceImpl
+	 markup0x23084a.Component `id:"AboutService"`
+	Profile string `inject:"${application.profiles.active}"`
+	Name string `inject:"${application.about.name}"`
+	Title string `inject:"${application.about.title}"`
+	Copyright string `inject:"${application.about.copyright}"`
+	ServerPort int `inject:"${server.port}"`
+	EnableDebug bool `inject:"${wpm.options.debug}"`
+	PlatformService service0x3e063d.PlatformService `inject:"#PlatformService"`
+	ProfileService service0x3e063d.ProfileService `inject:"#ProfileService"`
+	AppRuntimeService service0x3e063d.AppRuntimeService `inject:"#AppRuntimeService"`
 }
 
 
-type pComImpPresetService struct {
-	instance *presets0x875f8b.ImpPresetService
-	 markup0x23084a.Component `id:"PresetService"`
-	Cache presets0x875f8b.Cache `inject:"#PresetCache"`
+type pComAppDataServiceImpl struct {
+	instance *implservice0x22327c.AppDataServiceImpl
+	 markup0x23084a.Component `id:"AppDataService"`
+	ProfileService service0x3e063d.ProfileService `inject:"#ProfileService"`
+	AppRuntimeService service0x3e063d.AppRuntimeService `inject:"#AppRuntimeService"`
+	FS service0x3e063d.FileSystemService `inject:"#FileSystemService"`
+	DatabaseName string `inject:"${datasource.wpm.database}"`
+}
+
+
+type pComExampleServiceImpl struct {
+	instance *implservice0x22327c.ExampleServiceImpl
+	 markup0x23084a.Component `id:"ExampleService"`
+}
+
+
+type pComFileSystemServiceImpl struct {
+	instance *implservice0x22327c.FileSystemServiceImpl
+	 markup0x23084a.Component `id:"FileSystemService"`
+}
+
+
+type pComUUIDGenServiceImpl struct {
+	instance *implservice0x22327c.UUIDGenServiceImpl
+	 markup0x23084a.Component `id:"UUIDGenService" initMethod:"Init"`
+}
+
+
+type pComWpmInitController struct {
+	instance *init0xc984bc.WpmInitController
+	 markup0x23084a.RestController `class:"rest-controller"`
+	InitService service0x3e063d.InitService `inject:"#InitService"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
+type pComImpInitService struct {
+	instance *init0xc984bc.ImpInitService
+	 markup0x23084a.Component `id:"InitService" class:"life"`
+	AboutService service0x3e063d.AboutService `inject:"#AboutService"`
+	ProjectTypeService service0x3e063d.ContentTypeService `inject:"#ContentTypeService"`
+	ExecutableService service0x3e063d.ExecutableService `inject:"#ExecutableService"`
+	CheckUpdateService service0x3e063d.CheckUpdateService `inject:"#CheckUpdateService"`
+	SetupService service0x3e063d.SetupService `inject:"#SetupService"`
+	OptionService service0x3e063d.OptionService `inject:"#OptionService"`
+}
+
+
+type pComRunIntentController struct {
+	instance *intents0x8ee0e0.RunIntentController
+	 markup0x23084a.RestController `class:"rest-controller"`
+	IntentService service0x3e063d.IntentService `inject:"#IntentService"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
+type pComFilterManagerImpl struct {
+	instance *intents0x8ee0e0.FilterManagerImpl
+	 markup0x23084a.Component `id:"wpm-intent-filter-manager"`
+	FilterRegistryList []intents0x8557f3.FilterRegistry `inject:".wpm-intent-filter"`
+}
+
+
+type pComIntentHandlerImpl struct {
+	instance *intents0x8ee0e0.IntentHandlerImpl
+	 markup0x23084a.Component `id:"IntentHandlerService"`
+}
+
+
+type pComRunIntentServiceImpl struct {
+	instance *intents0x8ee0e0.RunIntentServiceImpl
+	 markup0x23084a.Component `id:"IntentService"`
+	GitLibAgent store0x8467b3.LibAgent `inject:"#git-lib-agent"`
+	IntentFilterManager intents0x8557f3.FilterManager `inject:"#wpm-intent-filter-manager"`
+	LocalRepositoryService service0x3e063d.LocalRepositoryService `inject:"#LocalRepositoryService"`
+	ExecutableService service0x3e063d.ExecutableService `inject:"#ExecutableService"`
+	IntentHandlerService service0x3e063d.IntentHandlerService `inject:"#IntentHandlerService"`
+}
+
+
+type pComIntentTemplateController struct {
+	instance *intenttemplates0x2e3dcf.IntentTemplateController
+	 markup0x23084a.RestController `class:"rest-controller"`
+	IntentTemplateService service0x3e063d.IntentTemplateService `inject:"#IntentTemplateService"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
+type pComIntentTemplateDaoImpl struct {
+	instance *intenttemplates0x2e3dcf.IntentTemplateDaoImpl
+	 markup0x23084a.Component `id:"IntentTemplateDAO"`
+	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
+	TrashService service0x3e063d.TrashService `inject:"#TrashService"`
+	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
+}
+
+
+type pComImpIntentTemplateEntityCache struct {
+	instance *intenttemplates0x2e3dcf.ImpIntentTemplateEntityCache
+	 markup0x23084a.Component `id:"IntentTemplateEntityCache"`
+	DAO dao0x5af8d0.IntentTemplateDAO `inject:"#IntentTemplateDAO"`
+}
+
+
+type pComIntentTemplateServiceImpl struct {
+	instance *intenttemplates0x2e3dcf.IntentTemplateServiceImpl
+	 markup0x23084a.Component `id:"IntentTemplateService"`
+	AC application0x67f6c5.Context `inject:"context"`
+	IntentTempDAO dao0x5af8d0.IntentTemplateDAO `inject:"#IntentTemplateDAO"`
+	IntentFilterManager intents0x8557f3.FilterManager `inject:"#wpm-intent-filter-manager"`
+	PresetService service0x3e063d.PresetService `inject:"#PresetService"`
+	TemplateCache service0x3e063d.IntentTemplateEntityCache `inject:"#IntentTemplateEntityCache"`
+}
+
+
+type pComJSONBufferController struct {
+	instance *jsonbuffer0x988f20.JSONBufferController
+	 markup0x23084a.RestController `class:"rest-controller"`
+	JSONBufferService service0x3e063d.JSONBufferService `inject:"#JSONBufferService"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
+type pComImpJSONBufferService struct {
+	instance *jsonbuffer0x988f20.ImpJSONBufferService
+	 markup0x23084a.Component `id:"JSONBufferService"`
+}
+
+
+type pComLocationController struct {
+	instance *locations0xb36349.LocationController
+	 markup0x23084a.RestController `class:"rest-controller"`
+	LocationService service0x3e063d.LocationService `inject:"#LocationService"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
+type pComImpLocationDao struct {
+	instance *locations0xb36349.ImpLocationDao
+	 markup0x23084a.Component `id:"LocationDAO"`
+	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
+	TrashService service0x3e063d.TrashService `inject:"#TrashService"`
+	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
+}
+
+
+type pComImpLocationService struct {
+	instance *locations0xb36349.ImpLocationService
+	 markup0x23084a.Component `id:"LocationService"`
+	DAO dao0x5af8d0.LocationDAO `inject:"#LocationDAO"`
 }
 
 
@@ -432,10 +485,181 @@ type pComMediaServiceImpl struct {
 }
 
 
+type pComNamespaceController struct {
+	instance *namespaces0xceefcf.NamespaceController
+	 markup0x23084a.RestController `class:"rest-controller"`
+	NamespaceService service0x3e063d.NamespaceService `inject:"#NamespaceService"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
+type pComImpNamespaceDao struct {
+	instance *namespaces0xceefcf.ImpNamespaceDao
+	 markup0x23084a.Component `id:"NamespaceDAO"`
+	AC application0x67f6c5.Context `inject:"context"`
+	PresetService service0x3e063d.PresetService `inject:"#PresetService"`
+}
+
+
+type pComImpNamespaceService struct {
+	instance *namespaces0xceefcf.ImpNamespaceService
+	 markup0x23084a.Component `id:"NamespaceService"`
+	MyDAO dao0x5af8d0.NamespaceDAO `inject:"#NamespaceDAO"`
+}
+
+
+type pComTheOptionController struct {
+	instance *options0x10c3ff.TheOptionController
+	 markup0x23084a.RestController `class:"rest-controller"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+	OptionService service0x3e063d.OptionService `inject:"#OptionService"`
+}
+
+
+type pComImpOptionService struct {
+	instance *options0x10c3ff.ImpOptionService
+	 markup0x23084a.Component `id:"OptionService"`
+	AC application0x67f6c5.Context `inject:"context"`
+}
+
+
+type pComLinuxPlatformServiceImpl struct {
+	instance *platforms0xb539c0.LinuxPlatformServiceImpl
+	 markup0x23084a.Component `class:"PlatformProviderRegistry"`
+}
+
+
+type pComPlatformServiceImpl struct {
+	instance *platforms0xb539c0.PlatformServiceImpl
+	 markup0x23084a.Component `id:"PlatformService"`
+	Providers []service0x3e063d.PlatformProviderRegistry `inject:".PlatformProviderRegistry"`
+}
+
+
+type pComProfileServiceImpl struct {
+	instance *platforms0xb539c0.ProfileServiceImpl
+	 markup0x23084a.Component `id:"ProfileService"`
+	PlatformService service0x3e063d.PlatformService `inject:"#PlatformService"`
+}
+
+
+type pComWindowsPlatformServiceImpl struct {
+	instance *platforms0xb539c0.WindowsPlatformServiceImpl
+	 markup0x23084a.Component `class:"PlatformProviderRegistry"`
+}
+
+
+type pComWPMPluginInstaller struct {
+	instance *plugins0x82e34b.WPMPluginInstaller
+	 markup0x23084a.Component `class:"life packs.InstallerRegistry"`
+	HTTPClientExService service0x3e063d.HTTPClientExService `inject:"#HTTPClientExService"`
+	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
+	MediaService service0x3e063d.MediaService `inject:"#MediaService"`
+	ExecutableService service0x3e063d.ExecutableService `inject:"#ExecutableService"`
+	IntentTemplateService service0x3e063d.IntentTemplateService `inject:"#IntentTemplateService"`
+	ContentTypeService service0x3e063d.ContentTypeService `inject:"#ContentTypeService"`
+	InstalledFileDAO dao0x5af8d0.InstalledFileDAO `inject:"#InstalledFileDAO"`
+}
+
+
+type pComSoftInstalledFileDAO struct {
+	instance *plugins0x82e34b.SoftInstalledFileDAO
+	 markup0x23084a.Component `id:"InstalledFileDAO"`
+	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
+	TrashService service0x3e063d.TrashService `inject:"#TrashService"`
+	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
+}
+
+
+type pComSoftwarePackageController struct {
+	instance *plugins0x82e34b.SoftwarePackageController
+	 markup0x23084a.RestController `class:"rest-controller"`
+	SoftwarePackageService service0x3e063d.SoftwarePackageService `inject:"#SoftwarePackageService"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
+type pComPluginDaoImpl struct {
+	instance *plugins0x82e34b.PluginDaoImpl
+	 markup0x23084a.Component `id:"SoftwarePackageDAO"`
+	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
+	TrashService service0x3e063d.TrashService `inject:"#TrashService"`
+	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
+}
+
+
+type pComPluginServiceImpl struct {
+	instance *plugins0x82e34b.PluginServiceImpl
+	 markup0x23084a.Component `id:"SoftwarePackageService"`
+	SoftwarePackageDAO dao0x5af8d0.SoftwarePackageDAO `inject:"#SoftwarePackageDAO"`
+	GormDBAgent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
+	NamespaceService service0x3e063d.NamespaceService `inject:"#NamespaceService"`
+	HTTPClient service0x3e063d.HTTPClientService `inject:"#HTTPClientService"`
+	HTTPClientEx service0x3e063d.HTTPClientExService `inject:"#HTTPClientExService"`
+	TrashService service0x3e063d.TrashService `inject:"#TrashService"`
+	IntentTemplateSer service0x3e063d.IntentTemplateService `inject:"#IntentTemplateService"`
+	ExecutableSer service0x3e063d.ExecutableService `inject:"#ExecutableService"`
+	ContentTypeSer service0x3e063d.ContentTypeService `inject:"#ContentTypeService"`
+	MediaSer service0x3e063d.MediaService `inject:"#MediaService"`
+	AppDataService service0x3e063d.AppDataService `inject:"#AppDataService"`
+	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
+	InstallerRegistryList []packs0xfbb07e.InstallerRegistry `inject:".packs.InstallerRegistry"`
+}
+
+
+type pComSoftwareSetController struct {
+	instance *plugins0x82e34b.SoftwareSetController
+	 markup0x23084a.RestController `class:"rest-controller"`
+	SoftwareSetService service0x3e063d.SoftwareSetService `inject:"#SoftwareSetService"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
+type pComImpSoftwareSetService struct {
+	instance *plugins0x82e34b.ImpSoftwareSetService
+	 markup0x23084a.Component `id:"SoftwareSetService"`
+	SoftwarePackageService service0x3e063d.SoftwarePackageService `inject:"#SoftwarePackageService"`
+}
+
+
+type pComCacheProvider struct {
+	instance *presets0x875f8b.CacheProvider
+	 markup0x23084a.Component ` id:"PresetCache"  class:"wpm-cache-provider"`
+	AC application0x67f6c5.Context `inject:"context"`
+	CS service0x3e063d.CacheService `inject:"#CacheService"`
+	HTC service0x3e063d.HTTPClientExService `inject:"#HTTPClientExService"`
+	ListFileName string `inject:"${wpm.presets.list-file-name}"`
+}
+
+
+type pComImpPresetService struct {
+	instance *presets0x875f8b.ImpPresetService
+	 markup0x23084a.Component `id:"PresetService"`
+	Cache presets0x875f8b.Cache `inject:"#PresetCache"`
+}
+
+
 type pComProjectController struct {
 	instance *projects0x4d85c7.ProjectController
 	 markup0x23084a.RestController `class:"rest-controller"`
 	ProjectService service0x3e063d.ProjectService `inject:"#ProjectService"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
+type pComProjectDaoImpl struct {
+	instance *projects0x4d85c7.ProjectDaoImpl
+	 markup0x23084a.Component `id:"ProjectDAO"`
+	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
+	TrashService service0x3e063d.TrashService `inject:"#TrashService"`
+	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
+}
+
+
+type pComProjectImportController struct {
+	instance *projects0x4d85c7.ProjectImportController
+	 markup0x23084a.RestController `class:"rest-controller"`
+	ProjectImportService service0x3e063d.ProjectImportService `inject:"#ProjectImportService"`
 	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
 }
 
@@ -460,34 +684,27 @@ type pComProjectServiceImpl struct {
 }
 
 
-type pComProjectDaoImpl struct {
-	instance *projects0x4d85c7.ProjectDaoImpl
-	 markup0x23084a.Component `id:"ProjectDAO"`
+type pComLocalRepositoryController struct {
+	instance *repositories0x637d5e.LocalRepositoryController
+	 markup0x23084a.RestController `class:"rest-controller"`
+	RepoService service0x3e063d.LocalRepositoryService `inject:"#LocalRepositoryService"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
+type pComRepositoryDaoImpl struct {
+	instance *repositories0x637d5e.RepositoryDaoImpl
+	 markup0x23084a.Component `id:"LocalRepositoryDAO"`
 	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
 	TrashService service0x3e063d.TrashService `inject:"#TrashService"`
 	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
 }
 
 
-type pComProjectImportController struct {
-	instance *projects0x4d85c7.ProjectImportController
-	 markup0x23084a.RestController `class:"rest-controller"`
-	ProjectImportService service0x3e063d.ProjectImportService `inject:"#ProjectImportService"`
-	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
-}
-
-
-type pComJSONBufferController struct {
-	instance *jsonbuffer0x988f20.JSONBufferController
-	 markup0x23084a.RestController `class:"rest-controller"`
-	JSONBufferService service0x3e063d.JSONBufferService `inject:"#JSONBufferService"`
-	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
-}
-
-
-type pComImpJSONBufferService struct {
-	instance *jsonbuffer0x988f20.ImpJSONBufferService
-	 markup0x23084a.Component `id:"JSONBufferService"`
+type pComLocalRepositoryFinderImpl struct {
+	instance *repositories0x637d5e.LocalRepositoryFinderImpl
+	 markup0x23084a.Component `id:"LocalRepositoryFinder"`
+	GitLibAgent store0x8467b3.LibAgent `inject:"#git-lib-agent"`
 }
 
 
@@ -505,43 +722,11 @@ type pComLocalRepositoryServiceImpl struct {
 }
 
 
-type pComLocalRepositoryController struct {
-	instance *repositories0x637d5e.LocalRepositoryController
-	 markup0x23084a.RestController `class:"rest-controller"`
-	RepoService service0x3e063d.LocalRepositoryService `inject:"#LocalRepositoryService"`
-	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
-}
-
-
-type pComRepositoryImportServiceImpl struct {
-	instance *repositories0x637d5e.RepositoryImportServiceImpl
-	 markup0x23084a.Component `id:"RepositoryImportService"`
-	RepositoryService service0x3e063d.LocalRepositoryService `inject:"#LocalRepositoryService"`
-	RepoFinder service0x3e063d.LocalRepositoryFinder `inject:"#LocalRepositoryFinder"`
-}
-
-
 type pComLocalRepositoryStateLoaderImpl struct {
 	instance *repositories0x637d5e.LocalRepositoryStateLoaderImpl
 	 markup0x23084a.Component `id:"LocalRepositoryStateLoader"`
 	LocalRepoService service0x3e063d.LocalRepositoryService `inject:"#LocalRepositoryService"`
 	Dao dao0x5af8d0.LocalRepositoryDAO `inject:"#LocalRepositoryDAO"`
-	GitLibAgent store0x8467b3.LibAgent `inject:"#git-lib-agent"`
-}
-
-
-type pComRepositoryImportController struct {
-	instance *repositories0x637d5e.RepositoryImportController
-	 markup0x23084a.RestController `class:"rest-controller"`
-	RepoStateLoader service0x3e063d.LocalRepositoryStateLoader `inject:"#LocalRepositoryStateLoader"`
-	ImportService service0x3e063d.RepositoryImportService `inject:"#RepositoryImportService"`
-	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
-}
-
-
-type pComLocalRepositoryFinderImpl struct {
-	instance *repositories0x637d5e.LocalRepositoryFinderImpl
-	 markup0x23084a.Component `id:"LocalRepositoryFinder"`
 	GitLibAgent store0x8467b3.LibAgent `inject:"#git-lib-agent"`
 }
 
@@ -568,51 +753,70 @@ type pComRemoteRepositoryServiceImpl struct {
 }
 
 
-type pComRepositoryDaoImpl struct {
-	instance *repositories0x637d5e.RepositoryDaoImpl
-	 markup0x23084a.Component `id:"LocalRepositoryDAO"`
+type pComRepositoryImportController struct {
+	instance *repositories0x637d5e.RepositoryImportController
+	 markup0x23084a.RestController `class:"rest-controller"`
+	RepoStateLoader service0x3e063d.LocalRepositoryStateLoader `inject:"#LocalRepositoryStateLoader"`
+	ImportService service0x3e063d.RepositoryImportService `inject:"#RepositoryImportService"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
+type pComRepositoryImportServiceImpl struct {
+	instance *repositories0x637d5e.RepositoryImportServiceImpl
+	 markup0x23084a.Component `id:"RepositoryImportService"`
+	RepositoryService service0x3e063d.LocalRepositoryService `inject:"#LocalRepositoryService"`
+	RepoFinder service0x3e063d.LocalRepositoryFinder `inject:"#LocalRepositoryFinder"`
+}
+
+
+type pComRepoWorktreeProjectController struct {
+	instance *repositoryworktreeproject0x399028.RepoWorktreeProjectController
+	 markup0x23084a.RestController `class:"rest-controller"`
+	RWPService service0x3e063d.RepositoryWorktreeProjectService `inject:"#RepositoryWorktreeProjectService"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
+type pComRWPServiceImpl struct {
+	instance *repositoryworktreeproject0x399028.RWPServiceImpl
+	 markup0x23084a.Component `id:"RepositoryWorktreeProjectService"`
+	Repositories service0x3e063d.LocalRepositoryService `inject:"#LocalRepositoryService"`
+	Worktrees service0x3e063d.WorktreeService `inject:"#WorktreeService"`
+	Projects service0x3e063d.ProjectService `inject:"#ProjectService"`
+	GitLib store0x8467b3.LibAgent `inject:"#git-lib-agent"`
+}
+
+
+type pComSettingController struct {
+	instance *settings0x19237d.SettingController
+	 markup0x23084a.RestController `class:"rest-controller"`
+	SettingService service0x3e063d.SettingService `inject:"#SettingService"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
+type pComSettingDaoImpl struct {
+	instance *settings0x19237d.SettingDaoImpl
+	 markup0x23084a.Component `id:"SettingDAO"`
 	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
 	TrashService service0x3e063d.TrashService `inject:"#TrashService"`
 	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
 }
 
 
-type pComImpOptionService struct {
-	instance *options0x10c3ff.ImpOptionService
-	 markup0x23084a.Component `id:"OptionService"`
-	AC application0x67f6c5.Context `inject:"context"`
+type pComSettingServiceImpl struct {
+	instance *settings0x19237d.SettingServiceImpl
+	 markup0x23084a.Component `id:"SettingService" class:"life" `
+	SettingDAO dao0x5af8d0.SettingDAO `inject:"#SettingDAO"`
 }
 
 
-type pComTheOptionController struct {
-	instance *options0x10c3ff.TheOptionController
-	 markup0x23084a.RestController `class:"rest-controller"`
+type pComWpmSetupController struct {
+	instance *setup0xd9ff02.WpmSetupController
+	 markup0x23084a.Component `class:"rest-controller"`
 	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
-	OptionService service0x3e063d.OptionService `inject:"#OptionService"`
-}
-
-
-type pComTheTrashController struct {
-	instance *trash0xd00f34.TheTrashController
-	 markup0x23084a.RestController `class:"rest-controller"`
-	TrashSer service0x3e063d.TrashService `inject:"#TrashService"`
-	TrashDao dao0x5af8d0.TrashDAO `inject:"#TrashDAO"`
-	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
-}
-
-
-type pComImpTrashService struct {
-	instance *trash0xd00f34.ImpTrashService
-	 markup0x23084a.Component `id:"TrashService" initMethod:"Init"`
-	TrashDao dao0x5af8d0.TrashDAO `inject:"#TrashDAO"`
-	AutoClean bool `inject:"${wpm.auto-clean-trash.enabled}"`
-}
-
-
-type pComImpTrashDao struct {
-	instance *trash0xd00f34.ImpTrashDao
-	 markup0x23084a.Component `id:"TrashDAO"`
-	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
+	SetupService service0x3e063d.SetupService `inject:"#SetupService"`
 }
 
 
@@ -632,54 +836,6 @@ type pComImpSetupService struct {
 }
 
 
-type pComWpmSetupController struct {
-	instance *setup0xd9ff02.WpmSetupController
-	 markup0x23084a.Component `class:"rest-controller"`
-	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
-	SetupService service0x3e063d.SetupService `inject:"#SetupService"`
-}
-
-
-type pComImpAppRuntimeService struct {
-	instance *appruntime0x8dfe0a.ImpAppRuntimeService
-	 markup0x23084a.Component `id:"AppRuntimeService" class:"life"`
-	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
-	AppDataService service0x3e063d.AppDataService `inject:"#AppDataService"`
-	MediaService service0x3e063d.MediaService `inject:"#MediaService"`
-	EnableBackupSelf bool `inject:"${wpm.options.backup-this-exe}"`
-}
-
-
-type pComImpCacheManager struct {
-	instance *caches0xd7996d.ImpCacheManager
-	 markup0x23084a.Component `id:"CacheService" class:"life"`
-	ProviderRegistryList []caches0x9d186b.ProviderRegistry `inject:".wpm-cache-provider"`
-}
-
-
-type pComNamespaceController struct {
-	instance *namespaces0xceefcf.NamespaceController
-	 markup0x23084a.RestController `class:"rest-controller"`
-	NamespaceService service0x3e063d.NamespaceService `inject:"#NamespaceService"`
-	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
-}
-
-
-type pComImpNamespaceDao struct {
-	instance *namespaces0xceefcf.ImpNamespaceDao
-	 markup0x23084a.Component `id:"NamespaceDAO"`
-	AC application0x67f6c5.Context `inject:"context"`
-	PresetService service0x3e063d.PresetService `inject:"#PresetService"`
-}
-
-
-type pComImpNamespaceService struct {
-	instance *namespaces0xceefcf.ImpNamespaceService
-	 markup0x23084a.Component `id:"NamespaceService"`
-	MyDAO dao0x5af8d0.NamespaceDAO `inject:"#NamespaceDAO"`
-}
-
-
 type pComTheStatisticController struct {
 	instance *statistics0x0575cd.TheStatisticController
 	 markup0x23084a.RestController `class:"rest-controller"`
@@ -695,62 +851,46 @@ type pComImpStatisticDao struct {
 }
 
 
-type pComImpLocationDao struct {
-	instance *locations0xb36349.ImpLocationDao
-	 markup0x23084a.Component `id:"LocationDAO"`
+type pComTheTrashController struct {
+	instance *trash0xd00f34.TheTrashController
+	 markup0x23084a.RestController `class:"rest-controller"`
+	TrashSer service0x3e063d.TrashService `inject:"#TrashService"`
+	TrashDao dao0x5af8d0.TrashDAO `inject:"#TrashDAO"`
+	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+}
+
+
+type pComImpTrashDao struct {
+	instance *trash0xd00f34.ImpTrashDao
+	 markup0x23084a.Component `id:"TrashDAO"`
+	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
+}
+
+
+type pComImpTrashService struct {
+	instance *trash0xd00f34.ImpTrashService
+	 markup0x23084a.Component `id:"TrashService" initMethod:"Init"`
+	TrashDao dao0x5af8d0.TrashDAO `inject:"#TrashDAO"`
+	AutoClean bool `inject:"${wpm.auto-clean-trash.enabled}"`
+}
+
+
+type pComImpWorktreeDao struct {
+	instance *worktrees0xa762f3.ImpWorktreeDao
+	 markup0x23084a.Component `id:"WorktreeDAO"`
 	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
 	TrashService service0x3e063d.TrashService `inject:"#TrashService"`
 	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
 }
 
 
-type pComImpLocationService struct {
-	instance *locations0xb36349.ImpLocationService
-	 markup0x23084a.Component `id:"LocationService"`
-	DAO dao0x5af8d0.LocationDAO `inject:"#LocationDAO"`
-}
-
-
-type pComAboutServiceImpl struct {
-	instance *implservice0x22327c.AboutServiceImpl
-	 markup0x23084a.Component `id:"AboutService"`
-	Profile string `inject:"${application.profiles.active}"`
-	Name string `inject:"${application.about.name}"`
-	Title string `inject:"${application.about.title}"`
-	Copyright string `inject:"${application.about.copyright}"`
-	ServerPort int `inject:"${server.port}"`
-	EnableDebug bool `inject:"${wpm.options.debug}"`
-	PlatformService service0x3e063d.PlatformService `inject:"#PlatformService"`
-	ProfileService service0x3e063d.ProfileService `inject:"#ProfileService"`
-	AppRuntimeService service0x3e063d.AppRuntimeService `inject:"#AppRuntimeService"`
-}
-
-
-type pComAppDataServiceImpl struct {
-	instance *implservice0x22327c.AppDataServiceImpl
-	 markup0x23084a.Component `id:"AppDataService"`
-	ProfileService service0x3e063d.ProfileService `inject:"#ProfileService"`
-	AppRuntimeService service0x3e063d.AppRuntimeService `inject:"#AppRuntimeService"`
-	FS service0x3e063d.FileSystemService `inject:"#FileSystemService"`
-	DatabaseName string `inject:"${datasource.wpm.database}"`
-}
-
-
-type pComExampleServiceImpl struct {
-	instance *implservice0x22327c.ExampleServiceImpl
-	 markup0x23084a.Component `id:"ExampleService"`
-}
-
-
-type pComUUIDGenServiceImpl struct {
-	instance *implservice0x22327c.UUIDGenServiceImpl
-	 markup0x23084a.Component `id:"UUIDGenService" initMethod:"Init"`
-}
-
-
-type pComFileSystemServiceImpl struct {
-	instance *implservice0x22327c.FileSystemServiceImpl
-	 markup0x23084a.Component `id:"FileSystemService"`
+type pComImpWorktreeService struct {
+	instance *worktrees0xa762f3.ImpWorktreeService
+	 markup0x23084a.Component `id:"WorktreeService"`
+	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
+	LocationService service0x3e063d.LocationService `inject:"#LocationService"`
+	RepoFinder service0x3e063d.LocalRepositoryFinder `inject:"#LocalRepositoryFinder"`
+	DAO dao0x5af8d0.WorktreeDAO `inject:"#WorktreeDAO"`
 }
 
 
@@ -771,85 +911,6 @@ type pComWpmDataSource struct {
 }
 
 
-type pComWindowsPlatformServiceImpl struct {
-	instance *platforms0xb539c0.WindowsPlatformServiceImpl
-	 markup0x23084a.Component `class:"PlatformProviderRegistry"`
-}
-
-
-type pComProfileServiceImpl struct {
-	instance *platforms0xb539c0.ProfileServiceImpl
-	 markup0x23084a.Component `id:"ProfileService"`
-	PlatformService service0x3e063d.PlatformService `inject:"#PlatformService"`
-}
-
-
-type pComPlatformServiceImpl struct {
-	instance *platforms0xb539c0.PlatformServiceImpl
-	 markup0x23084a.Component `id:"PlatformService"`
-	Providers []service0x3e063d.PlatformProviderRegistry `inject:".PlatformProviderRegistry"`
-}
-
-
-type pComLinuxPlatformServiceImpl struct {
-	instance *platforms0xb539c0.LinuxPlatformServiceImpl
-	 markup0x23084a.Component `class:"PlatformProviderRegistry"`
-}
-
-
-type pComTheCheckUpdateServiceImpl struct {
-	instance *checkupdate0xea1855.TheCheckUpdateServiceImpl
-	 markup0x23084a.Component `id:"CheckUpdateService"`
-	PackagesURL string `inject:"${wpm.check-update.url}"`
-	AboutService service0x3e063d.AboutService `inject:"#AboutService"`
-	SettingService service0x3e063d.SettingService `inject:"#SettingService"`
-}
-
-
-type pComExecutableController struct {
-	instance *executables0xd3773a.ExecutableController
-	 markup0x23084a.RestController `class:"rest-controller"`
-	ExecutableService service0x3e063d.ExecutableService `inject:"#ExecutableService"`
-	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
-}
-
-
-type pComExecutableDaoImpl struct {
-	instance *executables0xd3773a.ExecutableDaoImpl
-	 markup0x23084a.Component `id:"ExecutableDAO"`
-	Agent dbagent0x9f90fb.GormDBAgent `inject:"#GormDBAgent"`
-	TrashService service0x3e063d.TrashService `inject:"#TrashService"`
-	UUIDGenService service0x3e063d.UUIDGenService `inject:"#UUIDGenService"`
-}
-
-
-type pComExecutableImportController struct {
-	instance *executables0xd3773a.ExecutableImportController
-	 markup0x23084a.RestController `class:"rest-controller"`
-	ExecutableImportService service0x3e063d.ExecutableImportService `inject:"#ExecutableImportService"`
-	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
-}
-
-
-type pComExecutableServiceImpl struct {
-	instance *executables0xd3773a.ExecutableServiceImpl
-	 markup0x23084a.Component `id:"ExecutableService"`
-	ExecutableDAO dao0x5af8d0.ExecutableDAO `inject:"#ExecutableDAO"`
-	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
-	LocationService service0x3e063d.LocationService `inject:"#LocationService"`
-}
-
-
-type pComExecutableImportServiceImpl struct {
-	instance *executables0xd3773a.ExecutableImportServiceImpl
-	 markup0x23084a.Component `id:"ExecutableImportService"`
-	AC application0x67f6c5.Context `inject:"context"`
-	ExecutableService service0x3e063d.ExecutableService `inject:"#ExecutableService"`
-	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
-	PresetService service0x3e063d.PresetService `inject:"#PresetService"`
-}
-
-
 type pComFileSystemHandler struct {
 	instance *handlers0x162741.FileSystemHandler
 	 markup0x23084a.Component `class:"filequery-handler-registry"`
@@ -857,69 +918,13 @@ type pComFileSystemHandler struct {
 }
 
 
-type pComFindTemplateFilter struct {
-	instance *v3filters0xa6552a.FindTemplateFilter
-	 markup0x23084a.Component `class:"wpm-intent-filter"`
-	IntentTemplateService service0x3e063d.IntentTemplateService `inject:"#IntentTemplateService"`
-}
-
-
-type pComCLIRunnerFilter struct {
-	instance *v3filters0xa6552a.CLIRunnerFilter
-	 markup0x23084a.Component `class:"wpm-intent-filter"`
-	IntentHandlerService service0x3e063d.IntentHandlerService `inject:"#IntentHandlerService"`
-}
-
-
-type pComCheckTemplateFilter struct {
-	instance *v3filters0xa6552a.CheckTemplateFilter
-	 markup0x23084a.Component `class:"wpm-intent-filter"`
-}
-
-
-type pComPrepareActionFilter struct {
-	instance *v3filters0xa6552a.PrepareActionFilter
-	 markup0x23084a.Component `class:"wpm-intent-filter"`
-	ProfileService service0x3e063d.ProfileService `inject:"#ProfileService"`
-}
-
-
-type pComCLIMakerFilter struct {
-	instance *v3filters0xa6552a.CLIMakerFilter
-	 markup0x23084a.Component `class:"wpm-intent-filter"`
-	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
-}
-
-
-type pComPreparePropertiesFilter struct {
-	instance *v3filters0xa6552a.PreparePropertiesFilter
-	 markup0x23084a.Component `class:"wpm-intent-filter"`
-}
-
-
-type pComExampleFilter struct {
-	instance *v3filters0xa6552a.ExampleFilter
-	 markup0x23084a.Component `class:"wpm-intent-filter"`
-}
-
-
-type pComHostFilter struct {
-	instance *filter0x8aa8f6.HostFilter
+type pComAboutController struct {
+	instance *controller0x9dc399.AboutController
 	 markup0x23084a.RestController `class:"rest-controller"`
-}
-
-
-type pComHTTP404Filter struct {
-	instance *filter0x8aa8f6.HTTP404Filter
-	 markup0x23084a.RestController `class:"rest-controller"`
-	Context application0x67f6c5.Context `inject:"context"`
-}
-
-
-type pComOnlineDocumentExampleController struct {
-	instance *controller0x9dc399.OnlineDocumentExampleController
-	 markup0x23084a.RestController `class:"rest-controller"`
+	AboutService service0x3e063d.AboutService `inject:"#AboutService"`
+	UpdateService service0x3e063d.CheckUpdateService `inject:"#CheckUpdateService"`
 	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
+	Profile string `inject:"${application.profiles.active}"`
 }
 
 
@@ -937,10 +942,9 @@ type pComExampleController struct {
 }
 
 
-type pComUploadController struct {
-	instance *controller0x9dc399.UploadController
+type pComOnlineDocumentExampleController struct {
+	instance *controller0x9dc399.OnlineDocumentExampleController
 	 markup0x23084a.RestController `class:"rest-controller"`
-	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
 	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
 }
 
@@ -954,19 +958,23 @@ type pComPlatformController struct {
 }
 
 
-type pComAboutController struct {
-	instance *controller0x9dc399.AboutController
+type pComUploadController struct {
+	instance *controller0x9dc399.UploadController
 	 markup0x23084a.RestController `class:"rest-controller"`
-	AboutService service0x3e063d.AboutService `inject:"#AboutService"`
-	UpdateService service0x3e063d.CheckUpdateService `inject:"#CheckUpdateService"`
+	FileSystemService service0x3e063d.FileSystemService `inject:"#FileSystemService"`
 	Responder glass0x47343f.MainResponder `inject:"#glass-main-responder"`
-	Profile string `inject:"${application.profiles.active}"`
 }
 
 
-type pComGormDBAgentImpl struct {
-	instance *dbagent0x9f90fb.GormDBAgentImpl
-	 markup0x23084a.Component `id:"GormDBAgent" class:"life"`
-	Sources datasource0x68a737.SourceManager `inject:"#starter-gorm-source-manager"`
+type pComHostFilter struct {
+	instance *filter0x8aa8f6.HostFilter
+	 markup0x23084a.RestController `class:"rest-controller"`
+}
+
+
+type pComHTTP404Filter struct {
+	instance *filter0x8aa8f6.HTTP404Filter
+	 markup0x23084a.RestController `class:"rest-controller"`
+	Context application0x67f6c5.Context `inject:"context"`
 }
 

@@ -9,6 +9,7 @@ type Location struct {
 
 	Path string `json:"path"` // the normalized full-path
 
+	Target dxo.URN           `json:"target"`
 	Class  dxo.LocationClass `json:"class"`
 	AsFile bool              `json:"as_file"` // 表示该路径可以是一个普通文件
 	AsDir  bool              `json:"as_dir"`  // 表示该路径可以是一个目录

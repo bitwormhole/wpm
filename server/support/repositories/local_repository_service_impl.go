@@ -36,24 +36,6 @@ func (inst *LocalRepositoryServiceImpl) _Impl() service.LocalRepositoryService {
 	return inst
 }
 
-func (inst *LocalRepositoryServiceImpl) prepareLocation(c context.Context, o1 *entity.LocalRepository) error {
-	path := o1.Path
-	location := &dto.Location{
-		Path:   path,
-		Class:  dxo.LocationGitRepository,
-		AsFile: true,
-		AsDir:  true,
-	}
-	location, err := inst.LocationService.InsertOrFetch(c, location, nil)
-	if err != nil {
-		return err
-	}
-	// o1.Path = location.Path
-	o1.Location = location.ID
-	o1.Class = location.Class
-	return nil
-}
-
 func (inst *LocalRepositoryServiceImpl) prepareBeforeWrite(ctx context.Context, o1 *entity.LocalRepository) error {
 
 	err := inst.prepareEntity(ctx, o1)
@@ -61,10 +43,7 @@ func (inst *LocalRepositoryServiceImpl) prepareBeforeWrite(ctx context.Context, 
 		return err
 	}
 
-	err = inst.prepareLocation(ctx, o1)
-	if err != nil {
-		return err
-	}
+	inst.LocationService.PutRepository(ctx, o1)
 
 	return nil
 }
@@ -82,8 +61,7 @@ func (inst *LocalRepositoryServiceImpl) dto2entity(c context.Context, o1 *dto.Lo
 	o2.Description = o1.Description
 
 	o2.Path = o1.Path
-	o2.Class = o1.Class
-	o2.Location = o1.Location
+	o2.RegularPath = o1.RegularPath
 
 	o2.ConfigFile = o1.ConfigFile
 	o2.DotGitPath = o1.DotGitPath
@@ -115,8 +93,7 @@ func (inst *LocalRepositoryServiceImpl) entity2dto(ctx context.Context, o1 *enti
 	o2.WorkingPath = o1.WorkingPath
 
 	o2.Path = o1.Path
-	o2.Class = o1.Class
-	o2.Location = o1.Location
+	o2.RegularPath = o1.RegularPath
 
 	o2.Bare = o1.Bare
 
@@ -189,6 +166,7 @@ func (inst *LocalRepositoryServiceImpl) prepareEntity(ctx context.Context, o1 *e
 	o1.ConfigFile = config.GetPath()
 	o1.RepositoryPath = repodir.GetPath()
 	o1.Path = repodir.GetPath()
+	o1.RegularPath = config.GetPath()
 	if !bare {
 		o1.DotGitPath = dotgit.GetPath()
 		o1.WorkingPath = dotgit.GetParent().GetPath()

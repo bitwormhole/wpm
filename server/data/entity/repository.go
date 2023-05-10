@@ -16,6 +16,7 @@ type RemoteRepository struct {
 type LocalRepository struct {
 	ID dxo.LocalRepositoryID `gorm:"primaryKey"`
 	Base
+	URN dxo.URN
 
 	// LocalRepositoryBase
 
@@ -28,13 +29,14 @@ type LocalRepository struct {
 	RepositoryPath string // the parent of ConfigFile
 	DotGitPath     string // can be empty
 	WorkingPath    string // can be empty
+	RegularPath    string `gorm:"index:,unique"` // = ConfigFile
+	Path           string // this.Path == DotGitPath.Path
 
-	Path     string         // this.Path == Location.Path == ConfigFile
-	Location dxo.LocationID `gorm:"index:,unique"`
-	Class    dxo.LocationClass
+	// Location dxo.LocationID
+	// Class    dxo.LocationClass
 }
 
 // ListPathFields ...
 func (LocalRepository) ListPathFields() []string {
-	return []string{"path", "config_file", "repository_path", "dot_git_path", "working_path"}
+	return []string{"path", "config_file", "repository_path", "dot_git_path", "working_path", "regular_path"}
 }
