@@ -1,9 +1,0 @@
-package dxo
-
-// UUID 以hex字符串的形式表示一个UUID
-type UUID string // util.Hex
-
-////////////////////////////////////////////////////////////////////////////////
-
-// DesktopSessionID ...
-type DesktopSessionID UUID

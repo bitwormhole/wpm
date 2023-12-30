@@ -1,0 +1,57 @@
+{
+    "configen": {
+        "version": "4",
+        "sources": [
+            {
+                "id": "main",
+                "path": "src/main/golang/code",
+                "r": true
+            },
+            {
+                "id": "agent",
+                "path": "agent",
+                "r": true
+            },
+            {
+                "id": "server",
+                "path": "server",
+                "r": true
+            },
+            {
+                "id": "test",
+                "path": "src/test/golang/code",
+                "r": true
+            }
+        ],
+        "destinations": [
+            {
+                "id": "main",
+                "path": "gen/main4wpm",
+                "sources": [
+                    "main"
+                ]
+            },
+            {
+                "id": "agent",
+                "path": "gen/agent4wpm",
+                "sources": [
+                    "agent"
+                ]
+            },
+            {
+                "id": "server",
+                "path": "gen/server4wpm",
+                "sources": [
+                    "server"
+                ]
+            },
+            {
+                "id": "test",
+                "path": "gen/test4wpm",
+                "sources": [
+                    "test"
+                ]
+            }
+        ]
+    }
+}

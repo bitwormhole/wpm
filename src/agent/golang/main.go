@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	m := wpm.Module()
+	m := wpm.AgentModule()
 	i := starter.Init(os.Args)
 	i.MainModule(m)
 	i.WithPanic(true).Run()
