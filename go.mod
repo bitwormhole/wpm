@@ -27,7 +27,7 @@ require (
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.8 // indirect
 	github.com/starter-go/afs v0.9.4 // indirect
-	github.com/starter-go/application v0.9.18 // indirect
+	github.com/starter-go/application v0.9.20 // indirect
 	github.com/starter-go/base v0.9.11 // indirect
 	github.com/starter-go/configen v0.9.5 // indirect
 	github.com/starter-go/libgin v1.0.11 // indirect
