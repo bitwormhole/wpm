@@ -24,3 +24,8 @@ type IntentTemplate struct {
 	Env       dxo.StringMap      // as map[string]string
 	WD        string
 }
+
+// TableName 。。。
+func (IntentTemplate) TableName() string {
+	return getTableName("intent_templates")
+}

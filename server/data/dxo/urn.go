@@ -17,6 +17,9 @@ type ContentTypeURN URN
 // SoftwarePackageURN like 'urn:package:{{name}}'
 type SoftwarePackageURN URN
 
+// SoftwareSetURN like 'urn:packageset:{{name}}'
+type SoftwareSetURN URN
+
 ////////////////////////////////////////////////////////////////////////////////
 
 func (name URN) String() string {

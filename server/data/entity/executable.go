@@ -32,3 +32,8 @@ type Executable struct {
 	// Location dxo.LocationID `gorm:"index:,unique"`
 	// Class    dxo.LocationClass
 }
+
+// TableName 。。。
+func (Executable) TableName() string {
+	return getTableName("executables")
+}

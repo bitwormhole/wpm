@@ -1,5 +1,7 @@
 package dxo
 
+import "strconv"
+
 // ExampleID ...
 type ExampleID int
 
@@ -22,6 +24,9 @@ type InstallationID int64
 
 // IntentID ...
 type IntentID int
+
+// IntentQueueID ...
+type IntentQueueID int64
 
 // IntentTemplateID ...
 type IntentTemplateID int
@@ -82,3 +87,10 @@ type UserID int
 
 // WorktreeID ...
 type WorktreeID int
+
+////////////////////////////////////////////////////////////////////////////////
+
+func (id IntentQueueID) String() string {
+	n := int64(id)
+	return strconv.FormatInt(n, 10)
+}

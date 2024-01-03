@@ -64,6 +64,15 @@ type IntentTemplate struct {
 	WD        string             `json:"wd"`
 }
 
+// IntentQueue 表示一个命令消息队列
+type IntentQueue struct {
+	ID dxo.IntentQueueID `json:"id"`
+	Base
+
+	UserHomeDir string    `json:"home"`
+	Intents     []*Intent `json:"intents"`
+}
+
 // WebRequest ...
 type WebRequest struct {
 	Method string `json:"method"`

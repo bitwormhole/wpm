@@ -12,3 +12,8 @@ type Setting struct {
 	Description string
 	Type        string
 }
+
+// TableName 。。。
+func (Setting) TableName() string {
+	return getTableName("settings")
+}

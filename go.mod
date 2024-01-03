@@ -3,6 +3,7 @@ module github.com/bitwormhole/wpm
 go 1.20
 
 require (
+	github.com/bitwormhole/gitlib v0.1.3 // indirect
 	github.com/bytedance/sonic v1.9.1 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20221115062448-fe3a3abad311 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.2 // indirect
@@ -30,12 +31,17 @@ require (
 	github.com/starter-go/application v0.9.20 // indirect
 	github.com/starter-go/base v0.9.11 // indirect
 	github.com/starter-go/configen v0.9.5 // indirect
+	github.com/starter-go/httpagent v0.0.4 // indirect
 	github.com/starter-go/libgin v1.0.11 // indirect
 	github.com/starter-go/libgorm v0.9.12 // indirect
+	github.com/starter-go/module-email v0.0.2 // indirect
 	github.com/starter-go/module-gorm-mysql v1.0.0 // indirect
 	github.com/starter-go/module-gorm-sqlserver v1.0.0 // indirect
 	github.com/starter-go/rbac v0.0.1 // indirect
-	github.com/starter-go/security v1.0.44 // indirect
+	github.com/starter-go/security v1.0.45 // indirect
+	github.com/starter-go/security-gin v1.0.45 // indirect
+	github.com/starter-go/security-gin-gorm v1.0.45 // indirect
+	github.com/starter-go/security-gorm v1.0.45 // indirect
 	github.com/starter-go/starter v1.0.7 // indirect
 	github.com/starter-go/units v0.0.3 // indirect
 	github.com/starter-go/vlog v0.9.7 // indirect

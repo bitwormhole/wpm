@@ -30,6 +30,7 @@ func (inst *autoRegistrar) register(factory comFactory) error {
 func (inst*autoRegistrar) addAll() error {
 
     
+    inst.register(&p70bc378ded_code_DebugAllDAOs{})
     inst.register(&p70bc378ded_code_DemoUnit{})
 
 

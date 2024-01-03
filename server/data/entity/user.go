@@ -12,3 +12,8 @@ type User struct {
 	Nickname string
 	Home     string // the home dir path
 }
+
+// TableName 。。。
+func (User) TableName() string {
+	return getTableName("users")
+}

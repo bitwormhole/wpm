@@ -16,3 +16,8 @@ type Namespace struct {
 	Arch string
 	OS   string
 }
+
+// TableName 。。。
+func (Namespace) TableName() string {
+	return getTableName("namespaces")
+}

@@ -40,3 +40,13 @@ type LocalRepository struct {
 func (LocalRepository) ListPathFields() []string {
 	return []string{"path", "config_file", "repository_path", "dot_git_path", "working_path", "regular_path"}
 }
+
+// TableName 。。。
+func (RemoteRepository) TableName() string {
+	return getTableName("remote_repositories")
+}
+
+// TableName 。。。
+func (LocalRepository) TableName() string {
+	return getTableName("local_repositories")
+}

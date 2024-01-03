@@ -21,3 +21,8 @@ type Media struct {
 
 	SHA256SUM lang.Hex
 }
+
+// TableName 。。。
+func (Media) TableName() string {
+	return getTableName("mediae")
+}

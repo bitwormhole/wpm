@@ -30,7 +30,7 @@ func (inst *autoRegistrar) register(factory comFactory) error {
 func (inst*autoRegistrar) addAll() error {
 
     
-    inst.register(&p7c0694d502_agent_Example{})
+    inst.register(&p7c0694d502_agent_WPMAgent{})
 
 
     return nil

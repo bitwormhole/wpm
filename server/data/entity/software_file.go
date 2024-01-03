@@ -19,3 +19,8 @@ type InstalledFile struct {
 	IsDir        bool
 	OwnerPackage dxo.SoftwarePackageURN
 }
+
+// TableName 。。。
+func (InstalledFile) TableName() string {
+	return getTableName("installed_files")
+}

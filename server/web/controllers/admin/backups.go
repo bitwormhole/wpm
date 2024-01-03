@@ -1,9 +1,9 @@
-package apiv1
+package admin
 
 import (
 	"strconv"
 
-	"github.com/bitwormhole/wpm/server/data/dao"
+	"github.com/bitwormhole/wpm/server/classes/backups"
 	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/web/dto"
 	"github.com/bitwormhole/wpm/server/web/vo"
@@ -11,28 +11,28 @@ import (
 	"github.com/starter-go/libgin"
 )
 
-// ExampleController ...
-type ExampleController struct {
+// BackupsController ...
+type BackupsController struct {
 
 	//starter:component
 	_as func(libgin.Controller) //starter:as(".")
 
-	Sender libgin.Responder //starter:inject("#")
-	Dao    dao.ExampleDAO   //starter:inject("#")
+	Sender  libgin.Responder //starter:inject("#")
+	Service backups.Service  //starter:inject("#")
 }
 
-func (inst *ExampleController) _impl() libgin.Controller {
+func (inst *BackupsController) _impl() libgin.Controller {
 	return inst
 }
 
 // Registration ...
-func (inst *ExampleController) Registration() *libgin.ControllerRegistration {
+func (inst *BackupsController) Registration() *libgin.ControllerRegistration {
 	return &libgin.ControllerRegistration{Route: inst.route}
 }
 
-func (inst *ExampleController) route(rp libgin.RouterProxy) error {
+func (inst *BackupsController) route(rp libgin.RouterProxy) error {
 
-	rp = rp.For("example")
+	rp = rp.For("backups")
 
 	rp.POST("", inst.handle)
 	rp.PUT(":id", inst.handle)
@@ -44,8 +44,8 @@ func (inst *ExampleController) route(rp libgin.RouterProxy) error {
 	return nil
 }
 
-func (inst *ExampleController) handle(c *gin.Context) {
-	req := &myExampleRequest{
+func (inst *BackupsController) handle(c *gin.Context) {
+	req := &myBackupsRequest{
 		context:       c,
 		controller:    inst,
 		wantRequestID: false,
@@ -53,8 +53,8 @@ func (inst *ExampleController) handle(c *gin.Context) {
 	req.execute(req.doNOP)
 }
 
-func (inst *ExampleController) handleGetOne(c *gin.Context) {
-	req := &myExampleRequest{
+func (inst *BackupsController) handleGetOne(c *gin.Context) {
+	req := &myBackupsRequest{
 		context:       c,
 		controller:    inst,
 		wantRequestID: true,
@@ -64,19 +64,19 @@ func (inst *ExampleController) handleGetOne(c *gin.Context) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-type myExampleRequest struct {
+type myBackupsRequest struct {
 	context    *gin.Context
-	controller *ExampleController
+	controller *BackupsController
 
 	wantRequestID   bool
 	wantRequestBody bool
 
-	id    dxo.ExampleID
-	body1 vo.Example
-	body2 vo.Example
+	id    dxo.BackupID
+	body1 vo.Backup
+	body2 vo.Backup
 }
 
-func (inst *myExampleRequest) open() error {
+func (inst *myBackupsRequest) open() error {
 
 	c := inst.context
 
@@ -86,7 +86,7 @@ func (inst *myExampleRequest) open() error {
 		if err != nil {
 			return err
 		}
-		inst.id = dxo.ExampleID(idnum)
+		inst.id = dxo.BackupID(idnum)
 	}
 
 	if inst.wantRequestBody {
@@ -99,7 +99,7 @@ func (inst *myExampleRequest) open() error {
 	return nil
 }
 
-func (inst *myExampleRequest) send(err error) {
+func (inst *myBackupsRequest) send(err error) {
 	data := &inst.body2
 	code := inst.body2.Status
 	resp := new(libgin.Response)
@@ -110,7 +110,7 @@ func (inst *myExampleRequest) send(err error) {
 	inst.controller.Sender.Send(resp)
 }
 
-func (inst *myExampleRequest) execute(fn func() error) {
+func (inst *myBackupsRequest) execute(fn func() error) {
 	err := inst.open()
 	if err == nil {
 		err = fn()
@@ -118,21 +118,21 @@ func (inst *myExampleRequest) execute(fn func() error) {
 	inst.send(err)
 }
 
-func (inst *myExampleRequest) doNOP() error {
+func (inst *myBackupsRequest) doNOP() error {
 	return nil
 }
 
-func (inst *myExampleRequest) doGetOne() error {
+func (inst *myBackupsRequest) doGetOne() error {
 	id := inst.id
-	o1, err := inst.controller.Dao.Find(nil, id)
+	o1, err := inst.controller.Service.Find(nil, id)
 	if err != nil {
 		return err
 	}
-	o2 := &dto.Example{
-		ID:  o1.ID,
-		Foo: o1.Foo,
-		Bar: o1.Bar,
+	o2 := &dto.Backup{
+		ID: o1.ID,
+		// Foo: o1.Foo,
+		// Bar: o1.Bar,
 	}
-	inst.body2.Items = []*dto.Example{o2}
+	inst.body2.Backups = []*dto.Backup{o2}
 	return nil
 }

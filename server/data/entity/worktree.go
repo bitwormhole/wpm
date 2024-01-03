@@ -25,3 +25,8 @@ type Worktree struct {
 func (Worktree) ListPathFields() []string {
 	return []string{"path", "dot_git_path", "working_directory", "regular_path"}
 }
+
+// TableName 。。。
+func (Worktree) TableName() string {
+	return getTableName("worktrees")
+}

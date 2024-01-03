@@ -23,7 +23,7 @@ type ThisGroup struct {
 
 	plist []any // the prototypes list
 	inner libgorm.DataSourceAgent
-	info  dxo.DataGroupInfo
+	// info  dxo.DataGroupInfo
 }
 
 func (inst *ThisGroup) _impl() (libgorm.GroupRegistry, libgorm.Group, dxo.DatabaseAgent) {
@@ -33,11 +33,7 @@ func (inst *ThisGroup) _impl() (libgorm.GroupRegistry, libgorm.Group, dxo.Databa
 // Groups ...
 func (inst *ThisGroup) Groups() []*libgorm.GroupRegistration {
 
-	info := entity.GetDataGroupInfo()
-	info.SetTableNamePrefix(inst.Prefix)
-
-	inst.info = info
-	inst.plist = info.Prototypes()
+	inst.plist = entity.ListAllTypes()
 
 	r1 := &libgorm.GroupRegistration{
 		Enabled: true,

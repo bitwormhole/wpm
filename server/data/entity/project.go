@@ -34,3 +34,8 @@ type Project struct {
 func (Project) ListPathFields() []string {
 	return []string{"path", "project_dir"}
 }
+
+// TableName 。。。
+func (Project) TableName() string {
+	return getTableName("projects")
+}

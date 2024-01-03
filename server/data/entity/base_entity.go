@@ -1,24 +1,25 @@
 package entity
 
 import (
-	"time"
-
 	"github.com/bitwormhole/wpm/server/data/dxo"
+	"github.com/starter-go/security-gorm/rbacdb"
 	"gorm.io/gorm"
 )
 
 // Base ...
 type Base struct {
-	UUID dxo.UUID `gorm:"index:,unique"`
+	// UUID dxo.UUID `gorm:"index:,unique"`
 
 	// ID        uint           `gorm:"primaryKey"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt gorm.DeletedAt `gorm:"index"`
+	// CreatedAt time.Time
+	// UpdatedAt time.Time
+	// DeletedAt gorm.DeletedAt `gorm:"index"`
 
-	Committer dxo.UserID
-	Creator   dxo.UserID
-	Owner     dxo.UserID
+	// Committer dxo.UserID
+	// Creator   dxo.UserID
+	// Owner     dxo.UserID
+
+	rbacdb.BaseEntity
 
 	Referer string // a URL, refer to owner document of this entity
 

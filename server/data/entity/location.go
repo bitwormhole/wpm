@@ -24,3 +24,8 @@ type Location struct {
 func (Location) ListPathFields() []string {
 	return []string{"path"}
 }
+
+// TableName 。。。
+func (Location) TableName() string {
+	return getTableName("locations")
+}

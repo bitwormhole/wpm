@@ -16,3 +16,10 @@ type Intent struct {
 
 	Intents []*dto.Intent `json:"intents"`
 }
+
+// IntentQueue ...
+type IntentQueue struct {
+	Base
+
+	Queue dto.IntentQueue `json:"queue"`
+}

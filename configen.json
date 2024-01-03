@@ -18,6 +18,16 @@
                 "r": true
             },
             {
+                "id": "cli",
+                "path": "src/cli/golang/",
+                "r": true
+            },
+            {
+                "id": "gui",
+                "path": "src/gui/golang/",
+                "r": true
+            },
+            {
                 "id": "test",
                 "path": "src/test/golang/code",
                 "r": true
@@ -43,6 +53,20 @@
                 "path": "gen/server4wpm",
                 "sources": [
                     "server"
+                ]
+            },
+            {
+                "id": "cli",
+                "path": "gen/cli4wpm",
+                "sources": [
+                    "cli"
+                ]
+            },
+            {
+                "id": "gui",
+                "path": "gen/gui4wpm",
+                "sources": [
+                    "gui"
                 ]
             },
             {

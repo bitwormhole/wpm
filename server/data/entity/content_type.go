@@ -69,3 +69,8 @@ func SortContentTypeArray(list []*ContentType, fn ContentTypeLessFn) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+
+// TableName 。。。
+func (ContentType) TableName() string {
+	return getTableName("content_types")
+}
