@@ -44,5 +44,10 @@ func (inst *ServiceImpl) Find(ctx context.Context, id dxo.ProjectID) (*dto.Proje
 
 // List ...
 func (inst *ServiceImpl) List(ctx context.Context, q *projects.Query) ([]*dto.Project, error) {
-	return nil, fmt.Errorf("no impl")
+	list1, err := inst.Dao.List(nil, q)
+	if err != nil {
+		return nil, err
+	}
+	list2 := projects.NewConvertor().ConvertListE2D(list1)
+	return list2, nil
 }

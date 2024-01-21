@@ -1,20 +1,23 @@
 package server4wpm
 import (
     paeb460c7d "github.com/bitwormhole/gitlib"
-    p2b3a11a1c "github.com/bitwormhole/wpm/server/classes/about"
+    p663158af9 "github.com/bitwormhole/wpm/common/classes/about"
     pce44af903 "github.com/bitwormhole/wpm/server/classes/auths"
     p7b01405af "github.com/bitwormhole/wpm/server/classes/backups"
     p6021e9d7f "github.com/bitwormhole/wpm/server/classes/contenttypes"
     pcc7a88d45 "github.com/bitwormhole/wpm/server/classes/examples"
     p97b2b30ad "github.com/bitwormhole/wpm/server/classes/executables"
     p709b0834a "github.com/bitwormhole/wpm/server/classes/intents"
+    p6db2388a6 "github.com/bitwormhole/wpm/server/classes/intenttemplates"
     p3c68bd3f6 "github.com/bitwormhole/wpm/server/classes/locations"
+    p677240472 "github.com/bitwormhole/wpm/server/classes/media"
+    pdb29a3bec "github.com/bitwormhole/wpm/server/classes/packages"
     paa275b61f "github.com/bitwormhole/wpm/server/classes/projects"
     p4a2c02e71 "github.com/bitwormhole/wpm/server/classes/repositories"
+    p353d73ec3 "github.com/bitwormhole/wpm/server/classes/softwaresets"
     p3ededc14a "github.com/bitwormhole/wpm/server/data/database"
     p410b3e070 "github.com/bitwormhole/wpm/server/data/dxo"
     pfba77a8fb "github.com/bitwormhole/wpm/server/implements/example"
-    p308315ca5 "github.com/bitwormhole/wpm/server/implements/impabout"
     pd11deb9a0 "github.com/bitwormhole/wpm/server/implements/impauths"
     pc347f939e "github.com/bitwormhole/wpm/server/implements/impbackups"
     pd5537a67b "github.com/bitwormhole/wpm/server/implements/impcontenttypes"
@@ -197,100 +200,6 @@ func (inst* pfba77a8fb5_example_ServiceImpl) inject(injext application.Injection
 
 
 func (inst*pfba77a8fb5_example_ServiceImpl) getDao(ie application.InjectionExt)pcc7a88d45.DAO{
-    return ie.GetComponent("#alias-cc7a88d4518f4d0c9704940596344e7e-DAO").(pcc7a88d45.DAO)
-}
-
-
-
-// type p308315ca5.DaoImpl in package:github.com/bitwormhole/wpm/server/implements/impabout
-//
-// id:com-308315ca5da6e45c-impabout-DaoImpl
-// class:
-// alias:alias-2b3a11a1cf97aae61bef7e8ae48de5b2-DAO
-// scope:singleton
-//
-type p308315ca5d_impabout_DaoImpl struct {
-}
-
-func (inst* p308315ca5d_impabout_DaoImpl) register(cr application.ComponentRegistry) error {
-	r := cr.NewRegistration()
-	r.ID = "com-308315ca5da6e45c-impabout-DaoImpl"
-	r.Classes = ""
-	r.Aliases = "alias-2b3a11a1cf97aae61bef7e8ae48de5b2-DAO"
-	r.Scope = "singleton"
-	r.NewFunc = inst.new
-	r.InjectFunc = inst.inject
-	return r.Commit()
-}
-
-func (inst* p308315ca5d_impabout_DaoImpl) new() any {
-    return &p308315ca5.DaoImpl{}
-}
-
-func (inst* p308315ca5d_impabout_DaoImpl) inject(injext application.InjectionExt, instance any) error {
-	ie := injext
-	com := instance.(*p308315ca5.DaoImpl)
-	nop(ie, com)
-
-	
-    com.Agent = inst.getAgent(ie)
-    com.UUIDService = inst.getUUIDService(ie)
-
-
-    return nil
-}
-
-
-func (inst*p308315ca5d_impabout_DaoImpl) getAgent(ie application.InjectionExt)p410b3e070.DatabaseAgent{
-    return ie.GetComponent("#alias-410b3e0705d26ea4e345ca7cbbc8388f-DatabaseAgent").(p410b3e070.DatabaseAgent)
-}
-
-
-func (inst*p308315ca5d_impabout_DaoImpl) getUUIDService(ie application.InjectionExt)p9621e8b71.UUIDService{
-    return ie.GetComponent("#alias-9621e8b71013b0fc25942a1749ed3652-UUIDService").(p9621e8b71.UUIDService)
-}
-
-
-
-// type p308315ca5.ServiceImpl in package:github.com/bitwormhole/wpm/server/implements/impabout
-//
-// id:com-308315ca5da6e45c-impabout-ServiceImpl
-// class:
-// alias:alias-2b3a11a1cf97aae61bef7e8ae48de5b2-Service
-// scope:singleton
-//
-type p308315ca5d_impabout_ServiceImpl struct {
-}
-
-func (inst* p308315ca5d_impabout_ServiceImpl) register(cr application.ComponentRegistry) error {
-	r := cr.NewRegistration()
-	r.ID = "com-308315ca5da6e45c-impabout-ServiceImpl"
-	r.Classes = ""
-	r.Aliases = "alias-2b3a11a1cf97aae61bef7e8ae48de5b2-Service"
-	r.Scope = "singleton"
-	r.NewFunc = inst.new
-	r.InjectFunc = inst.inject
-	return r.Commit()
-}
-
-func (inst* p308315ca5d_impabout_ServiceImpl) new() any {
-    return &p308315ca5.ServiceImpl{}
-}
-
-func (inst* p308315ca5d_impabout_ServiceImpl) inject(injext application.InjectionExt, instance any) error {
-	ie := injext
-	com := instance.(*p308315ca5.ServiceImpl)
-	nop(ie, com)
-
-	
-    com.Dao = inst.getDao(ie)
-
-
-    return nil
-}
-
-
-func (inst*p308315ca5d_impabout_ServiceImpl) getDao(ie application.InjectionExt)pcc7a88d45.DAO{
     return ie.GetComponent("#alias-cc7a88d4518f4d0c9704940596344e7e-DAO").(pcc7a88d45.DAO)
 }
 
@@ -764,7 +673,7 @@ func (inst*p1eb0a0660b_impintenttemplates_DaoImpl) getUUIDService(ie application
 //
 // id:com-1eb0a0660bb35862-impintenttemplates-ServiceImpl
 // class:
-// alias:alias-cc7a88d4518f4d0c9704940596344e7e-Service
+// alias:alias-6db2388a63f83ff930eeb1226ef48eb6-Service
 // scope:singleton
 //
 type p1eb0a0660b_impintenttemplates_ServiceImpl struct {
@@ -774,7 +683,7 @@ func (inst* p1eb0a0660b_impintenttemplates_ServiceImpl) register(cr application.
 	r := cr.NewRegistration()
 	r.ID = "com-1eb0a0660bb35862-impintenttemplates-ServiceImpl"
 	r.Classes = ""
-	r.Aliases = "alias-cc7a88d4518f4d0c9704940596344e7e-Service"
+	r.Aliases = "alias-6db2388a63f83ff930eeb1226ef48eb6-Service"
 	r.Scope = "singleton"
 	r.NewFunc = inst.new
 	r.InjectFunc = inst.inject
@@ -798,8 +707,8 @@ func (inst* p1eb0a0660b_impintenttemplates_ServiceImpl) inject(injext applicatio
 }
 
 
-func (inst*p1eb0a0660b_impintenttemplates_ServiceImpl) getDao(ie application.InjectionExt)pcc7a88d45.DAO{
-    return ie.GetComponent("#alias-cc7a88d4518f4d0c9704940596344e7e-DAO").(pcc7a88d45.DAO)
+func (inst*p1eb0a0660b_impintenttemplates_ServiceImpl) getDao(ie application.InjectionExt)p6db2388a6.DAO{
+    return ie.GetComponent("#alias-6db2388a63f83ff930eeb1226ef48eb6-DAO").(p6db2388a6.DAO)
 }
 
 
@@ -952,7 +861,7 @@ func (inst*p8cd6426648_impmedia_DaoImpl) getUUIDService(ie application.Injection
 //
 // id:com-8cd64266481c28e5-impmedia-ServiceImpl
 // class:
-// alias:alias-cc7a88d4518f4d0c9704940596344e7e-Service
+// alias:alias-67724047202291d9335f729c0f271c46-Service
 // scope:singleton
 //
 type p8cd6426648_impmedia_ServiceImpl struct {
@@ -962,7 +871,7 @@ func (inst* p8cd6426648_impmedia_ServiceImpl) register(cr application.ComponentR
 	r := cr.NewRegistration()
 	r.ID = "com-8cd64266481c28e5-impmedia-ServiceImpl"
 	r.Classes = ""
-	r.Aliases = "alias-cc7a88d4518f4d0c9704940596344e7e-Service"
+	r.Aliases = "alias-67724047202291d9335f729c0f271c46-Service"
 	r.Scope = "singleton"
 	r.NewFunc = inst.new
 	r.InjectFunc = inst.inject
@@ -986,8 +895,8 @@ func (inst* p8cd6426648_impmedia_ServiceImpl) inject(injext application.Injectio
 }
 
 
-func (inst*p8cd6426648_impmedia_ServiceImpl) getDao(ie application.InjectionExt)pcc7a88d45.DAO{
-    return ie.GetComponent("#alias-cc7a88d4518f4d0c9704940596344e7e-DAO").(pcc7a88d45.DAO)
+func (inst*p8cd6426648_impmedia_ServiceImpl) getDao(ie application.InjectionExt)p677240472.DAO{
+    return ie.GetComponent("#alias-67724047202291d9335f729c0f271c46-DAO").(p677240472.DAO)
 }
 
 
@@ -1424,50 +1333,6 @@ func (inst*p337e784ada_impsettings_ServiceImpl) getDao(ie application.InjectionE
 
 
 
-// type p8f4406e5f.ServiceImpl in package:github.com/bitwormhole/wpm/server/implements/impsoftware
-//
-// id:com-8f4406e5f78c176d-impsoftware-ServiceImpl
-// class:
-// alias:alias-cc7a88d4518f4d0c9704940596344e7e-Service
-// scope:singleton
-//
-type p8f4406e5f7_impsoftware_ServiceImpl struct {
-}
-
-func (inst* p8f4406e5f7_impsoftware_ServiceImpl) register(cr application.ComponentRegistry) error {
-	r := cr.NewRegistration()
-	r.ID = "com-8f4406e5f78c176d-impsoftware-ServiceImpl"
-	r.Classes = ""
-	r.Aliases = "alias-cc7a88d4518f4d0c9704940596344e7e-Service"
-	r.Scope = "singleton"
-	r.NewFunc = inst.new
-	r.InjectFunc = inst.inject
-	return r.Commit()
-}
-
-func (inst* p8f4406e5f7_impsoftware_ServiceImpl) new() any {
-    return &p8f4406e5f.ServiceImpl{}
-}
-
-func (inst* p8f4406e5f7_impsoftware_ServiceImpl) inject(injext application.InjectionExt, instance any) error {
-	ie := injext
-	com := instance.(*p8f4406e5f.ServiceImpl)
-	nop(ie, com)
-
-	
-    com.Dao = inst.getDao(ie)
-
-
-    return nil
-}
-
-
-func (inst*p8f4406e5f7_impsoftware_ServiceImpl) getDao(ie application.InjectionExt)pcc7a88d45.DAO{
-    return ie.GetComponent("#alias-cc7a88d4518f4d0c9704940596344e7e-DAO").(pcc7a88d45.DAO)
-}
-
-
-
 // type p8f4406e5f.SoftwarePackageDaoImpl in package:github.com/bitwormhole/wpm/server/implements/impsoftware
 //
 // id:com-8f4406e5f78c176d-impsoftware-SoftwarePackageDaoImpl
@@ -1518,52 +1383,90 @@ func (inst*p8f4406e5f7_impsoftware_SoftwarePackageDaoImpl) getUUIDService(ie app
 
 
 
-// type p8f4406e5f.SoftwareSetDaoImpl in package:github.com/bitwormhole/wpm/server/implements/impsoftware
+// type p8f4406e5f.SoftwarePackageService in package:github.com/bitwormhole/wpm/server/implements/impsoftware
 //
-// id:com-8f4406e5f78c176d-impsoftware-SoftwareSetDaoImpl
+// id:com-8f4406e5f78c176d-impsoftware-SoftwarePackageService
 // class:
-// alias:alias-353d73ec3edc2e74f8181282d9e87a31-DAO
+// alias:alias-db29a3bec1e3d63283b5b71ee9ef4989-Service
 // scope:singleton
 //
-type p8f4406e5f7_impsoftware_SoftwareSetDaoImpl struct {
+type p8f4406e5f7_impsoftware_SoftwarePackageService struct {
 }
 
-func (inst* p8f4406e5f7_impsoftware_SoftwareSetDaoImpl) register(cr application.ComponentRegistry) error {
+func (inst* p8f4406e5f7_impsoftware_SoftwarePackageService) register(cr application.ComponentRegistry) error {
 	r := cr.NewRegistration()
-	r.ID = "com-8f4406e5f78c176d-impsoftware-SoftwareSetDaoImpl"
+	r.ID = "com-8f4406e5f78c176d-impsoftware-SoftwarePackageService"
 	r.Classes = ""
-	r.Aliases = "alias-353d73ec3edc2e74f8181282d9e87a31-DAO"
+	r.Aliases = "alias-db29a3bec1e3d63283b5b71ee9ef4989-Service"
 	r.Scope = "singleton"
 	r.NewFunc = inst.new
 	r.InjectFunc = inst.inject
 	return r.Commit()
 }
 
-func (inst* p8f4406e5f7_impsoftware_SoftwareSetDaoImpl) new() any {
-    return &p8f4406e5f.SoftwareSetDaoImpl{}
+func (inst* p8f4406e5f7_impsoftware_SoftwarePackageService) new() any {
+    return &p8f4406e5f.SoftwarePackageService{}
 }
 
-func (inst* p8f4406e5f7_impsoftware_SoftwareSetDaoImpl) inject(injext application.InjectionExt, instance any) error {
+func (inst* p8f4406e5f7_impsoftware_SoftwarePackageService) inject(injext application.InjectionExt, instance any) error {
 	ie := injext
-	com := instance.(*p8f4406e5f.SoftwareSetDaoImpl)
+	com := instance.(*p8f4406e5f.SoftwarePackageService)
 	nop(ie, com)
 
 	
-    com.Agent = inst.getAgent(ie)
-    com.UUIDService = inst.getUUIDService(ie)
+    com.Dao = inst.getDao(ie)
 
 
     return nil
 }
 
 
-func (inst*p8f4406e5f7_impsoftware_SoftwareSetDaoImpl) getAgent(ie application.InjectionExt)p410b3e070.DatabaseAgent{
-    return ie.GetComponent("#alias-410b3e0705d26ea4e345ca7cbbc8388f-DatabaseAgent").(p410b3e070.DatabaseAgent)
+func (inst*p8f4406e5f7_impsoftware_SoftwarePackageService) getDao(ie application.InjectionExt)pdb29a3bec.DAO{
+    return ie.GetComponent("#alias-db29a3bec1e3d63283b5b71ee9ef4989-DAO").(pdb29a3bec.DAO)
 }
 
 
-func (inst*p8f4406e5f7_impsoftware_SoftwareSetDaoImpl) getUUIDService(ie application.InjectionExt)p9621e8b71.UUIDService{
-    return ie.GetComponent("#alias-9621e8b71013b0fc25942a1749ed3652-UUIDService").(p9621e8b71.UUIDService)
+
+// type p8f4406e5f.SoftwareSetService in package:github.com/bitwormhole/wpm/server/implements/impsoftware
+//
+// id:com-8f4406e5f78c176d-impsoftware-SoftwareSetService
+// class:
+// alias:alias-353d73ec3edc2e74f8181282d9e87a31-Service
+// scope:singleton
+//
+type p8f4406e5f7_impsoftware_SoftwareSetService struct {
+}
+
+func (inst* p8f4406e5f7_impsoftware_SoftwareSetService) register(cr application.ComponentRegistry) error {
+	r := cr.NewRegistration()
+	r.ID = "com-8f4406e5f78c176d-impsoftware-SoftwareSetService"
+	r.Classes = ""
+	r.Aliases = "alias-353d73ec3edc2e74f8181282d9e87a31-Service"
+	r.Scope = "singleton"
+	r.NewFunc = inst.new
+	r.InjectFunc = inst.inject
+	return r.Commit()
+}
+
+func (inst* p8f4406e5f7_impsoftware_SoftwareSetService) new() any {
+    return &p8f4406e5f.SoftwareSetService{}
+}
+
+func (inst* p8f4406e5f7_impsoftware_SoftwareSetService) inject(injext application.InjectionExt, instance any) error {
+	ie := injext
+	com := instance.(*p8f4406e5f.SoftwareSetService)
+	nop(ie, com)
+
+	
+    com.PackageService = inst.getPackageService(ie)
+
+
+    return nil
+}
+
+
+func (inst*p8f4406e5f7_impsoftware_SoftwareSetService) getPackageService(ie application.InjectionExt)pdb29a3bec.Service{
+    return ie.GetComponent("#alias-db29a3bec1e3d63283b5b71ee9ef4989-Service").(pdb29a3bec.Service)
 }
 
 
@@ -1600,7 +1503,7 @@ func (inst* p415d59ee4c_admin_AboutController) inject(injext application.Injecti
 
 	
     com.Sender = inst.getSender(ie)
-    com.Dao = inst.getDao(ie)
+    com.Service = inst.getService(ie)
 
 
     return nil
@@ -1612,8 +1515,8 @@ func (inst*p415d59ee4c_admin_AboutController) getSender(ie application.Injection
 }
 
 
-func (inst*p415d59ee4c_admin_AboutController) getDao(ie application.InjectionExt)p2b3a11a1c.Service{
-    return ie.GetComponent("#alias-2b3a11a1cf97aae61bef7e8ae48de5b2-Service").(p2b3a11a1c.Service)
+func (inst*p415d59ee4c_admin_AboutController) getService(ie application.InjectionExt)p663158af9.Service{
+    return ie.GetComponent("#alias-663158af9b1a72a79c266e906db07157-Service").(p663158af9.Service)
 }
 
 
@@ -1968,6 +1871,56 @@ func (inst*p415d59ee4c_admin_IntentQueueController) getQueues(ie application.Inj
 
 
 
+// type p415d59ee4.IntentTemplateController in package:github.com/bitwormhole/wpm/server/web/controllers/admin
+//
+// id:com-415d59ee4c0dd6da-admin-IntentTemplateController
+// class:class-d1a916a203352fd5d33eabc36896b42e-Controller
+// alias:
+// scope:singleton
+//
+type p415d59ee4c_admin_IntentTemplateController struct {
+}
+
+func (inst* p415d59ee4c_admin_IntentTemplateController) register(cr application.ComponentRegistry) error {
+	r := cr.NewRegistration()
+	r.ID = "com-415d59ee4c0dd6da-admin-IntentTemplateController"
+	r.Classes = "class-d1a916a203352fd5d33eabc36896b42e-Controller"
+	r.Aliases = ""
+	r.Scope = "singleton"
+	r.NewFunc = inst.new
+	r.InjectFunc = inst.inject
+	return r.Commit()
+}
+
+func (inst* p415d59ee4c_admin_IntentTemplateController) new() any {
+    return &p415d59ee4.IntentTemplateController{}
+}
+
+func (inst* p415d59ee4c_admin_IntentTemplateController) inject(injext application.InjectionExt, instance any) error {
+	ie := injext
+	com := instance.(*p415d59ee4.IntentTemplateController)
+	nop(ie, com)
+
+	
+    com.Sender = inst.getSender(ie)
+    com.Service = inst.getService(ie)
+
+
+    return nil
+}
+
+
+func (inst*p415d59ee4c_admin_IntentTemplateController) getSender(ie application.InjectionExt)pd1a916a20.Responder{
+    return ie.GetComponent("#alias-d1a916a203352fd5d33eabc36896b42e-Responder").(pd1a916a20.Responder)
+}
+
+
+func (inst*p415d59ee4c_admin_IntentTemplateController) getService(ie application.InjectionExt)p6db2388a6.Service{
+    return ie.GetComponent("#alias-6db2388a63f83ff930eeb1226ef48eb6-Service").(p6db2388a6.Service)
+}
+
+
+
 // type p415d59ee4.LocalRepositoryController in package:github.com/bitwormhole/wpm/server/web/controllers/admin
 //
 // id:com-415d59ee4c0dd6da-admin-LocalRepositoryController
@@ -2014,6 +1967,56 @@ func (inst*p415d59ee4c_admin_LocalRepositoryController) getSender(ie application
 
 func (inst*p415d59ee4c_admin_LocalRepositoryController) getService(ie application.InjectionExt)p4a2c02e71.LocalRepositoryService{
     return ie.GetComponent("#alias-4a2c02e71bff15e74f38c4d3caa746b4-LocalRepositoryService").(p4a2c02e71.LocalRepositoryService)
+}
+
+
+
+// type p415d59ee4.MediaController in package:github.com/bitwormhole/wpm/server/web/controllers/admin
+//
+// id:com-415d59ee4c0dd6da-admin-MediaController
+// class:class-d1a916a203352fd5d33eabc36896b42e-Controller
+// alias:
+// scope:singleton
+//
+type p415d59ee4c_admin_MediaController struct {
+}
+
+func (inst* p415d59ee4c_admin_MediaController) register(cr application.ComponentRegistry) error {
+	r := cr.NewRegistration()
+	r.ID = "com-415d59ee4c0dd6da-admin-MediaController"
+	r.Classes = "class-d1a916a203352fd5d33eabc36896b42e-Controller"
+	r.Aliases = ""
+	r.Scope = "singleton"
+	r.NewFunc = inst.new
+	r.InjectFunc = inst.inject
+	return r.Commit()
+}
+
+func (inst* p415d59ee4c_admin_MediaController) new() any {
+    return &p415d59ee4.MediaController{}
+}
+
+func (inst* p415d59ee4c_admin_MediaController) inject(injext application.InjectionExt, instance any) error {
+	ie := injext
+	com := instance.(*p415d59ee4.MediaController)
+	nop(ie, com)
+
+	
+    com.Sender = inst.getSender(ie)
+    com.Service = inst.getService(ie)
+
+
+    return nil
+}
+
+
+func (inst*p415d59ee4c_admin_MediaController) getSender(ie application.InjectionExt)pd1a916a20.Responder{
+    return ie.GetComponent("#alias-d1a916a203352fd5d33eabc36896b42e-Responder").(pd1a916a20.Responder)
+}
+
+
+func (inst*p415d59ee4c_admin_MediaController) getService(ie application.InjectionExt)p677240472.Service{
+    return ie.GetComponent("#alias-67724047202291d9335f729c0f271c46-Service").(p677240472.Service)
 }
 
 
@@ -2114,6 +2117,150 @@ func (inst*p415d59ee4c_admin_RemoteRepositoryController) getSender(ie applicatio
 
 func (inst*p415d59ee4c_admin_RemoteRepositoryController) getService(ie application.InjectionExt)p4a2c02e71.RemoteRepositoryService{
     return ie.GetComponent("#alias-4a2c02e71bff15e74f38c4d3caa746b4-RemoteRepositoryService").(p4a2c02e71.RemoteRepositoryService)
+}
+
+
+
+// type p415d59ee4.SoftwarePackageController in package:github.com/bitwormhole/wpm/server/web/controllers/admin
+//
+// id:com-415d59ee4c0dd6da-admin-SoftwarePackageController
+// class:class-d1a916a203352fd5d33eabc36896b42e-Controller
+// alias:
+// scope:singleton
+//
+type p415d59ee4c_admin_SoftwarePackageController struct {
+}
+
+func (inst* p415d59ee4c_admin_SoftwarePackageController) register(cr application.ComponentRegistry) error {
+	r := cr.NewRegistration()
+	r.ID = "com-415d59ee4c0dd6da-admin-SoftwarePackageController"
+	r.Classes = "class-d1a916a203352fd5d33eabc36896b42e-Controller"
+	r.Aliases = ""
+	r.Scope = "singleton"
+	r.NewFunc = inst.new
+	r.InjectFunc = inst.inject
+	return r.Commit()
+}
+
+func (inst* p415d59ee4c_admin_SoftwarePackageController) new() any {
+    return &p415d59ee4.SoftwarePackageController{}
+}
+
+func (inst* p415d59ee4c_admin_SoftwarePackageController) inject(injext application.InjectionExt, instance any) error {
+	ie := injext
+	com := instance.(*p415d59ee4.SoftwarePackageController)
+	nop(ie, com)
+
+	
+    com.Sender = inst.getSender(ie)
+    com.Service = inst.getService(ie)
+
+
+    return nil
+}
+
+
+func (inst*p415d59ee4c_admin_SoftwarePackageController) getSender(ie application.InjectionExt)pd1a916a20.Responder{
+    return ie.GetComponent("#alias-d1a916a203352fd5d33eabc36896b42e-Responder").(pd1a916a20.Responder)
+}
+
+
+func (inst*p415d59ee4c_admin_SoftwarePackageController) getService(ie application.InjectionExt)pdb29a3bec.Service{
+    return ie.GetComponent("#alias-db29a3bec1e3d63283b5b71ee9ef4989-Service").(pdb29a3bec.Service)
+}
+
+
+
+// type p415d59ee4.SoftwareSetController in package:github.com/bitwormhole/wpm/server/web/controllers/admin
+//
+// id:com-415d59ee4c0dd6da-admin-SoftwareSetController
+// class:class-d1a916a203352fd5d33eabc36896b42e-Controller
+// alias:
+// scope:singleton
+//
+type p415d59ee4c_admin_SoftwareSetController struct {
+}
+
+func (inst* p415d59ee4c_admin_SoftwareSetController) register(cr application.ComponentRegistry) error {
+	r := cr.NewRegistration()
+	r.ID = "com-415d59ee4c0dd6da-admin-SoftwareSetController"
+	r.Classes = "class-d1a916a203352fd5d33eabc36896b42e-Controller"
+	r.Aliases = ""
+	r.Scope = "singleton"
+	r.NewFunc = inst.new
+	r.InjectFunc = inst.inject
+	return r.Commit()
+}
+
+func (inst* p415d59ee4c_admin_SoftwareSetController) new() any {
+    return &p415d59ee4.SoftwareSetController{}
+}
+
+func (inst* p415d59ee4c_admin_SoftwareSetController) inject(injext application.InjectionExt, instance any) error {
+	ie := injext
+	com := instance.(*p415d59ee4.SoftwareSetController)
+	nop(ie, com)
+
+	
+    com.Sender = inst.getSender(ie)
+    com.Service = inst.getService(ie)
+
+
+    return nil
+}
+
+
+func (inst*p415d59ee4c_admin_SoftwareSetController) getSender(ie application.InjectionExt)pd1a916a20.Responder{
+    return ie.GetComponent("#alias-d1a916a203352fd5d33eabc36896b42e-Responder").(pd1a916a20.Responder)
+}
+
+
+func (inst*p415d59ee4c_admin_SoftwareSetController) getService(ie application.InjectionExt)p353d73ec3.Service{
+    return ie.GetComponent("#alias-353d73ec3edc2e74f8181282d9e87a31-Service").(p353d73ec3.Service)
+}
+
+
+
+// type p415d59ee4.UploadController in package:github.com/bitwormhole/wpm/server/web/controllers/admin
+//
+// id:com-415d59ee4c0dd6da-admin-UploadController
+// class:class-d1a916a203352fd5d33eabc36896b42e-Controller
+// alias:
+// scope:singleton
+//
+type p415d59ee4c_admin_UploadController struct {
+}
+
+func (inst* p415d59ee4c_admin_UploadController) register(cr application.ComponentRegistry) error {
+	r := cr.NewRegistration()
+	r.ID = "com-415d59ee4c0dd6da-admin-UploadController"
+	r.Classes = "class-d1a916a203352fd5d33eabc36896b42e-Controller"
+	r.Aliases = ""
+	r.Scope = "singleton"
+	r.NewFunc = inst.new
+	r.InjectFunc = inst.inject
+	return r.Commit()
+}
+
+func (inst* p415d59ee4c_admin_UploadController) new() any {
+    return &p415d59ee4.UploadController{}
+}
+
+func (inst* p415d59ee4c_admin_UploadController) inject(injext application.InjectionExt, instance any) error {
+	ie := injext
+	com := instance.(*p415d59ee4.UploadController)
+	nop(ie, com)
+
+	
+    com.Sender = inst.getSender(ie)
+
+
+    return nil
+}
+
+
+func (inst*p415d59ee4c_admin_UploadController) getSender(ie application.InjectionExt)pd1a916a20.Responder{
+    return ie.GetComponent("#alias-d1a916a203352fd5d33eabc36896b42e-Responder").(pd1a916a20.Responder)
 }
 
 

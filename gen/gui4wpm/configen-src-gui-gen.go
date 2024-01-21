@@ -1,22 +1,22 @@
 package gui4wpm
 import (
-    p7c219bb63 "github.com/bitwormhole/wpm/src/gui/golang/code"
+    p0f9140652 "github.com/bitwormhole/wpm/gui"
      "github.com/starter-go/application"
 )
 
-// type p7c219bb63.Com in package:github.com/bitwormhole/wpm/src/gui/golang/code
+// type p0f9140652.Example in package:github.com/bitwormhole/wpm/gui
 //
-// id:com-7c219bb636aa295a-code-Com
+// id:com-0f91406523dc70d7-gui-Example
 // class:
 // alias:
 // scope:singleton
 //
-type p7c219bb636_code_Com struct {
+type p0f91406523_gui_Example struct {
 }
 
-func (inst* p7c219bb636_code_Com) register(cr application.ComponentRegistry) error {
+func (inst* p0f91406523_gui_Example) register(cr application.ComponentRegistry) error {
 	r := cr.NewRegistration()
-	r.ID = "com-7c219bb636aa295a-code-Com"
+	r.ID = "com-0f91406523dc70d7-gui-Example"
 	r.Classes = ""
 	r.Aliases = ""
 	r.Scope = "singleton"
@@ -25,13 +25,13 @@ func (inst* p7c219bb636_code_Com) register(cr application.ComponentRegistry) err
 	return r.Commit()
 }
 
-func (inst* p7c219bb636_code_Com) new() any {
-    return &p7c219bb63.Com{}
+func (inst* p0f91406523_gui_Example) new() any {
+    return &p0f9140652.Example{}
 }
 
-func (inst* p7c219bb636_code_Com) inject(injext application.InjectionExt, instance any) error {
+func (inst* p0f91406523_gui_Example) inject(injext application.InjectionExt, instance any) error {
 	ie := injext
-	com := instance.(*p7c219bb63.Com)
+	com := instance.(*p0f9140652.Example)
 	nop(ie, com)
 
 	

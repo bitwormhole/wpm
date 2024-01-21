@@ -39,7 +39,7 @@ func (inst *ContentTypesController) route(rp libgin.RouterProxy) error {
 	rp.PUT(":id", inst.handle)
 	rp.DELETE(":id", inst.handle)
 
-	rp.GET("", inst.handle)
+	rp.GET("", inst.handleGetList)
 	rp.GET(":id", inst.handleGetOne)
 
 	return nil
@@ -63,16 +63,29 @@ func (inst *ContentTypesController) handleGetOne(c *gin.Context) {
 	req.execute(req.doGetOne)
 }
 
+func (inst *ContentTypesController) handleGetList(c *gin.Context) {
+	req := &myContentTypesRequest{
+		context:          c,
+		controller:       inst,
+		wantRequestID:    false,
+		wantRequestQuery: true,
+	}
+	req.execute(req.doGetList)
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 type myContentTypesRequest struct {
 	context    *gin.Context
 	controller *ContentTypesController
 
-	wantRequestID   bool
-	wantRequestBody bool
+	wantRequestID    bool
+	wantRequestBody  bool
+	wantRequestQuery bool
 
 	id    dxo.ContentTypeID
+	query contenttypes.Query
+
 	body1 vo.ContentType
 	body2 vo.ContentType
 }
@@ -135,5 +148,17 @@ func (inst *myContentTypesRequest) doGetOne() error {
 		// Bar: o1.Bar,
 	}
 	inst.body2.ContentTypes = []*dto.ContentType{o2}
+	return nil
+}
+
+func (inst *myContentTypesRequest) doGetList() error {
+	ctx := inst.context
+	ser := inst.controller.Service
+	q := &inst.query
+	list, err := ser.List(ctx, q)
+	if err != nil {
+		return err
+	}
+	inst.body2.ContentTypes = list
 	return nil
 }

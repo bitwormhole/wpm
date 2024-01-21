@@ -10,7 +10,6 @@ import (
 	"github.com/bitwormhole/wpm/server/classes/projects"
 	"github.com/bitwormhole/wpm/server/classes/repositories"
 	"github.com/bitwormhole/wpm/server/classes/settings"
-	"github.com/bitwormhole/wpm/server/classes/softwaresets"
 	"github.com/starter-go/application"
 )
 
@@ -19,17 +18,16 @@ type DebugAllDAOs struct {
 
 	//starter:component
 
-	ContentTypeDAO     contenttypes.DAO                 //starter:inject("#")
-	ExecutableDAO      executables.DAO                  //starter:inject("#")
-	IntentTemplateDAO  intenttemplates.DAO              //starter:inject("#")
-	LocationDAO        locations.DAO                    //starter:inject("#")
-	MediaDAO           media.DAO                        //starter:inject("#")
-	ProjectDAO         projects.DAO                     //starter:inject("#")
-	LocalRepoDAO       repositories.LocalRepositoryDAO  //starter:inject("#")
-	RemoteRepoDAO      repositories.RemoteRepositoryDAO //starter:inject("#")
-	SettingDAO         settings.DAO                     //starter:inject("#")
-	SoftwarePackageDAO packages.DAO                     //starter:inject("#")
-	SoftwareSetDAO     softwaresets.DAO                 //starter:inject("#")
+	ContentTypeDAO    contenttypes.DAO                 //starter:inject("#")
+	ExecutableDAO     executables.DAO                  //starter:inject("#")
+	IntentTemplateDAO intenttemplates.DAO              //starter:inject("#")
+	LocationDAO       locations.DAO                    //starter:inject("#")
+	MediaDAO          media.DAO                        //starter:inject("#")
+	ProjectDAO        projects.DAO                     //starter:inject("#")
+	LocalRepoDAO      repositories.LocalRepositoryDAO  //starter:inject("#")
+	RemoteRepoDAO     repositories.RemoteRepositoryDAO //starter:inject("#")
+	SettingDAO        settings.DAO                     //starter:inject("#")
+	PackageDAO        packages.DAO                     //starter:inject("#")
 
 }
 

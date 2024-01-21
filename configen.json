@@ -13,18 +13,28 @@
                 "r": true
             },
             {
+                "id": "boot",
+                "path": "boot",
+                "r": true
+            },
+            {
+                "id": "common",
+                "path": "common",
+                "r": true
+            },
+            {
                 "id": "server",
                 "path": "server",
                 "r": true
             },
             {
                 "id": "cli",
-                "path": "src/cli/golang/",
+                "path": "cli",
                 "r": true
             },
             {
                 "id": "gui",
-                "path": "src/gui/golang/",
+                "path": "gui",
                 "r": true
             },
             {
@@ -46,6 +56,20 @@
                 "path": "gen/agent4wpm",
                 "sources": [
                     "agent"
+                ]
+            },
+            {
+                "id": "boot",
+                "path": "gen/boot4wpm",
+                "sources": [
+                    "boot"
+                ]
+            },
+            {
+                "id": "common",
+                "path": "gen/common4wpm",
+                "sources": [
+                    "common"
                 ]
             },
             {

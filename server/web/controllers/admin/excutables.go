@@ -38,7 +38,7 @@ func (inst *ExecutablesController) route(rp libgin.RouterProxy) error {
 	rp.PUT(":id", inst.handle)
 	rp.DELETE(":id", inst.handle)
 
-	rp.GET("", inst.handle)
+	rp.GET("", inst.handleGetList)
 	rp.GET(":id", inst.handleGetOne)
 
 	return nil
@@ -62,16 +62,29 @@ func (inst *ExecutablesController) handleGetOne(c *gin.Context) {
 	req.execute(req.doGetOne)
 }
 
+func (inst *ExecutablesController) handleGetList(c *gin.Context) {
+	req := &myExecutablesRequest{
+		context:          c,
+		controller:       inst,
+		wantRequestID:    false,
+		wantRequestQuery: true,
+	}
+	req.execute(req.doGetList)
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 type myExecutablesRequest struct {
 	context    *gin.Context
 	controller *ExecutablesController
 
-	wantRequestID   bool
-	wantRequestBody bool
+	wantRequestID    bool
+	wantRequestBody  bool
+	wantRequestQuery bool
 
 	id    dxo.ExecutableID
+	query executables.Query
+
 	body1 vo.Executable
 	body2 vo.Executable
 }
@@ -130,9 +143,19 @@ func (inst *myExecutablesRequest) doGetOne() error {
 	}
 	o2 := &dto.Executable{
 		ID: o1.ID,
-		// Foo: o1.Foo,
-		// Bar: o1.Bar,
 	}
 	inst.body2.Executables = []*dto.Executable{o2}
+	return nil
+}
+
+func (inst *myExecutablesRequest) doGetList() error {
+	ctx := inst.context
+	ser := inst.controller.Service
+	q := &inst.query
+	list, err := ser.List(ctx, q)
+	if err != nil {
+		return err
+	}
+	inst.body2.Executables = list
 	return nil
 }

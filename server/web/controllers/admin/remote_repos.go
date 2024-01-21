@@ -38,7 +38,7 @@ func (inst *RemoteRepositoryController) route(rp libgin.RouterProxy) error {
 	rp.PUT(":id", inst.handle)
 	rp.DELETE(":id", inst.handle)
 
-	rp.GET("", inst.handle)
+	rp.GET("", inst.handleGetList)
 	rp.GET(":id", inst.handleGetOne)
 
 	return nil
@@ -62,16 +62,30 @@ func (inst *RemoteRepositoryController) handleGetOne(c *gin.Context) {
 	req.execute(req.doGetOne)
 }
 
+func (inst *RemoteRepositoryController) handleGetList(c *gin.Context) {
+	req := &myRemoteRepositoryRequest{
+		context:          c,
+		controller:       inst,
+		wantRequestID:    false,
+		wantRequestBody:  false,
+		wantRequestQuery: true,
+	}
+	req.execute(req.doGetList)
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 type myRemoteRepositoryRequest struct {
 	context    *gin.Context
 	controller *RemoteRepositoryController
 
-	wantRequestID   bool
-	wantRequestBody bool
+	wantRequestID    bool
+	wantRequestBody  bool
+	wantRequestQuery bool
 
 	id    dxo.RemoteRepositoryID
+	query repositories.Query
+
 	body1 vo.RemoteRepository
 	body2 vo.RemoteRepository
 }
@@ -132,5 +146,17 @@ func (inst *myRemoteRepositoryRequest) doGetOne() error {
 		ID: o1.ID,
 	}
 	inst.body2.Repositories = []*dto.RemoteRepository{o2}
+	return nil
+}
+
+func (inst *myRemoteRepositoryRequest) doGetList() error {
+	ctx := inst.context
+	ser := inst.controller.Service
+	q := &inst.query
+	list, err := ser.List(ctx, q)
+	if err != nil {
+		return err
+	}
+	inst.body2.Repositories = list
 	return nil
 }

@@ -47,13 +47,12 @@ type SoftwarePackage struct {
 	ReleaseAt time.Time
 }
 
-// SoftwareSet ...
-type SoftwareSet struct {
-	ID  dxo.SoftwareSetID  `gorm:"primaryKey"`
-	URN dxo.SoftwareSetURN `gorm:"index:,unique"`
-
-	SoftwareInfo
-}
+// // SoftwareSet ...
+// type SoftwareSet struct {
+// 	ID  dxo.SoftwareSetID  `gorm:"primaryKey"`
+// 	URN dxo.SoftwareSetURN `gorm:"index:,unique"`
+// 	SoftwareInfo
+// }
 
 ////////////////////////////////////////////////////////////////////////////////
 

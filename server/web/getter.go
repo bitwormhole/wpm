@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/starter-go/rbac"
 )
 
 type getterInner struct {
@@ -120,6 +121,16 @@ func (inst *Getter) GetBool(name string) bool {
 		value = v
 		return err
 	})
+	return value
+}
+
+// GetPagination ...
+func (inst *Getter) GetPagination() rbac.Pagination {
+	var value rbac.Pagination
+	page := inst.GetInt("page")
+	size := inst.GetInt("size")
+	value.Page = int64(page)
+	value.Size = size
 	return value
 }
 

@@ -40,7 +40,8 @@ type SoftwarePackage struct {
 
 // SoftwareSet 表示一个软件集合，可能包含多个不同版本的包
 type SoftwareSet struct {
-	// ID dxo.SoftwareSetID `json:"id"`
+	ID dxo.SoftwareSetID `json:"id"`
+
 	// URN dxo.SoftwarePackageURN   `json:"urn"`
 	// Base
 

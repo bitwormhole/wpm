@@ -1,7 +1,7 @@
 package admin
 
 import (
-	"github.com/bitwormhole/wpm/server/classes/about"
+	"github.com/bitwormhole/wpm/common/classes/about"
 	"github.com/bitwormhole/wpm/server/web/vo"
 	"github.com/gin-gonic/gin"
 	"github.com/starter-go/libgin"
@@ -13,8 +13,8 @@ type AboutController struct {
 	//starter:component
 	_as func(libgin.Controller) //starter:as(".")
 
-	Sender libgin.Responder //starter:inject("#")
-	Dao    about.Service    //starter:inject("#")
+	Sender  libgin.Responder //starter:inject("#")
+	Service about.Service    //starter:inject("#")
 }
 
 func (inst *AboutController) _impl() libgin.Controller {
@@ -34,8 +34,8 @@ func (inst *AboutController) route(rp libgin.RouterProxy) error {
 	rp.PUT(":id", inst.handle)
 	rp.DELETE(":id", inst.handle)
 
-	rp.GET("", inst.handle)
-	rp.GET(":id", inst.handleGetOne)
+	rp.GET("", inst.handleGetAboutInfo)
+	rp.GET(":id", inst.handleGetAboutInfo)
 
 	return nil
 }
@@ -49,13 +49,13 @@ func (inst *AboutController) handle(c *gin.Context) {
 	req.execute(req.doNOP)
 }
 
-func (inst *AboutController) handleGetOne(c *gin.Context) {
+func (inst *AboutController) handleGetAboutInfo(c *gin.Context) {
 	req := &myAboutRequest{
 		context:       c,
 		controller:    inst,
-		wantRequestID: true,
+		wantRequestID: false,
 	}
-	req.execute(req.doGetOne)
+	req.execute(req.doGetAboutInfo)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -118,7 +118,9 @@ func (inst *myAboutRequest) doNOP() error {
 	return nil
 }
 
-func (inst *myAboutRequest) doGetOne() error {
-
-	return nil
+func (inst *myAboutRequest) doGetAboutInfo() error {
+	ctx := inst.context
+	dst := &inst.body2
+	ser := inst.controller.Service
+	return ser.GetAboutInfo(ctx, dst)
 }

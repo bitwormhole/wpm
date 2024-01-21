@@ -5,6 +5,7 @@ import (
 
 	"github.com/bitwormhole/wpm/server/classes/projects"
 	"github.com/bitwormhole/wpm/server/data/dxo"
+	"github.com/bitwormhole/wpm/server/web"
 	"github.com/bitwormhole/wpm/server/web/dto"
 	"github.com/bitwormhole/wpm/server/web/vo"
 	"github.com/gin-gonic/gin"
@@ -38,7 +39,7 @@ func (inst *ProjectController) route(rp libgin.RouterProxy) error {
 	rp.PUT(":id", inst.handle)
 	rp.DELETE(":id", inst.handle)
 
-	rp.GET("", inst.handle)
+	rp.GET("", inst.handleGetList)
 	rp.GET(":id", inst.handleGetOne)
 
 	return nil
@@ -62,16 +63,30 @@ func (inst *ProjectController) handleGetOne(c *gin.Context) {
 	req.execute(req.doGetOne)
 }
 
+func (inst *ProjectController) handleGetList(c *gin.Context) {
+	req := &myProjectRequest{
+		context:          c,
+		controller:       inst,
+		wantRequestID:    false,
+		wantRequestBody:  false,
+		wantRequestQuery: true,
+	}
+	req.execute(req.doGetList)
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 type myProjectRequest struct {
 	context    *gin.Context
 	controller *ProjectController
 
-	wantRequestID   bool
-	wantRequestBody bool
+	wantRequestID    bool
+	wantRequestBody  bool
+	wantRequestQuery bool
 
 	id    dxo.ProjectID
+	query projects.Query
+
 	body1 vo.Project
 	body2 vo.Project
 }
@@ -91,6 +106,16 @@ func (inst *myProjectRequest) open() error {
 
 	if inst.wantRequestBody {
 		err := c.BindJSON(&inst.body1)
+		if err != nil {
+			return err
+		}
+	}
+
+	if inst.wantRequestQuery {
+		getter := web.NewQueryGetter(c).Optional()
+		inst.query.All = getter.GetBool("all")
+		inst.query.Pagination = getter.GetPagination()
+		err := getter.Error()
 		if err != nil {
 			return err
 		}
@@ -132,5 +157,17 @@ func (inst *myProjectRequest) doGetOne() error {
 		ID: o1.ID,
 	}
 	inst.body2.Projects = []*dto.Project{o2}
+	return nil
+}
+
+func (inst *myProjectRequest) doGetList() error {
+	ctx := inst.context
+	ser := inst.controller.Service
+	q := &inst.query
+	list, err := ser.List(ctx, q)
+	if err != nil {
+		return err
+	}
+	inst.body2.Projects = list
 	return nil
 }

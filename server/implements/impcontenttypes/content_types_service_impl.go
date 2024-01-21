@@ -16,6 +16,8 @@ type ServiceImpl struct {
 	_as func(contenttypes.Service) //starter:as("#")
 
 	Dao contenttypes.DAO //starter:inject("#")
+
+	convertor contenttypes.Convertor
 }
 
 func (inst *ServiceImpl) _impl() contenttypes.Service {
@@ -44,5 +46,10 @@ func (inst *ServiceImpl) Find(ctx context.Context, id dxo.ContentTypeID) (*dto.C
 
 // List ...
 func (inst *ServiceImpl) List(ctx context.Context, q *contenttypes.Query) ([]*dto.ContentType, error) {
-	return nil, fmt.Errorf("no impl")
+	list1, err := inst.Dao.List(nil, q)
+	if err != nil {
+		return nil, err
+	}
+	list2 := inst.convertor.ConvertListE2D(list1)
+	return list2, nil
 }

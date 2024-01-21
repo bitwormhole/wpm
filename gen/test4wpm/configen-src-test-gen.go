@@ -9,7 +9,6 @@ import (
     paa275b61f "github.com/bitwormhole/wpm/server/classes/projects"
     p4a2c02e71 "github.com/bitwormhole/wpm/server/classes/repositories"
     p4ab661a34 "github.com/bitwormhole/wpm/server/classes/settings"
-    p353d73ec3 "github.com/bitwormhole/wpm/server/classes/softwaresets"
     p70bc378de "github.com/bitwormhole/wpm/src/test/golang/code"
      "github.com/starter-go/application"
 )
@@ -54,8 +53,7 @@ func (inst* p70bc378ded_code_DebugAllDAOs) inject(injext application.InjectionEx
     com.LocalRepoDAO = inst.getLocalRepoDAO(ie)
     com.RemoteRepoDAO = inst.getRemoteRepoDAO(ie)
     com.SettingDAO = inst.getSettingDAO(ie)
-    com.SoftwarePackageDAO = inst.getSoftwarePackageDAO(ie)
-    com.SoftwareSetDAO = inst.getSoftwareSetDAO(ie)
+    com.PackageDAO = inst.getPackageDAO(ie)
 
 
     return nil
@@ -107,13 +105,8 @@ func (inst*p70bc378ded_code_DebugAllDAOs) getSettingDAO(ie application.Injection
 }
 
 
-func (inst*p70bc378ded_code_DebugAllDAOs) getSoftwarePackageDAO(ie application.InjectionExt)pdb29a3bec.DAO{
+func (inst*p70bc378ded_code_DebugAllDAOs) getPackageDAO(ie application.InjectionExt)pdb29a3bec.DAO{
     return ie.GetComponent("#alias-db29a3bec1e3d63283b5b71ee9ef4989-DAO").(pdb29a3bec.DAO)
-}
-
-
-func (inst*p70bc378ded_code_DebugAllDAOs) getSoftwareSetDAO(ie application.InjectionExt)p353d73ec3.DAO{
-    return ie.GetComponent("#alias-353d73ec3edc2e74f8181282d9e87a31-DAO").(p353d73ec3.DAO)
 }
 
 

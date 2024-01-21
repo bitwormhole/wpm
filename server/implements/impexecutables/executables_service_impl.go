@@ -16,6 +16,8 @@ type ServiceImpl struct {
 	_as func(executables.Service) //starter:as("#")
 
 	Dao executables.DAO //starter:inject("#")
+
+	convertor executables.Convertor
 }
 
 func (inst *ServiceImpl) _impl() executables.Service {
@@ -44,5 +46,10 @@ func (inst *ServiceImpl) Find(ctx context.Context, id dxo.ExecutableID) (*dto.Ex
 
 // List ...
 func (inst *ServiceImpl) List(ctx context.Context, q *executables.Query) ([]*dto.Executable, error) {
-	return nil, fmt.Errorf("no impl")
+	list1, err := inst.Dao.List(nil, q)
+	if err != nil {
+		return nil, err
+	}
+	list2 := inst.convertor.ConvertListE2D(list1)
+	return list2, nil
 }

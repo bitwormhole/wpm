@@ -18,6 +18,7 @@ type About struct {
 	OS        string   `json:"os"`
 	Arch      string   `json:"arch"`
 	WebURL    string   `json:"weburl"`
+	Exe       string   `json:"executable"`
 	SHA256SUM lang.Hex `json:"sha256sum"`
 
 	// the main module
