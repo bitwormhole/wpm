@@ -99,6 +99,8 @@ github.com/starter-go/application v0.9.20 h1:CxOmwhpr1Kz8mSv0e2T+j+CBPXvCmfMFCqH
 github.com/starter-go/application v0.9.20/go.mod h1:WXdBRmDnpM6+vAxbuYrOwqxWH1dcGxhXLmwFepRBCeA=
 github.com/starter-go/base v0.9.11 h1:QG5kcShJSV9cs2KEeqZ8UN9icM/0uPZwPFrh0XUOf+Q=
 github.com/starter-go/base v0.9.11/go.mod h1:MMqPMFzwPHjKyfX0cMmkpAAbeJ0tJupFbI8D+x27fJM=
+github.com/starter-go/browsers v0.0.2 h1:582J3IdzIKvjO8Z9nr2SW7E/pQ7W1BL0vpggYu5hX3A=
+github.com/starter-go/browsers v0.0.2/go.mod h1:ixuY6Zog7DRX4Us0uhYtT1Om80mv8hyMdZQaW6/FtOg=
 github.com/starter-go/configen v0.9.5 h1:KTwueLMQA3Ba70sJddK+hOLEifOI0dTXpPkX/jiBjIo=
 github.com/starter-go/configen v0.9.5/go.mod h1:n3qiv4z1nZ0h4qfcX9Ju8kUMgjuLUkv0EvL6lxQOwtQ=
 github.com/starter-go/httpagent v0.0.4 h1:IstjhI1pboDHhMTuDIS7G5l7gfYO0eK9W483ykS9RTA=

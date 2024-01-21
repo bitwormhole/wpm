@@ -30,7 +30,7 @@ func (inst *autoRegistrar) register(factory comFactory) error {
 func (inst*autoRegistrar) addAll() error {
 
     
-    inst.register(&p0f91406523_gui_Example{})
+    inst.register(&p0f91406523_gui_BrowserLauncher{})
 
 
     return nil

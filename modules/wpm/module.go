@@ -12,6 +12,7 @@ import (
 	"github.com/bitwormhole/wpm/gen/server4wpm"
 	"github.com/bitwormhole/wpm/gen/test4wpm"
 	"github.com/starter-go/application"
+	"github.com/starter-go/browsers/modules/browsers"
 	"github.com/starter-go/httpagent/modules/httpagent"
 	"github.com/starter-go/libgin/modules/libgin"
 	"github.com/starter-go/libgorm/modules/libgorm"
@@ -64,6 +65,7 @@ func ModuleForGUI() application.Module {
 	mb := wpm.NewGuiModule()
 	mb.Components(gui4wpm.ExportComponents)
 	mb.Depend(ModuleForCommon())
+	mb.Depend(browsers.Module())
 	return mb.Create()
 }
 
