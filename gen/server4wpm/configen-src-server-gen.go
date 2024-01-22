@@ -2,6 +2,7 @@ package server4wpm
 import (
     paeb460c7d "github.com/bitwormhole/gitlib"
     p663158af9 "github.com/bitwormhole/wpm/common/classes/about"
+    p49fbd1e53 "github.com/bitwormhole/wpm/common/classes/paths"
     pce44af903 "github.com/bitwormhole/wpm/server/classes/auths"
     p7b01405af "github.com/bitwormhole/wpm/server/classes/backups"
     p6021e9d7f "github.com/bitwormhole/wpm/server/classes/contenttypes"
@@ -30,7 +31,9 @@ import (
     p233917231 "github.com/bitwormhole/wpm/server/implements/imprepositories"
     p337e784ad "github.com/bitwormhole/wpm/server/implements/impsettings"
     p8f4406e5f "github.com/bitwormhole/wpm/server/implements/impsoftware"
+    p72b9b4e1d "github.com/bitwormhole/wpm/server/web/controllers"
     p415d59ee4 "github.com/bitwormhole/wpm/server/web/controllers/admin"
+    p0ef6f2938 "github.com/starter-go/application"
     pd1a916a20 "github.com/starter-go/libgin"
     p512a30914 "github.com/starter-go/libgorm"
     p9621e8b71 "github.com/starter-go/security/random"
@@ -807,6 +810,50 @@ func (inst*pb5fa9685f8_implocations_ServiceImpl) getDao(ie application.Injection
 
 
 
+// type p8cd642664.MediaBucketPool in package:github.com/bitwormhole/wpm/server/implements/impmedia
+//
+// id:com-8cd64266481c28e5-impmedia-MediaBucketPool
+// class:
+// alias:alias-67724047202291d9335f729c0f271c46-BucketPool
+// scope:singleton
+//
+type p8cd6426648_impmedia_MediaBucketPool struct {
+}
+
+func (inst* p8cd6426648_impmedia_MediaBucketPool) register(cr application.ComponentRegistry) error {
+	r := cr.NewRegistration()
+	r.ID = "com-8cd64266481c28e5-impmedia-MediaBucketPool"
+	r.Classes = ""
+	r.Aliases = "alias-67724047202291d9335f729c0f271c46-BucketPool"
+	r.Scope = "singleton"
+	r.NewFunc = inst.new
+	r.InjectFunc = inst.inject
+	return r.Commit()
+}
+
+func (inst* p8cd6426648_impmedia_MediaBucketPool) new() any {
+    return &p8cd642664.MediaBucketPool{}
+}
+
+func (inst* p8cd6426648_impmedia_MediaBucketPool) inject(injext application.InjectionExt, instance any) error {
+	ie := injext
+	com := instance.(*p8cd642664.MediaBucketPool)
+	nop(ie, com)
+
+	
+    com.Paths = inst.getPaths(ie)
+
+
+    return nil
+}
+
+
+func (inst*p8cd6426648_impmedia_MediaBucketPool) getPaths(ie application.InjectionExt)p49fbd1e53.Service{
+    return ie.GetComponent("#alias-49fbd1e53488227339ec0b5fef589093-Service").(p49fbd1e53.Service)
+}
+
+
+
 // type p8cd642664.DaoImpl in package:github.com/bitwormhole/wpm/server/implements/impmedia
 //
 // id:com-8cd64266481c28e5-impmedia-DaoImpl
@@ -889,6 +936,7 @@ func (inst* p8cd6426648_impmedia_ServiceImpl) inject(injext application.Injectio
 
 	
     com.Dao = inst.getDao(ie)
+    com.Buckets = inst.getBuckets(ie)
 
 
     return nil
@@ -897,6 +945,11 @@ func (inst* p8cd6426648_impmedia_ServiceImpl) inject(injext application.Injectio
 
 func (inst*p8cd6426648_impmedia_ServiceImpl) getDao(ie application.InjectionExt)p677240472.DAO{
     return ie.GetComponent("#alias-67724047202291d9335f729c0f271c46-DAO").(p677240472.DAO)
+}
+
+
+func (inst*p8cd6426648_impmedia_ServiceImpl) getBuckets(ie application.InjectionExt)p677240472.BucketPool{
+    return ie.GetComponent("#alias-67724047202291d9335f729c0f271c46-BucketPool").(p677240472.BucketPool)
 }
 
 
@@ -1471,6 +1524,50 @@ func (inst*p8f4406e5f7_impsoftware_SoftwareSetService) getPackageService(ie appl
 
 
 
+// type p72b9b4e1d.HTTP404Controller in package:github.com/bitwormhole/wpm/server/web/controllers
+//
+// id:com-72b9b4e1d80225c1-controllers-HTTP404Controller
+// class:class-d1a916a203352fd5d33eabc36896b42e-Controller
+// alias:
+// scope:singleton
+//
+type p72b9b4e1d8_controllers_HTTP404Controller struct {
+}
+
+func (inst* p72b9b4e1d8_controllers_HTTP404Controller) register(cr application.ComponentRegistry) error {
+	r := cr.NewRegistration()
+	r.ID = "com-72b9b4e1d80225c1-controllers-HTTP404Controller"
+	r.Classes = "class-d1a916a203352fd5d33eabc36896b42e-Controller"
+	r.Aliases = ""
+	r.Scope = "singleton"
+	r.NewFunc = inst.new
+	r.InjectFunc = inst.inject
+	return r.Commit()
+}
+
+func (inst* p72b9b4e1d8_controllers_HTTP404Controller) new() any {
+    return &p72b9b4e1d.HTTP404Controller{}
+}
+
+func (inst* p72b9b4e1d8_controllers_HTTP404Controller) inject(injext application.InjectionExt, instance any) error {
+	ie := injext
+	com := instance.(*p72b9b4e1d.HTTP404Controller)
+	nop(ie, com)
+
+	
+    com.AC = inst.getAC(ie)
+
+
+    return nil
+}
+
+
+func (inst*p72b9b4e1d8_controllers_HTTP404Controller) getAC(ie application.InjectionExt)p0ef6f2938.Context{
+    return ie.GetContext()
+}
+
+
+
 // type p415d59ee4.AboutController in package:github.com/bitwormhole/wpm/server/web/controllers/admin
 //
 // id:com-415d59ee4c0dd6da-admin-AboutController
@@ -2002,11 +2099,23 @@ func (inst* p415d59ee4c_admin_MediaController) inject(injext application.Injecti
 	nop(ie, com)
 
 	
+    com.UploadSizeMax = inst.getUploadSizeMax(ie)
+    com.DownloadSizeMax = inst.getDownloadSizeMax(ie)
     com.Sender = inst.getSender(ie)
-    com.Service = inst.getService(ie)
+    com.MediaService = inst.getMediaService(ie)
 
 
     return nil
+}
+
+
+func (inst*p415d59ee4c_admin_MediaController) getUploadSizeMax(ie application.InjectionExt)int{
+    return ie.GetInt("${http.upload.content-length.max}")
+}
+
+
+func (inst*p415d59ee4c_admin_MediaController) getDownloadSizeMax(ie application.InjectionExt)int{
+    return ie.GetInt("${http.download.content-length.max}")
 }
 
 
@@ -2015,7 +2124,7 @@ func (inst*p415d59ee4c_admin_MediaController) getSender(ie application.Injection
 }
 
 
-func (inst*p415d59ee4c_admin_MediaController) getService(ie application.InjectionExt)p677240472.Service{
+func (inst*p415d59ee4c_admin_MediaController) getMediaService(ie application.InjectionExt)p677240472.Service{
     return ie.GetComponent("#alias-67724047202291d9335f729c0f271c46-Service").(p677240472.Service)
 }
 
@@ -2252,15 +2361,33 @@ func (inst* p415d59ee4c_admin_UploadController) inject(injext application.Inject
 	nop(ie, com)
 
 	
+    com.UploadSizeMax = inst.getUploadSizeMax(ie)
+    com.DownloadSizeMax = inst.getDownloadSizeMax(ie)
     com.Sender = inst.getSender(ie)
+    com.MediaService = inst.getMediaService(ie)
 
 
     return nil
 }
 
 
+func (inst*p415d59ee4c_admin_UploadController) getUploadSizeMax(ie application.InjectionExt)int{
+    return ie.GetInt("${http.upload.content-length.max}")
+}
+
+
+func (inst*p415d59ee4c_admin_UploadController) getDownloadSizeMax(ie application.InjectionExt)int{
+    return ie.GetInt("${http.download.content-length.max}")
+}
+
+
 func (inst*p415d59ee4c_admin_UploadController) getSender(ie application.InjectionExt)pd1a916a20.Responder{
     return ie.GetComponent("#alias-d1a916a203352fd5d33eabc36896b42e-Responder").(pd1a916a20.Responder)
+}
+
+
+func (inst*p415d59ee4c_admin_UploadController) getMediaService(ie application.InjectionExt)p677240472.Service{
+    return ie.GetComponent("#alias-67724047202291d9335f729c0f271c46-Service").(p677240472.Service)
 }
 
 

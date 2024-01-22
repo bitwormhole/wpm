@@ -2,6 +2,7 @@ package common4wpm
 import (
     p09212bb02 "github.com/bitwormhole/wpm/common"
     p534481b92 "github.com/bitwormhole/wpm/common/implements/impabout"
+    p240e4b42e "github.com/bitwormhole/wpm/common/implements/imppaths"
     p0d2a11d16 "github.com/starter-go/afs"
     p0ef6f2938 "github.com/starter-go/application"
      "github.com/starter-go/application"
@@ -139,6 +140,50 @@ func (inst*p534481b920_impabout_ServiceImpl) getServerPort(ie application.Inject
 
 func (inst*p534481b920_impabout_ServiceImpl) getServerProtocol(ie application.InjectionExt)string{
     return ie.GetString("${server.protocol}")
+}
+
+
+
+// type p240e4b42e.PathsServiceImpl in package:github.com/bitwormhole/wpm/common/implements/imppaths
+//
+// id:com-240e4b42e671cc4f-imppaths-PathsServiceImpl
+// class:
+// alias:alias-49fbd1e53488227339ec0b5fef589093-Service
+// scope:singleton
+//
+type p240e4b42e6_imppaths_PathsServiceImpl struct {
+}
+
+func (inst* p240e4b42e6_imppaths_PathsServiceImpl) register(cr application.ComponentRegistry) error {
+	r := cr.NewRegistration()
+	r.ID = "com-240e4b42e671cc4f-imppaths-PathsServiceImpl"
+	r.Classes = ""
+	r.Aliases = "alias-49fbd1e53488227339ec0b5fef589093-Service"
+	r.Scope = "singleton"
+	r.NewFunc = inst.new
+	r.InjectFunc = inst.inject
+	return r.Commit()
+}
+
+func (inst* p240e4b42e6_imppaths_PathsServiceImpl) new() any {
+    return &p240e4b42e.PathsServiceImpl{}
+}
+
+func (inst* p240e4b42e6_imppaths_PathsServiceImpl) inject(injext application.InjectionExt, instance any) error {
+	ie := injext
+	com := instance.(*p240e4b42e.PathsServiceImpl)
+	nop(ie, com)
+
+	
+    com.FS = inst.getFS(ie)
+
+
+    return nil
+}
+
+
+func (inst*p240e4b42e6_imppaths_PathsServiceImpl) getFS(ie application.InjectionExt)p0d2a11d16.FS{
+    return ie.GetComponent("#alias-0d2a11d163e349503a64168a1cdf48a2-FS").(p0d2a11d16.FS)
 }
 
 

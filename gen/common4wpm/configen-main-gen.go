@@ -31,6 +31,7 @@ func (inst*autoRegistrar) addAll() error {
 
     
     inst.register(&p09212bb029_common_Example{})
+    inst.register(&p240e4b42e6_imppaths_PathsServiceImpl{})
     inst.register(&p534481b920_impabout_ServiceImpl{})
 
 

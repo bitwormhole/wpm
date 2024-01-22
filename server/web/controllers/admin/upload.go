@@ -1,7 +1,12 @@
 package admin
 
 import (
+	"fmt"
+	"mime/multipart"
+
+	"github.com/bitwormhole/wpm/server/classes/media"
 	"github.com/bitwormhole/wpm/server/data/dxo"
+	"github.com/bitwormhole/wpm/server/web/dto"
 	"github.com/bitwormhole/wpm/server/web/vo"
 	"github.com/gin-gonic/gin"
 	"github.com/starter-go/libgin"
@@ -13,8 +18,11 @@ type UploadController struct {
 	//starter:component
 	_as func(libgin.Controller) //starter:as(".")
 
-	Sender libgin.Responder //starter:inject("#")
-	// Dao    Uploads.DAO      //starter:inject("#")
+	UploadSizeMax   int //starter:inject("${http.upload.content-length.max}")
+	DownloadSizeMax int //starter:inject("${http.download.content-length.max}")
+
+	Sender       libgin.Responder //starter:inject("#")
+	MediaService media.Service    //starter:inject("#")
 }
 
 func (inst *UploadController) _impl() libgin.Controller {
@@ -43,11 +51,11 @@ func (inst *UploadController) handle(c *gin.Context) {
 
 func (inst *UploadController) handlePostUpload(c *gin.Context) {
 	req := &myUploadRequest{
-		context:       c,
-		controller:    inst,
-		wantRequestID: true,
+		context:               c,
+		controller:            inst,
+		wantRequestUploadFile: true,
 	}
-	req.execute(req.doGetOne)
+	req.execute(req.doPostUpload)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -56,12 +64,13 @@ type myUploadRequest struct {
 	context    *gin.Context
 	controller *UploadController
 
-	wantRequestID   bool
-	wantRequestBody bool
+	wantRequestID         bool
+	wantRequestBody       bool
+	wantRequestUploadFile bool
 
-	id    dxo.ExampleID
-	body1 vo.Example
-	body2 vo.Example
+	id    dxo.MediaID
+	body1 vo.Media
+	body2 vo.Media
 }
 
 func (inst *myUploadRequest) open() error {
@@ -85,6 +94,14 @@ func (inst *myUploadRequest) open() error {
 		// }
 	}
 
+	if inst.wantRequestUploadFile {
+		inst.body1.Mediae = nil
+		err := inst.receiveMultipartFormData()
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -99,6 +116,61 @@ func (inst *myUploadRequest) send(err error) {
 	inst.controller.Sender.Send(resp)
 }
 
+func (inst *myUploadRequest) receiveMultipartFormData() error {
+	c := inst.context
+	mf, err := c.MultipartForm()
+	if err != nil {
+		return err
+	}
+	files := mf.File["file"]
+	for _, file := range files {
+		err = inst.receiveFile(file)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (inst *myUploadRequest) receiveFile(fh *multipart.FileHeader) error {
+
+	file, err := fh.Open()
+	if err != nil {
+		return err
+	}
+	defer func() {
+		file.Close()
+	}()
+
+	size := fh.Size
+	limitSize := inst.controller.UploadSizeMax
+	if size > int64(limitSize) {
+		const f = "file size is too large to upload, limit:%d, have:%d"
+		return fmt.Errorf(f, limitSize, size)
+	}
+
+	m1 := &dto.Media{}
+	m1.Name = fh.Filename
+	m1.FileSize = size
+	m1.ContentType = fh.Header.Get("Content-Type")
+	m1.Label = fh.Filename
+	m1.Bucket = ""
+	m1.URL = ""
+	m1.Source = ""
+
+	ctx := inst.context
+	ser := inst.controller.MediaService
+	m2, err := ser.ImportMediaStream(ctx, m1, file)
+	if err != nil {
+		return err
+	}
+
+	list := inst.body1.Mediae
+	list = append(list, m2)
+	inst.body1.Mediae = list
+	return nil
+}
+
 func (inst *myUploadRequest) execute(fn func() error) {
 	err := inst.open()
 	if err == nil {
@@ -111,6 +183,8 @@ func (inst *myUploadRequest) doNOP() error {
 	return nil
 }
 
-func (inst *myUploadRequest) doGetOne() error {
+func (inst *myUploadRequest) doPostUpload() error {
+	list := inst.body1.Mediae
+	inst.body2.Mediae = list
 	return nil
 }

@@ -31,6 +31,14 @@ func (inst *Convertor) ConvertE2D(src *entity.Media) *dto.Media {
 	dst.ID = src.ID
 
 	//todo ....
+	dst.Name = src.Name
+	dst.FileSize = src.ContentLength
+	dst.ContentType = src.ContentType
+	dst.SHA256SUM = src.SHA256SUM
+	dst.Label = src.Label
+	dst.Source = src.Source
+	dst.URL = src.URL
+	dst.Bucket = src.Bucket
 
 	return dst
 }
@@ -42,6 +50,14 @@ func (inst *Convertor) ConvertD2E(src *dto.Media) *entity.Media {
 	dst.ID = src.ID
 
 	//todo ....
+	dst.Name = src.Name
+	dst.ContentLength = src.FileSize
+	dst.ContentType = src.ContentType
+	dst.SHA256SUM = src.SHA256SUM
+	dst.Label = src.Label
+	dst.Source = src.Source
+	dst.URL = src.URL
+	dst.Bucket = src.Bucket
 
 	return dst
 }
