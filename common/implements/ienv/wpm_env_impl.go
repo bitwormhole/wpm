@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/user"
 	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/bitwormhole/wpm"
@@ -24,6 +25,7 @@ type environment struct {
 	currentExeFile    afs.Path
 	filesFolder       afs.Path
 	useHTTPS          bool
+	webServerURL      string
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -36,8 +38,11 @@ type EnvironmentImpl struct {
 
 	FS afs.FS //starter:inject("#")
 
+	ServerPort       int    //starter:inject("${server.port}")
 	ServerPortNumMin int    //starter:inject("${server.port}")
 	ServerPortNumMax int    //starter:inject("${server.port.max}")
+	ServerName       string //starter:inject("${server.default}")
+	ServerHost       string //starter:inject("${server.host}")
 	ServerProtocol   string //starter:inject("${server.protocol}")
 
 	env *environment
@@ -110,6 +115,11 @@ func (inst *EnvironmentImpl) DataDir() wpm.DataDir {
 // UseHTTPS ...
 func (inst *EnvironmentImpl) UseHTTPS() bool {
 	return inst.getEnv().useHTTPS
+}
+
+// WebServerURL ...
+func (inst *EnvironmentImpl) WebServerURL() string {
+	return inst.getEnv().webServerURL
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -284,6 +294,21 @@ func (inst *envLoader) loadServerConfig(l *environment) error {
 
 	// for protocol
 	protocol := parent.ServerProtocol
-	l.useHTTPS = (strings.ToLower(protocol) == "https")
+	tls := (strings.ToLower(protocol) == "https")
+	if tls {
+		protocol = "https"
+	} else {
+		protocol = "http"
+	}
+	l.useHTTPS = tls
+
+	// for base URL
+	host := parent.ServerHost
+	if host == "" || host == "0.0.0.0" {
+		host = "localhost"
+	}
+	url := protocol + "://" + host + ":" + strconv.Itoa(port)
+	l.webServerURL = url
+
 	return nil
 }

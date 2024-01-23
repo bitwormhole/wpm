@@ -30,5 +30,7 @@ type Environment interface {
 
 	DataDir() DataDir
 
+	WebServerURL() string
+
 	UseHTTPS() bool
 }

@@ -79,29 +79,31 @@ func (inst* pbd5ab6f4e0_iabout_ServiceImpl) inject(injext application.InjectionE
 	nop(ie, com)
 
 	
-    com.FS = inst.getFS(ie)
     com.AC = inst.getAC(ie)
+    com.Env = inst.getEnv(ie)
+    com.FS = inst.getFS(ie)
     com.Name = inst.getName(ie)
     com.Title = inst.getTitle(ie)
     com.Copyright = inst.getCopyright(ie)
     com.Profile = inst.getProfile(ie)
-    com.ServerName = inst.getServerName(ie)
-    com.ServerHost = inst.getServerHost(ie)
-    com.ServerPort = inst.getServerPort(ie)
-    com.ServerProtocol = inst.getServerProtocol(ie)
 
 
     return nil
 }
 
 
-func (inst*pbd5ab6f4e0_iabout_ServiceImpl) getFS(ie application.InjectionExt)p0d2a11d16.FS{
-    return ie.GetComponent("#alias-0d2a11d163e349503a64168a1cdf48a2-FS").(p0d2a11d16.FS)
+func (inst*pbd5ab6f4e0_iabout_ServiceImpl) getAC(ie application.InjectionExt)p0ef6f2938.Context{
+    return ie.GetContext()
 }
 
 
-func (inst*pbd5ab6f4e0_iabout_ServiceImpl) getAC(ie application.InjectionExt)p0ef6f2938.Context{
-    return ie.GetContext()
+func (inst*pbd5ab6f4e0_iabout_ServiceImpl) getEnv(ie application.InjectionExt)pae1817f17.Environment{
+    return ie.GetComponent("#alias-ae1817f178ee7043d385955ec6d6a87b-Environment").(pae1817f17.Environment)
+}
+
+
+func (inst*pbd5ab6f4e0_iabout_ServiceImpl) getFS(ie application.InjectionExt)p0d2a11d16.FS{
+    return ie.GetComponent("#alias-0d2a11d163e349503a64168a1cdf48a2-FS").(p0d2a11d16.FS)
 }
 
 
@@ -122,26 +124,6 @@ func (inst*pbd5ab6f4e0_iabout_ServiceImpl) getCopyright(ie application.Injection
 
 func (inst*pbd5ab6f4e0_iabout_ServiceImpl) getProfile(ie application.InjectionExt)string{
     return ie.GetString("${application.profiles.active}")
-}
-
-
-func (inst*pbd5ab6f4e0_iabout_ServiceImpl) getServerName(ie application.InjectionExt)string{
-    return ie.GetString("${server.default}")
-}
-
-
-func (inst*pbd5ab6f4e0_iabout_ServiceImpl) getServerHost(ie application.InjectionExt)string{
-    return ie.GetString("${server.host}")
-}
-
-
-func (inst*pbd5ab6f4e0_iabout_ServiceImpl) getServerPort(ie application.InjectionExt)int{
-    return ie.GetInt("${server.port}")
-}
-
-
-func (inst*pbd5ab6f4e0_iabout_ServiceImpl) getServerProtocol(ie application.InjectionExt)string{
-    return ie.GetString("${server.protocol}")
 }
 
 
@@ -222,8 +204,11 @@ func (inst* pe0ab501628_ienv_EnvironmentImpl) inject(injext application.Injectio
 
 	
     com.FS = inst.getFS(ie)
+    com.ServerPort = inst.getServerPort(ie)
     com.ServerPortNumMin = inst.getServerPortNumMin(ie)
     com.ServerPortNumMax = inst.getServerPortNumMax(ie)
+    com.ServerName = inst.getServerName(ie)
+    com.ServerHost = inst.getServerHost(ie)
     com.ServerProtocol = inst.getServerProtocol(ie)
 
 
@@ -236,6 +221,11 @@ func (inst*pe0ab501628_ienv_EnvironmentImpl) getFS(ie application.InjectionExt)p
 }
 
 
+func (inst*pe0ab501628_ienv_EnvironmentImpl) getServerPort(ie application.InjectionExt)int{
+    return ie.GetInt("${server.port}")
+}
+
+
 func (inst*pe0ab501628_ienv_EnvironmentImpl) getServerPortNumMin(ie application.InjectionExt)int{
     return ie.GetInt("${server.port}")
 }
@@ -243,6 +233,16 @@ func (inst*pe0ab501628_ienv_EnvironmentImpl) getServerPortNumMin(ie application.
 
 func (inst*pe0ab501628_ienv_EnvironmentImpl) getServerPortNumMax(ie application.InjectionExt)int{
     return ie.GetInt("${server.port.max}")
+}
+
+
+func (inst*pe0ab501628_ienv_EnvironmentImpl) getServerName(ie application.InjectionExt)string{
+    return ie.GetString("${server.default}")
+}
+
+
+func (inst*pe0ab501628_ienv_EnvironmentImpl) getServerHost(ie application.InjectionExt)string{
+    return ie.GetString("${server.host}")
 }
 
 

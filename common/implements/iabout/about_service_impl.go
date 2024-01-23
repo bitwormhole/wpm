@@ -4,8 +4,7 @@ import (
 	"context"
 	"crypto/md5"
 	"crypto/sha256"
-	"os"
-	"os/user"
+
 	"runtime"
 	"strconv"
 	"strings"
@@ -26,18 +25,14 @@ type ServiceImpl struct {
 	//starter:component
 	_as func(about.Service) //starter:as("#")
 
-	FS afs.FS              //starter:inject("#")
-	AC application.Context //starter:inject("context")
+	AC  application.Context //starter:inject("context")
+	Env wpm.Environment     //starter:inject("#")
+	FS  afs.FS              //starter:inject("#")
 
 	Name      string //starter:inject("${application.name}")
 	Title     string //starter:inject("${application.title}")
 	Copyright string //starter:inject("${application.copyright}")
 	Profile   string //starter:inject("${application.profiles.active}")
-
-	ServerName     string //starter:inject("${server.default}")
-	ServerHost     string //starter:inject("${server.host}")
-	ServerPort     int    //starter:inject("${server.port}")
-	ServerProtocol string //starter:inject("${server.protocol}")
 
 	cached *vo.About
 }
@@ -74,7 +69,7 @@ func (inst *ServiceImpl) loadInfo(ctx context.Context, d *vo.About) error {
 	d.Home = home
 	d.OS = runtime.GOOS
 	d.Arch = runtime.GOARCH
-	d.WebURL = inst.computeDefaultWebServerURL()
+	d.WebURL = inst.computeWebServerURL()
 	d.Exe = exefile
 	d.SHA256SUM = sum
 
@@ -89,40 +84,18 @@ func (inst *ServiceImpl) loadInfo(ctx context.Context, d *vo.About) error {
 }
 
 func (inst *ServiceImpl) getUserHome() (userName string, home string) {
-	u, err := user.Current()
-	if err != nil {
-		vlog.Warn("%s", err.Error())
-		return
-	}
-	userName = u.Username
-	home = u.HomeDir
+	userName = inst.Env.CurrentUserName()
+	home = inst.Env.CurrentUserHome().GetPath()
 	return
 }
 
-func (inst *ServiceImpl) computeDefaultWebServerURL() string {
-	host := inst.ServerHost
-	port := inst.ServerPort
-	protocol := inst.ServerProtocol
-	if port < 1 {
-		port = wpm.DefaultServerPort
-	}
-	return protocol + "://" + host + ":" + strconv.Itoa(port)
+func (inst *ServiceImpl) computeWebServerURL() string {
+	return inst.Env.WebServerURL()
 }
 
 func (inst *ServiceImpl) computeAppExeSHA256() (retSum lang.Hex, retExeFile string) {
 
-	path := ""
-	for i, ar := range os.Args {
-		if i == 0 {
-			path = ar
-		}
-	}
-	if path == "" {
-		vlog.Warn("path of current executable is empty")
-		return
-	}
-
-	file := inst.FS.NewPath(path)
+	file := inst.Env.CurrentExecutableFile()
 	data, err := file.GetIO().ReadBinary(nil)
 	if err != nil {
 		vlog.Warn("%s", err.Error())
