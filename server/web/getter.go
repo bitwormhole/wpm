@@ -8,6 +8,8 @@ import (
 	"github.com/starter-go/rbac"
 )
 
+////////////////////////////////////////////////////////////////////////////////
+
 type getterInner struct {
 	c         *gin.Context
 	errlist   []error
@@ -67,6 +69,33 @@ func (inst *getterInner) value(name string, callback func(str string) error) {
 		}
 	}
 	inst.handleError(err)
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+// GetterEx  是对 Getter 的扩展，提供一些常用的参数提取方法
+type GetterEx struct {
+	inner *Getter
+}
+
+// NewGetterEx 新建一个 GetterEx
+func NewGetterEx(i *Getter) *GetterEx {
+	return &GetterEx{inner: i}
+}
+
+// GetAll ...
+func (inst *GetterEx) GetAll() bool {
+	return inst.inner.GetBool("all")
+}
+
+// GetWithFileState ...
+func (inst *GetterEx) GetWithFileState() bool {
+	return inst.inner.GetBool("with-file-state")
+}
+
+// GetWithProjects ...
+func (inst *GetterEx) GetWithProjects() bool {
+	return inst.inner.GetBool("with-projects")
 }
 
 ////////////////////////////////////////////////////////////////////////////////

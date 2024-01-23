@@ -112,9 +112,11 @@ func (inst *myLocalRepositoryRequest) open() error {
 
 	if inst.wantRequestQuery {
 		getter := web.NewQueryGetter(c).Optional()
-		inst.query.All = getter.GetBool("all")
-		inst.query.WithFileState = getter.GetBool("with-file-state")
-		inst.query.WithProjects = getter.GetBool("with-projects")
+		gex := web.NewGetterEx(getter)
+		inst.query.All = gex.GetAll()
+		inst.query.WithFileState = gex.GetWithFileState()
+		inst.query.WithProjects = gex.GetWithProjects()
+		inst.query.Pagination = getter.GetPagination()
 		err := getter.Error()
 		if err != nil {
 			return err

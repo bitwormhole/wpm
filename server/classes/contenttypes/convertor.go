@@ -31,6 +31,18 @@ func (inst *Convertor) ConvertE2D(src *entity.ContentType) *dto.ContentType {
 	dst.ID = src.ID
 
 	//todo ....
+	dst.URN = src.URN
+
+	dst.TypeName = src.Name
+	dst.Patterns = src.Patterns
+	dst.Label = src.Label
+	dst.Description = src.Description
+	dst.Icon = src.Icon
+
+	dst.Priority = src.Priority
+	dst.AsDir = src.AsDir
+	dst.AsFile = src.AsFile
+	dst.AsProject = src.AsProject
 
 	return dst
 }
@@ -42,6 +54,18 @@ func (inst *Convertor) ConvertD2E(src *dto.ContentType) *entity.ContentType {
 	dst.ID = src.ID
 
 	//todo ....
+	dst.URN = src.URN
+
+	dst.Name = src.TypeName
+	dst.Patterns = src.Patterns
+	dst.Label = src.Label
+	dst.Description = src.Description
+	dst.Icon = src.Icon
+
+	dst.Priority = src.Priority
+	dst.AsDir = src.AsDir
+	dst.AsFile = src.AsFile
+	dst.AsProject = src.AsProject
 
 	return dst
 }

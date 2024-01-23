@@ -113,7 +113,10 @@ func (inst *myProjectRequest) open() error {
 
 	if inst.wantRequestQuery {
 		getter := web.NewQueryGetter(c).Optional()
-		inst.query.All = getter.GetBool("all")
+		gex := web.NewGetterEx(getter)
+		inst.query.All = gex.GetAll()
+		// inst.query.WithFileState = gex.GetWithFileState()
+		// inst.query.WithProjects = gex.GetWithProjects()
 		inst.query.Pagination = getter.GetPagination()
 		err := getter.Error()
 		if err != nil {

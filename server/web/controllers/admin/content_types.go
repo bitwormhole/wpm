@@ -4,6 +4,7 @@ import (
 	"strconv"
 
 	"github.com/bitwormhole/wpm/server/classes/contenttypes"
+	"github.com/bitwormhole/wpm/server/web"
 
 	"github.com/bitwormhole/wpm/common/objects/dto"
 	"github.com/bitwormhole/wpm/common/objects/dxo"
@@ -35,9 +36,9 @@ func (inst *ContentTypesController) route(rp libgin.RouterProxy) error {
 
 	rp = rp.For("content-types")
 
-	rp.POST("", inst.handle)
-	rp.PUT(":id", inst.handle)
-	rp.DELETE(":id", inst.handle)
+	rp.POST("", inst.handlePost)
+	rp.PUT(":id", inst.handlePut)
+	rp.DELETE(":id", inst.handleDelete)
 
 	rp.GET("", inst.handleGetList)
 	rp.GET(":id", inst.handleGetOne)
@@ -73,6 +74,37 @@ func (inst *ContentTypesController) handleGetList(c *gin.Context) {
 	req.execute(req.doGetList)
 }
 
+func (inst *ContentTypesController) handlePost(c *gin.Context) {
+	req := &myContentTypesRequest{
+		context:         c,
+		controller:      inst,
+		wantRequestID:   false,
+		wantRequestBody: true,
+	}
+	req.execute(req.doInsert)
+}
+
+func (inst *ContentTypesController) handlePut(c *gin.Context) {
+	req := &myContentTypesRequest{
+		context:          c,
+		controller:       inst,
+		wantRequestID:    true,
+		wantRequestQuery: false,
+		wantRequestBody:  true,
+	}
+	req.execute(req.doUpdate)
+}
+
+func (inst *ContentTypesController) handleDelete(c *gin.Context) {
+	req := &myContentTypesRequest{
+		context:          c,
+		controller:       inst,
+		wantRequestID:    true,
+		wantRequestQuery: false,
+	}
+	req.execute(req.doRemove)
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 type myContentTypesRequest struct {
@@ -105,6 +137,19 @@ func (inst *myContentTypesRequest) open() error {
 
 	if inst.wantRequestBody {
 		err := c.BindJSON(&inst.body1)
+		if err != nil {
+			return err
+		}
+	}
+
+	if inst.wantRequestQuery {
+		getter := web.NewQueryGetter(c).Optional()
+		gex := web.NewGetterEx(getter)
+		inst.query.All = gex.GetAll()
+		// inst.query.WithFileState = gex.GetWithFileState()
+		// inst.query.WithProjects = gex.GetWithProjects()
+		inst.query.Pagination = getter.GetPagination()
+		err := getter.Error()
 		if err != nil {
 			return err
 		}
@@ -152,6 +197,9 @@ func (inst *myContentTypesRequest) doGetOne() error {
 }
 
 func (inst *myContentTypesRequest) doGetList() error {
+
+	inst.query.All = true // todo ... workaround
+
 	ctx := inst.context
 	ser := inst.controller.Service
 	q := &inst.query
@@ -161,4 +209,46 @@ func (inst *myContentTypesRequest) doGetList() error {
 	}
 	inst.body2.ContentTypes = list
 	return nil
+}
+
+func (inst *myContentTypesRequest) doInsert() error {
+	ctx := inst.context
+	ser := inst.controller.Service
+	src := inst.body1.ContentTypes
+	dst := inst.body2.ContentTypes
+	for _, item1 := range src {
+		item2, err := ser.Insert(ctx, item1)
+		if err != nil {
+			return err
+		}
+		dst = append(dst, item2)
+	}
+	inst.body2.ContentTypes = dst
+	return nil
+}
+
+func (inst *myContentTypesRequest) doUpdate() error {
+	ctx := inst.context
+	ser := inst.controller.Service
+	src := inst.body1.ContentTypes
+	dst := inst.body2.ContentTypes
+	id := inst.id
+	for _, item1 := range src {
+		if item1.ID == id {
+			item2, err := ser.Update(ctx, id, item1)
+			if err != nil {
+				return err
+			}
+			dst = append(dst, item2)
+		}
+	}
+	inst.body2.ContentTypes = dst
+	return nil
+}
+
+func (inst *myContentTypesRequest) doRemove() error {
+	ctx := inst.context
+	ser := inst.controller.Service
+	id := inst.id
+	return ser.Remove(ctx, id)
 }
