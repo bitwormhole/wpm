@@ -31,8 +31,9 @@ func (inst*autoRegistrar) addAll() error {
 
     
     inst.register(&p09212bb029_common_Example{})
-    inst.register(&p240e4b42e6_imppaths_PathsServiceImpl{})
-    inst.register(&p534481b920_impabout_ServiceImpl{})
+    inst.register(&pbd5ab6f4e0_iabout_ServiceImpl{})
+    inst.register(&pe0ab501628_ienv_EnvironmentImpl{})
+    inst.register(&pe4ab0a3957_ibuckets_MediaBucketPool{})
 
 
     return nil

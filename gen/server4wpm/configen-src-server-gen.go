@@ -2,12 +2,13 @@ package server4wpm
 import (
     paeb460c7d "github.com/bitwormhole/gitlib"
     p663158af9 "github.com/bitwormhole/wpm/common/classes/about"
-    p49fbd1e53 "github.com/bitwormhole/wpm/common/classes/paths"
+    p9ae32fb86 "github.com/bitwormhole/wpm/common/classes/buckets"
     pce44af903 "github.com/bitwormhole/wpm/server/classes/auths"
     p7b01405af "github.com/bitwormhole/wpm/server/classes/backups"
     p6021e9d7f "github.com/bitwormhole/wpm/server/classes/contenttypes"
     pcc7a88d45 "github.com/bitwormhole/wpm/server/classes/examples"
     p97b2b30ad "github.com/bitwormhole/wpm/server/classes/executables"
+    peafe07768 "github.com/bitwormhole/wpm/server/classes/filequery"
     p709b0834a "github.com/bitwormhole/wpm/server/classes/intents"
     p6db2388a6 "github.com/bitwormhole/wpm/server/classes/intenttemplates"
     p3c68bd3f6 "github.com/bitwormhole/wpm/server/classes/locations"
@@ -19,6 +20,7 @@ import (
     p3ededc14a "github.com/bitwormhole/wpm/server/data/database"
     p410b3e070 "github.com/bitwormhole/wpm/server/data/dxo"
     pfba77a8fb "github.com/bitwormhole/wpm/server/implements/example"
+    p9b527161a "github.com/bitwormhole/wpm/server/implements/ifilequery"
     pd11deb9a0 "github.com/bitwormhole/wpm/server/implements/impauths"
     pc347f939e "github.com/bitwormhole/wpm/server/implements/impbackups"
     pd5537a67b "github.com/bitwormhole/wpm/server/implements/impcontenttypes"
@@ -33,6 +35,7 @@ import (
     p8f4406e5f "github.com/bitwormhole/wpm/server/implements/impsoftware"
     p72b9b4e1d "github.com/bitwormhole/wpm/server/web/controllers"
     p415d59ee4 "github.com/bitwormhole/wpm/server/web/controllers/admin"
+    p0d2a11d16 "github.com/starter-go/afs"
     p0ef6f2938 "github.com/starter-go/application"
     pd1a916a20 "github.com/starter-go/libgin"
     p512a30914 "github.com/starter-go/libgorm"
@@ -204,6 +207,50 @@ func (inst* pfba77a8fb5_example_ServiceImpl) inject(injext application.Injection
 
 func (inst*pfba77a8fb5_example_ServiceImpl) getDao(ie application.InjectionExt)pcc7a88d45.DAO{
     return ie.GetComponent("#alias-cc7a88d4518f4d0c9704940596344e7e-DAO").(pcc7a88d45.DAO)
+}
+
+
+
+// type p9b527161a.ServiceImpl in package:github.com/bitwormhole/wpm/server/implements/ifilequery
+//
+// id:com-9b527161a50fcafd-ifilequery-ServiceImpl
+// class:
+// alias:alias-eafe077682a78bde34843d43b78b6a30-Service
+// scope:singleton
+//
+type p9b527161a5_ifilequery_ServiceImpl struct {
+}
+
+func (inst* p9b527161a5_ifilequery_ServiceImpl) register(cr application.ComponentRegistry) error {
+	r := cr.NewRegistration()
+	r.ID = "com-9b527161a50fcafd-ifilequery-ServiceImpl"
+	r.Classes = ""
+	r.Aliases = "alias-eafe077682a78bde34843d43b78b6a30-Service"
+	r.Scope = "singleton"
+	r.NewFunc = inst.new
+	r.InjectFunc = inst.inject
+	return r.Commit()
+}
+
+func (inst* p9b527161a5_ifilequery_ServiceImpl) new() any {
+    return &p9b527161a.ServiceImpl{}
+}
+
+func (inst* p9b527161a5_ifilequery_ServiceImpl) inject(injext application.InjectionExt, instance any) error {
+	ie := injext
+	com := instance.(*p9b527161a.ServiceImpl)
+	nop(ie, com)
+
+	
+    com.FS = inst.getFS(ie)
+
+
+    return nil
+}
+
+
+func (inst*p9b527161a5_ifilequery_ServiceImpl) getFS(ie application.InjectionExt)p0d2a11d16.FS{
+    return ie.GetComponent("#alias-0d2a11d163e349503a64168a1cdf48a2-FS").(p0d2a11d16.FS)
 }
 
 
@@ -810,50 +857,6 @@ func (inst*pb5fa9685f8_implocations_ServiceImpl) getDao(ie application.Injection
 
 
 
-// type p8cd642664.MediaBucketPool in package:github.com/bitwormhole/wpm/server/implements/impmedia
-//
-// id:com-8cd64266481c28e5-impmedia-MediaBucketPool
-// class:
-// alias:alias-67724047202291d9335f729c0f271c46-BucketPool
-// scope:singleton
-//
-type p8cd6426648_impmedia_MediaBucketPool struct {
-}
-
-func (inst* p8cd6426648_impmedia_MediaBucketPool) register(cr application.ComponentRegistry) error {
-	r := cr.NewRegistration()
-	r.ID = "com-8cd64266481c28e5-impmedia-MediaBucketPool"
-	r.Classes = ""
-	r.Aliases = "alias-67724047202291d9335f729c0f271c46-BucketPool"
-	r.Scope = "singleton"
-	r.NewFunc = inst.new
-	r.InjectFunc = inst.inject
-	return r.Commit()
-}
-
-func (inst* p8cd6426648_impmedia_MediaBucketPool) new() any {
-    return &p8cd642664.MediaBucketPool{}
-}
-
-func (inst* p8cd6426648_impmedia_MediaBucketPool) inject(injext application.InjectionExt, instance any) error {
-	ie := injext
-	com := instance.(*p8cd642664.MediaBucketPool)
-	nop(ie, com)
-
-	
-    com.Paths = inst.getPaths(ie)
-
-
-    return nil
-}
-
-
-func (inst*p8cd6426648_impmedia_MediaBucketPool) getPaths(ie application.InjectionExt)p49fbd1e53.Service{
-    return ie.GetComponent("#alias-49fbd1e53488227339ec0b5fef589093-Service").(p49fbd1e53.Service)
-}
-
-
-
 // type p8cd642664.DaoImpl in package:github.com/bitwormhole/wpm/server/implements/impmedia
 //
 // id:com-8cd64266481c28e5-impmedia-DaoImpl
@@ -948,8 +951,8 @@ func (inst*p8cd6426648_impmedia_ServiceImpl) getDao(ie application.InjectionExt)
 }
 
 
-func (inst*p8cd6426648_impmedia_ServiceImpl) getBuckets(ie application.InjectionExt)p677240472.BucketPool{
-    return ie.GetComponent("#alias-67724047202291d9335f729c0f271c46-BucketPool").(p677240472.BucketPool)
+func (inst*p8cd6426648_impmedia_ServiceImpl) getBuckets(ie application.InjectionExt)p9ae32fb86.BucketPool{
+    return ie.GetComponent("#alias-9ae32fb866160a2b2e9745348187d238-BucketPool").(p9ae32fb86.BucketPool)
 }
 
 
@@ -1864,6 +1867,56 @@ func (inst*p415d59ee4c_admin_ExecutablesController) getSender(ie application.Inj
 
 func (inst*p415d59ee4c_admin_ExecutablesController) getService(ie application.InjectionExt)p97b2b30ad.Service{
     return ie.GetComponent("#alias-97b2b30ad7df904c32bf0f040e5527d8-Service").(p97b2b30ad.Service)
+}
+
+
+
+// type p415d59ee4.FileQueryController in package:github.com/bitwormhole/wpm/server/web/controllers/admin
+//
+// id:com-415d59ee4c0dd6da-admin-FileQueryController
+// class:class-d1a916a203352fd5d33eabc36896b42e-Controller
+// alias:
+// scope:singleton
+//
+type p415d59ee4c_admin_FileQueryController struct {
+}
+
+func (inst* p415d59ee4c_admin_FileQueryController) register(cr application.ComponentRegistry) error {
+	r := cr.NewRegistration()
+	r.ID = "com-415d59ee4c0dd6da-admin-FileQueryController"
+	r.Classes = "class-d1a916a203352fd5d33eabc36896b42e-Controller"
+	r.Aliases = ""
+	r.Scope = "singleton"
+	r.NewFunc = inst.new
+	r.InjectFunc = inst.inject
+	return r.Commit()
+}
+
+func (inst* p415d59ee4c_admin_FileQueryController) new() any {
+    return &p415d59ee4.FileQueryController{}
+}
+
+func (inst* p415d59ee4c_admin_FileQueryController) inject(injext application.InjectionExt, instance any) error {
+	ie := injext
+	com := instance.(*p415d59ee4.FileQueryController)
+	nop(ie, com)
+
+	
+    com.Sender = inst.getSender(ie)
+    com.FileQueryService = inst.getFileQueryService(ie)
+
+
+    return nil
+}
+
+
+func (inst*p415d59ee4c_admin_FileQueryController) getSender(ie application.InjectionExt)pd1a916a20.Responder{
+    return ie.GetComponent("#alias-d1a916a203352fd5d33eabc36896b42e-Responder").(pd1a916a20.Responder)
+}
+
+
+func (inst*p415d59ee4c_admin_FileQueryController) getFileQueryService(ie application.InjectionExt)peafe07768.Service{
+    return ie.GetComponent("#alias-eafe077682a78bde34843d43b78b6a30-Service").(peafe07768.Service)
 }
 
 

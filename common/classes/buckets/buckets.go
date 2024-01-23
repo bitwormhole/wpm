@@ -1,4 +1,4 @@
-package media
+package buckets
 
 import (
 	"github.com/bitwormhole/wpm/server/web/dto"

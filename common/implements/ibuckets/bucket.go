@@ -1,7 +1,7 @@
-package impmedia
+package ibuckets
 
 import (
-	"github.com/bitwormhole/wpm/server/classes/media"
+	"github.com/bitwormhole/wpm/common/classes/buckets"
 	"github.com/bitwormhole/wpm/server/web/dto"
 	"github.com/starter-go/afs"
 )
@@ -12,7 +12,7 @@ type bucketImpl struct {
 	dir  afs.Path
 }
 
-func (inst *bucketImpl) _impl() media.Bucket {
+func (inst *bucketImpl) _impl() buckets.Bucket {
 	return inst
 }
 

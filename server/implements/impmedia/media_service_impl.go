@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/bitwormhole/wpm/common/classes/buckets"
 	"github.com/bitwormhole/wpm/server/classes/media"
 	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/web/dto"
@@ -21,8 +22,8 @@ type ServiceImpl struct {
 	//starter:component
 	_as func(media.Service) //starter:as("#")
 
-	Dao     media.DAO        //starter:inject("#")
-	Buckets media.BucketPool //starter:inject("#")
+	Dao     media.DAO          //starter:inject("#")
+	Buckets buckets.BucketPool //starter:inject("#")
 
 	convertor media.Convertor
 }
@@ -131,7 +132,7 @@ func (inst *ServiceImpl) computeMediaURL(info *dto.Media) string {
 	return b.String()
 }
 
-func (inst *ServiceImpl) getTempFile(info *dto.Media, bucket media.Bucket) afs.Path {
+func (inst *ServiceImpl) getTempFile(info *dto.Media, bucket buckets.Bucket) afs.Path {
 	const (
 		prefix = "import-media-"
 		suffix = ".tmp"
