@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/bitwormhole/wpm/common/classes/about"
-	"github.com/bitwormhole/wpm/server/web/vo"
+	"github.com/bitwormhole/wpm/common/objects/vo"
 	"github.com/starter-go/application"
 	"github.com/starter-go/browsers"
 )

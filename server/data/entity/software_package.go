@@ -3,7 +3,7 @@ package entity
 import (
 	"time"
 
-	"github.com/bitwormhole/wpm/server/data/dxo"
+	"github.com/bitwormhole/wpm/common/objects/dxo"
 	"github.com/starter-go/base/lang"
 )
 

@@ -3,8 +3,8 @@ package intents
 import (
 	"context"
 
-	"github.com/bitwormhole/wpm/server/data/dxo"
-	"github.com/bitwormhole/wpm/server/web/dto"
+	"github.com/bitwormhole/wpm/common/objects/dto"
+	"github.com/bitwormhole/wpm/common/objects/dxo"
 )
 
 // Service 表示该类型的服务接口

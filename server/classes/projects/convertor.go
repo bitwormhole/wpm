@@ -1,8 +1,8 @@
 package projects
 
 import (
+	"github.com/bitwormhole/wpm/common/objects/dto"
 	"github.com/bitwormhole/wpm/server/data/entity"
-	"github.com/bitwormhole/wpm/server/web/dto"
 	"github.com/starter-go/security-gorm/rbacdb"
 )
 

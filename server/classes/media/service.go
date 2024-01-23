@@ -4,8 +4,8 @@ import (
 	"context"
 	"io"
 
-	"github.com/bitwormhole/wpm/server/data/dxo"
-	"github.com/bitwormhole/wpm/server/web/dto"
+	"github.com/bitwormhole/wpm/common/objects/dto"
+	"github.com/bitwormhole/wpm/common/objects/dxo"
 	"github.com/starter-go/afs"
 )
 

@@ -1,6 +1,6 @@
 package entity
 
-import "github.com/bitwormhole/wpm/server/data/dxo"
+import "github.com/bitwormhole/wpm/common/objects/dxo"
 
 // RemoteRepository ...
 type RemoteRepository struct {

@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/bitwormhole/wpm/server/web/vo"
+	"github.com/bitwormhole/wpm/common/objects/vo"
 	"github.com/gin-gonic/gin"
 	"github.com/starter-go/application"
 	"github.com/starter-go/libgin"

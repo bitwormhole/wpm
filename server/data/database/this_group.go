@@ -1,7 +1,7 @@
 package database
 
 import (
-	"github.com/bitwormhole/wpm/server/data/dxo"
+	"github.com/bitwormhole/wpm/common/objects/dxo"
 	"github.com/bitwormhole/wpm/server/data/entity"
 	"github.com/starter-go/libgorm"
 	"gorm.io/gorm"

@@ -1,7 +1,7 @@
 package media
 
 import (
-	"github.com/bitwormhole/wpm/server/data/dxo"
+	"github.com/bitwormhole/wpm/common/objects/dxo"
 	"github.com/bitwormhole/wpm/server/data/entity"
 	"gorm.io/gorm"
 )

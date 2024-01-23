@@ -9,9 +9,9 @@ import (
 	"strings"
 
 	"github.com/bitwormhole/wpm/common/classes/buckets"
+	"github.com/bitwormhole/wpm/common/objects/dto"
+	"github.com/bitwormhole/wpm/common/objects/dxo"
 	"github.com/bitwormhole/wpm/server/classes/media"
-	"github.com/bitwormhole/wpm/server/data/dxo"
-	"github.com/bitwormhole/wpm/server/web/dto"
 	"github.com/starter-go/afs"
 	"github.com/starter-go/base/lang"
 )

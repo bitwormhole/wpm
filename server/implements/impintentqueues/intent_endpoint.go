@@ -3,8 +3,8 @@ package impintentqueues
 import (
 	"encoding/json"
 
-	"github.com/bitwormhole/wpm/server/data/dxo"
-	"github.com/bitwormhole/wpm/server/web/vo"
+	"github.com/bitwormhole/wpm/common/objects/dxo"
+	"github.com/bitwormhole/wpm/common/objects/vo"
 )
 
 type iQueueEP struct {

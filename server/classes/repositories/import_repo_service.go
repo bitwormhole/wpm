@@ -3,7 +3,7 @@ package repositories
 import (
 	"context"
 
-	"github.com/bitwormhole/wpm/server/web/vo"
+	"github.com/bitwormhole/wpm/common/objects/vo"
 )
 
 // ImportRepositoryService ...

@@ -4,10 +4,10 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/bitwormhole/wpm/common/objects/dto"
+	"github.com/bitwormhole/wpm/common/objects/dxo"
 	"github.com/bitwormhole/wpm/server/classes/examples"
 	"github.com/bitwormhole/wpm/server/classes/repositories"
-	"github.com/bitwormhole/wpm/server/data/dxo"
-	"github.com/bitwormhole/wpm/server/web/dto"
 )
 
 // RemoteRepositoryService ...

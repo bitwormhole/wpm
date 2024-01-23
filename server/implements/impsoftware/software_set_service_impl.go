@@ -4,10 +4,10 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/bitwormhole/wpm/common/objects/dto"
+	"github.com/bitwormhole/wpm/common/objects/dxo"
 	"github.com/bitwormhole/wpm/server/classes/packages"
 	"github.com/bitwormhole/wpm/server/classes/softwaresets"
-	"github.com/bitwormhole/wpm/server/data/dxo"
-	"github.com/bitwormhole/wpm/server/web/dto"
 )
 
 // SoftwareSetService ...

@@ -3,7 +3,7 @@ package entity
 import (
 	"sort"
 
-	"github.com/bitwormhole/wpm/server/data/dxo"
+	"github.com/bitwormhole/wpm/common/objects/dxo"
 )
 
 // ContentType ...

@@ -1,6 +1,6 @@
 package entity
 
-import "github.com/bitwormhole/wpm/server/data/dxo"
+import "github.com/bitwormhole/wpm/common/objects/dxo"
 
 // Setting  表示一个设置项
 type Setting struct {

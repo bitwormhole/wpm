@@ -11,8 +11,8 @@ import (
 
 	"github.com/bitwormhole/wpm"
 	"github.com/bitwormhole/wpm/common/classes/about"
-	"github.com/bitwormhole/wpm/server/web/dto"
-	"github.com/bitwormhole/wpm/server/web/vo"
+	"github.com/bitwormhole/wpm/common/objects/dto"
+	"github.com/bitwormhole/wpm/common/objects/vo"
 	"github.com/starter-go/afs"
 	"github.com/starter-go/application"
 	"github.com/starter-go/base/lang"

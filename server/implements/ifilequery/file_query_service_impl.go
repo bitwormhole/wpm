@@ -3,8 +3,8 @@ package ifilequery
 import (
 	"context"
 
+	"github.com/bitwormhole/wpm/common/objects/vo"
 	"github.com/bitwormhole/wpm/server/classes/filequery"
-	"github.com/bitwormhole/wpm/server/web/vo"
 	"github.com/starter-go/afs"
 )
 

@@ -1,9 +1,9 @@
 package imprepositories
 
 import (
+	"github.com/bitwormhole/wpm/common/objects/dxo"
 	"github.com/bitwormhole/wpm/server/classes/repositories"
 	"github.com/bitwormhole/wpm/server/data/dao"
-	"github.com/bitwormhole/wpm/server/data/dxo"
 	"github.com/bitwormhole/wpm/server/data/entity"
 	"github.com/starter-go/security/random"
 	"gorm.io/gorm"

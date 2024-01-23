@@ -2,7 +2,7 @@ package admin
 
 import (
 	"github.com/bitwormhole/wpm/common/classes/about"
-	"github.com/bitwormhole/wpm/server/web/vo"
+	"github.com/bitwormhole/wpm/common/objects/vo"
 	"github.com/gin-gonic/gin"
 	"github.com/starter-go/libgin"
 )

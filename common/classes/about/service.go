@@ -3,7 +3,7 @@ package about
 import (
 	"context"
 
-	"github.com/bitwormhole/wpm/server/web/vo"
+	"github.com/bitwormhole/wpm/common/objects/vo"
 )
 
 // Service 表示该类型的服务接口

@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"mime/multipart"
 
+	"github.com/bitwormhole/wpm/common/objects/dto"
+	"github.com/bitwormhole/wpm/common/objects/dxo"
+	"github.com/bitwormhole/wpm/common/objects/vo"
 	"github.com/bitwormhole/wpm/server/classes/media"
-	"github.com/bitwormhole/wpm/server/data/dxo"
-	"github.com/bitwormhole/wpm/server/web/dto"
-	"github.com/bitwormhole/wpm/server/web/vo"
 	"github.com/gin-gonic/gin"
 	"github.com/starter-go/libgin"
 )

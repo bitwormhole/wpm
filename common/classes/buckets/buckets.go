@@ -1,7 +1,7 @@
 package buckets
 
 import (
-	"github.com/bitwormhole/wpm/server/web/dto"
+	"github.com/bitwormhole/wpm/common/objects/dto"
 	"github.com/starter-go/afs"
 )
 
