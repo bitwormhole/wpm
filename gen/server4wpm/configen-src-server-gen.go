@@ -244,6 +244,7 @@ func (inst* p9b527161a5_ifilequery_ServiceImpl) inject(injext application.Inject
 
 	
     com.FS = inst.getFS(ie)
+    com.CTypeService = inst.getCTypeService(ie)
 
 
     return nil
@@ -252,6 +253,11 @@ func (inst* p9b527161a5_ifilequery_ServiceImpl) inject(injext application.Inject
 
 func (inst*p9b527161a5_ifilequery_ServiceImpl) getFS(ie application.InjectionExt)p0d2a11d16.FS{
     return ie.GetComponent("#alias-0d2a11d163e349503a64168a1cdf48a2-FS").(p0d2a11d16.FS)
+}
+
+
+func (inst*p9b527161a5_ifilequery_ServiceImpl) getCTypeService(ie application.InjectionExt)p6021e9d7f.Service{
+    return ie.GetComponent("#alias-6021e9d7f5afc3355549f2f1fec8b3e7-Service").(p6021e9d7f.Service)
 }
 
 
