@@ -3,7 +3,6 @@ package ifilequery
 import (
 	"fmt"
 	"sort"
-	"strings"
 
 	"github.com/bitwormhole/wpm/common/objects/dto"
 	"github.com/bitwormhole/wpm/common/objects/vo"
@@ -28,6 +27,8 @@ func (inst *fsDirItemsFinder) find(want *vo.FileQuery) (*vo.FileQuery, error) {
 		err = inst.findAsFile(path, dst)
 	} else if path.IsDirectory() {
 		err = inst.findAsDir(path, dst)
+	} else if inst.isFSRoot(path) {
+		err = inst.findAsFSRoot(path, dst)
 	} else {
 		p := path.GetPath()
 		err = fmt.Errorf("bad path [%s]", p)
@@ -75,6 +76,32 @@ func (inst *fsDirItemsFinder) findAsFile(file afs.Path, dst *vo.FileQuery) error
 	return nil
 }
 
+func (inst *fsDirItemsFinder) findAsFSRoot(path afs.Path, dst *vo.FileQuery) error {
+
+	all := path.GetFS().ListRoots()
+
+	for _, child := range all {
+
+		item, err := inst.convertToDTO(child)
+		if err == nil {
+			dst.Items = append(dst.Items, item)
+		} else {
+			vlog.Warn(err.Error())
+		}
+	}
+
+	self := &dto.File{
+		Name:   "FS_ROOT",
+		Path:   "/",
+		Exists: true,
+		IsFile: false,
+		IsDir:  true,
+		Type:   "FS_ROOT",
+	}
+	dst.Self = *self
+	return nil
+}
+
 func (inst *fsDirItemsFinder) convertToDTO(path afs.Path) (*dto.File, error) {
 
 	info := path.GetInfo()
@@ -92,6 +119,14 @@ func (inst *fsDirItemsFinder) convertToDTO(path afs.Path) (*dto.File, error) {
 	item.CreatedAt = lang.NewTime(createdAt)
 	item.UpdatedAt = lang.NewTime(updatedAt)
 
+	if item.IsFile {
+		item.Type = "file"
+	} else if item.IsDir {
+		item.Type = "folder"
+	} else {
+		item.Type = "undefined"
+	}
+
 	return item, nil
 }
 
@@ -101,18 +136,27 @@ func (inst *fsDirItemsFinder) pathOf(want *vo.FileQuery) (afs.Path, error) {
 	p1 := want.BaseURL
 	p2 := want.Path
 
-	if strings.HasPrefix(p1, prefix) {
-		p1 = p1[len(prefix):]
-	} else {
-		return nil, fmt.Errorf("bad base URL [%s]", p1)
-	}
+	// if strings.HasPrefix(p1, prefix) {
+	// 	p1 = p1[len(prefix):]
+	// } else {
+	// 	return nil, fmt.Errorf("bad base URL [%s]", p1)
+	// }
 
 	str := p1 + "/" + p2
 	path := inst.parent.FS.NewPath(str)
+
+	if inst.isFSRoot(path) {
+		return path, nil
+	}
 
 	if !path.Exists() {
 		str = path.GetPath()
 		return nil, fmt.Errorf("file or folder is not exists, path = [%s]", str)
 	}
 	return path, nil
+}
+
+func (inst *fsDirItemsFinder) isFSRoot(path afs.Path) bool {
+	str := path.GetPath()
+	return (str == "")
 }

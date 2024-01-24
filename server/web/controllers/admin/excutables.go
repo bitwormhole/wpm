@@ -34,9 +34,9 @@ func (inst *ExecutablesController) route(rp libgin.RouterProxy) error {
 
 	rp = rp.For("executables")
 
-	rp.POST("", inst.handle)
-	rp.PUT(":id", inst.handle)
-	rp.DELETE(":id", inst.handle)
+	rp.POST("", inst.handlePost)
+	rp.PUT(":id", inst.handlePut)
+	rp.DELETE(":id", inst.handleDelete)
 
 	rp.GET("", inst.handleGetList)
 	rp.GET(":id", inst.handleGetOne)
@@ -70,6 +70,38 @@ func (inst *ExecutablesController) handleGetList(c *gin.Context) {
 		wantRequestQuery: true,
 	}
 	req.execute(req.doGetList)
+}
+
+func (inst *ExecutablesController) handlePost(c *gin.Context) {
+	req := &myExecutablesRequest{
+		context:          c,
+		controller:       inst,
+		wantRequestID:    false,
+		wantRequestQuery: false,
+		wantRequestBody:  true,
+	}
+	req.execute(req.doInsert)
+}
+
+func (inst *ExecutablesController) handlePut(c *gin.Context) {
+	req := &myExecutablesRequest{
+		context:          c,
+		controller:       inst,
+		wantRequestID:    true,
+		wantRequestQuery: false,
+		wantRequestBody:  true,
+	}
+	req.execute(req.doUpdate)
+}
+
+func (inst *ExecutablesController) handleDelete(c *gin.Context) {
+	req := &myExecutablesRequest{
+		context:          c,
+		controller:       inst,
+		wantRequestID:    true,
+		wantRequestQuery: false,
+	}
+	req.execute(req.doRemove)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -149,6 +181,9 @@ func (inst *myExecutablesRequest) doGetOne() error {
 }
 
 func (inst *myExecutablesRequest) doGetList() error {
+
+	inst.query.All = true // todo ... workaround
+
 	ctx := inst.context
 	ser := inst.controller.Service
 	q := &inst.query
@@ -158,4 +193,47 @@ func (inst *myExecutablesRequest) doGetList() error {
 	}
 	inst.body2.Executables = list
 	return nil
+}
+
+func (inst *myExecutablesRequest) doInsert() error {
+	ctx := inst.context
+	ser := inst.controller.Service
+	src := inst.body1.Executables
+	dst := inst.body2.Executables
+	for _, item1 := range src {
+		item2, err := ser.Insert(ctx, item1)
+		if err != nil {
+			return err
+		}
+		dst = append(dst, item2)
+	}
+	inst.body2.Executables = dst
+	return nil
+}
+
+func (inst *myExecutablesRequest) doUpdate() error {
+	ctx := inst.context
+	ser := inst.controller.Service
+	src := inst.body1.Executables
+	dst := inst.body2.Executables
+	id := inst.id
+	for _, item1 := range src {
+		if item1.ID != id {
+			continue
+		}
+		item2, err := ser.Update(ctx, id, item1)
+		if err != nil {
+			return err
+		}
+		dst = append(dst, item2)
+	}
+	inst.body2.Executables = dst
+	return nil
+}
+
+func (inst *myExecutablesRequest) doRemove() error {
+	ctx := inst.context
+	ser := inst.controller.Service
+	id := inst.id
+	return ser.Remove(ctx, id)
 }

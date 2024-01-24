@@ -3,6 +3,7 @@ import (
     paeb460c7d "github.com/bitwormhole/gitlib"
     p663158af9 "github.com/bitwormhole/wpm/common/classes/about"
     p9ae32fb86 "github.com/bitwormhole/wpm/common/classes/buckets"
+    p765def9d2 "github.com/bitwormhole/wpm/common/classes/caches"
     p080073581 "github.com/bitwormhole/wpm/common/objects/dxo"
     pce44af903 "github.com/bitwormhole/wpm/server/classes/auths"
     p7b01405af "github.com/bitwormhole/wpm/server/classes/backups"
@@ -619,6 +620,8 @@ func (inst* p7fca5d6e66_impexecutables_ServiceImpl) inject(injext application.In
 
 	
     com.Dao = inst.getDao(ie)
+    com.StateLoader = inst.getStateLoader(ie)
+    com.FS = inst.getFS(ie)
 
 
     return nil
@@ -627,6 +630,66 @@ func (inst* p7fca5d6e66_impexecutables_ServiceImpl) inject(injext application.In
 
 func (inst*p7fca5d6e66_impexecutables_ServiceImpl) getDao(ie application.InjectionExt)p97b2b30ad.DAO{
     return ie.GetComponent("#alias-97b2b30ad7df904c32bf0f040e5527d8-DAO").(p97b2b30ad.DAO)
+}
+
+
+func (inst*p7fca5d6e66_impexecutables_ServiceImpl) getStateLoader(ie application.InjectionExt)p97b2b30ad.StateLoader{
+    return ie.GetComponent("#alias-97b2b30ad7df904c32bf0f040e5527d8-StateLoader").(p97b2b30ad.StateLoader)
+}
+
+
+func (inst*p7fca5d6e66_impexecutables_ServiceImpl) getFS(ie application.InjectionExt)p0d2a11d16.FS{
+    return ie.GetComponent("#alias-0d2a11d163e349503a64168a1cdf48a2-FS").(p0d2a11d16.FS)
+}
+
+
+
+// type p7fca5d6e6.ExecutableStateLoaderImpl in package:github.com/bitwormhole/wpm/server/implements/impexecutables
+//
+// id:com-7fca5d6e6670ce3b-impexecutables-ExecutableStateLoaderImpl
+// class:
+// alias:alias-97b2b30ad7df904c32bf0f040e5527d8-StateLoader
+// scope:singleton
+//
+type p7fca5d6e66_impexecutables_ExecutableStateLoaderImpl struct {
+}
+
+func (inst* p7fca5d6e66_impexecutables_ExecutableStateLoaderImpl) register(cr application.ComponentRegistry) error {
+	r := cr.NewRegistration()
+	r.ID = "com-7fca5d6e6670ce3b-impexecutables-ExecutableStateLoaderImpl"
+	r.Classes = ""
+	r.Aliases = "alias-97b2b30ad7df904c32bf0f040e5527d8-StateLoader"
+	r.Scope = "singleton"
+	r.NewFunc = inst.new
+	r.InjectFunc = inst.inject
+	return r.Commit()
+}
+
+func (inst* p7fca5d6e66_impexecutables_ExecutableStateLoaderImpl) new() any {
+    return &p7fca5d6e6.ExecutableStateLoaderImpl{}
+}
+
+func (inst* p7fca5d6e66_impexecutables_ExecutableStateLoaderImpl) inject(injext application.InjectionExt, instance any) error {
+	ie := injext
+	com := instance.(*p7fca5d6e6.ExecutableStateLoaderImpl)
+	nop(ie, com)
+
+	
+    com.CacheService = inst.getCacheService(ie)
+    com.FS = inst.getFS(ie)
+
+
+    return nil
+}
+
+
+func (inst*p7fca5d6e66_impexecutables_ExecutableStateLoaderImpl) getCacheService(ie application.InjectionExt)p765def9d2.Service{
+    return ie.GetComponent("#alias-765def9d27b81648c9336ef7a9348c53-Service").(p765def9d2.Service)
+}
+
+
+func (inst*p7fca5d6e66_impexecutables_ExecutableStateLoaderImpl) getFS(ie application.InjectionExt)p0d2a11d16.FS{
+    return ie.GetComponent("#alias-0d2a11d163e349503a64168a1cdf48a2-FS").(p0d2a11d16.FS)
 }
 
 

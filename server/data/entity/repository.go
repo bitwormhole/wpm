@@ -25,13 +25,14 @@ type LocalRepository struct {
 	Description string
 	Bare        bool
 
-	ConfigFile     string
-	RepositoryPath string // the parent of ConfigFile
-	DotGitPath     string // can be empty
-	WorkingPath    string // can be empty
-	RegularPath    string `gorm:"index:,unique"` // = ConfigFile
-	Path           string // this.Path == DotGitPath.Path
+	Path        string // this.Path == RegularPath.Path
+	RawPath     string
+	RegularPath string `gorm:"index:,unique"` // = ConfigFile/..
 
+	// ConfigFile     string
+	// RepositoryPath string // the parent of ConfigFile
+	// DotGitPath     string // can be empty
+	// WorkingPath    string // can be empty
 	// Location dxo.LocationID
 	// Class    dxo.LocationClass
 }

@@ -31,6 +31,7 @@ func (inst*autoRegistrar) addAll() error {
 
     
     inst.register(&p09212bb029_common_Example{})
+    inst.register(&p7244b39c6d_icaches_CacheServiceImpl{})
     inst.register(&pbd5ab6f4e0_iabout_ServiceImpl{})
     inst.register(&pe0ab501628_ienv_EnvironmentImpl{})
     inst.register(&pe4ab0a3957_ibuckets_MediaBucketPool{})

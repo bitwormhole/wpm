@@ -4,6 +4,7 @@ import (
     p09212bb02 "github.com/bitwormhole/wpm/common"
     pbd5ab6f4e "github.com/bitwormhole/wpm/common/implements/iabout"
     pe4ab0a395 "github.com/bitwormhole/wpm/common/implements/ibuckets"
+    p7244b39c6 "github.com/bitwormhole/wpm/common/implements/icaches"
     pe0ab50162 "github.com/bitwormhole/wpm/common/implements/ienv"
     p0d2a11d16 "github.com/starter-go/afs"
     p0ef6f2938 "github.com/starter-go/application"
@@ -168,6 +169,44 @@ func (inst* pe4ab0a3957_ibuckets_MediaBucketPool) inject(injext application.Inje
 
 func (inst*pe4ab0a3957_ibuckets_MediaBucketPool) getEnv(ie application.InjectionExt)pae1817f17.Environment{
     return ie.GetComponent("#alias-ae1817f178ee7043d385955ec6d6a87b-Environment").(pae1817f17.Environment)
+}
+
+
+
+// type p7244b39c6.CacheServiceImpl in package:github.com/bitwormhole/wpm/common/implements/icaches
+//
+// id:com-7244b39c6dffc187-icaches-CacheServiceImpl
+// class:
+// alias:alias-765def9d27b81648c9336ef7a9348c53-Service
+// scope:singleton
+//
+type p7244b39c6d_icaches_CacheServiceImpl struct {
+}
+
+func (inst* p7244b39c6d_icaches_CacheServiceImpl) register(cr application.ComponentRegistry) error {
+	r := cr.NewRegistration()
+	r.ID = "com-7244b39c6dffc187-icaches-CacheServiceImpl"
+	r.Classes = ""
+	r.Aliases = "alias-765def9d27b81648c9336ef7a9348c53-Service"
+	r.Scope = "singleton"
+	r.NewFunc = inst.new
+	r.InjectFunc = inst.inject
+	return r.Commit()
+}
+
+func (inst* p7244b39c6d_icaches_CacheServiceImpl) new() any {
+    return &p7244b39c6.CacheServiceImpl{}
+}
+
+func (inst* p7244b39c6d_icaches_CacheServiceImpl) inject(injext application.InjectionExt, instance any) error {
+	ie := injext
+	com := instance.(*p7244b39c6.CacheServiceImpl)
+	nop(ie, com)
+
+	
+
+
+    return nil
 }
 
 

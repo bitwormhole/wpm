@@ -93,6 +93,8 @@ github.com/pkg/browser v0.0.0-20210911075715-681adbf594b8/go.mod h1:HKlIX3XHQyzL
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/starter-go/afs v0.9.4 h1:0o96pOdtDvZcWSS5b7icbzYHq6hdfnHZyr+sXD6OZds=
 github.com/starter-go/afs v0.9.4/go.mod h1:Kuwz+TntvRVUYJuHWfR9hkEIcBiIC3ScW9IS/gjJulM=
+github.com/starter-go/afs v0.9.5 h1:nlXQwCzqI0fht6RrQYj+CBCH2dPX2j7HArkEf11Vhjw=
+github.com/starter-go/afs v0.9.5/go.mod h1:Kuwz+TntvRVUYJuHWfR9hkEIcBiIC3ScW9IS/gjJulM=
 github.com/starter-go/application v0.9.18 h1:rAjCJvpZjzed7QsUnAh8rBQLFFQegyHKpetsv6i1UKo=
 github.com/starter-go/application v0.9.18/go.mod h1:WXdBRmDnpM6+vAxbuYrOwqxWH1dcGxhXLmwFepRBCeA=
 github.com/starter-go/application v0.9.20 h1:CxOmwhpr1Kz8mSv0e2T+j+CBPXvCmfMFCqHq5m+tBWk=

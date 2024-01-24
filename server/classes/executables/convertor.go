@@ -31,6 +31,22 @@ func (inst *Convertor) ConvertE2D(src *entity.Executable) *dto.Executable {
 	dst.ID = src.ID
 
 	//todo ....
+	dst.URN = src.URN
+	dst.Name = src.Name
+	dst.Aliases = src.Aliases
+	dst.Namespace = src.Namespace
+	dst.Title = src.Title
+	dst.Description = src.Description
+	dst.IconURL = src.IconURL
+
+	dst.Path = src.Path
+	dst.Size = src.Size
+	dst.SHA256SUM = src.SHA256SUM
+	dst.OpenWithPriority = src.OpenWithPriority
+
+	dst.OS = src.OS
+	dst.Arch = src.Arch
+	dst.Version = src.Version
 
 	return dst
 }
@@ -42,6 +58,22 @@ func (inst *Convertor) ConvertD2E(src *dto.Executable) *entity.Executable {
 	dst.ID = src.ID
 
 	//todo ....
+	dst.URN = src.URN
+	dst.Name = src.Name
+	dst.Aliases = src.Aliases
+	dst.Namespace = src.Namespace
+	dst.Title = src.Title
+	dst.Description = src.Description
+	dst.IconURL = src.IconURL
+
+	dst.Path = src.Path
+	dst.Size = src.Size
+	dst.SHA256SUM = src.SHA256SUM
+	dst.OpenWithPriority = src.OpenWithPriority
+
+	dst.OS = src.OS
+	dst.Arch = src.Arch
+	dst.Version = src.Version
 
 	return dst
 }

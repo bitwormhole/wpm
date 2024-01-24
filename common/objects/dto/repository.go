@@ -28,6 +28,7 @@ type LocalRepository struct {
 	WorkingPath    string `json:"workspace_path"`
 	ConfigFile     string `json:"config_file_path"`
 	RegularPath    string `json:"regular_path"`
+	RawPath        string `json:"raw_path"`
 
 	Path     string            `json:"path"` // this.Path == this.RepositoryPath
 	Location dxo.LocationID    `json:"location"`

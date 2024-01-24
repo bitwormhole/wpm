@@ -35,13 +35,16 @@ func (LocalRepositoryConvertor) E2D(src *entity.LocalRepository) *dto.LocalRepos
 	dst.DisplayName = src.DisplayName
 	dst.Description = src.Description
 
-	dst.ConfigFile = src.ConfigFile
-	dst.RegularPath = src.RegularPath
-	dst.WorkingPath = src.WorkingPath
-	dst.RepositoryPath = src.RepositoryPath
-	dst.DotGitPath = src.DotGitPath
-
 	dst.Path = src.Path
+	dst.RawPath = src.RawPath
+	dst.RegularPath = src.RegularPath
+
+	// dst.ConfigFile = src.ConfigFile
+	// dst.WorkingPath = src.WorkingPath
+	// dst.RepositoryPath = src.RepositoryPath
+	// dst.DotGitPath = src.DotGitPath
+	// dst.Path = src.Path
+
 	dst.Bare = src.Bare
 	dst.IconURL = "todo..."
 
@@ -60,13 +63,13 @@ func (inst *LocalRepositoryConvertor) D2E(src *dto.LocalRepository) *entity.Loca
 	dst.DisplayName = src.DisplayName
 	dst.Description = src.Description
 
-	dst.ConfigFile = src.ConfigFile
+	// dst.ConfigFile = src.ConfigFile
+	// dst.RepositoryPath = src.RepositoryPath
+	// dst.DotGitPath = src.DotGitPath
 	dst.RegularPath = src.RegularPath
-	dst.WorkingPath = src.WorkingPath
-	dst.RepositoryPath = src.RepositoryPath
-	dst.DotGitPath = src.DotGitPath
-
+	dst.RawPath = src.RawPath
 	dst.Path = src.Path
+
 	dst.Bare = src.Bare
 	dst.URN = inst.computeURN(src)
 
