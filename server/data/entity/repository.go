@@ -25,11 +25,12 @@ type LocalRepository struct {
 	Description string
 	Bare        bool
 
-	Path        string // this.Path == RegularPath.Path
-	RawPath     string
-	RegularPath string `gorm:"index:,unique"` // = ConfigFile/..
+	Path       string // this.Path == ConfigFile.parentDir
+	ConfigFile string // the path of '.git/config' file
 
-	// ConfigFile     string
+	RegularPath dxo.RegularPath `gorm:"index:,unique"` // = ConfigFile/..
+
+	// RawPath     string
 	// RepositoryPath string // the parent of ConfigFile
 	// DotGitPath     string // can be empty
 	// WorkingPath    string // can be empty
@@ -37,17 +38,29 @@ type LocalRepository struct {
 	// Class    dxo.LocationClass
 }
 
-// ListPathFields ...
-func (LocalRepository) ListPathFields() []string {
-	return []string{"path", "config_file", "repository_path", "dot_git_path", "working_path", "regular_path"}
-}
+////////////////////////////////////////////////////////////////////////////////
 
 // TableName 。。。
 func (RemoteRepository) TableName() string {
 	return getTableName("remote_repositories")
 }
 
+////////////////////////////////////////////////////////////////////////////////
+
 // TableName 。。。
 func (LocalRepository) TableName() string {
 	return getTableName("local_repositories")
 }
+
+// ComputeRegularPath 。。。
+func (inst *LocalRepository) ComputeRegularPath() dxo.RegularPath {
+	path := inst.Path
+	return dxo.NewRegularPath(path)
+}
+
+// ListPathFields ...
+func (LocalRepository) ListPathFields() []string {
+	return []string{"path", "config_file", "repository_path", "dot_git_path", "working_path", "regular_path"}
+}
+
+////////////////////////////////////////////////////////////////////////////////

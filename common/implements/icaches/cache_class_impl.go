@@ -12,8 +12,10 @@ type classImpl struct {
 	context *cacheContext
 	name    string
 	maxAge  time.Duration
-	loader  caches.Loader
 	uuid    lang.UUID
+
+	// loader  caches.Loader
+
 }
 
 func (inst *classImpl) _impl() caches.Class {
@@ -35,9 +37,9 @@ func (inst *classImpl) Name() string {
 	return inst.name
 }
 
-func (inst *classImpl) Loader() caches.Loader {
-	return inst.loader
-}
+// func (inst *classImpl) Loader() caches.Loader {
+// 	return inst.loader
+// }
 
 func (inst *classImpl) MaxAge() time.Duration {
 	return inst.maxAge

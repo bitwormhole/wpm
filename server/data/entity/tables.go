@@ -28,7 +28,7 @@ func ListAllTypes() []any {
 	list = append(list, new(SystemConfig))
 	list = append(list, new(UserConfig))
 	list = append(list, new(User))
-	list = append(list, new(Worktree))
+	list = append(list, new(TreeRoot))
 
 	return list
 }

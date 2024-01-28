@@ -23,14 +23,15 @@ type LocalRepository struct {
 
 	RepositoryBase
 
+	Path           string `json:"path"` // this.Path == this.RepositoryPath
 	DotGitPath     string `json:"dot_git_path"`
 	RepositoryPath string `json:"repository_path"`
 	WorkingPath    string `json:"workspace_path"`
 	ConfigFile     string `json:"config_file_path"`
 	RegularPath    string `json:"regular_path"`
-	RawPath        string `json:"raw_path"`
 
-	Path     string            `json:"path"` // this.Path == this.RepositoryPath
+	// RawPath        string `json:"raw_path"`
+
 	Location dxo.LocationID    `json:"location"`
 	Class    dxo.LocationClass `json:"location_class"`
 

@@ -26,15 +26,15 @@ type Service interface {
 
 // Pool 表示缓存数据池
 type Pool interface {
-	NewClass(name string, loader Loader) Class
+	// NewClass(name string) Class
 
 	GetClass(name string) Class
 
 	Clean(want *Want)
 }
 
-// Loader 表示缓存数据加载器
-type Loader func(want *Want) (any, error)
+// OnLoadFunc 表示缓存数据加载器
+type OnLoadFunc func(want *Want) (any, error)
 
 // Class 表示一种缓存数据类型
 type Class interface {
@@ -42,7 +42,7 @@ type Class interface {
 
 	UUID() lang.UUID
 
-	Loader() Loader
+	// Loader() Loader
 
 	MaxAge() time.Duration
 

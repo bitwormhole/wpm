@@ -13,7 +13,7 @@ type Adapter struct {
 	Setting        *Setting
 	Source         *Namespace
 	User           *User
-	Worktree       *Worktree
+	TreeRoot       *TreeRoot
 }
 
 ////////////////////////////////////////////////////////////////////////////////

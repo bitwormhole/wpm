@@ -35,9 +35,9 @@ func (inst *ProjectController) route(rp libgin.RouterProxy) error {
 
 	rp = rp.For("projects")
 
-	rp.POST("", inst.handle)
-	rp.PUT(":id", inst.handle)
-	rp.DELETE(":id", inst.handle)
+	rp.POST("", inst.handlePost)
+	rp.PUT(":id", inst.handlePut)
+	rp.DELETE(":id", inst.handleDelete)
 
 	rp.GET("", inst.handleGetList)
 	rp.GET(":id", inst.handleGetOne)
@@ -72,6 +72,35 @@ func (inst *ProjectController) handleGetList(c *gin.Context) {
 		wantRequestQuery: true,
 	}
 	req.execute(req.doGetList)
+}
+
+func (inst *ProjectController) handlePost(c *gin.Context) {
+	req := &myProjectRequest{
+		context:         c,
+		controller:      inst,
+		wantRequestID:   false,
+		wantRequestBody: true,
+	}
+	req.execute(req.doInsert)
+}
+
+func (inst *ProjectController) handlePut(c *gin.Context) {
+	req := &myProjectRequest{
+		context:         c,
+		controller:      inst,
+		wantRequestID:   true,
+		wantRequestBody: true,
+	}
+	req.execute(req.doUpdate)
+}
+
+func (inst *ProjectController) handleDelete(c *gin.Context) {
+	req := &myProjectRequest{
+		context:       c,
+		controller:    inst,
+		wantRequestID: true,
+	}
+	req.execute(req.doRemove)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -173,4 +202,47 @@ func (inst *myProjectRequest) doGetList() error {
 	}
 	inst.body2.Projects = list
 	return nil
+}
+
+func (inst *myProjectRequest) doInsert() error {
+	ctx := inst.context
+	ser := inst.controller.Service
+	src := inst.body1.Projects
+	dst := inst.body2.Projects
+	for _, item := range src {
+		item, err := ser.Insert(ctx, item)
+		if err != nil {
+			return err
+		}
+		dst = append(dst, item)
+	}
+	inst.body2.Projects = dst
+	return nil
+}
+
+func (inst *myProjectRequest) doUpdate() error {
+	ctx := inst.context
+	ser := inst.controller.Service
+	src := inst.body1.Projects
+	dst := inst.body2.Projects
+	id := inst.id
+	for _, item := range src {
+		if item.ID != id {
+			continue
+		}
+		item, err := ser.Update(ctx, id, item)
+		if err != nil {
+			return err
+		}
+		dst = append(dst, item)
+	}
+	inst.body2.Projects = dst
+	return nil
+}
+
+func (inst *myProjectRequest) doRemove() error {
+	ctx := inst.context
+	ser := inst.controller.Service
+	id := inst.id
+	return ser.Remove(ctx, id)
 }

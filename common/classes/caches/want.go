@@ -10,10 +10,10 @@ import (
 type Want struct {
 	Context   context.Context
 	ID        string
-	ClassName string
-	Class     Class
+	Class     string
+	Pool      Pool
 	Item      Item
-	Loader    Loader
+	OnLoad    OnLoadFunc
 	Scope     Scope
 	NotBefore lang.Time
 

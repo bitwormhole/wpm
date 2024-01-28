@@ -14,7 +14,7 @@ func (inst *cachePool) _impl() caches.Pool {
 	return inst
 }
 
-func (inst *cachePool) NewClass(name string, loader caches.Loader) caches.Class {
+func (inst *cachePool) openClass(name string) caches.Class {
 	ctx := inst.context
 	ctx.mutex.Lock()
 	defer func() {
@@ -28,7 +28,7 @@ func (inst *cachePool) NewClass(name string, loader caches.Loader) caches.Class 
 
 	class := new(classImpl)
 	class.name = name
-	class.loader = loader
+	// class.loader = loader
 	class.maxAge = 60 * time.Minute
 	class.context = inst.context
 	class.init()
@@ -39,12 +39,7 @@ func (inst *cachePool) NewClass(name string, loader caches.Loader) caches.Class 
 }
 
 func (inst *cachePool) GetClass(name string) caches.Class {
-	ctx := inst.context
-	ctx.mutex.Lock()
-	defer func() {
-		ctx.mutex.Unlock()
-	}()
-	return ctx.classes[name]
+	return inst.openClass(name)
 }
 
 func (inst *cachePool) Clean(want *caches.Want) {

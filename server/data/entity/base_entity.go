@@ -26,6 +26,7 @@ type Base struct {
 	Installation dxo.InstallationID // 用来跟踪软件包安装资源项 ,  >0 表示已安装
 }
 
+// PrepareInsert ...
 func (inst *Base) PrepareInsert() {
 	if inst.Installation == 0 {
 		inst.Installation = -1

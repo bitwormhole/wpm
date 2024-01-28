@@ -28,21 +28,18 @@ type ExecutableStateLoaderImpl struct {
 	CacheService caches.Service //starter:inject("#")
 	FS           afs.FS         //starter:inject("#")
 
-	cache *myStateCache
+	cache caches.Agent
 }
 
 func (inst *ExecutableStateLoaderImpl) _impl() executables.StateLoader {
 	return inst
 }
 
-func (inst *ExecutableStateLoaderImpl) getCache() *myStateCache {
-	c := inst.cache
-	if c == nil {
-		c = new(myStateCache)
-		c.init(inst.CacheService, inst.reload)
-		inst.cache = c
-	}
-	return c
+func (inst *ExecutableStateLoaderImpl) getCacheLoader(ctx context.Context) caches.Loader {
+	loader := inst.cache.NewLoader(ctx)
+	loader.Class("ExecutableStateLoaderImpl::dto.Executable")
+	loader.Pool(inst.CacheService.GetPool())
+	return loader
 }
 
 // Load ...
@@ -52,13 +49,14 @@ func (inst *ExecutableStateLoaderImpl) Load(ctx context.Context, id dxo.Executab
 		return fmt.Errorf("param is nil")
 	}
 
-	want := &caches.Want{
-		ID: o.UUID.String(),
-	}
-	want.SetAttr("exe", o)
-	want.NotBefore = o.UpdatedAt
+	loader := inst.getCacheLoader(ctx)
+	loader.ID(o.UUID.String())
+	loader.NotBefore(o.UpdatedAt)
+	loader.OnLoad(func(want *caches.Want) (any, error) {
+		return inst.reload(want, o)
+	})
 
-	x, err := inst.getCache().load(want)
+	x, err := loader.Load()
 	if err != nil {
 		return err
 	}
@@ -69,9 +67,9 @@ func (inst *ExecutableStateLoaderImpl) Load(ctx context.Context, id dxo.Executab
 	return nil
 }
 
-func (inst *ExecutableStateLoaderImpl) reload(want *caches.Want) (any, error) {
+func (inst *ExecutableStateLoaderImpl) reload(want *caches.Want, obj *dto.Executable) (any, error) {
 
-	obj := want.GetAttr("exe").(*dto.Executable)
+	// obj := want.GetAttr("exe").(*dto.Executable)
 	file := inst.FS.NewPath(obj.Path)
 
 	vlog.Info("reload state of Executable:%d", obj.ID)

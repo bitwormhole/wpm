@@ -2,6 +2,17 @@ package dto
 
 import "github.com/bitwormhole/wpm/common/objects/dxo"
 
+// TreeRoot ...
+type TreeRoot struct {
+	ID dxo.TreeRootID `json:"id"`
+	Base
+
+	Path       string `json:"path"`         // this.Path = DotGitPath.parent
+	DotGitPath string `json:"dot_git_path"` // .git 文件（或目录）路径
+
+	Class dxo.LocationClass `json:"location_class"`
+}
+
 // Worktree 表示一颗工作树, 或者 submodule
 type Worktree struct {
 	ID dxo.WorktreeID `json:"id"`

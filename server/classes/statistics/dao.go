@@ -1,4 +1,4 @@
-package examples
+package statistics
 
 import (
 	"github.com/bitwormhole/wpm/common/objects/dxo"

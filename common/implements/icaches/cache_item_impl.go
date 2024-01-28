@@ -1,6 +1,7 @@
 package icaches
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/bitwormhole/wpm/common/classes/caches"
@@ -108,13 +109,15 @@ func (inst *itemImpl) isExpired(h *itemDataHolder, want *caches.Want) bool {
 
 func (inst *itemImpl) load(want *caches.Want) (*itemDataHolder, error) {
 
-	want.ClassName = inst.class.Name()
-	want.Class = inst.class
-	want.ID = inst.id
-	want.Item = inst
-	want.Loader = inst.class.Loader()
+	if want == nil {
+		return nil, fmt.Errorf("no param: want")
+	}
+	fn := want.OnLoad
+	if fn == nil {
+		return nil, fmt.Errorf("no param: OnLoad")
+	}
 
-	data, err := want.Loader(want)
+	data, err := fn(want)
 	if err != nil {
 		return nil, err
 	}

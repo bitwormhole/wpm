@@ -88,6 +88,9 @@ type UserID int
 // WorktreeID ...
 type WorktreeID int
 
+// TreeRootID ...
+type TreeRootID int
+
 ////////////////////////////////////////////////////////////////////////////////
 
 func (id IntentQueueID) String() string {

@@ -109,6 +109,7 @@ func (inst *fsDirItemsFinder) convertToDTO(path afs.Path) (*dto.File, error) {
 	updatedAt := info.UpdatedAt()
 
 	item := new(dto.File)
+	item.Path = path.GetPath()
 	item.Name = path.GetName()
 	item.Size = info.Length()
 	item.Type = "todo..."
