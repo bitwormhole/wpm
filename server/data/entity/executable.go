@@ -26,10 +26,10 @@ type Executable struct {
 	Arch    string
 	Version string
 
-	Path string `gorm:"index:,unique"`
+	Path     string         `gorm:"index:,unique"`
+	Location dxo.LocationID `gorm:"unique"`
 
 	// this.Path == Location.Path
-	// Location dxo.LocationID `gorm:"index:,unique"`
 	// Class    dxo.LocationClass
 }
 

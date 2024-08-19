@@ -19,8 +19,8 @@ type Project struct {
 	OwnerRepository dxo.LocalRepositoryID
 
 	// FullPath        string `gorm:"index:,unique"`  [已废弃] 用 Path 代替
-	ProjectDir  string
-	RegularPath string `gorm:"index:,unique"`
+	ProjectDir string
+	Location   dxo.LocationID `gorm:"unique"`
 
 	Path string // = RegularPath
 

@@ -1,4 +1,4 @@
-package examples
+package repositoryworktreeproject
 
 import "github.com/starter-go/rbac"
 

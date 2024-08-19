@@ -27,11 +27,12 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.8 // indirect
-	github.com/starter-go/afs v0.9.5 // indirect
-	github.com/starter-go/application v0.9.20 // indirect
+	github.com/starter-go/afs v0.9.6 // indirect
+	github.com/starter-go/application v0.9.23 // indirect
 	github.com/starter-go/base v0.9.11 // indirect
 	github.com/starter-go/browsers v0.0.2 // indirect
 	github.com/starter-go/configen v0.9.5 // indirect
+	github.com/starter-go/env v0.0.2 // indirect
 	github.com/starter-go/httpagent v0.0.4 // indirect
 	github.com/starter-go/libgin v1.0.11 // indirect
 	github.com/starter-go/libgorm v0.9.12 // indirect
@@ -43,9 +44,9 @@ require (
 	github.com/starter-go/security-gin v1.0.45 // indirect
 	github.com/starter-go/security-gin-gorm v1.0.45 // indirect
 	github.com/starter-go/security-gorm v1.0.45 // indirect
-	github.com/starter-go/starter v1.0.7 // indirect
+	github.com/starter-go/starter v1.0.8 // indirect
 	github.com/starter-go/units v0.0.3 // indirect
-	github.com/starter-go/vlog v0.9.7 // indirect
+	github.com/starter-go/vlog v0.9.8 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.11 // indirect
 	golang.org/x/arch v0.3.0 // indirect

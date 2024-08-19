@@ -23,13 +23,13 @@ type LocalRepository struct {
 	Name        string
 	DisplayName string
 	Description string
-	Bare        bool
 
 	Path       string // this.Path == ConfigFile.parentDir
 	ConfigFile string // the path of '.git/config' file
 
-	RegularPath dxo.RegularPath `gorm:"index:,unique"` // = ConfigFile/..
+	Location dxo.LocationID `gorm:"unique"`
 
+	// Bare        bool
 	// RawPath     string
 	// RepositoryPath string // the parent of ConfigFile
 	// DotGitPath     string // can be empty

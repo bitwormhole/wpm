@@ -22,8 +22,8 @@ func (inst *MediaBucketPool) _impl() buckets.BucketPool {
 // GetBucket ...
 func (inst *MediaBucketPool) GetBucket(name string) buckets.Bucket {
 
-	dd := inst.Env.DataDir()
-	bucketDir := dd.GetMediaBucket(name)
+	dataDir := inst.Env.GetDataDir()
+	bucketDir := dataDir.GetChild("buckets/" + name)
 
 	b := new(bucketImpl)
 	b.name = bucketDir.GetName()

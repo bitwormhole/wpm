@@ -21,6 +21,7 @@ func ListAllTypes() []any {
 	list = append(list, new(Project))
 	list = append(list, new(LocalRepository))
 	list = append(list, new(RemoteRepository))
+	list = append(list, new(GitRepositoryContainer))
 	list = append(list, new(Setting))
 	list = append(list, new(SoftwarePackage))
 	list = append(list, new(InstalledFile))

@@ -43,8 +43,8 @@ func (LocalRepositoryConvertor) E2D(src *entity.LocalRepository) *dto.LocalRepos
 	// dst.RepositoryPath = src.RepositoryPath
 	// dst.DotGitPath = src.DotGitPath
 	// dst.Path = src.Path
+	// dst.Bare = src.Bare
 
-	dst.Bare = src.Bare
 	dst.IconURL = "todo..."
 
 	return dst
@@ -68,9 +68,9 @@ func (inst *LocalRepositoryConvertor) D2E(src *dto.LocalRepository) *entity.Loca
 
 	dst.ConfigFile = src.ConfigFile
 	dst.Path = src.Path
-	dst.RegularPath = dst.ComputeRegularPath()
+	dst.Location = src.Location
 
-	dst.Bare = src.Bare
+	// dst.Bare = src.Bare
 	dst.URN = inst.computeURN(src)
 
 	return dst

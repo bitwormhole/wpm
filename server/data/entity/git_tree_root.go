@@ -13,7 +13,7 @@ type TreeRoot struct {
 	Path       string // this.Path == DotGitPath.parentDir
 	DotGitPath string // '.git' （文件|文件夹） 的路径。
 
-	RegularPath dxo.RegularPath `gorm:"index:,unique"` // = ConfigFile/..
+	Location dxo.LocationID `gorm:"unique"`
 
 	// WorkingDirectory string
 	// RegularPath      string `gorm:"index:,unique"` // = DotGitPath

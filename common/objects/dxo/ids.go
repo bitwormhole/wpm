@@ -70,6 +70,9 @@ type MainRepositoryID int
 // RepositoryGroupID ...
 type RepositoryGroupID int
 
+// GitRepositoryContainerID ...
+type GitRepositoryContainerID int
+
 // SettingID ...
 type SettingID int
 

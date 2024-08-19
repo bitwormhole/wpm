@@ -7,7 +7,8 @@ type Location struct {
 	ID dxo.LocationID `gorm:"primaryKey"`
 	Base
 
-	Path string `gorm:"index:,unique"` // the normalized full-path
+	RawPath string
+	Path    string `gorm:"index:,unique"` // the normalized full-path
 
 	Target dxo.URN
 	Class  dxo.LocationClass

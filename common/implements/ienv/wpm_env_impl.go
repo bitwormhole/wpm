@@ -11,21 +11,15 @@ import (
 	"github.com/bitwormhole/wpm"
 	"github.com/starter-go/afs"
 	"github.com/starter-go/application"
+	"github.com/starter-go/env"
+)
+
+const (
+	myAppName = "wpm"
 )
 
 type environment struct {
 	facade wpm.Environment
-	dd     wpm.DataDir
-
-	baseServerPort    int
-	currentServerPort int
-	currentUserName   string
-	currentUserHome   afs.Path
-	currentUserWPMDir afs.Path
-	currentExeFile    afs.Path
-	filesFolder       afs.Path
-	useHTTPS          bool
-	webServerURL      string
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -36,14 +30,15 @@ type EnvironmentImpl struct {
 	//starter:component
 	_as func(wpm.Environment) //starter:as("#")
 
-	FS afs.FS //starter:inject("#")
+	FS         afs.FS      //starter:inject("#")
+	EnvService env.Service //starter:inject("#")
 
-	ServerPort       int    //starter:inject("${server.port}")
-	ServerPortNumMin int    //starter:inject("${server.port}")
-	ServerPortNumMax int    //starter:inject("${server.port.max}")
-	ServerName       string //starter:inject("${server.default}")
-	ServerHost       string //starter:inject("${server.host}")
-	ServerProtocol   string //starter:inject("${server.protocol}")
+	// ServerPort       int    //starter:inject("${server.port}")
+	// ServerPortNumMin int    //starter:inject("${server.port}")
+	// ServerPortNumMax int    //starter:inject("${server.port.max}")
+	// ServerName       string //starter:inject("${server.default}")
+	// ServerHost       string //starter:inject("${server.host}")
+	// ServerProtocol   string //starter:inject("${server.protocol}")
 
 	env *environment
 }
