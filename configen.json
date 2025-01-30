@@ -4,42 +4,12 @@
         "sources": [
             {
                 "id": "main",
-                "path": "src/main/golang/code",
-                "r": true
-            },
-            {
-                "id": "agent",
-                "path": "agent",
-                "r": true
-            },
-            {
-                "id": "boot",
-                "path": "boot",
-                "r": true
-            },
-            {
-                "id": "common",
-                "path": "common",
-                "r": true
-            },
-            {
-                "id": "server",
-                "path": "server",
-                "r": true
-            },
-            {
-                "id": "cli",
-                "path": "cli",
-                "r": true
-            },
-            {
-                "id": "gui",
-                "path": "gui",
+                "path": "src/main/golang",
                 "r": true
             },
             {
                 "id": "test",
-                "path": "src/test/golang/code",
+                "path": "src/test/golang",
                 "r": true
             }
         ],
@@ -49,48 +19,6 @@
                 "path": "gen/main4wpm",
                 "sources": [
                     "main"
-                ]
-            },
-            {
-                "id": "agent",
-                "path": "gen/agent4wpm",
-                "sources": [
-                    "agent"
-                ]
-            },
-            {
-                "id": "boot",
-                "path": "gen/boot4wpm",
-                "sources": [
-                    "boot"
-                ]
-            },
-            {
-                "id": "common",
-                "path": "gen/common4wpm",
-                "sources": [
-                    "common"
-                ]
-            },
-            {
-                "id": "server",
-                "path": "gen/server4wpm",
-                "sources": [
-                    "server"
-                ]
-            },
-            {
-                "id": "cli",
-                "path": "gen/cli4wpm",
-                "sources": [
-                    "cli"
-                ]
-            },
-            {
-                "id": "gui",
-                "path": "gen/gui4wpm",
-                "sources": [
-                    "gui"
                 ]
             },
             {

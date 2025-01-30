@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	m := wpm.ModuleForTest()
+	m := wpm.Module()
 	i := starter.Init(os.Args)
 	i.MainModule(m)
 	i.WithPanic(true).Run()

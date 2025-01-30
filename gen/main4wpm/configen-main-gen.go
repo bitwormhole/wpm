@@ -30,7 +30,13 @@ func (inst *autoRegistrar) register(factory comFactory) error {
 func (inst*autoRegistrar) addAll() error {
 
     
-    inst.register(&pd894cb5e7e_code_Example{})
+    inst.register(&p213a6f747a_idao_LocationDaoImpl{})
+    inst.register(&p57f9b38391_apiv1_ExampleController{})
+    inst.register(&p57f9b38391_apiv1_LocalRepositoryController{})
+    inst.register(&p636ab1bcf1_example_DaoImpl{})
+    inst.register(&p8aac3fe082_database_ThisGroup{})
+    inst.register(&pb25d04dc62_ilocations_LocationServiceImpl{})
+    inst.register(&pd7f15ffc37_irepositories_LocalRepositoryServiceImpl{})
 
 
     return nil

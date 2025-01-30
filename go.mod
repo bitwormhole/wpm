@@ -3,12 +3,24 @@ module github.com/bitwormhole/wpm
 go 1.20
 
 require (
-	github.com/bitwormhole/gitlib v0.1.3 // indirect
+	github.com/gin-gonic/gin v1.9.1 // direct
+	github.com/starter-go/application v0.9.26 // direct
+	github.com/starter-go/libgin v1.0.17 // direct
+	github.com/starter-go/libgorm v0.9.12 // direct
+	github.com/starter-go/module-gorm-mysql v1.0.0 // direct
+	github.com/starter-go/module-gorm-sqlserver v1.0.0 // direct
+	github.com/starter-go/rbac v0.0.11 // direct
+	github.com/starter-go/security v1.0.55 // direct
+	github.com/starter-go/starter v1.0.12 // direct
+	github.com/starter-go/units v0.0.6 // direct
+	gorm.io/gorm v1.25.5 // direct
+)
+
+require (
 	github.com/bytedance/sonic v1.9.1 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20221115062448-fe3a3abad311 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.2 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
-	github.com/gin-gonic/gin v1.9.1 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/go-playground/validator/v10 v10.14.0 // indirect
@@ -27,36 +39,27 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.8 // indirect
-	github.com/starter-go/afs v0.9.6 // indirect
-	github.com/starter-go/application v0.9.23 // indirect
+	github.com/starter-go/afs v0.9.9 // direct
 	github.com/starter-go/base v0.9.11 // indirect
-	github.com/starter-go/browsers v0.0.2 // indirect
 	github.com/starter-go/configen v0.9.5 // indirect
-	github.com/starter-go/env v0.0.2 // indirect
-	github.com/starter-go/httpagent v0.0.4 // indirect
-	github.com/starter-go/libgin v1.0.11 // indirect
-	github.com/starter-go/libgorm v0.9.12 // indirect
-	github.com/starter-go/module-email v0.0.2 // indirect
-	github.com/starter-go/module-gorm-mysql v1.0.0 // indirect
-	github.com/starter-go/module-gorm-sqlserver v1.0.0 // indirect
-	github.com/starter-go/rbac v0.0.1 // indirect
-	github.com/starter-go/security v1.0.45 // indirect
-	github.com/starter-go/security-gin v1.0.45 // indirect
-	github.com/starter-go/security-gin-gorm v1.0.45 // indirect
-	github.com/starter-go/security-gorm v1.0.45 // indirect
-	github.com/starter-go/starter v1.0.8 // indirect
-	github.com/starter-go/units v0.0.3 // indirect
-	github.com/starter-go/vlog v0.9.8 // indirect
+	github.com/starter-go/i18n v0.0.4 // indirect
+	github.com/starter-go/keyvalues v0.0.1 // indirect
+	github.com/starter-go/libafs v0.0.7 // indirect
+	github.com/starter-go/mimetypes v0.0.2 // direct
+	github.com/starter-go/security-gorm v1.0.55 // direct
+	github.com/starter-go/stopper v0.0.4 // indirect
+	github.com/starter-go/vlog v0.9.8 // direct
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.11 // indirect
 	golang.org/x/arch v0.3.0 // indirect
 	golang.org/x/crypto v0.14.0 // indirect
 	golang.org/x/net v0.14.0 // indirect
-	golang.org/x/sys v0.13.0 // indirect
+	golang.org/x/sys v0.22.0 // indirect
 	golang.org/x/text v0.13.0 // indirect
 	google.golang.org/protobuf v1.30.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	gorm.io/driver/mysql v1.5.2 // indirect
 	gorm.io/driver/sqlserver v1.5.2 // indirect
-	gorm.io/gorm v1.25.5 // indirect
 )
+
+require github.com/bitwormhole/wpm-api v0.0.1 // direct
